@@ -19,8 +19,6 @@ public class NetworkClient : MonoBehaviour
     RsaEncryption rsaEncryption;
     [SerializeField] private string ServerPublicKey;
 
-    private List<NetworkDataFormat> networkDataList;
-
     // Player Room and Name -----------------------------------------------------------
     public string myId { get; private set; }
     [SerializeField] private string customId;
@@ -54,7 +52,6 @@ public class NetworkClient : MonoBehaviour
         rsaEncryption = new RsaEncryption(ServerPublicKey);
         isVerified = false;
         isMaster = false;
-        networkDataList = new List<NetworkDataFormat>();
     }
 
     // Try connecting to server ------------------------------------------------------
@@ -129,7 +126,7 @@ public class NetworkClient : MonoBehaviour
             if (networkStream.DataAvailable)
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                //ReceiveMassage(formatter.Deserialize(networkStream) as string);
+                ReceiveMassage(formatter.Deserialize(networkStream) as string);
             }
 
             // Also check connection with server -----------------------------------
@@ -211,60 +208,6 @@ public class NetworkClient : MonoBehaviour
 
         }
     }
-
-    string FORMAT = "Sender|Header";
-    string FORMAT_ROOM_CREATED = "RoomName";
-    string FORMAT_ROOM_JOINED = "RoomName|PlayersInRoom";
-    private void ReceiveMassage2(string massage)
-    {
-        NetworkDataFormat networkData = new NetworkDataFormat();
-        networkDataList.Add(networkData);
-        
-        string[] info = massage.Split('|');
-        string[] formatInfo = FORMAT.Split('|');
-
-        for(int i = 0; i < formatInfo.Length; i++)
-        {
-            DataSplitter((NetworkDataFormat.Format)Enum.Parse(typeof(NetworkDataFormat.Format), formatInfo[i], true), info[i]);
-        }
-    }
-
-
-    private void DataSplitter(NetworkDataFormat.Format format, string data)
-    {
-        switch (format)
-        {
-            case NetworkDataFormat.Format.Sender:
-                SenderHandler((NetworkDataFormat.Sender) Enum.Parse(typeof(NetworkDataFormat.Sender), data, true));
-                    break;
-            case NetworkDataFormat.Format.Header:
-                HeaderHandler((NetworkDataFormat.Header)Enum.Parse(typeof(NetworkDataFormat.Header), data, true));
-                break;
-        }
-    }
-    private void DataHandler(NetworkDataFormat.Header header, string data)
-    {
-        switch (header)
-        {
-            case NetworkDataFormat.Header.BtDw :
-                
-                break;
-        }
-    }
-    private void SenderHandler(NetworkDataFormat.Sender sender) 
-    {
-        
-    }
-    private void HeaderHandler(NetworkDataFormat.Header header)
-    {
-        switch (header)
-        {
-            case NetworkDataFormat.Header.BtDw:
-                
-                break;
-        }
-    }
-
 
     // Proccess massage that want to be send ---------------------------------------
     private void SendMassageClient(string target, string massage)
