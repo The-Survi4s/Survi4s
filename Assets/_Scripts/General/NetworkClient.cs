@@ -27,10 +27,13 @@ public class NetworkClient : MonoBehaviour
     public bool isMaster { get; private set; }
     public int playersCount { get; private set; }
 
+    private float DefaultCheckTime;
+    private float checkTime;
+
     // Connection status --------------------------------------------------------------
     private bool isVerified;
 
-    // Singleton ----------------------------------------------------------------------
+    // Eazy access ----------------------------------------------------------------------
     public static NetworkClient Instance { get; private set; }
     private void Awake()
     {
@@ -52,6 +55,9 @@ public class NetworkClient : MonoBehaviour
         rsaEncryption = new RsaEncryption(ServerPublicKey);
         isVerified = false;
         isMaster = false;
+
+        DefaultCheckTime = .8f;
+        checkTime = DefaultCheckTime;
     }
 
     // Try connecting to server ------------------------------------------------------
@@ -119,7 +125,7 @@ public class NetworkClient : MonoBehaviour
 
     private void Update()
     {
-        // Chech connection and verification status ---------------------------------
+        // Check connection and verification status ---------------------------------
         if(client.Connected && isVerified)
         {
             // If all ok, begin listening -------------------------------------------
@@ -129,8 +135,14 @@ public class NetworkClient : MonoBehaviour
                 ReceiveMassage(formatter.Deserialize(networkStream) as string);
             }
 
-            // Also check connection with server -----------------------------------
-
+            // Alwasy send massage to server to tell server that we
+            // Still online 
+            checkTime -= Time.deltaTime;
+            if(checkTime <= 0)
+            {
+                SendMassageClient("2", "A");
+                Debug.Log("Here");
+            }
         }
     }
 
@@ -159,6 +171,10 @@ public class NetworkClient : MonoBehaviour
             else if (info[1] == "RsF")
             {
                 JoinRoomPanel.Instance.RoomIsFull();
+            }
+            else if (info[1] == "REx")
+            {
+                ScenesManager.Instance.LoadScene(0);
             }
         }
         else
@@ -232,6 +248,8 @@ public class NetworkClient : MonoBehaviour
 
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(networkStream, data);
+
+        checkTime = DefaultCheckTime;
     }
 
     // If want to check connection status -------------------------------------------
@@ -257,14 +275,17 @@ public class NetworkClient : MonoBehaviour
         // Set to master, becuse we the one created room ---------------------------
         isMaster = true;
         playersCount = 1;
-        MainMenuManager.Instance.LoadScene(1);
+
+        // Load Scene 
+        ScenesManager.Instance.LoadScene(1);
     }
     private void OnJoinedRoom(string roomName, int playerCount)
     {
         playersCount = playerCount;
-        MainMenuManager.Instance.LoadScene(1);
+
+        // Load Scene 
+        ScenesManager.Instance.LoadScene(1);
     }
-    
 
     // Public method that can be called to send massage to server -------------------
     public void StartMatchmaking()
@@ -281,10 +302,18 @@ public class NetworkClient : MonoBehaviour
         string[] massage = new string[] { "JnR", roomName, roomName.ToString() };
         SendMassageClient("2", massage);
     }
+    public void ExitRoom()
+    {
+        SendMassageClient("2", "ExR");
+    }
 
     public void StartGame()
     {
         SendMassageClient("1", "StGm");
+    }
+    public void LockTheRoom()
+    {
+        SendMassageClient("2", "LcR");
     }
 
     public void SpawnPlayer(float x, float y, int skin)

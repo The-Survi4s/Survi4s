@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
-
-
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -25,6 +22,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         NetworkClient.Instance.StartGame();
+        NetworkClient.Instance.LockTheRoom();
     }
     public void GameStarted()
     {

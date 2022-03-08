@@ -39,18 +39,17 @@ public class MainMenuManager : MonoBehaviour
             selectNamePanel.SetActive(true);
             connectPanel.SetActive(false);
         }
-        else
+        else if (!NetworkClient.Instance.IsConnected())
         {
             selectNamePanel.SetActive(false);
             connectPanel.SetActive(true);
             NetworkClient.Instance.BeginConnecting();
         }
-    }
-
-    // Universal Load Scene ---------------------------------------------------
-    public void LoadScene(int SceneId)
-    {
-        SceneManager.LoadScene(SceneId);
+        else
+        {
+            selectNamePanel.SetActive(false);
+            connectPanel.SetActive(false);
+        }
     }
 
     // Quick Match Button ------------------------------------------------------

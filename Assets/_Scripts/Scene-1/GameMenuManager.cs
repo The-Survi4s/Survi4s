@@ -7,6 +7,8 @@ public class GameMenuManager : MonoBehaviour
 {
     // Panels ---------------------------------------------------------------------
     [SerializeField] private GameObject preparationPanel;
+    [SerializeField] private GameObject inGameMenuPanel;
+    [SerializeField] private GameObject mainPanel;
 
     // Buttons --------------------------------------------------------------------
     [SerializeField] private GameObject startButton;
@@ -32,6 +34,8 @@ public class GameMenuManager : MonoBehaviour
     {
         // Setup Ui ---------------------------------------------------------------
         preparationPanel.SetActive(true);
+        inGameMenuPanel.SetActive(false);
+        mainPanel.SetActive(true);
 
         startButton.SetActive(false);
 
@@ -56,4 +60,10 @@ public class GameMenuManager : MonoBehaviour
     {
         preparationPanel.SetActive(isTrue);
     } 
+
+    // Exit Room ------------------------------------------------------------------
+    public void ExitRoom()
+    {
+        NetworkClient.Instance.ExitRoom();
+    }
 }
