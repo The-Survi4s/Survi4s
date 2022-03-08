@@ -15,7 +15,7 @@ public class CharacterController : MonoBehaviour
     private Vector3 localMousePos;
     private Vector3 historyMousePos;
     public Vector3 syncMousePos { get; private set; }
-    private bool isFacingLeft;
+    public bool isFacingLeft { get; private set; }
 
     // Character Stats -----------------------------------------------------------------
     [SerializeField] private CharacterStats characterStats;

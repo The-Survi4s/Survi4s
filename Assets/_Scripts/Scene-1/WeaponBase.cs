@@ -10,12 +10,24 @@ public abstract class WeaponBase : MonoBehaviour
     private GameObject owner;
     [SerializeField] private Vector3 offset;
 
+    private bool isFacingLeft;
+
     private void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
         if(owner != null)
         {
             // Follow owner
+            if (owner.GetComponent<CharacterController>().isFacingLeft && !isFacingLeft)
+            {
+                offset.x = -offset.x;
+                isFacingLeft = true;
+            }
+            else if (!owner.GetComponent<CharacterController>().isFacingLeft && isFacingLeft)
+            {
+                offset.x = -offset.x;
+                isFacingLeft = false;
+            }
             transform.position = owner.transform.position + offset;
 
             // Rotate weapon based on owner mouse pos
