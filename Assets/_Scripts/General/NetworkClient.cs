@@ -141,7 +141,6 @@ public class NetworkClient : MonoBehaviour
             if(checkTime <= 0)
             {
                 SendMassageClient("2", "A");
-                Debug.Log("Here");
             }
         }
     }
@@ -221,7 +220,26 @@ public class NetworkClient : MonoBehaviour
             {
                 UnitManager.Instance.SpawnPlayer(info[0] ,float.Parse(info[2]), float.Parse(info[3]), int.Parse(info[4]));
             }
-
+            else if (info[1] == "EqWp")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        obj.GetComponent<CharacterStats>().EquipWeapon(info[2]);
+                    }
+                }
+            }
+            else if (info[1] == "UqWp")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        obj.GetComponent<CharacterStats>().UnEquipWeapon();
+                    }
+                }
+            }
         }
     }
 
@@ -336,6 +354,16 @@ public class NetworkClient : MonoBehaviour
     {
         string[] msg = new string[] { "MPos", x.ToString("f2"), y.ToString("f2") };
         SendMassageClient("1", msg);
+    }
+
+    public void EquipWeapon(string weapon)
+    {
+        string[] msg = new string[] { "EqWp", weapon };
+        SendMassageClient("1", msg);
+    }
+    public void UnequipWeapon()
+    {
+        SendMassageClient("1", "UqWp");
     }
 
     public void Attack(Vector2 mousePos)

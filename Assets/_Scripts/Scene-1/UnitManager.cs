@@ -9,6 +9,7 @@ public class UnitManager : MonoBehaviour
 
     // List ---------------------------------------------------------------------------
     public List<GameObject> players { get; private set; }
+    [SerializeField] public List<WeaponBase> weapons;
 
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }

@@ -17,6 +17,9 @@ public class CharacterController : MonoBehaviour
     public Vector3 syncMousePos { get; private set; }
     private bool isFacingLeft;
 
+    // Character Stats -----------------------------------------------------------------
+    [SerializeField] private CharacterStats characterStats;
+
     private void Start()
     {
         // Tell camera to follow this object --------------------------------------------
@@ -37,8 +40,14 @@ public class CharacterController : MonoBehaviour
     {
         if (isLocal)
         {
-            DetectKeyboard();
-            DetectMouse();
+            DetectMovementKeyboard();
+            DetectMovementMouse();
+
+            // For equip weapon ----------------------------------------------------
+            if(Input.GetKeyDown(KeyCode.F) && characterStats.weaponIsInRange)
+            {
+                NetworkClient.Instance.EquipWeapon(characterStats.GetClosestWeapon());
+            }
         }
     }
 
@@ -67,7 +76,7 @@ public class CharacterController : MonoBehaviour
     }
 
     // For detecting input keyboard ------------------------------------------------------
-    private void DetectKeyboard()
+    private void DetectMovementKeyboard()
     {
         // Detect Keyboard Down -----------------------------------------------------------
         if (Input.GetKeyDown(KeyCode.W))
@@ -107,7 +116,7 @@ public class CharacterController : MonoBehaviour
     }
 
     // For detecting input mouse ---------------------------------------------------------
-    private void DetectMouse()
+    private void DetectMovementMouse()
     {
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
