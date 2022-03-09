@@ -226,7 +226,7 @@ public class NetworkClient : MonoBehaviour
                 {
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
-                        obj.GetComponent<CharacterStats>().EquipWeapon(info[2]);
+                        obj.GetComponent<CharacterWeapon>().EquipWeapon(info[2]);
                     }
                 }
             }
@@ -236,7 +236,7 @@ public class NetworkClient : MonoBehaviour
                 {
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
-                        obj.GetComponent<CharacterStats>().UnEquipWeapon();
+                        obj.GetComponent<CharacterWeapon>().UnEquipWeapon();
                     }
                 }
             }

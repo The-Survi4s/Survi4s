@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    [SerializeField] private float baseSpeed;
     [SerializeField] private Rigidbody2D rigidbody;
     private bool isLocal;
 
@@ -19,6 +18,7 @@ public class CharacterController : MonoBehaviour
 
     // Character Stats -----------------------------------------------------------------
     [SerializeField] private CharacterStats characterStats;
+    [SerializeField] private CharacterWeapon characterWeapon;
 
     private void Start()
     {
@@ -44,9 +44,9 @@ public class CharacterController : MonoBehaviour
             DetectMovementMouse();
 
             // For equip weapon ----------------------------------------------------
-            if(Input.GetKeyDown(KeyCode.F) && characterStats.weaponIsInRange)
+            if(Input.GetKeyDown(KeyCode.F) && characterWeapon.weaponIsInRange)
             {
-                NetworkClient.Instance.EquipWeapon(characterStats.GetClosestWeapon());
+                NetworkClient.Instance.EquipWeapon(characterWeapon.GetClosestWeapon());
             }
         }
     }
@@ -126,6 +126,7 @@ public class CharacterController : MonoBehaviour
     // For moving character ------------------------------------------------------------------
     private void MoveCharacter()
     {
+        float baseSpeed = characterStats.moveSpeed;
         if (wIsDown && aIsDown)
         {
             rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / 2);

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1726068168767584519}
   - component: {fileID: 1801512274828443493}
   - component: {fileID: 3734245638782618344}
+  - component: {fileID: 8575366379326903538}
   - component: {fileID: 6815912341295409886}
   m_Layer: 0
   m_Name: Character Dummy
@@ -98,7 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b783c0c74d966c498cc2830b499ebea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSpeed: 5
   rigidbody: {fileID: 6815912341295409886}
   characterStats: {fileID: 3734245638782618344}
 --- !u!114 &3734245638782618344
@@ -114,8 +114,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultHitPoint: 100
-  DefaultBaseAttack: 5
+  DefaultMoveSpeed: 5
   weaponRadarRange: 1
+--- !u!114 &8575366379326903538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123738617261133931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3b0668bf8e80b148b5ac4158a44e421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &6815912341295409886
 Rigidbody2D:
   serializedVersion: 4

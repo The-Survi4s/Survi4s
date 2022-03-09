@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class WeaponBase : MonoBehaviour
 {
     [SerializeField] private float DefaultBaseAttack;
+    [SerializeField] private float DefaultCritRate;
     [SerializeField] private float DefaultCoolDownTime;
 
     private GameObject owner;
@@ -39,6 +40,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
 
     public abstract void Attack();
+    public abstract void OnCritical();
 
     public bool isUsed()
     {
@@ -49,14 +51,14 @@ public abstract class WeaponBase : MonoBehaviour
         return false;
     }
 
-    public void EquipWeapon(CharacterStats player)
+    public void EquipWeapon(CharacterWeapon player)
     {
         if(owner == null)
         {
             owner = player.gameObject;
         }
     }
-    public void UnequipWeapon(CharacterStats player)
+    public void UnequipWeapon(CharacterWeapon player)
     {
         if(player.gameObject.name == owner.name)
         {

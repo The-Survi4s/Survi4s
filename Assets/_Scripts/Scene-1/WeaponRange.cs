@@ -1,14 +1,24 @@
 using UnityEngine;
 
-public class WeaponRange : WeaponBase
+public abstract class WeaponRange : WeaponBase
 {
     [SerializeField] private float DefaultShootRange;
+    [SerializeField] private float DefaultAmmo;
     public float shootRange { get; private set; }
+    public float ammo { get; private set; }
 
+    // TipeX
+    // Stun
+    
+    // Pentilan
+    // Fast attack
 
-    public override void Attack()
-    {
-        
-    }
+    // Minuman Es
+    // Splash damage
 
+    // Pelontar Pensil
+    // Piercing damage
+
+    public abstract override void Attack();
+    public abstract override void OnCritical();
 }
