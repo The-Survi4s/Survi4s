@@ -40,13 +40,20 @@ public class CharacterController : MonoBehaviour
     {
         if (isLocal)
         {
+            // For Movement --------------------------------------------------------
             DetectMovementKeyboard();
             DetectMovementMouse();
 
             // For equip weapon ----------------------------------------------------
-            if(Input.GetKeyDown(KeyCode.F) && characterWeapon.weaponIsInRange)
+            if(Input.GetKeyDown(KeyCode.F))
             {
-                NetworkClient.Instance.EquipWeapon(characterWeapon.GetClosestWeapon());
+                characterWeapon.EquipWeapon();
+            }
+
+            // For Attack ----------------------------------------------------------
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                characterWeapon.Attack();
             }
         }
     }

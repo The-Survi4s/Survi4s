@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3734245638782618344}
   - component: {fileID: 8575366379326903538}
   - component: {fileID: 6815912341295409886}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Character Dummy
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -32,6 +32,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4569821827003623592}
   - {fileID: 7632530473345644093}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -101,6 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 6815912341295409886}
   characterStats: {fileID: 3734245638782618344}
+  characterWeapon: {fileID: 8575366379326903538}
 --- !u!114 &3734245638782618344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,7 +117,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultHitPoint: 100
   DefaultMoveSpeed: 5
-  weaponRadarRange: 1
 --- !u!114 &8575366379326903538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3b0668bf8e80b148b5ac4158a44e421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponRadarRange: 2.5
+  attackPoint: {fileID: 4569821827003623592}
 --- !u!50 &6815912341295409886
 Rigidbody2D:
   serializedVersion: 4
@@ -149,6 +152,36 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!1 &2500542996280073990
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4569821827003623592}
+  m_Layer: 0
+  m_Name: Attack Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4569821827003623592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2500542996280073990}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8364647250040857712}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7267195193128970953
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +211,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 8364647250040857712}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7452571087797404013
 SpriteRenderer:

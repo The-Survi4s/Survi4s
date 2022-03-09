@@ -9,7 +9,7 @@ public abstract class WeaponRange : WeaponBase
 
     // TipeX
     // Stun
-    
+
     // Pentilan
     // Fast attack
 
@@ -19,6 +19,6 @@ public abstract class WeaponRange : WeaponBase
     // Pelontar Pensil
     // Piercing damage
 
-    public abstract override void Attack();
-    public abstract override void OnCritical();
+    public override abstract void OnAttack(Vector2 mousePos);
+    public override abstract void OnCritical(Vector2 mousePos);
 }

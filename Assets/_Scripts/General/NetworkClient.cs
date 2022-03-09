@@ -226,7 +226,7 @@ public class NetworkClient : MonoBehaviour
                 {
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
-                        obj.GetComponent<CharacterWeapon>().EquipWeapon(info[2]);
+                        obj.GetComponent<CharacterWeapon>().OnEquipWeapon(info[2]);
                     }
                 }
             }
@@ -237,6 +237,28 @@ public class NetworkClient : MonoBehaviour
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
                         obj.GetComponent<CharacterWeapon>().UnEquipWeapon();
+                    }
+                }
+            }
+            else if (info[1] == "PNAtk")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        Vector2 mousePos = new Vector2(float.Parse(info[2]), float.Parse(info[3])); 
+                        obj.GetComponent<CharacterWeapon>().OnNormalAttack(mousePos);
+                    }
+                }
+            }
+            else if (info[1] == "PCAtk")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        Vector2 mousePos = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
+                        obj.GetComponent<CharacterWeapon>().OnCritAttack(mousePos);
                     }
                 }
             }
@@ -366,8 +388,14 @@ public class NetworkClient : MonoBehaviour
         SendMassageClient("1", "UqWp");
     }
 
-    public void Attack(Vector2 mousePos)
+    public void NormalAttack(Vector2 mousePos)
     {
-
+        string[] msg = new string[] { "PNAtk", mousePos.x.ToString("f2"), mousePos.y.ToString("f2") };
+        SendMassageClient("1", msg);
+    }
+    public void CritAttack(Vector2 mousePos)
+    {
+        string[] msg = new string[] { "PCAtk", mousePos.x.ToString("f2"), mousePos.y.ToString("f2") };
+        SendMassageClient("1", msg);
     }
 }

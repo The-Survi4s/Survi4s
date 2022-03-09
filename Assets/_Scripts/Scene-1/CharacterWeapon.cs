@@ -8,13 +8,23 @@ public class CharacterWeapon : MonoBehaviour
     [SerializeField] private float weaponRadarRange;
     public bool weaponIsInRange { get; private set; }
 
+    [SerializeField] private Transform attackPoint;
+
     private void Update()
     {
         // Check Weapon in range
         CheckWeaponInRange();
     }
 
-    public void EquipWeapon(string weaponName)
+    // Equip and unequip ---------------------------------------------------------------------
+    public void EquipWeapon()
+    {
+        if (weaponIsInRange)
+        {
+            NetworkClient.Instance.EquipWeapon(GetClosestWeapon());
+        }
+    }
+    public void OnEquipWeapon(string weaponName)
     {
         foreach (WeaponBase x in UnitManager.Instance.weapons)
         {
@@ -34,7 +44,28 @@ public class CharacterWeapon : MonoBehaviour
     }
     public void UnEquipWeapon()
     {
-        weapon.UnequipWeapon(this);
+        weapon.UnequipWeapon(this, weapon.transform.position);
+    }
+
+    // Attack --------------------------------------------------------------------------------
+    public void Attack()
+    {
+        if(weapon != null)
+        {
+            weapon.Attack();
+        }
+    }
+    public void OnNormalAttack(Vector2 mousePos)
+    {
+        weapon.OnAttack(mousePos);
+    }
+    public void OnCritAttack(Vector2 mousePos)
+    {
+        weapon.OnCritical(mousePos);
+    }
+    public Transform GetAttackPoint()
+    {
+        return attackPoint;
     }
 
     // Find and get name of closest weapon ---------------------------------------------------

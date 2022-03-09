@@ -6,13 +6,24 @@ public abstract class WeaponBase : MonoBehaviour
 {
     [SerializeField] private float DefaultBaseAttack;
     [SerializeField] private float DefaultCritRate;
-    [SerializeField] private float DefaultCoolDownTime;
+    [SerializeField] private float DefaultCooldownTime;
 
-    private GameObject owner;
+    public float baseAttack { get; private set; }
+    public float critRate { get; private set; }
+    public float cooldownTime { get; private set; }
+    private float nextAttackTime = 0f;
+
+    public GameObject owner { get; private set; }
     [SerializeField] private Vector3 offset;
 
     private bool isFacingLeft;
 
+    private void Start()
+    {
+        baseAttack = DefaultBaseAttack;
+        critRate = DefaultCritRate;
+        cooldownTime = DefaultCooldownTime;
+    }
     private void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
@@ -39,8 +50,34 @@ public abstract class WeaponBase : MonoBehaviour
         }
     }
 
-    public abstract void Attack();
-    public abstract void OnCritical();
+    public void Attack()
+    {
+        // Check cooldown
+        if (Time.time >= nextAttackTime)
+        {
+            Vector2 mousePos = owner.GetComponent<CharacterController>().syncMousePos;
+            // Calculate crit
+            if (IsCrit())
+            {
+                NetworkClient.Instance.CritAttack(mousePos);
+            }
+            else
+            {
+                NetworkClient.Instance.NormalAttack(mousePos);
+            }
+
+            // Cooldown
+            nextAttackTime = Time.time + cooldownTime;
+        }
+    }
+    private bool IsCrit()
+    {
+        return false;
+    }
+
+    public abstract void OnAttack(Vector2 mousePos);
+    public abstract void OnCritical(Vector2 mousePos);
+
 
     public bool isUsed()
     {
@@ -58,11 +95,12 @@ public abstract class WeaponBase : MonoBehaviour
             owner = player.gameObject;
         }
     }
-    public void UnequipWeapon(CharacterWeapon player)
+    public void UnequipWeapon(CharacterWeapon player, Vector2 dropPos)
     {
         if(player.gameObject.name == owner.name)
         {
             owner = null;
+            transform.position = dropPos;
         }
     }
 }
