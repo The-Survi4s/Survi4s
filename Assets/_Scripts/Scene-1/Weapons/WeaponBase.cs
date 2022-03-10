@@ -70,13 +70,21 @@ public abstract class WeaponBase : MonoBehaviour
     {
         return false;
     }
+    public Vector2 GetOwnerAttackPoint()
+    {
+        if(owner == null)
+        {
+            return new Vector2 (0, 0);
+        }
+
+        return owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
+    }
     public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float attackRad, LayerMask tergetLayer)
     {
         return Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
     }
 
     public abstract void OnAttack();
-    public abstract void OnCritical(Collider2D[] hitEnemy);
 
 
     public bool isUsed()
@@ -87,7 +95,6 @@ public abstract class WeaponBase : MonoBehaviour
         }
         return false;
     }
-
     public void EquipWeapon(CharacterWeapon player)
     {
         if(owner == null)
@@ -95,12 +102,13 @@ public abstract class WeaponBase : MonoBehaviour
             owner = player.gameObject;
         }
     }
-    public void UnequipWeapon(CharacterWeapon player, Vector2 dropPos)
+    public void UnequipWeapon(CharacterWeapon player, Vector2 dropPos, float z)
     {
         if(player.gameObject.name == owner.name)
         {
             owner = null;
             transform.position = dropPos;
+            transform.rotation = Quaternion.Euler(0, 0, z);
         }
     }
 }

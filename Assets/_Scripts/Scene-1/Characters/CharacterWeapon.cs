@@ -33,7 +33,7 @@ public class CharacterWeapon : MonoBehaviour
                 // Unequip old weapon
                 if (weapon != null)
                 {
-                    UnEquipWeapon();
+                    UnEquipWeapon(x.transform.position, x.transform.rotation.z);
                 }
 
                 // Equip new weapon
@@ -42,9 +42,9 @@ public class CharacterWeapon : MonoBehaviour
             }
         }
     }
-    public void UnEquipWeapon()
+    public void UnEquipWeapon(Vector2 position, float z)
     {
-        weapon.UnequipWeapon(this, weapon.transform.position);
+        weapon.UnequipWeapon(this, position, z);
     }
 
     // Attack --------------------------------------------------------------------------------

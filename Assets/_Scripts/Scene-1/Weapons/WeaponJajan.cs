@@ -10,8 +10,7 @@ public class WeaponJajan : WeaponMelee
         if (IsLocal())
         {
             // Detect enemies on range
-            Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-            Collider2D[] hitPlayer = GetHitObjectInRange(attackPoint, attackRad, targetMask);
+            Collider2D[] hitPlayer = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
 
             // Heal player
             foreach (Collider2D x in hitPlayer)
@@ -27,7 +26,7 @@ public class WeaponJajan : WeaponMelee
             }
         }
     }
-    public override void OnCritical(Collider2D[] hitTarget)
+    private void OnCritical(Collider2D[] hitTarget)
     {
         // Buff Player
         foreach (Collider2D x in hitTarget)

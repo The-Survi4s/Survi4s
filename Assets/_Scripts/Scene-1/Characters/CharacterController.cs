@@ -20,6 +20,10 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private CharacterStats characterStats;
     [SerializeField] private CharacterWeapon characterWeapon;
 
+    // Frame rate sending mouse pos
+    [SerializeField] private float mousePosSendRate;
+    private float mousePosSendCoolDown, mousePosNextTime;
+
     private void Start()
     {
         // Tell camera to follow this object --------------------------------------------
@@ -34,6 +38,9 @@ public class CharacterController : MonoBehaviour
         historyMousePos = new Vector3(0, 0, 0);
         localMousePos = new Vector3(0, 0, 0);
         syncMousePos = new Vector3(0, 0, 0);
+
+        mousePosSendCoolDown = 1 / mousePosSendRate;
+        mousePosNextTime = 0;
     }
 
     private void Update()
@@ -175,10 +182,13 @@ public class CharacterController : MonoBehaviour
     // For sending mouse position ------------------------------------------------------------
     private void SendMousePos()
     {
-        if(localMousePos != historyMousePos)
+        // Need update for better connection
+        if (localMousePos != historyMousePos && Time.time >= mousePosNextTime)
         {
             historyMousePos = localMousePos;
             NetworkClient.Instance.SendMousePos(localMousePos.x, localMousePos.y);
+
+            mousePosNextTime = Time.time + mousePosSendCoolDown;
         }
     }
 

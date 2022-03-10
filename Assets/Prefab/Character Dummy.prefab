@@ -103,6 +103,7 @@ MonoBehaviour:
   rigidbody: {fileID: 6815912341295409886}
   characterStats: {fileID: 3734245638782618344}
   characterWeapon: {fileID: 8575366379326903538}
+  mousePosSendRate: 10
 --- !u!114 &3734245638782618344
 MonoBehaviour:
   m_ObjectHideFlags: 0

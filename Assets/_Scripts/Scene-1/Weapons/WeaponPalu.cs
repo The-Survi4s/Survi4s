@@ -12,8 +12,7 @@ public class WeaponPalu : WeaponMelee
         if (IsLocal())
         {
             // Detect enemies on range
-            Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-            Collider2D[] hitEnemy = GetHitObjectInRange(attackPoint, attackRad, targetMask);
+            Collider2D[] hitEnemy = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
 
             // Calculate crit
             if (IsCrit())
@@ -31,14 +30,14 @@ public class WeaponPalu : WeaponMelee
             }
 
             // Special ability
-            hitEnemy = GetHitObjectInRange(attackPoint, attackRad, wallMask);
+            hitEnemy = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, wallMask);
             foreach (Collider2D x in hitEnemy)
             {
                 Debug.Log("We repair " + x.name);
             }
         }
     }
-    public override void OnCritical(Collider2D[] hitEnemy)
+    private void OnCritical(Collider2D[] hitEnemy)
     {
         // Damage them more
         foreach (Collider2D x in hitEnemy)

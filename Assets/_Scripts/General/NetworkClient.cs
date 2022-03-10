@@ -230,16 +230,6 @@ public class NetworkClient : MonoBehaviour
                     }
                 }
             }
-            else if (info[1] == "UqWp")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
-                {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
-                    {
-                        obj.GetComponent<CharacterWeapon>().UnEquipWeapon();
-                    }
-                }
-            }
             else if (info[1] == "PAtk")
             {
                 foreach (GameObject obj in UnitManager.Instance.players)
@@ -371,14 +361,15 @@ public class NetworkClient : MonoBehaviour
         string[] msg = new string[] { "EqWp", weapon };
         SendMassageClient("1", msg);
     }
-    public void UnequipWeapon()
-    {
-        SendMassageClient("1", "UqWp");
-    }
 
     public void Attack()
     {
         string[] msg = new string[] { "PAtk" };
+        SendMassageClient("1", msg);
+    }
+    public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    {
+        string[] msg = new string[] { "SwBl", xSpawnPos.ToString("f2"), ySpawnPos.ToString("f2"), xMousePos.ToString("f2"), yMousePos.ToString("f2") };
         SendMassageClient("1", msg);
     }
 }

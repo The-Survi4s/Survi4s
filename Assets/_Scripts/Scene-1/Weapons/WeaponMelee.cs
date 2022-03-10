@@ -12,7 +12,6 @@ public abstract class WeaponMelee : WeaponBase
     }
 
     public override abstract void OnAttack();
-    public override abstract void OnCritical(Collider2D[] hitEnemy);
 
     // Visualy attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()
