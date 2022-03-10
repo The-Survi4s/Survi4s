@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rigidbody;
-    private bool isLocal;
+    public bool isLocal { get; private set; }
 
     // For player movement -------------------------------------------------------------
     private bool wIsDown, aIsDown, sIsDown, dIsDown;

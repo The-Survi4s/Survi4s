@@ -2,30 +2,35 @@ using UnityEngine;
 
 public class WeaponJajan : WeaponMelee
 {
-    public override void OnAttack(Vector2 mousePos)
+    public override void OnAttack()
     {
         // Play animation
 
-        // Detect enemies on range
-        Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
 
-        // Damage them
-        foreach (Collider2D x in hitPlayer)
+        if (IsLocal())
         {
-            Debug.Log("We heal " + x.name);
+            // Detect enemies on range
+            Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
+            Collider2D[] hitPlayer = GetHitObjectInRange(attackPoint, attackRad, targetMask);
+
+            // Heal player
+            foreach (Collider2D x in hitPlayer)
+            {
+                Debug.Log("We Heal " + x.name);
+            }
+
+            // Calculate crit
+            if (IsCrit())
+            {
+                // Call crit skill
+                OnCritical(hitPlayer);
+            }
         }
     }
-    public override void OnCritical(Vector2 mousePos)
+    public override void OnCritical(Collider2D[] hitTarget)
     {
-        // Play animation
-
-        // Detect enemies on range
-        Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
-
-        // Damage them
-        foreach (Collider2D x in hitPlayer)
+        // Buff Player
+        foreach (Collider2D x in hitTarget)
         {
             Debug.Log("We buff " + x.name);
         }

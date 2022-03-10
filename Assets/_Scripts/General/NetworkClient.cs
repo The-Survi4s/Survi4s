@@ -240,25 +240,13 @@ public class NetworkClient : MonoBehaviour
                     }
                 }
             }
-            else if (info[1] == "PNAtk")
+            else if (info[1] == "PAtk")
             {
                 foreach (GameObject obj in UnitManager.Instance.players)
                 {
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
-                        Vector2 mousePos = new Vector2(float.Parse(info[2]), float.Parse(info[3])); 
-                        obj.GetComponent<CharacterWeapon>().OnNormalAttack(mousePos);
-                    }
-                }
-            }
-            else if (info[1] == "PCAtk")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
-                {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
-                    {
-                        Vector2 mousePos = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
-                        obj.GetComponent<CharacterWeapon>().OnCritAttack(mousePos);
+                        obj.GetComponent<CharacterWeapon>().OnAttack();
                     }
                 }
             }
@@ -388,14 +376,9 @@ public class NetworkClient : MonoBehaviour
         SendMassageClient("1", "UqWp");
     }
 
-    public void NormalAttack(Vector2 mousePos)
+    public void Attack()
     {
-        string[] msg = new string[] { "PNAtk", mousePos.x.ToString("f2"), mousePos.y.ToString("f2") };
-        SendMassageClient("1", msg);
-    }
-    public void CritAttack(Vector2 mousePos)
-    {
-        string[] msg = new string[] { "PCAtk", mousePos.x.ToString("f2"), mousePos.y.ToString("f2") };
+        string[] msg = new string[] { "PAtk" };
         SendMassageClient("1", msg);
     }
 }

@@ -55,28 +55,28 @@ public abstract class WeaponBase : MonoBehaviour
         // Check cooldown
         if (Time.time >= nextAttackTime)
         {
-            Vector2 mousePos = owner.GetComponent<CharacterController>().syncMousePos;
-            // Calculate crit
-            if (IsCrit())
-            {
-                NetworkClient.Instance.CritAttack(mousePos);
-            }
-            else
-            {
-                NetworkClient.Instance.NormalAttack(mousePos);
-            }
+            // Send attack massage
+            NetworkClient.Instance.Attack();
 
             // Cooldown
             nextAttackTime = Time.time + cooldownTime;
         }
     }
-    private bool IsCrit()
+    public bool IsLocal()
+    {
+        return owner.GetComponent<CharacterController>().isLocal;
+    }
+    public bool IsCrit()
     {
         return false;
     }
+    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float attackRad, LayerMask tergetLayer)
+    {
+        return Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
+    }
 
-    public abstract void OnAttack(Vector2 mousePos);
-    public abstract void OnCritical(Vector2 mousePos);
+    public abstract void OnAttack();
+    public abstract void OnCritical(Collider2D[] hitEnemy);
 
 
     public bool isUsed()

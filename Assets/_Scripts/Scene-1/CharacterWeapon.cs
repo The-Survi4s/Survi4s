@@ -55,13 +55,9 @@ public class CharacterWeapon : MonoBehaviour
             weapon.Attack();
         }
     }
-    public void OnNormalAttack(Vector2 mousePos)
+    public void OnAttack()
     {
-        weapon.OnAttack(mousePos);
-    }
-    public void OnCritAttack(Vector2 mousePos)
-    {
-        weapon.OnCritical(mousePos);
+        weapon.OnAttack();
     }
     public Transform GetAttackPoint()
     {

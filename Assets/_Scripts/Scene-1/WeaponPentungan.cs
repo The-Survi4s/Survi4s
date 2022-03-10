@@ -2,35 +2,42 @@ using UnityEngine;
 
 public class WeaponPentungan : WeaponMelee
 {
-    public override void OnAttack(Vector2 mousePos)
+    public override void OnAttack()
     {
         // Play animation
 
-        // Detect enemies on range
-        Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-        Collider2D[] hitEnemy = Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
 
-        // Damage them
-        foreach (Collider2D x in hitEnemy)
+        if (IsLocal())
         {
-            Debug.Log("We hit " + x.name);
+            // Detect enemies on range
+            Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
+            Collider2D[] hitEnemy = GetHitObjectInRange(attackPoint, attackRad, targetMask);
+
+            // Calculate crit
+            if (IsCrit())
+            {
+                // Call crit attack
+                OnCritical(hitEnemy);
+            }
+            else
+            {
+                // Call normal attack
+                foreach (Collider2D x in hitEnemy)
+                {
+                    Debug.Log("We hit " + x.name);
+                }
+            }
         }
     }
-    public override void OnCritical(Vector2 mousePos)
+    public override void OnCritical(Collider2D[] hitEnemy)
     {
-        // Play animation
-
-        // Detect enemies on range
-        Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-        Collider2D[] hitEnemy = Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
-
         // Damage them
         foreach (Collider2D x in hitEnemy)
         {
             Debug.Log("We hit " + x.name);
 
             // Special ability
-            // Push player back
+            Debug.Log("We push back " + x.name);
         }
     }
 }

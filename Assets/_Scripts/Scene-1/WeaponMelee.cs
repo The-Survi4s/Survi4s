@@ -3,26 +3,16 @@ using UnityEngine;
 public abstract class WeaponMelee : WeaponBase
 {
     [SerializeField] private float DefaultAttackRad;
-    public LayerMask tergetLayer;
+    public LayerMask targetMask;
     public float attackRad { get; private set; }
-
-
-    // Palu 
-    // Can repair wall
-
-    // Pentungan
-    // Knockback enemy
-
-    // Jajan
-    // Area Heal + buff damage
 
     private void Start()
     {
         attackRad = DefaultAttackRad;
     }
 
-    public override abstract void OnAttack(Vector2 mousePos);
-    public override abstract void OnCritical(Vector2 mousePos);
+    public override abstract void OnAttack();
+    public override abstract void OnCritical(Collider2D[] hitEnemy);
 
     // Visualy attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()
