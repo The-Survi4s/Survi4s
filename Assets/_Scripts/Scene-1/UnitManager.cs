@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,10 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     // List ---------------------------------------------------------------------------
-    public List<GameObject> players { get; private set; }
+    public List<GameObject> players;
     [SerializeField] public List<WeaponBase> weapons;
+    public List<Wall> walls;
+    public List<Monster> monsters;
 
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
@@ -37,5 +40,38 @@ public class UnitManager : MonoBehaviour
         GameObject temp = Instantiate(playerPrefab, pos, Quaternion.identity);
         temp.name = name;
         players.Add(temp);
+    }
+
+    // Event -------------------------------------------------------------------------
+    private void OnEnable()
+    {
+        Wall.OnWallDestroyed += OnWallDestroyed;
+    }
+    private void OnDisable()
+    {
+        Wall.OnWallDestroyed -= OnWallDestroyed;
+    }
+
+    public static event Action<Wall> OnWallFallenTop;
+    public static event Action<Wall> OnWallFallenRight;
+    public static event Action<Wall> OnWallFallenBottom;
+    public static event Action<Wall> OnWallFallenLeft;
+    private void OnWallDestroyed(Wall wall)
+    {
+        switch (wall.origin)
+        {
+            case Monster.Origin.Top:
+                OnWallFallenTop?.Invoke(wall);
+                break;
+            case Monster.Origin.Right:
+                OnWallFallenRight?.Invoke(wall);
+                break;
+            case Monster.Origin.Bottom:
+                OnWallFallenBottom?.Invoke(wall);
+                break;
+            case Monster.Origin.Left:
+                OnWallFallenLeft?.Invoke(wall);
+                break;
+        }
     }
 }
