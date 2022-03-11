@@ -60,6 +60,11 @@ public class GameMenuManager : MonoBehaviour
     {
         preparationPanel.SetActive(isTrue);
     } 
+    // Update Players in room -----------------------------------------------------
+    public void UpdatePlayersInRoom(int player)
+    {
+        playersInRoom.text = player.ToString();
+    }
 
     // Exit Room ------------------------------------------------------------------
     public void ExitRoom()

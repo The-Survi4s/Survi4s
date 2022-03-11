@@ -43,11 +43,21 @@ public abstract class WeaponBase : MonoBehaviour
             transform.position = owner.transform.position + offset;
 
             // Rotate weapon based on owner mouse pos
-            Vector3 target = owner.GetComponent<CharacterController>().syncMousePos;
-            float AngleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
-            float AngleDeg = (180 / Mathf.PI) * AngleRad;
-            transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
+            if (IsLocal())
+            {
+                RotateWeapon(owner.GetComponent<CharacterController>().localMousePos);
+            }
+            else
+            {
+                RotateWeapon(owner.GetComponent<CharacterController>().syncMousePos);
+            }
         }
+    }
+    private void RotateWeapon(Vector3 target)
+    {
+        float AngleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
+        float AngleDeg = (180 / Mathf.PI) * AngleRad;
+        transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
     }
 
     public void Attack()
@@ -85,7 +95,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
 
     public abstract void OnAttack();
-
+    public abstract void SpawnBullet(Vector2 spawnPos, Vector2 mousePos);
 
     public bool isUsed()
     {

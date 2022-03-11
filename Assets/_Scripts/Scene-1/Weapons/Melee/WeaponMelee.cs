@@ -12,6 +12,10 @@ public abstract class WeaponMelee : WeaponBase
     }
 
     public override abstract void OnAttack();
+    public override void SpawnBullet(Vector2 spawnPos, Vector2 mosePos)
+    {
+        throw new System.NotImplementedException();
+    }
 
     // Visualy attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()

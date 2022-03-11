@@ -11,7 +11,7 @@ public class CharacterController : MonoBehaviour
 
     // For player facing ---------------------------------------------------------------
     private Camera mainCamera;
-    private Vector3 localMousePos;
+    public Vector3 localMousePos { get; private set; }
     private Vector3 historyMousePos;
     public Vector3 syncMousePos { get; private set; }
     public bool isFacingLeft { get; private set; }

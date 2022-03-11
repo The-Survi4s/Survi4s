@@ -211,6 +211,7 @@ public class NetworkClient : MonoBehaviour
             else if (info[1] == "PlCt")
             {
                 playersCount = int.Parse(info[2]);
+                GameMenuManager.Instance.UpdatePlayersInRoom(playersCount);
             }
             else if (info[1] == "StGm")
             {
@@ -237,6 +238,16 @@ public class NetworkClient : MonoBehaviour
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
                         obj.GetComponent<CharacterWeapon>().OnAttack();
+                    }
+                }
+            }
+            else if (info[1] == "SwBl")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        obj.GetComponent<CharacterWeapon>().SpawnBullet(float.Parse(info[2]), float.Parse(info[3]), float.Parse(info[4]), float.Parse(info[5]));
                     }
                 }
             }

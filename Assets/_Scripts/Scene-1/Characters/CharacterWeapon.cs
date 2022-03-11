@@ -59,6 +59,10 @@ public class CharacterWeapon : MonoBehaviour
     {
         weapon.OnAttack();
     }
+    public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    {
+        weapon.SpawnBullet(new Vector2(xSpawnPos, ySpawnPos), new Vector2(xMousePos, yMousePos));
+    }
     public Transform GetAttackPoint()
     {
         return attackPoint;
