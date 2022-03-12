@@ -45,6 +45,11 @@ public class Monster : MonoBehaviour
     public void ReduceHitPoint(float damage)
     {
         hitPoint -= damage;
+
+        if(hitPoint <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
     public void Stun(float second)
     {

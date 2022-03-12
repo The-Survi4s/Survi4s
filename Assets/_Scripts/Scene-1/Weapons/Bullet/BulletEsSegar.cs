@@ -12,6 +12,10 @@ public class BulletEsSegar : BulletBase
 
         if (weapon != null && isLocal)
         {
+            Monster monster = GetMonster(collision);
+            Monster.Origin ori = monster.origin;
+            int Id = monster.ID;
+
             if (!weapon.IsCrit())
             {
                 // Damage here
@@ -26,4 +30,6 @@ public class BulletEsSegar : BulletBase
 
         Destroy(gameObject);
     }
+
+
 }

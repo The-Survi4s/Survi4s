@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2377165867587476518}
   - component: {fileID: 2377165867587476519}
+  - component: {fileID: 7773981490425168370}
   - component: {fileID: 5297857289526348701}
   - component: {fileID: 8199000041367107212}
   m_Layer: 6
-  m_Name: Enemy
+  m_Name: Monster
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2377165867587476512}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.83, y: 2.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,6 +85,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7773981490425168370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377165867587476512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 773f9b9b6fdce3d4bb08159cfd0df8b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultHitPoint: 50
+  DefaultAttack: 10
+  DefaultCooldownAttack: 3
+  DefaultMoveSpeed: 5
+  DefaultRotationSpeed: 90
 --- !u!61 &5297857289526348701
 BoxCollider2D:
   m_ObjectHideFlags: 0

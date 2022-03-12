@@ -220,6 +220,10 @@ public class NetworkClient : MonoBehaviour
             {
                 UnitManager.Instance.SpawnPlayer(info[0] ,float.Parse(info[2]), float.Parse(info[3]), int.Parse(info[4]));
             }
+            else if (info[1] == "SwM")
+            {
+                UnitManager.Instance.OnSpawnMonster(int.Parse(info[2]), (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true));
+            }
             else if (info[1] == "EqWp")
             {
                 foreach (GameObject obj in UnitManager.Instance.players)
@@ -261,13 +265,24 @@ public class NetworkClient : MonoBehaviour
                     }
                 }
             }
+            else if (info[1] == "StM")
+            {
+                foreach (Monster monster in UnitManager.Instance.monsters)
+                {
+                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
+                    if (monster.ID == int.Parse(info[2]) && monster.origin == ori)
+                    {
+                        monster.Stun(float.Parse(info[4]));
+                    }
+                }
+            }
             else if (info[1] == "HePl")
             {
                 foreach (GameObject obj in UnitManager.Instance.players)
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    if (obj.name == info[2].Substring(0, obj.name.Length))
                     {
-                        obj.GetComponent<CharacterStats>().HealHitPoint(int.Parse(info[2]));
+                        obj.GetComponent<CharacterStats>().HealHitPoint(int.Parse(info[3]));
                     }
                 }
             }
@@ -275,9 +290,9 @@ public class NetworkClient : MonoBehaviour
             {
                 foreach (GameObject obj in UnitManager.Instance.players)
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    if (obj.name == info[2].Substring(0, obj.name.Length))
                     {
-                        obj.GetComponent<CharacterStats>().ReduceHitPoint(int.Parse(info[2]));
+                        obj.GetComponent<CharacterStats>().ReduceHitPoint(int.Parse(info[3]));
                     }
                 }
             }
@@ -287,7 +302,7 @@ public class NetworkClient : MonoBehaviour
                 {
                     if (obj.name == info[0].Substring(0, obj.name.Length))
                     {
-                        obj.GetComponent<CharacterStats>().ReduceHitPoint(int.Parse(info[2]));
+                        obj.GetComponent<CharacterStats>().PlayerDead(float.Parse(info[2]), float.Parse(info[3]));
                     }
                 }
             }
@@ -412,6 +427,11 @@ public class NetworkClient : MonoBehaviour
         string[] msg = new string[] { "SwPy", x.ToString("f2"), y.ToString("f2"), skin.ToString() };
         SendMessageClient("1", msg);
     }
+    public void SpawnMonster(int Id, Monster.Origin origin)
+    {
+        string[] msg = new string[] { "SwM", Id.ToString(), origin.ToString() };
+        SendMessageClient("1", msg);
+    }
 
     public void MovementButtonDown(CharacterController.Button button)
     {
@@ -451,15 +471,20 @@ public class NetworkClient : MonoBehaviour
         string[] msg = new string[] { "DmgM", Id.ToString(), origin.ToString(), damage.ToString("f2") };
         SendMessageClient("1", msg);
     }
+    public void StunMonster(int Id, Monster.Origin origin, float time)
+    {
+        string[] msg = new string[] { "StM", Id.ToString(), origin.ToString(), time.ToString("f2") };
+        SendMessageClient("1", msg);
+    }
     public void HealPlayer(string Id, string name, float healPoint)
     {
-        string[] msg = new string[] { "HePl", healPoint.ToString("f2") };
-        SendMessageClient( Id + name, msg);
+        string[] msg = new string[] { "HePl", Id+name, healPoint.ToString("f2") };
+        SendMessageClient( "1", msg);
     }
     public void DamagePlayer(string Id, string name, float damage)
     {
-        string[] msg = new string[] { "DmgPl", damage.ToString("f2") };
-        SendMessageClient(Id + name, msg);
+        string[] msg = new string[] { "DmgPl", Id + name, damage.ToString("f2") };
+        SendMessageClient("1", msg);
     }
     public void PlayerDead(float xPos, float yPos)
     {

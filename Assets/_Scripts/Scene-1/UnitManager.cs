@@ -7,6 +7,7 @@ public class UnitManager : MonoBehaviour
 {
     // Prefab -------------------------------------------------------------------------
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject mosterPrefab;
 
     // List ---------------------------------------------------------------------------
     public List<GameObject> players;
@@ -40,6 +41,17 @@ public class UnitManager : MonoBehaviour
         GameObject temp = Instantiate(playerPrefab, pos, Quaternion.identity);
         temp.name = name;
         players.Add(temp);
+    }
+
+    // Spawn Monster -----------------------------------------------------------------
+    
+    public void OnSpawnMonster(int ID, Monster.Origin origin)
+    {
+        GameObject temp = Instantiate(mosterPrefab, new Vector2(2, 0), Quaternion.identity);
+        Monster monster = temp.GetComponent<Monster>();
+        monster.SetID(ID);
+        monster.SetOrigin(origin);
+        monsters.Add(monster);
     }
 
     // Event -------------------------------------------------------------------------

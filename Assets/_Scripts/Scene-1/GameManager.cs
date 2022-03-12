@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private SpawnManager spawnManager;
+
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }
     private void Awake()

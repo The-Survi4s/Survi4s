@@ -10,15 +10,19 @@ public class BulletPentilan : BulletBase
 
         if (weapon != null && isLocal)
         {
+            Monster monster = GetMonster(collision);
+            Monster.Origin ori = monster.origin;
+            int Id = monster.ID;
+
             if (!weapon.IsCrit())
             {
                 // Damage here
-
+                NetworkClient.Instance.DamageMonster(Id, ori, weapon.baseAttack);
             }
             else
             {
                 // More damage
-
+                NetworkClient.Instance.DamageMonster(Id, ori, weapon.baseAttack * 1.5f);
             }
         }
 

@@ -10,12 +10,15 @@ public class BulletTipeX : BulletBase
 
         if(weapon!= null && isLocal)
         {
-            // Damage here
+            Monster monster = GetMonster(collision);
+            Monster.Origin ori = monster.origin;
+            int Id = monster.ID;
+
+            NetworkClient.Instance.DamageMonster(Id, ori, weapon.baseAttack);
 
             if (weapon.IsCrit())
             {
-                // Stun here
-
+                NetworkClient.Instance.StunMonster(Id, ori, weapon.baseAttack);
             }
         }
 

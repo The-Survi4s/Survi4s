@@ -12,12 +12,19 @@ public class BulletPensil : BulletBase
 
         if (weapon != null && isLocal)
         {
-            // Damage here
+            Monster monster = GetMonster(collision);
+            Monster.Origin ori = monster.origin;
+            int Id = monster.ID;
 
-            if (weapon.IsCrit())
+            if (!weapon.IsCrit())
             {
-                // More Damage
-
+                // Damage here
+                NetworkClient.Instance.DamageMonster(Id, ori, weapon.baseAttack);
+            }
+            else
+            {
+                // More damage
+                NetworkClient.Instance.DamageMonster(Id, ori, weapon.baseAttack * 1.5f);
             }
         }
 
