@@ -17,9 +17,9 @@ public class Monster : MonoBehaviour
     public float rotationSpeed { get; private set; }
 
     public enum Origin { Top, Right, Bottom, Left }
-    
-    private Origin origin;
-    private int ID;
+
+    public Origin origin { get; private set; }
+    public int ID { get; private set; }
 
     private void Start()
     {
@@ -95,6 +95,6 @@ public class Monster : MonoBehaviour
     }
     public void SetTargetWall(Wall wall)
     {
-
+        
     }
 }

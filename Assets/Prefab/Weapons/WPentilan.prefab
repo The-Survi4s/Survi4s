@@ -102,7 +102,7 @@ MonoBehaviour:
   offset: {x: 0.2, y: -3, z: -1}
   DefaultShootRange: 10
   DefaultAmmo: 10
-  bullet: {fileID: 5926505289157146130, guid: 86e02e271c687c043a595287ac3db668, type: 3}
+  bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
 --- !u!1 &2034098877874509900
 GameObject:
   m_ObjectHideFlags: 0

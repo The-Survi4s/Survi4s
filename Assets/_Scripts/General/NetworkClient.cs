@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -132,7 +131,7 @@ public class NetworkClient : MonoBehaviour
             if (networkStream.DataAvailable)
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                ReceiveMassage(formatter.Deserialize(networkStream) as string);
+                ReceiveMessage(formatter.Deserialize(networkStream) as string);
             }
 
             // Alwasy send massage to server to tell server that we
@@ -140,15 +139,15 @@ public class NetworkClient : MonoBehaviour
             checkTime -= Time.deltaTime;
             if(checkTime <= 0)
             {
-                SendMassageClient("2", "A");
+                SendMessageClient("2", "A");
             }
         }
     }
 
     // Receive and Preccess incoming massage here ----------------------------------
-    private void ReceiveMassage(string massage)
+    private void ReceiveMessage(string massage)
     {
-        // Massage format : sender|header|data|data|data... 
+        // Message format : sender|header|data|data|data... 
         // Svr|RCrd|...
         // ID+NamaClient|MPos|...
         string[] info = massage.Split('|');
@@ -251,20 +250,83 @@ public class NetworkClient : MonoBehaviour
                     }
                 }
             }
+            else if (info[1] == "DmgM")
+            {
+                foreach (Monster monster in UnitManager.Instance.monsters)
+                {
+                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
+                    if (monster.ID == int.Parse(info[2]) && monster.origin == ori)
+                    {
+                        monster.ReduceHitPoint(float.Parse(info[4]));
+                    }
+                }
+            }
+            else if (info[1] == "HePl")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        obj.GetComponent<CharacterStats>().HealHitPoint(int.Parse(info[2]));
+                    }
+                }
+            }
+            else if (info[1] == "DmgPl")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        obj.GetComponent<CharacterStats>().ReduceHitPoint(int.Parse(info[2]));
+                    }
+                }
+            }
+            else if (info[1] == "PlDd")
+            {
+                foreach (GameObject obj in UnitManager.Instance.players)
+                {
+                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    {
+                        obj.GetComponent<CharacterStats>().ReduceHitPoint(int.Parse(info[2]));
+                    }
+                }
+            }
+            else if (info[1] == "HeWl")
+            {
+                foreach (Wall wall in UnitManager.Instance.walls)
+                {
+                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
+                    if (wall.ID == int.Parse(info[2]) && wall.origin == ori)
+                    {
+                        wall.RepairWall(float.Parse(info[4]));
+                    }
+                }
+            }
+            else if (info[1] == "DmgWl")
+            {
+                foreach (Wall wall in UnitManager.Instance.walls)
+                {
+                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
+                    if (wall.ID == int.Parse(info[2]) && wall.origin == ori)
+                    {
+                        wall.DamageWall(float.Parse(info[4]));
+                    }
+                }
+            }
         }
     }
 
     // Proccess massage that want to be send ---------------------------------------
-    private void SendMassageClient(string target, string massage)
+    private void SendMessageClient(string target, string massage)
     {
         // Massage format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
         string[] temp = new string[1];
         temp[0] = massage;
 
-        SendMassageClient(target, temp);
+        SendMessageClient(target, temp);
     }
-    private void SendMassageClient(string target, string[] massage)
+    private void SendMessageClient(string target, string[] massage)
     {
         // Massage format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
@@ -319,68 +381,99 @@ public class NetworkClient : MonoBehaviour
     // Public method that can be called to send massage to server -------------------
     public void StartMatchmaking()
     {
-        SendMassageClient("2", "StMtc");
+        SendMessageClient("2", "StMtc");
     }
     public void CreateRoom(string roomName, int maxPlayer, bool isPublic)
     {
         string[] massage = new string[] { "CrR", roomName, maxPlayer.ToString(), isPublic.ToString() } ;
-        SendMassageClient("2", massage);
+        SendMessageClient("2", massage);
     }
     public void JoinRoom(string roomName)
     {
         string[] massage = new string[] { "JnR", roomName, roomName.ToString() };
-        SendMassageClient("2", massage);
+        SendMessageClient("2", massage);
     }
     public void ExitRoom()
     {
-        SendMassageClient("2", "ExR");
+        SendMessageClient("2", "ExR");
     }
 
     public void StartGame()
     {
-        SendMassageClient("1", "StGm");
+        SendMessageClient("1", "StGm");
     }
     public void LockTheRoom()
     {
-        SendMassageClient("2", "LcR");
+        SendMessageClient("2", "LcR");
     }
 
     public void SpawnPlayer(float x, float y, int skin)
     {
         string[] msg = new string[] { "SwPy", x.ToString("f2"), y.ToString("f2"), skin.ToString() };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
     }
 
     public void MovementButtonDown(CharacterController.Button button)
     {
         string[] msg = new string[] { "BtDw", button.ToString() };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
     }
     public void MovementButtonUp(CharacterController.Button button)
     {
         string[] msg = new string[] { "BtUp", button.ToString() };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
     }
     public void SendMousePos(float x, float y)
     {
         string[] msg = new string[] { "MPos", x.ToString("f2"), y.ToString("f2") };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
     }
 
     public void EquipWeapon(string weapon)
     {
         string[] msg = new string[] { "EqWp", weapon };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
     }
 
     public void Attack()
     {
         string[] msg = new string[] { "PAtk" };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
     }
     public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
     {
         string[] msg = new string[] { "SwBl", xSpawnPos.ToString("f2"), ySpawnPos.ToString("f2"), xMousePos.ToString("f2"), yMousePos.ToString("f2") };
-        SendMassageClient("1", msg);
+        SendMessageClient("1", msg);
+    }
+
+    public void DamageMonster(int Id, Monster.Origin origin, float damage)
+    {
+        string[] msg = new string[] { "DmgM", Id.ToString(), origin.ToString(), damage.ToString("f2") };
+        SendMessageClient("1", msg);
+    }
+    public void HealPlayer(string Id, string name, float healPoint)
+    {
+        string[] msg = new string[] { "HePl", healPoint.ToString("f2") };
+        SendMessageClient( Id + name, msg);
+    }
+    public void DamagePlayer(string Id, string name, float damage)
+    {
+        string[] msg = new string[] { "DmgPl", damage.ToString("f2") };
+        SendMessageClient(Id + name, msg);
+    }
+    public void PlayerDead(float xPos, float yPos)
+    {
+        string[] msg = new string[] { "PlDd", xPos.ToString("f2"), yPos.ToString("f2") };
+        SendMessageClient("1", msg);
+    }
+    public void HealWall(string Id, Monster.Origin origin, float healPoint)
+    {
+        string[] msg = new string[] { "HeWl", Id.ToString(), origin.ToString(), healPoint.ToString("f2") };
+        SendMessageClient("1", msg);
+    }
+    public void DamageWall(string Id, Monster.Origin origin, float damage)
+    {
+        string[] msg = new string[] { "DmgWl", Id.ToString(), origin.ToString(), damage.ToString("f2") };
+        SendMessageClient("1", msg);
     }
 }
