@@ -2,36 +2,28 @@ using UnityEngine;
 
 public class WeaponJajan : WeaponMelee
 {
-    public override void OnAttack()
+    protected override void OnNormalAttack(Collider2D[] targets)
     {
-        // Play animation
-
-
-        if (IsLocal())
+        // Heal players
+        foreach (Collider2D target in targets)
         {
-            // Detect enemies on range
-            Collider2D[] hitPlayer = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
+            Debug.Log("We Heal " + target.name);
+        }
 
-            // Heal player
-            foreach (Collider2D x in hitPlayer)
-            {
-                Debug.Log("We Heal " + x.name);
-            }
+        SpawnParticle();
+    }
 
-            // Calculate crit
-            if (IsCrit())
-            {
-                // Call crit skill
-                OnCritical(hitPlayer);
-            }
+    protected override void OnCritical(Collider2D[] targets)
+    {
+        // Buff players
+        foreach (Collider2D target in targets)
+        {
+            Debug.Log("We buff " + target.name);
         }
     }
-    private void OnCritical(Collider2D[] hitTarget)
+
+    protected override void SpawnParticle()
     {
-        // Buff Player
-        foreach (Collider2D x in hitTarget)
-        {
-            Debug.Log("We buff " + x.name);
-        }
+        //
     }
 }

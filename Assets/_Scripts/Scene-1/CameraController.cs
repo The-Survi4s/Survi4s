@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector3 offset;
     [SerializeField] [Range(1, 10)] private float smoothFactor; 
 
-    // Eazy access ----------------------------------------------------------------------
+    // Easy access ----------------------------------------------------------------------
     public static CameraController Instance;
     private void Awake()
     {

@@ -95,7 +95,7 @@ public class RsaEncryption
             return "Decryption error : " + e.Message;
         }
 
-        return "Massage not encrypted";
+        return "message not encrypted";
     }
 
     public string ConvertKeyToString(RSAParameters key)

@@ -4,19 +4,19 @@ using UnityEngine;
 
 public abstract class BulletBase : MonoBehaviour
 {
-    [SerializeField] private float DefaultMoveSpeed;
-    private float DefaultFireRange;
+    [SerializeField] protected float DefaultMoveSpeed;
+    [SerializeField] protected float DefaultTravelRange;
+    [SerializeField] protected float CriticalMultiplier = 1.5f;
     private Vector2 startPos;
     public float moveSpeed { get; private set; }
     private bool rotationIsSet;
 
-    public WeaponBase weapon { get; private set; }
+    protected WeaponBase weapon { get; private set; }
     public bool isLocal { get; private set; }
 
     private void Start()
     {
-        moveSpeed = DefaultMoveSpeed;
-        startPos = transform.position;
+        
     }
 
     private void Update()
@@ -26,19 +26,57 @@ public abstract class BulletBase : MonoBehaviour
             // Move bullet
             transform.position += moveSpeed * transform.right * Time.deltaTime;
 
-            if(Vector2.Distance(transform.position, startPos) > DefaultFireRange)
+            if(Vector2.Distance(transform.position, startPos) > DefaultTravelRange)
             {
                 Destroy(gameObject);
             }
         }
     }
 
-    public Monster GetMonster(Collider2D collider)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        return collider.GetComponent<Monster>();
+        Monster monster = collision.GetComponent<Monster>();
+        if (monster == null) return;
+        // Animation
+        PlayAnimation();
+        if (weapon != null && isLocal)
+        {
+            if (!weapon.IsCritical())
+            {
+                OnNormalShot(monster);
+            }
+            else
+            {
+                OnCriticalShot(monster);
+            }
+        }
+        OnEndOfTrigger();
     }
 
-    public void SetRotation(Vector2 mousePos)
+    protected virtual void PlayAnimation()
+    {
+
+    }
+    protected virtual void SpawnParticle()
+    {
+
+    }
+    protected virtual void OnNormalShot(Monster monster)
+    {
+        // Damage here
+        NetworkClient.Instance.DamageMonster(monster.ID, monster.origin, weapon.baseAttack);
+    }
+    protected virtual void OnCriticalShot(Monster monster)
+    {
+        // More damage
+        NetworkClient.Instance.DamageMonster(monster.ID, monster.origin, weapon.baseAttack * CriticalMultiplier);
+    }
+    protected virtual void OnEndOfTrigger()
+    {
+        Destroy(gameObject);
+    }
+
+    private void SetRotation(Vector2 mousePos)
     {
         // Rotate weapon based on owner mouse pos
         float AngleRad = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x);
@@ -46,16 +84,13 @@ public abstract class BulletBase : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
         rotationIsSet = true;
     }
-    public void SetWeapon(WeaponBase weapon)
+
+    public void Init(WeaponBase weaponOrigin, Vector2 mousePos, bool isLocal = false)
     {
-        this.weapon = weapon;
-    }
-    public void SetToLocal()
-    {
-        isLocal = true;
-    }
-    public void SetFireRange(float range)
-    {
-        DefaultFireRange = range;
+        weapon = weaponOrigin;
+        SetRotation(mousePos);
+        this.isLocal = isLocal;
+        moveSpeed = DefaultMoveSpeed;
+        startPos = transform.position;
     }
 }

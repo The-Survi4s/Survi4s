@@ -4,24 +4,9 @@ using UnityEngine;
 
 public class BulletTipeX : BulletBase
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnCriticalShot(Monster monster)
     {
-        // Animation
-
-        if(weapon!= null && isLocal)
-        {
-            Monster monster = GetMonster(collision);
-            Monster.Origin ori = monster.origin;
-            int Id = monster.ID;
-
-            NetworkClient.Instance.DamageMonster(Id, ori, weapon.baseAttack);
-
-            if (weapon.IsCrit())
-            {
-                NetworkClient.Instance.StunMonster(Id, ori, weapon.baseAttack);
-            }
-        }
-
-        Destroy(gameObject);
+        base.OnCriticalShot(monster);
+        NetworkClient.Instance.StunMonster(monster.ID, monster.origin, weapon.baseAttack);
     }
 }

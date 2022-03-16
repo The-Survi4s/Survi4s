@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,13 @@ public class Monster : MonoBehaviour
     public float rotationSpeed { get; private set; }
 
     public enum Origin { Top, Right, Bottom, Left }
+    public enum Type {TypeA, B}
 
     public Origin origin { get; private set; }
     public int ID { get; private set; }
+    public Wall targetWall { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         hitPoint = DefaultHitPoint;
         attack = DefaultAttack;
@@ -32,15 +35,10 @@ public class Monster : MonoBehaviour
         ID = -1;
     }
 
-    public void SetOrigin(Origin ori)
-    {
-        origin = ori;
-    }
-    public void SetID(int Id)
-    {
-        if(Id == -1)
-            ID = Id;
-    }
+    public static event Action<int> OnMonsterDeath; 
+
+    public void SetOrigin(Origin ori) => origin = ori;
+    public void SetID(int Id) => ID = Id == -1 ? Id : ID;
 
     public void ReduceHitPoint(float damage)
     {
@@ -48,8 +46,22 @@ public class Monster : MonoBehaviour
 
         if(hitPoint <= 0)
         {
+            OnMonsterDeath?.Invoke(ID);
+            SpawnManager.Instance.ClearIDIndex(ID);
             Destroy(gameObject);
         }
+    }
+
+    public void SendAttackMessage()
+    {
+        //Hapus pemanggilan fungsi di bawah ini. Cuma contoh (yg salah)
+        NetworkClient.Instance.DamagePlayer("","",0);
+        NetworkClient.Instance.DamageWall(0,1);
+    }
+
+    public void OnReceiveAttackMessage()
+    {
+
     }
     public void Stun(float second)
     {
@@ -67,16 +79,16 @@ public class Monster : MonoBehaviour
         switch (origin)
         {
             case Origin.Top:
-                UnitManager.OnWallFallenTop += SetTargetWall;
+                WallManager.OnWallFallenTop += SetTargetWall;
                 break;
             case Origin.Right:
-                UnitManager.OnWallFallenRight += SetTargetWall;
+                WallManager.OnWallFallenRight += SetTargetWall;
                 break;
             case Origin.Bottom:
-                UnitManager.OnWallFallenBottom += SetTargetWall;
+                WallManager.OnWallFallenBottom += SetTargetWall;
                 break;
             case Origin.Left:
-                UnitManager.OnWallFallenLeft += SetTargetWall;
+                WallManager.OnWallFallenLeft += SetTargetWall;
                 break;
         }
     }
@@ -85,21 +97,21 @@ public class Monster : MonoBehaviour
         switch (origin)
         {
             case Origin.Top:
-                UnitManager.OnWallFallenTop -= SetTargetWall;
+                WallManager.OnWallFallenTop -= SetTargetWall;
                 break;
             case Origin.Right:
-                UnitManager.OnWallFallenRight -= SetTargetWall;
+                WallManager.OnWallFallenRight -= SetTargetWall;
                 break;
             case Origin.Bottom:
-                UnitManager.OnWallFallenBottom -= SetTargetWall;
+                WallManager.OnWallFallenBottom -= SetTargetWall;
                 break;
             case Origin.Left:
-                UnitManager.OnWallFallenLeft -= SetTargetWall;
+                WallManager.OnWallFallenLeft -= SetTargetWall;
                 break;
         }
     }
     public void SetTargetWall(Wall wall)
     {
-        
+        targetWall = wall;
     }
 }

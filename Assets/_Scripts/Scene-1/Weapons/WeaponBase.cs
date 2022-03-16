@@ -4,121 +4,117 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour
 {
-    [SerializeField] private float DefaultBaseAttack;
-    [SerializeField] private float DefaultCritRate;
-    [SerializeField] private float DefaultCooldownTime;
+    [SerializeField] protected float DefaultBaseAttack;
+    [SerializeField] protected float DefaultCritRate;
+    [SerializeField] protected float MaxCooldownTime;
 
     public float baseAttack { get; private set; }
     public float critRate { get; private set; }
     public float cooldownTime { get; private set; }
-    private float nextAttackTime = 0f;
+    protected float nextAttackTime = 0f;
 
     public GameObject owner { get; private set; }
-    [SerializeField] private Vector3 offset;
+    public bool IsUsed() => owner != null;
 
-    private bool isFacingLeft;
+    // Animation Variables
+    [SerializeField] protected Vector3 offset;
+    [SerializeField]
+    protected struct SwingTo
+    {
+        public float degree;
+        public float t;
+    }
+    [SerializeField] private List<SwingTo> swingQueues = new List<SwingTo>();
+    protected float swingDegree;
+    protected int animationStep;
 
-    private void Start()
+    // Particles -----------------------------------------
+    
+
+    // Cached components --------------------
+    protected PlayerController _ownerPlayerController;
+
+
+
+
+
+    // -------------------
+    protected virtual void Init()
     {
         baseAttack = DefaultBaseAttack;
         critRate = DefaultCritRate;
-        cooldownTime = DefaultCooldownTime;
+        cooldownTime = MaxCooldownTime;
+        _ownerPlayerController = owner?.GetComponent<PlayerController>();
     }
+
+    private void Awake() => Init();
     private void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
-        if(owner != null)
+        if (owner == null) return;
+        // Follow owner
+        transform.position = owner.transform.position +
+                             offset * (_ownerPlayerController.isFacingLeft ? -1 : 1);
+        // Swing animation
+        if (animationStep < swingQueues.Count)
         {
-            // Follow owner
-            if (owner.GetComponent<CharacterController>().isFacingLeft && !isFacingLeft)
-            {
-                offset.x = -offset.x;
-                isFacingLeft = true;
-            }
-            else if (!owner.GetComponent<CharacterController>().isFacingLeft && isFacingLeft)
-            {
-                offset.x = -offset.x;
-                isFacingLeft = false;
-            }
-            transform.position = owner.transform.position + offset;
-
-            // Rotate weapon based on owner mouse pos
-            if (IsLocal())
-            {
-                RotateWeapon(owner.GetComponent<CharacterController>().localMousePos);
-            }
-            else
-            {
-                RotateWeapon(owner.GetComponent<CharacterController>().syncMousePos);
-            }
+            LerpAnimation();
+            if (Mathf.Abs(swingDegree - Mathf.LerpAngle(swingDegree, swingQueues[animationStep].degree,
+                    swingQueues[animationStep].t)) < 5) animationStep++;
         }
+        // Rotate weapon based on owner mouse pos
+        RotateWeapon(IsLocal()
+            ? _ownerPlayerController.localMousePos
+            : _ownerPlayerController.syncMousePos);
     }
-    private void RotateWeapon(Vector3 target)
-    {
-        float AngleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
-        float AngleDeg = (180 / Mathf.PI) * AngleRad;
-        transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
-    }
-
-    public void Attack()
+    
+    // Network methods -----------------------------------
+    public void SendAttackMessage()
     {
         // Check cooldown
-        if (Time.time >= nextAttackTime)
-        {
-            // Send attack massage
-            NetworkClient.Instance.Attack();
+        if (!(Time.time >= nextAttackTime)) return;
+        // Send attack message
+        NetworkClient.Instance.Attack();
+        // Cooldown
+        nextAttackTime = Time.time + cooldownTime;
+    }
+    public bool IsLocal() => _ownerPlayerController.isLocal;
 
-            // Cooldown
-            nextAttackTime = Time.time + cooldownTime;
-        }
-    }
-    public bool IsLocal()
+    // Animation methods ---------------------------------------
+    protected virtual void PlayAnimation() => animationStep = 0;
+    protected void LerpAnimation() =>
+        swingDegree = Mathf.LerpAngle(swingDegree, swingQueues[animationStep].degree, swingQueues[animationStep].t);
+    protected virtual void SpawnParticle() { }
+    private void RotateWeapon(Vector3 target)
     {
-        return owner.GetComponent<CharacterController>().isLocal;
-    }
-    public bool IsCrit()
-    {
-        return false;
-    }
-    public Vector2 GetOwnerAttackPoint()
-    {
-        if(owner == null)
-        {
-            return new Vector2 (0, 0);
-        }
-
-        return owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
-    }
-    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float attackRad, LayerMask tergetLayer)
-    {
-        return Physics2D.OverlapCircleAll(attackPoint, attackRad, tergetLayer);
+        var angleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
+        var angleDeg = (180 / Mathf.PI) * angleRad +
+                       swingDegree * (_ownerPlayerController.isFacingLeft ? -1 : 1);
+        transform.rotation = Quaternion.Euler(0, 0, angleDeg);
     }
 
-    public abstract void OnAttack();
-    public abstract void SpawnBullet(Vector2 spawnPos, Vector2 mousePos);
+    // Attack methods --------------------------------------------
+    public bool IsCritical() => Random.Range(0f, 100f) < critRate; 
+    public Vector2 GetOwnerAttackPoint() => 
+        owner == null 
+        ? Vector2.zero 
+        : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
 
-    public bool isUsed()
+    public virtual void OnAttack() => PlayAnimation();
+
+    // Equip / UnEquip -------------------------------------------------
+    public void EquipWeapon(PlayerWeaponManager player)
     {
-        if(owner != null)
-        {
-            return true;
-        }
-        return false;
+        if (owner != null) return;
+        owner = player.gameObject;
+        _ownerPlayerController = owner.GetComponent<PlayerController>();
     }
-    public void EquipWeapon(CharacterWeapon player)
+    public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {
-        if(owner == null)
-        {
-            owner = player.gameObject;
-        }
-    }
-    public void UnequipWeapon(CharacterWeapon player, Vector2 dropPos, float z)
-    {
-        if(player.gameObject.name == owner.name)
-        {
-            owner = null;
-            transform.position = dropPos;
-            transform.rotation = Quaternion.Euler(0, 0, z);
-        }
+        if (player.gameObject.name != owner.name) return;
+        owner = null;
+        transform.position = dropPos;
+        transform.rotation = Quaternion.Euler(0, 0, zRotation);
+        _ownerPlayerController = null;
     }
 }

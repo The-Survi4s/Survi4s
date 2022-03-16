@@ -2,14 +2,27 @@ using UnityEngine;
 
 public class WeaponRange : WeaponBase
 {
-    [SerializeField] private float DefaultShootRange;
-    [SerializeField] private int DefaultAmmo;
+    [SerializeField] private int MaxAmmo;
     public GameObject bullet;
-    public int ammo { get; private set; }
+
+    private int _ammo;
+
+    public int ammo
+    {
+        get => _ammo;
+        set
+        {
+            _ammo += value;
+            if (_ammo > MaxAmmo)
+            {
+                _ammo = MaxAmmo;
+            }
+        }
+    }
 
     private void Start()
     {
-        ammo = DefaultAmmo;
+        ReloadAmmo();
     }
 
     public Vector2 GetOwnerMousePos()
@@ -19,52 +32,32 @@ public class WeaponRange : WeaponBase
             return new Vector2(0, 0);
         }
 
-        return owner.GetComponent<CharacterController>().syncMousePos;
+        return _ownerPlayerController.syncMousePos;
     }
-    public void ReduceAmmo(int ammo)
-    {
-        this.ammo -= ammo;
-    }
-    public void ReloadAmmo(int ammo)
-    {
-        this.ammo += ammo;
-    }
-    public void ReloadAmmo()
-    {
-        this.ammo = DefaultAmmo;
-    }
+
+    public void ReloadAmmo() => ammo = MaxAmmo;
 
     public override void OnAttack()
     {
-        // Play animation
-
+        base.OnAttack();
 
         // Only do this if local
         if (IsLocal() && ammo > 0)
         {
-            // Send massage to spawn bullet
+            // Send message to spawn bullet
             Vector2 attackPoint = GetOwnerAttackPoint();
             Vector2 mousePos = GetOwnerMousePos();
             NetworkClient.Instance.SpawnBullet(attackPoint.x, attackPoint.y, mousePos.x, mousePos.y);
         }
     }
 
-    public override void SpawnBullet(Vector2 spawnPos, Vector2 mousePos)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos)
     {
         // Make a bullet
         GameObject temp = Instantiate(bullet, spawnPos, Quaternion.identity);
         BulletBase bulTemp = temp.GetComponent<BulletBase>();
 
-        // Roatate bullet
-        bulTemp.SetRotation(mousePos);
-        // Set Bullet weapon
-        bulTemp.SetWeapon(this);
-        // Set Range
-        bulTemp.SetFireRange(DefaultShootRange);
-        // Set local
-        if (IsLocal())
-        {
-            bulTemp.SetToLocal();
-        }
+        // init bullet
+        bulTemp.Init(this,mousePos,IsLocal());
     }
 }

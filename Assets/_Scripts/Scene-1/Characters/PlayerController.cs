@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rigidbody;
+    [SerializeField] private Rigidbody2D _rigidbody;
     public bool isLocal { get; private set; }
 
     // For player movement -------------------------------------------------------------
-    private bool wIsDown, aIsDown, sIsDown, dIsDown;
+    private bool w_IsDown, a_IsDown, s_IsDown, d_IsDown;
     public enum Button { w, a, s, d }
 
     // For player facing ---------------------------------------------------------------
@@ -18,7 +18,7 @@ public class CharacterController : MonoBehaviour
 
     // Character Stats -----------------------------------------------------------------
     [SerializeField] private CharacterStats characterStats;
-    [SerializeField] private CharacterWeapon characterWeapon;
+    [SerializeField] private PlayerWeaponManager _playerWeaponManager;
 
     // Frame rate sending mouse pos
     [SerializeField] private float mousePosSendRate;
@@ -54,13 +54,13 @@ public class CharacterController : MonoBehaviour
             // For equip weapon ----------------------------------------------------
             if(Input.GetKeyDown(KeyCode.F))
             {
-                characterWeapon.EquipWeapon();
+                _playerWeaponManager.EquipWeapon();
             }
 
-            // For Attack ----------------------------------------------------------
+            // For SendAttackMessage ----------------------------------------------------------
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                characterWeapon.Attack();
+                _playerWeaponManager.Attack();
             }
         }
     }
@@ -141,41 +141,41 @@ public class CharacterController : MonoBehaviour
     private void MoveCharacter()
     {
         float baseSpeed = characterStats.moveSpeed;
-        if (wIsDown && aIsDown)
+        if (w_IsDown && a_IsDown)
         {
-            rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / 2);
+            _rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / 2);
         }
-        else if (wIsDown && dIsDown)
+        else if (w_IsDown && d_IsDown)
         {
-            rigidbody.velocity = new Vector2(baseSpeed / 2, baseSpeed / 2);
+            _rigidbody.velocity = new Vector2(baseSpeed / 2, baseSpeed / 2);
         }
-        else if (sIsDown && aIsDown)
+        else if (s_IsDown && a_IsDown)
         {
-            rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / -2);
+            _rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / -2);
         }
-        else if (sIsDown && dIsDown)
+        else if (s_IsDown && d_IsDown)
         {
-            rigidbody.velocity = new Vector2(baseSpeed / 2, baseSpeed / -2);
+            _rigidbody.velocity = new Vector2(baseSpeed / 2, baseSpeed / -2);
         }
-        else if (wIsDown)
+        else if (w_IsDown)
         {
-            rigidbody.velocity = new Vector2(0, baseSpeed);
+            _rigidbody.velocity = new Vector2(0, baseSpeed);
         }
-        else if (aIsDown)
+        else if (a_IsDown)
         {
-            rigidbody.velocity = new Vector2(-baseSpeed, 0);
+            _rigidbody.velocity = new Vector2(-baseSpeed, 0);
         }
-        else if (sIsDown)
+        else if (s_IsDown)
         {
-            rigidbody.velocity = new Vector2(0, -baseSpeed);
+            _rigidbody.velocity = new Vector2(0, -baseSpeed);
         }
-        else if (dIsDown)
+        else if (d_IsDown)
         {
-            rigidbody.velocity = new Vector2(baseSpeed, 0);
+            _rigidbody.velocity = new Vector2(baseSpeed, 0);
         }
         else
         {
-            rigidbody.velocity = new Vector2(0, 0);
+            _rigidbody.velocity = new Vector2(0, 0);
         }
     }
 
@@ -203,38 +203,38 @@ public class CharacterController : MonoBehaviour
     {
         if(button == Button.w)
         {
-            wIsDown = true;
+            w_IsDown = true;
         }
         else if (button == Button.a)
         {
-            aIsDown = true;
+            a_IsDown = true;
         }
         else if (button == Button.s)
         {
-            sIsDown = true;
+            s_IsDown = true;
         }
         else if (button == Button.d)
         {
-            dIsDown = true;
+            d_IsDown = true;
         }
     }
     public void SetButtonUp(Button button)
     {
         if (button == Button.w)
         {
-            wIsDown = false;
+            w_IsDown = false;
         }
         else if (button == Button.a)
         {
-            aIsDown = false;
+            a_IsDown = false;
         }
         else if (button == Button.s)
         {
-            sIsDown = false;
+            s_IsDown = false;
         }
         else if (button == Button.d)
         {
-            dIsDown = false;
+            d_IsDown = false;
         }
     }
 }

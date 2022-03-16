@@ -4,43 +4,23 @@ public class WeaponPalu : WeaponMelee
 {
     [SerializeField] private LayerMask wallMask;
 
-    public override void OnAttack()
+    protected override void OnNormalAttack(Collider2D[] targets)
     {
-        // Play animation
-
-
-        if (IsLocal())
+        foreach (Collider2D x in targets)
         {
-            // Detect enemies on range
-            Collider2D[] hitEnemy = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
-
-            // Calculate crit
-            if (IsCrit())
+            Debug.Log("We hit " + x.name);
+            if (x.gameObject.TryGetComponent(typeof(Wall), out var component))
             {
-                // Call crit attack
-                OnCritical(hitEnemy);
-            }
-            else
-            {
-                // Call normal attack
-                foreach (Collider2D x in hitEnemy)
-                {
-                    Debug.Log("We hit " + x.name);
-                }
-            }
-
-            // Special ability
-            hitEnemy = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, wallMask);
-            foreach (Collider2D x in hitEnemy)
-            {
+                (component as Wall).RepairWall(10);
                 Debug.Log("We repair " + x.name);
             }
         }
     }
-    private void OnCritical(Collider2D[] hitEnemy)
+
+    protected override void OnCritical(Collider2D[] targets)
     {
         // Damage them more
-        foreach (Collider2D x in hitEnemy)
+        foreach (Collider2D x in targets)
         {
             Debug.Log("We Crit hit " + x.name);
         }

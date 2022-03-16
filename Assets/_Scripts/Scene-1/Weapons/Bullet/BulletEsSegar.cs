@@ -6,30 +6,18 @@ public class BulletEsSegar : BulletBase
 {
     [SerializeField] private float SplashRad;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        // Animation
-
-        if (weapon != null && isLocal)
-        {
-            Monster monster = GetMonster(collision);
-            Monster.Origin ori = monster.origin;
-            int Id = monster.ID;
-
-            if (!weapon.IsCrit())
-            {
-                // Damage here
-
-            }
-            else
-            {
-                // More damage + area bigger
-
-            }
-        }
-
-        Destroy(gameObject);
+        base.OnTriggerEnter2D(collision);
     }
 
+    protected override void OnNormalShot(Monster monster)
+    {
+        base.OnNormalShot(monster);
+    }
 
+    protected override void OnCriticalShot(Monster monster)
+    {
+        base.OnCriticalShot(monster);
+    }
 }

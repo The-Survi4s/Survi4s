@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -46,9 +47,11 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
+    // Components --------------------------------------------------------------------
+
     void Start()
     {
-        // Prepararation -------------------------------------------------------------
+        // Preparation -------------------------------------------------------------
         client = new TcpClient();
         ipAd = IPAddress.Parse(IpAddress);
         rsaEncryption = new RsaEncryption(ServerPublicKey);
@@ -114,7 +117,7 @@ public class NetworkClient : MonoBehaviour
         }
         else
         {
-            // if no, show some error massage ------------------------------------------------
+            // if no, show some error message ------------------------------------------------
 
         }
 
@@ -134,7 +137,7 @@ public class NetworkClient : MonoBehaviour
                 ReceiveMessage(formatter.Deserialize(networkStream) as string);
             }
 
-            // Alwasy send massage to server to tell server that we
+            // Always send message to server to tell server that we
             // Still online 
             checkTime -= Time.deltaTime;
             if(checkTime <= 0)
@@ -144,213 +147,171 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
-    // Receive and Preccess incoming massage here ----------------------------------
-    private void ReceiveMessage(string massage)
+    // Receive and Process incoming message here ----------------------------------
+    private void ReceiveMessage(string message)
     {
         // Message format : sender|header|data|data|data... 
         // Svr|RCrd|...
-        // ID+NamaClient|MPos|...
-        string[] info = massage.Split('|');
+        // ID+NameClient|MPos|...
+        string[] info = message.Split('|');
 
         if (info[0] == "Svr")
         {
-            if (info[1] == "RCrd")
+            switch (info[1])
             {
-                OnCreatedRoom(info[2]);
-            }
-            else if (info[1] == "RJnd")
-            {
-                OnJoinedRoom(info[2], int.Parse(info[3]));
-            }
-            else if (info[1] == "RnFd")
-            {
-                JoinRoomPanel.Instance.RoomNotFound();
-            }
-            else if (info[1] == "RsF")
-            {
-                JoinRoomPanel.Instance.RoomIsFull();
-            }
-            else if (info[1] == "REx")
-            {
-                ScenesManager.Instance.LoadScene(0);
+                case "RCrd":
+                    OnCreatedRoom(info[2]);
+                    break;
+                case "RJnd":
+                    OnJoinedRoom(info[2], int.Parse(info[3]));
+                    break;
+                case "RnFd":
+                    JoinRoomPanel.Instance.RoomNotFound();
+                    break;
+                case "RsF":
+                    JoinRoomPanel.Instance.RoomIsFull();
+                    break;
+                case "REx":
+                    ScenesManager.Instance.LoadScene(0);
+                    break;
             }
         }
         else
         {
-            if (info[1] == "MPos")
+            switch (info[1])
             {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "MPos":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterController>().SyncMousePos(float.Parse(info[2]), float.Parse(info[3]));
+                        obj.GetComponent<PlayerController>().SyncMousePos(float.Parse(info[2]), float.Parse(info[3]));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "BtDw")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "BtDw":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterController>().SetButtonDown((CharacterController.Button) Enum.Parse(typeof(CharacterController.Button), info[2], true));
+                        obj.GetComponent<PlayerController>().SetButtonDown((PlayerController.Button) Enum.Parse(typeof(PlayerController.Button), info[2], true));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "BtUp")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "BtUp":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterController>().SetButtonUp((CharacterController.Button)Enum.Parse(typeof(CharacterController.Button), info[2], true));
+                        obj.GetComponent<PlayerController>().SetButtonUp((PlayerController.Button)Enum.Parse(typeof(PlayerController.Button), info[2], true));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "PlCt")
-            {
-                playersCount = int.Parse(info[2]);
-                GameMenuManager.Instance.UpdatePlayersInRoom(playersCount);
-            }
-            else if (info[1] == "StGm")
-            {
-                GameManager.Instance.GameStarted();
-            }
-            else if (info[1] == "SwPy")
-            {
-                UnitManager.Instance.SpawnPlayer(info[0] ,float.Parse(info[2]), float.Parse(info[3]), int.Parse(info[4]));
-            }
-            else if (info[1] == "SwM")
-            {
-                UnitManager.Instance.OnSpawnMonster(int.Parse(info[2]), (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true));
-            }
-            else if (info[1] == "EqWp")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "PlCt":
+                    playersCount = int.Parse(info[2]);
+                    GameMenuManager.Instance.UpdatePlayersInRoom(playersCount);
+                    break;
+                case "StGm":
+                    GameManager.Instance.GameStarted();
+                    break;
+                case "SwPy":
+                    UnitManager.Instance.SpawnPlayer(info[0] ,float.Parse(info[2]), float.Parse(info[3]), int.Parse(info[4]));
+                    break;
+                case "SwM":
+                    SpawnManager.Instance.OnReceiveSpawnMonster(int.Parse(info[2]), (Monster.Type)Enum.Parse(typeof(Monster.Type), info[3], true), (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[4], true));
+                    break;
+                case "EqWp":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterWeapon>().OnEquipWeapon(info[2]);
+                        obj.GetComponent<PlayerWeaponManager>().OnEquipWeapon(info[2]);
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "PAtk")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "PAtk":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterWeapon>().OnAttack();
+                        obj.GetComponent<PlayerWeaponManager>().OnAttack();
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "SwBl")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "SwBl":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterWeapon>().SpawnBullet(float.Parse(info[2]), float.Parse(info[3]), float.Parse(info[4]), float.Parse(info[5]));
+                        obj.GetComponent<PlayerWeaponManager>().SpawnBullet(float.Parse(info[2]), float.Parse(info[3]), float.Parse(info[4]), float.Parse(info[5]));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "DmgM")
-            {
-                foreach (Monster monster in UnitManager.Instance.monsters)
+                case "DmgM":
                 {
-                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
-                    if (monster.ID == int.Parse(info[2]) && monster.origin == ori)
+                    foreach (var monster in from monster in UnitManager.Instance.monsters let ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true) where monster.ID == int.Parse(info[2]) && monster.origin == ori select monster)
                     {
                         monster.ReduceHitPoint(float.Parse(info[4]));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "StM")
-            {
-                foreach (Monster monster in UnitManager.Instance.monsters)
+                case "StM":
                 {
-                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
-                    if (monster.ID == int.Parse(info[2]) && monster.origin == ori)
+                    foreach (var monster in from monster in UnitManager.Instance.monsters let ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true) where monster.ID == int.Parse(info[2]) && monster.origin == ori select monster)
                     {
                         monster.Stun(float.Parse(info[4]));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "HePl")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "HePl":
                 {
-                    if (obj.name == info[2].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[2].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterStats>().HealHitPoint(int.Parse(info[3]));
+                        obj.GetComponent<CharacterStats>().hitPointAdd=int.Parse(info[3]);
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "DmgPl")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "DmgPl":
                 {
-                    if (obj.name == info[2].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[2].Substring(0, obj.name.Length)))
                     {
-                        obj.GetComponent<CharacterStats>().ReduceHitPoint(int.Parse(info[3]));
+                        obj.GetComponent<CharacterStats>().hitPointAdd=int.Parse(info[3]);
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "PlDd")
-            {
-                foreach (GameObject obj in UnitManager.Instance.players)
+                case "PlDd":
                 {
-                    if (obj.name == info[0].Substring(0, obj.name.Length))
+                    foreach (var obj in UnitManager.Instance.players.Where(obj =>
+                                 obj.name == info[0].Substring(0, obj.name.Length)))
                     {
                         obj.GetComponent<CharacterStats>().PlayerDead(float.Parse(info[2]), float.Parse(info[3]));
                     }
+                    break;
                 }
-            }
-            else if (info[1] == "HeWl")
-            {
-                foreach (Wall wall in UnitManager.Instance.walls)
+                case "HeWl":
                 {
-                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
-                    if (wall.ID == int.Parse(info[2]) && wall.origin == ori)
-                    {
-                        wall.RepairWall(float.Parse(info[4]));
-                    }
+                    WallManager.Instance.ReceiveRepairWall(int.Parse(info[2]), float.Parse(info[3]));
+                    break;
                 }
-            }
-            else if (info[1] == "DmgWl")
-            {
-                foreach (Wall wall in UnitManager.Instance.walls)
+                case "DmgWl":
                 {
-                    Monster.Origin ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true);
-                    if (wall.ID == int.Parse(info[2]) && wall.origin == ori)
-                    {
-                        wall.DamageWall(float.Parse(info[4]));
-                    }
+                    WallManager.Instance.ReceiveDamageWall(int.Parse(info[2]), float.Parse(info[3]));
+                    break;
                 }
             }
         }
     }
 
-    // Proccess massage that want to be send ---------------------------------------
-    private void SendMessageClient(string target, string massage)
+    // Proccess message that want to be send ---------------------------------------
+    private void SendMessageClient(string target, string message)
     {
-        // Massage format : target|header|data|data|data...
+        // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
         string[] temp = new string[1];
-        temp[0] = massage;
+        temp[0] = message;
 
         SendMessageClient(target, temp);
     }
-    private void SendMessageClient(string target, string[] massage)
+    private void SendMessageClient(string target, string[] message)
     {
-        // Massage format : target|header|data|data|data...
+        // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
 
-        string data = target;
-        foreach (string x in massage)
-        {
-            data += "|" + x;
-        }
+        string data = message.Aggregate(target, (current, x) => current + ("|" + x));
 
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(networkStream, data);
@@ -372,7 +333,7 @@ public class NetworkClient : MonoBehaviour
         {
             genId += UnityEngine.Random.Range(0, 10).ToString();
         }
-        return genId.ToString();
+        return genId;
     }
 
     // Private Method ---------------------------------------------------------------
@@ -393,20 +354,20 @@ public class NetworkClient : MonoBehaviour
         ScenesManager.Instance.LoadScene(1);
     }
 
-    // Public method that can be called to send massage to server -------------------
+    // Public method that can be called to send message to server -------------------
     public void StartMatchmaking()
     {
         SendMessageClient("2", "StMtc");
     }
     public void CreateRoom(string roomName, int maxPlayer, bool isPublic)
     {
-        string[] massage = new string[] { "CrR", roomName, maxPlayer.ToString(), isPublic.ToString() } ;
-        SendMessageClient("2", massage);
+        string[] message = new string[] { "CrR", roomName, maxPlayer.ToString(), isPublic.ToString() } ;
+        SendMessageClient("2", message);
     }
     public void JoinRoom(string roomName)
     {
-        string[] massage = new string[] { "JnR", roomName, roomName.ToString() };
-        SendMessageClient("2", massage);
+        string[] message = new string[] { "JnR", roomName, roomName.ToString() };
+        SendMessageClient("2", message);
     }
     public void ExitRoom()
     {
@@ -427,18 +388,18 @@ public class NetworkClient : MonoBehaviour
         string[] msg = new string[] { "SwPy", x.ToString("f2"), y.ToString("f2"), skin.ToString() };
         SendMessageClient("1", msg);
     }
-    public void SpawnMonster(int Id, Monster.Origin origin)
+    public void SpawnMonster(int Id, Monster.Type type, Monster.Origin origin)
     {
-        string[] msg = new string[] { "SwM", Id.ToString(), origin.ToString() };
+        string[] msg = new string[] { "SwM", Id.ToString(), type.ToString(), origin.ToString() };
         SendMessageClient("1", msg);
     }
 
-    public void MovementButtonDown(CharacterController.Button button)
+    public void MovementButtonDown(PlayerController.Button button)
     {
         string[] msg = new string[] { "BtDw", button.ToString() };
         SendMessageClient("1", msg);
     }
-    public void MovementButtonUp(CharacterController.Button button)
+    public void MovementButtonUp(PlayerController.Button button)
     {
         string[] msg = new string[] { "BtUp", button.ToString() };
         SendMessageClient("1", msg);
@@ -455,7 +416,7 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void Attack()
+    public void Attack() // Wtf is dis?
     {
         string[] msg = new string[] { "PAtk" };
         SendMessageClient("1", msg);
@@ -491,14 +452,14 @@ public class NetworkClient : MonoBehaviour
         string[] msg = new string[] { "PlDd", xPos.ToString("f2"), yPos.ToString("f2") };
         SendMessageClient("1", msg);
     }
-    public void HealWall(string Id, Monster.Origin origin, float healPoint)
+    public void HealWall(int Id, float healPoint)
     {
-        string[] msg = new string[] { "HeWl", Id.ToString(), origin.ToString(), healPoint.ToString("f2") };
+        string[] msg = new string[] { "HeWl", Id.ToString(), healPoint.ToString("f2") };
         SendMessageClient("1", msg);
     }
-    public void DamageWall(string Id, Monster.Origin origin, float damage)
+    public void DamageWall(int Id, float damage)
     {
-        string[] msg = new string[] { "DmgWl", Id.ToString(), origin.ToString(), damage.ToString("f2") };
+        string[] msg = new string[] { "DmgWl", Id.ToString(), damage.ToString("f2") };
         SendMessageClient("1", msg);
     }
 }
