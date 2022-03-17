@@ -51,7 +51,7 @@ public abstract class WeaponBase : MonoBehaviour
         if (owner == null) return;
         // Follow owner
         transform.position = owner.transform.position +
-                             offset * (_ownerPlayerController.isFacingLeft ? -1 : 1);
+                             (_ownerPlayerController.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
         // Swing animation
         if (animationStep < swingQueues.Count)
         {

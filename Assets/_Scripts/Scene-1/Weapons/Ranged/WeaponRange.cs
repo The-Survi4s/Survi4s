@@ -40,7 +40,7 @@ public class WeaponRange : WeaponBase
     public override void OnAttack()
     {
         base.OnAttack();
-
+        Debug.Log(ammo);
         // Only do this if local
         if (IsLocal() && ammo > 0)
         {
