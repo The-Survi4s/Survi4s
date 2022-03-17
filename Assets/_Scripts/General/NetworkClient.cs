@@ -20,7 +20,6 @@ public class NetworkClient : MonoBehaviour
 
     // Player Room and Name -----------------------------------------------------------
     public string myId { get; private set; }
-    [SerializeField] private string customId;
     public string myName { get; private set; }
     public string myRoomName { get; private set; }
     public bool isMaster { get; private set; }
@@ -65,7 +64,7 @@ public class NetworkClient : MonoBehaviour
         // Get Player Name -----------------------------------------------------------
         myName = PlayerDataLoader.Instance.TheData.UserName;
         //myId = PlayerDataLoader.Instance.TheData.UserId;
-        myId = customId;
+        myId = GeneratePlayerId();
 
         // Start try to connect again and again -------------------------------------
         StartCoroutine(TryConnecting());
