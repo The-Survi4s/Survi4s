@@ -35,9 +35,6 @@ public abstract class WeaponBase : MonoBehaviour
     protected PlayerController _ownerPlayerController;
 
 
-
-
-
     // -------------------
     protected virtual void Init()
     {
