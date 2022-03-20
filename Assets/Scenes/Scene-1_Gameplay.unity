@@ -717,7 +717,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 123738617261133931, guid: 2e90f74633581604fbabca89e95df3e5, type: 3}
-  mosterPrefab: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
   players: []
   weapons:
   - {fileID: 361628168857281629}
@@ -727,7 +726,6 @@ MonoBehaviour:
   - {fileID: 274349453}
   - {fileID: 1426752610}
   - {fileID: 1716027648}
-  walls: []
   monsters: []
 --- !u!1 &598861367
 GameObject:
@@ -1158,7 +1156,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d367484c272e1254f87503e3d16527d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxIdCount: 100
+  monsterPrefabs: []
+  _spawners:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1024943867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,7 +1531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89115cc99c2c9b34fb50cd9b35c663bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnManager: {fileID: 0}
+  spawnManager: {fileID: 989009126}
 --- !u!1001 &1238179591
 PrefabInstance:
   m_ObjectHideFlags: 0

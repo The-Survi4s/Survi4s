@@ -23,6 +23,7 @@ public class Monster : MonoBehaviour
     public Origin origin { get; private set; }
     public int ID { get; private set; }
     public Wall targetWall { get; private set; }
+    private MonsterMovement monsterMovement;
 
     private void Awake()
     {

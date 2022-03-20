@@ -9,15 +9,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Spawner[] _spawners = new Spawner[4];
     private List<Spawner> selectedSpawners = new List<Spawner>();
 
-    public class WaveInfo
-    {
-        public int waveNumber { get; }
-        public int monsterCount { get; }
-        public float spawnRate { get; }
-        public int spawnersUsedCount { get; }
-    }
-
-    [SerializeField] private List<WaveInfo> _waveInfos;
+    private WaveInfo _previousWaveInfo;
+    private WaveInfo _currentWaveInfo;
     public int currentWave { get; private set; }
 
     private static SpawnManager _instance;
@@ -31,6 +24,11 @@ public class SpawnManager : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    private void Awake()
+    {
+        _currentWaveInfo.Init(3, 1, 1);
     }
 
     public void OnReceiveSpawnMonster(int ID, Monster.Type type, Monster.Origin origin)
@@ -63,9 +61,10 @@ public class SpawnManager : MonoBehaviour
 
     public void NextWave()
     {
+        _previousWaveInfo = _currentWaveInfo;
         selectedSpawners.Clear();
-        currentWave++;
-        while (selectedSpawners.Count < _waveInfos[currentWave].spawnersUsedCount)
+        _currentWaveInfo.CalculateNextWave();
+        while (selectedSpawners.Count < _currentWaveInfo.spawnersUsedCount)
         {
             int index = Random.Range(0, _spawners.Length - 1);
             if (!selectedSpawners.Contains(_spawners[index]))

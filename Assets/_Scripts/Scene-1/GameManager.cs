@@ -6,6 +6,10 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private SpawnManager spawnManager;
 
+    public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
+
+    private GameState gameState;
+
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -18,6 +22,23 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+        ChangeState(GameState.StartGame);
+    }
+
+    public void ChangeState(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.StartGame:
+                HandleStartGame();
+                break;
+        }
+    }
+
+    private void HandleStartGame()
+    {
+        //Lakukan sesuatu
+        ChangeState(GameState.WavePreparation); //Cuma contoh
     }
 
     // For starting games -------------------------------------------------------------------
@@ -33,6 +54,8 @@ public class GameManager : MonoBehaviour
 
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);
+
+        // Spawn Monster
     }
 
 }
