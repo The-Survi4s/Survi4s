@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterWeapon : MonoBehaviour
+public class PlayerWeaponManager : MonoBehaviour
 {
     private WeaponBase weapon;
     [SerializeField] private float weaponRadarRange;
@@ -44,15 +44,15 @@ public class CharacterWeapon : MonoBehaviour
     }
     public void UnEquipWeapon(Vector2 position, float z)
     {
-        weapon.UnequipWeapon(this, position, z);
+        weapon.UnEquipWeapon(this, position, z);
     }
 
-    // Attack --------------------------------------------------------------------------------
+    // SendAttackMessage --------------------------------------------------------------------------------
     public void Attack()
     {
         if(weapon != null)
         {
-            weapon.Attack();
+            weapon.SendAttackMessage();
         }
     }
     public void OnAttack()
@@ -61,7 +61,7 @@ public class CharacterWeapon : MonoBehaviour
     }
     public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
     {
-        weapon.SpawnBullet(new Vector2(xSpawnPos, ySpawnPos), new Vector2(xMousePos, yMousePos));
+        (weapon as WeaponRange).SpawnBullet(new Vector2(xSpawnPos, ySpawnPos), new Vector2(xMousePos, yMousePos));
     }
     public Transform GetAttackPoint()
     {
@@ -77,7 +77,7 @@ public class CharacterWeapon : MonoBehaviour
         foreach (WeaponBase x in UnitManager.Instance.weapons)
         {
             float dist = Vector3.Distance(x.gameObject.transform.position, transform.position);
-            if (dist < minDist && !x.isUsed())
+            if (dist < minDist && !x.IsUsed())
             {
                 temp = x.gameObject;
                 minDist = dist;
@@ -94,7 +94,7 @@ public class CharacterWeapon : MonoBehaviour
             Vector3 target = x.transform.position;
             target.z = transform.position.z;
             float dist = Vector3.Distance(target, transform.position);
-            if (dist <= weaponRadarRange && !x.isUsed())
+            if (dist <= weaponRadarRange && !x.IsUsed())
             {
                 weaponIsInRange = true;
                 return;

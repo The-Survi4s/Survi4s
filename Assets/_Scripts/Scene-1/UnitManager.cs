@@ -1,18 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UnitManager : MonoBehaviour
 {
     // Prefab -------------------------------------------------------------------------
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject mosterPrefab;
 
     // List ---------------------------------------------------------------------------
     public List<GameObject> players;
     [SerializeField] public List<WeaponBase> weapons;
-    public List<Wall> walls;
     public List<Monster> monsters;
 
     // Eazy Access --------------------------------------------------------------------
@@ -44,46 +44,10 @@ public class UnitManager : MonoBehaviour
     }
 
     // Spawn Monster -----------------------------------------------------------------
-    
-    public void OnSpawnMonster(int ID, Monster.Origin origin)
+    // Receive
+    public void AddMonster(Monster monster)
     {
-        GameObject temp = Instantiate(mosterPrefab, new Vector2(2, 0), Quaternion.identity);
-        Monster monster = temp.GetComponent<Monster>();
-        monster.SetID(ID);
-        monster.SetOrigin(origin);
+        monster.SetTargetWall(WallManager.Instance.GetRandomWallOn(monster.origin));
         monsters.Add(monster);
-    }
-
-    // Event -------------------------------------------------------------------------
-    private void OnEnable()
-    {
-        Wall.OnWallDestroyed += OnWallDestroyed;
-    }
-    private void OnDisable()
-    {
-        Wall.OnWallDestroyed -= OnWallDestroyed;
-    }
-
-    public static event Action<Wall> OnWallFallenTop;
-    public static event Action<Wall> OnWallFallenRight;
-    public static event Action<Wall> OnWallFallenBottom;
-    public static event Action<Wall> OnWallFallenLeft;
-    private void OnWallDestroyed(Wall wall)
-    {
-        switch (wall.origin)
-        {
-            case Monster.Origin.Top:
-                OnWallFallenTop?.Invoke(wall);
-                break;
-            case Monster.Origin.Right:
-                OnWallFallenRight?.Invoke(wall);
-                break;
-            case Monster.Origin.Bottom:
-                OnWallFallenBottom?.Invoke(wall);
-                break;
-            case Monster.Origin.Left:
-                OnWallFallenLeft?.Invoke(wall);
-                break;
-        }
     }
 }

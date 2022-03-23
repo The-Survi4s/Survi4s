@@ -6,25 +6,38 @@ public abstract class WeaponMelee : WeaponBase
     public LayerMask targetMask;
     public float attackRad { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         attackRad = DefaultAttackRad;
     }
-
-    public override abstract void OnAttack();
-    public override void SpawnBullet(Vector2 spawnPos, Vector2 mosePos)
+    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
     {
-        throw new System.NotImplementedException();
+        return Physics2D.OverlapCircleAll(attackPoint, attackRad, targetLayer);
     }
 
-    // Visualy attack ---------------------------------------------------------------
+    public override void OnAttack()
+    {
+        // Play animation
+        base.OnAttack();
+
+        if (!IsLocal()) return;
+        // Detect enemies on range
+        Collider2D[] hitObjects = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
+        if (IsCritical()) OnCritical(hitObjects);
+        else OnNormalAttack(hitObjects);
+    }
+
+    protected virtual void OnNormalAttack(Collider2D[] targets){}
+    protected virtual void OnCritical(Collider2D[] targets){}
+
+    // Visually attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()
     {
         if(owner == null)
         {
             return;
         }
-        Vector2 attackPoint = owner.GetComponent<CharacterWeapon>().GetAttackPoint().position;
+        Vector2 attackPoint = owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
         Gizmos.DrawSphere(attackPoint, attackRad);
     }
 }

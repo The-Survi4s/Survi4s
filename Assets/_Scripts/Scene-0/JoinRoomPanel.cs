@@ -31,7 +31,7 @@ public class JoinRoomPanel : MonoBehaviour
     {
         MainMenuManager.Instance.SetActiveWaitingPanel(true);
 
-        // Send massage to server ---------------------------------------------------
+        // Send message to server ---------------------------------------------------
         NetworkClient.Instance.JoinRoom(inputRoomName.text);
     }
 

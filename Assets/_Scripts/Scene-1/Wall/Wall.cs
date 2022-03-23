@@ -6,43 +6,41 @@ using UnityEngine;
 public class Wall : MonoBehaviour
 {
     [SerializeField] private float DefaultHitPoint;
-
     public float hitPoint { get; private set; }
 
     public int ID { get; private set; }
     public bool isDestroyed { get; private set; }
-
-    public Monster.Origin origin { get; private set; }
-
+    public bool isInitialized { get; private set; }
     public static event Action<Wall> OnWallDestroyed;
+    public static event Action<Wall> OnWallRebuilt;
+    public Monster.Origin origin { get; private set; } // Di set di inspector
 
     private void Start()
     {
-        hitPoint = DefaultHitPoint;
+        isInitialized = false;
+        Init(WallManager.Instance.GetNewWallID());
+        WallManager.Instance.AddWall(this); // Auto add
     }
 
-    public void SetOrigin(Monster.Origin ori)
+    public void Init(int id)
     {
-        origin = ori;
-    }
-    public void SetID(int Id)
-    {
-        ID = Id;
+        ID = id;
+        hitPoint = DefaultHitPoint;
+        isInitialized = true;
+        isDestroyed = false;
     }
 
     public void DamageWall(float damage)
     {
         hitPoint -= damage;
 
-        if(hitPoint <= 0)
-        {
-            hitPoint = 0;
-            GetComponent<Collider2D>().enabled = false;
-            isDestroyed = true;
+        if (hitPoint > 0) return;
+        hitPoint = 0;
+        GetComponent<Collider2D>().enabled = false;
+        isDestroyed = true;
 
-            // Tell all that this is destroyed
-            OnWallDestroyed?.Invoke(this);
-        }
+        // Tell all that this is destroyed
+        OnWallDestroyed?.Invoke(this);
     }
     public void RepairWall(float point)
     {
@@ -50,8 +48,8 @@ public class Wall : MonoBehaviour
         {
             GetComponent<Collider2D>().enabled = true;
             isDestroyed = false;
+            OnWallRebuilt?.Invoke(this);
         }
-        
         hitPoint += point;
     }
 }
