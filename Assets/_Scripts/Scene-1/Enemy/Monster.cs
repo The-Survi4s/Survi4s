@@ -51,6 +51,10 @@ public class Monster : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void HealthMonster()
+    {
+
+    }
     public void Stun(float second)
     {
         moveSpeed = 0;
