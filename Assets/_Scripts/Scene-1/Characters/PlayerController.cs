@@ -1,9 +1,11 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterStats),typeof(PlayerWeaponManager))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
     public bool isLocal { get; private set; }
+    public string id { get; set; }
 
     // For player movement -------------------------------------------------------------
     private bool w_IsDown, a_IsDown, s_IsDown, d_IsDown;
@@ -90,42 +92,42 @@ public class PlayerController : MonoBehaviour
     }
 
     // For detecting input keyboard ------------------------------------------------------
-    private void DetectMovementKeyboard()
+    private static void DetectMovementKeyboard()
     {
         // Detect Keyboard Down -----------------------------------------------------------
         if (Input.GetKeyDown(KeyCode.W))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.w);
+            NetworkClient.Instance.SetMovementButton(Button.w, true);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.a);
+            NetworkClient.Instance.SetMovementButton(Button.a, true);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.s);
+            NetworkClient.Instance.SetMovementButton(Button.s, true);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.d);
+            NetworkClient.Instance.SetMovementButton(Button.d, true);
         }
 
         // Detect Keyboard Up -------------------------------------------------------------
         if (Input.GetKeyUp(KeyCode.W))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.w);
+            NetworkClient.Instance.SetMovementButton(Button.w, false);
         }
         else if (Input.GetKeyUp(KeyCode.A))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.a);
+            NetworkClient.Instance.SetMovementButton(Button.a, false);
         }
         else if (Input.GetKeyUp(KeyCode.S))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.s);
+            NetworkClient.Instance.SetMovementButton(Button.s, false);
         }
         else if (Input.GetKeyUp(KeyCode.D))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.d);
+            NetworkClient.Instance.SetMovementButton(Button.d, false);
         }
     }
 
@@ -199,42 +201,22 @@ public class PlayerController : MonoBehaviour
     }
 
     // Set Button up/down --------------------------------------------------------------------
-    public void SetButtonDown(Button button)
+    public void SetButton(Button button, bool isDown)
     {
-        if(button == Button.w)
+        switch (button)
         {
-            w_IsDown = true;
-        }
-        else if (button == Button.a)
-        {
-            a_IsDown = true;
-        }
-        else if (button == Button.s)
-        {
-            s_IsDown = true;
-        }
-        else if (button == Button.d)
-        {
-            d_IsDown = true;
-        }
-    }
-    public void SetButtonUp(Button button)
-    {
-        if (button == Button.w)
-        {
-            w_IsDown = false;
-        }
-        else if (button == Button.a)
-        {
-            a_IsDown = false;
-        }
-        else if (button == Button.s)
-        {
-            s_IsDown = false;
-        }
-        else if (button == Button.d)
-        {
-            d_IsDown = false;
+            case Button.w:
+                w_IsDown = isDown;
+                break;
+            case Button.a:
+                a_IsDown = isDown;
+                break;
+            case Button.s:
+                s_IsDown = isDown;
+                break;
+            case Button.d:
+                d_IsDown = isDown;
+                break;
         }
     }
 }

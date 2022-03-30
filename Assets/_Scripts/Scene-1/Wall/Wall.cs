@@ -30,26 +30,24 @@ public class Wall : MonoBehaviour
         isDestroyed = false;
     }
 
-    public void DamageWall(float damage)
+    public void ModifyWallHp(float amount)
     {
-        hitPoint -= damage;
-
-        if (hitPoint > 0) return;
-        hitPoint = 0;
-        GetComponent<Collider2D>().enabled = false;
-        isDestroyed = true;
-
-        // Tell all that this is destroyed
-        OnWallDestroyed?.Invoke(this);
-    }
-    public void RepairWall(float point)
-    {
-        if (isDestroyed)
+        hitPoint += amount;
+        if (hitPoint > 0)
         {
+            if (!isDestroyed) return;
             GetComponent<Collider2D>().enabled = true;
             isDestroyed = false;
             OnWallRebuilt?.Invoke(this);
         }
-        hitPoint += point;
+        else if (hitPoint <= 0)
+        {
+            hitPoint = 0;
+            if (isDestroyed) return;
+            GetComponent<Collider2D>().enabled = false;
+            isDestroyed = true;
+            // Tell all that this is destroyed
+            OnWallDestroyed?.Invoke(this);
+        }
     }
 }

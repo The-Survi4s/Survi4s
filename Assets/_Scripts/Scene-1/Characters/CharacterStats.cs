@@ -9,12 +9,12 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private float DefaultMoveSpeed;
 
     private float _hitPoint;
-    public float hitPointAdd
+    public float hitPoint
     {
         get => _hitPoint;
         set
         {
-            _hitPoint += value;
+            _hitPoint = value;
 
             if (_hitPoint <= 0)
             {
@@ -32,11 +32,11 @@ public class CharacterStats : MonoBehaviour
 
     private void Start()
     {
-        hitPointAdd = MaxHitPoint;
+        hitPoint = MaxHitPoint;
         moveSpeed = DefaultMoveSpeed;
     }
 
-    public void PlayerDead(float xPos, float yPos)
+    public void CorrectDeadPosition(float xPos, float yPos)
     {
         transform.position = new Vector2(xPos, yPos);
     }

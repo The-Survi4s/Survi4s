@@ -50,12 +50,13 @@ public class GameManager : MonoBehaviour
     public void GameStarted()
     {
         // Spawn Player ---------------------------------------------------------------------
-        NetworkClient.Instance.SpawnPlayer(0, 0, 0);
+        UnitManager.Instance.SendSpawnPlayer(0, 0, 0);
 
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
         // Spawn Monster
+        SpawnManager.instance.NextWave();
     }
 
 }

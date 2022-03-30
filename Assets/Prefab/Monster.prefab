@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7773981490425168370}
   - component: {fileID: 5297857289526348701}
   - component: {fileID: 8199000041367107212}
+  - component: {fileID: 1226200368138906639}
   m_Layer: 6
   m_Name: Monster
   m_TagString: Enemy
@@ -97,11 +98,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773f9b9b6fdce3d4bb08159cfd0df8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultHitPoint: 50
-  DefaultAttack: 10
-  DefaultCooldownAttack: 3
-  DefaultMoveSpeed: 5
-  DefaultRotationSpeed: 90
+  defaultStat:
+    hp: 100
+    atk: 5
+    atkCd: 2
+    movSpd: 1
+    rotSpd: 5
+  attackRange: 5
+  <type>k__BackingField: 0
 --- !u!61 &5297857289526348701
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -149,3 +153,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1226200368138906639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377165867587476512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5882cc9c8becb88429f6d024082c0e66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

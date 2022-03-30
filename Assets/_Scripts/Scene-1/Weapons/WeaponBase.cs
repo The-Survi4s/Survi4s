@@ -71,7 +71,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Check cooldown
         if (!(Time.time >= nextAttackTime)) return;
         // Send attack message
-        NetworkClient.Instance.Attack();
+        NetworkClient.Instance.StartAttackAnimation();
         // Cooldown
         nextAttackTime = Time.time + cooldownTime;
     }
@@ -97,7 +97,7 @@ public abstract class WeaponBase : MonoBehaviour
         ? Vector2.zero 
         : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
 
-    public virtual void OnAttack() => PlayAnimation();
+    public virtual void PlayAttackAnimation() => PlayAnimation();
 
     // Equip / UnEquip -------------------------------------------------
     public void EquipWeapon(PlayerWeaponManager player)

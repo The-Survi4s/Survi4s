@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] public Monster.Origin origin { get; private set; }
+    [field: SerializeField] public Monster.Origin origin { get; private set; }
     [SerializeField] private float randomSpawnOffset = 10.0f;
     public Vector3 spawnPos
     {
@@ -25,8 +25,7 @@ public class Spawner : MonoBehaviour
     {
         GameObject temp = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         Monster monster = temp.GetComponent<Monster>();
-        monster.SetID(monsterID);
-        monster.SetOrigin(origin);
+        monster.Init(origin, monsterID);
         UnitManager.Instance.AddMonster(monster);
     }
 }

@@ -15,10 +15,10 @@ public abstract class WeaponMelee : WeaponBase
         return Physics2D.OverlapCircleAll(attackPoint, attackRad, targetLayer);
     }
 
-    public override void OnAttack()
+    public override void PlayAttackAnimation()
     {
         // Play animation
-        base.OnAttack();
+        base.PlayAttackAnimation();
 
         if (!IsLocal()) return;
         // Detect enemies on range

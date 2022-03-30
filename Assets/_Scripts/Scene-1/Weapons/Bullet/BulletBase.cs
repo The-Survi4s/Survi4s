@@ -64,12 +64,12 @@ public abstract class BulletBase : MonoBehaviour
     protected virtual void OnNormalShot(Monster monster)
     {
         // Damage here
-        NetworkClient.Instance.DamageMonster(monster.ID, monster.origin, weapon.baseAttack);
+        NetworkClient.Instance.ModifyMonsterHp(monster.id, -weapon.baseAttack);
     }
     protected virtual void OnCriticalShot(Monster monster)
     {
         // More damage
-        NetworkClient.Instance.DamageMonster(monster.ID, monster.origin, weapon.baseAttack * CriticalMultiplier);
+        NetworkClient.Instance.ModifyMonsterHp(monster.id, -weapon.baseAttack * CriticalMultiplier);
     }
     protected virtual void OnEndOfTrigger()
     {

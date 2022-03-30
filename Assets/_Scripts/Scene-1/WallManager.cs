@@ -30,8 +30,7 @@ public class WallManager : MonoBehaviour
     public int GetNewWallID() => _maxWallID++;
     public void AddWall(Wall wall) => walls.Add(wall);
 
-    public void ReceiveRepairWall(int id, float healPoint) => GetWall(id).RepairWall(healPoint);
-    public void ReceiveDamageWall(int id, float damage) => GetWall(id).DamageWall(damage);
+    public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyWallHp(amount);
     private Wall GetWall(int id) => walls.FirstOrDefault(wall => wall.ID == id);
     public Wall GetRandomWallOn(Monster.Origin origin)
     {
