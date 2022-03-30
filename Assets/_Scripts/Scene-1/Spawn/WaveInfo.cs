@@ -22,8 +22,9 @@ public class WaveInfo
         public int speedIncreaseEvery;
         public int spawnSpeedPercent;
         public int waveCountInfluence;
+        public int dirInfluence;
 
-        public WaveSettings(float countMultiplier = 1.2f, float hpMultiplier = 0.05f, int hpIncreaseEvery = 3, float speedMultiplier = 0.02f, int speedIncreaseEvery = 5, int spawnSpeedPercent = 80, int waveCountInfluence = 2)
+        public WaveSettings(float countMultiplier = 1.2f, float hpMultiplier = 1.05f, int hpIncreaseEvery = 3, float speedMultiplier = 1.02f, int speedIncreaseEvery = 5, int spawnSpeedPercent = 80, int waveCountInfluence = 2, int dirInfluence = 80)
         {
             this.countMultiplier = countMultiplier;
             this.spawnSpeedPercent = spawnSpeedPercent;
@@ -32,6 +33,7 @@ public class WaveInfo
             this.speedIncreaseEvery = speedIncreaseEvery;
             this.speedMultiplier = speedMultiplier;
             this.waveCountInfluence = waveCountInfluence;
+            this.dirInfluence = dirInfluence;
         }
     }
 
@@ -60,7 +62,14 @@ public class WaveInfo
 
     public WaveInfo CalculateNextWave()
     {
-        var mc = Mathf.FloorToInt(monsterCount + 2 + waveNumber % (10 + Mathf.FloorToInt(waveNumber / 20)) * _settings.countMultiplier);
-        return new WaveInfo(waveNumber+1,mc,monsterHp,monsterSpd,new WaveSettings());
+        var count = Mathf.FloorToInt(monsterCount + 2 +
+                                  waveNumber % (10 + Mathf.FloorToInt(waveNumber / 20)) * _settings.countMultiplier);
+        var newMonsterHp = Mathf.FloorToInt(
+            (waveNumber % _settings.hpIncreaseEvery == 0 ? 1 + _settings.hpMultiplier / 100 : 1) * monsterHp);
+        var newBaseSpd = Mathf.FloorToInt(
+            (waveNumber % _settings.speedIncreaseEvery == 0 ? 1 + _settings.speedMultiplier / 100 : 1) * monsterSpd *
+            100) / 100;
+        var newSpeed = Mathf.Floor(newBaseSpd * (_settings.dirInfluence / 4 * spawnersUsedCount + (100 -_settings.dirInfluence))/ 100 * 100)/100;
+        return new WaveInfo(waveNumber+1,count,newMonsterHp,newSpeed);
     }
 }
