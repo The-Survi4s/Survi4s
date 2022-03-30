@@ -53,6 +53,7 @@ public class Monster : MonoBehaviour
     {
         OnMonsterDeath?.Invoke(id);
         SpawnManager.instance.ClearIdIndex(id);
+        UnitManager.Instance.DeleteMonsterFromList(id);
         Destroy(gameObject);
     }
 
@@ -83,6 +84,7 @@ public class Monster : MonoBehaviour
     public void SendAttackMessage()
     {
         monsterStat.StartCooldown();
+        NetworkClient.Instance.StartMonsterAttackAnimation(id);
         var players = GetTargetPlayers();
         foreach (var player in players)
         {

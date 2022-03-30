@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,9 +12,10 @@ public class SpawnManager : MonoBehaviour
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 
     [SerializeField] private int initialMonsterCount = 3;
-    [SerializeField] private float initialSpawnRate = 1;
-    [SerializeField] private float monsterHpMultiplier = 1;
-    [SerializeField] private float monsterSpdMultiplier = 1;
+    [SerializeField] private int initialMonsterHp = 30;
+    [SerializeField] private float initialMonsterSpeed = 1;
+    [SerializeField] private float randomMonsterSpawnOffsetMax = 10;
+
     private WaveInfo _previousWaveInfo;
     private WaveInfo _currentWaveInfo;
     public int currentWave => _currentWaveInfo.waveNumber;
@@ -46,7 +48,7 @@ public class SpawnManager : MonoBehaviour
         _monsterPrefabWeights = new List<MonsterPrefabWeight>();
         _monsterPrefabDuplicates = new List<GameObject>();
 
-        _currentWaveInfo = new WaveInfo(0, initialMonsterCount, 30, 1);
+        _currentWaveInfo = new WaveInfo(0, initialMonsterCount, initialMonsterHp, initialMonsterSpeed);
         _monsterPrefabDuplicates.Clear();
         foreach (var prefabWeight in _monsterPrefabWeights)
         {
@@ -63,32 +65,37 @@ public class SpawnManager : MonoBehaviour
         {
             if (spawner.origin == origin)
             {
-                spawner.SpawnMonster(_monsterPrefabDuplicates[monsterPrefabIndex], id);
+                spawner.SpawnMonster(_monsterPrefabDuplicates[monsterPrefabIndex], id, spawnOffset);
             }
         }
     }
 
-    public void OnSendSpawnMonster()
+    public async Task OnSendSpawnMonster(double delayToNext)
     {
         NetworkClient.Instance.SpawnMonster(_occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin(),
-            RandomSpawnOffset());
+            Random.Range(-randomMonsterSpawnOffsetMax, randomMonsterSpawnOffsetMax));
         _occupiedIDs.Add(true);
-    }
-
-    private float RandomSpawnOffset()
-    {
-        throw new NotImplementedException();
+        var end = Time.time + delayToNext;
+        while (Time.time < end)
+        {
+            await Task.Yield();
+        }
     }
 
     private Monster.Origin GetRandomOrigin() => _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
 
     private int GetRandomMonsterType() => Random.Range(0, _monsterPrefabDuplicates.Count);
 
-    public void NextWave()
+    public void PrepareNextWave()
     {
         _previousWaveInfo = _currentWaveInfo;
-        _selectedSpawners.Clear();
         _currentWaveInfo.CalculateNextWave();
+        SelectSpawners();
+    }
+
+    private void SelectSpawners()
+    {
+        _selectedSpawners.Clear();
         while (_selectedSpawners.Count < _currentWaveInfo.spawnersUsedCount)
         {
             int index = Random.Range(0, _spawners.Length);
@@ -97,6 +104,20 @@ public class SpawnManager : MonoBehaviour
                 _selectedSpawners.Add(_spawners[index]);
             }
         }
+    }
+
+    public async void StartWave()
+    {
+        var monsterLeft = _currentWaveInfo.monsterCount;
+        var tasks = new List<Task>();
+        while (monsterLeft-- > 0)
+        {
+            tasks.Add(OnSendSpawnMonster(_currentWaveInfo.spawnRate));
+        }
+
+        await Task.WhenAll(tasks);
+        tasks.Clear();
+        PrepareNextWave();
     }
 
     public void ClearIdIndex(int index)

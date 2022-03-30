@@ -57,6 +57,12 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    // Delete
+    public void DeleteMonsterFromList(int id)
+    {
+        _monsters.RemoveAt(SearchMonsterIndexById(id));
+    }
+
     // Spawn Monster -----------------------------------------------------------------
     // Receive
     public void AddMonster(Monster monster)
@@ -142,6 +148,19 @@ public class UnitManager : MonoBehaviour
         }
         Debug.Log($"Monster with id {monsterId} not found.");
         return null;
+    }
+
+    private int SearchMonsterIndexById(int monsterId)
+    {
+        for (int i = 0; i < _monsters.Count; i++)
+        {
+            if (_monsters[i].id == monsterId)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public float RangeFromNearestPlayer(Vector3 pos)

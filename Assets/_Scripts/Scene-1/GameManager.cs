@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
         // Spawn Monster
-        SpawnManager.instance.NextWave();
+        SpawnManager.instance.StartWave();
     }
 
 }

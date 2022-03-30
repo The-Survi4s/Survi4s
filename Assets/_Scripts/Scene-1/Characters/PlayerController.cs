@@ -37,9 +37,9 @@ public class PlayerController : MonoBehaviour
             isLocal = true;
         }
 
-        historyMousePos = new Vector3(0, 0, 0);
-        localMousePos = new Vector3(0, 0, 0);
-        syncMousePos = new Vector3(0, 0, 0);
+        historyMousePos = Vector3.zero;
+        localMousePos = Vector3.zero;
+        syncMousePos = Vector3.zero;
 
         mousePosSendCoolDown = 1 / mousePosSendRate;
         mousePosNextTime = 0;

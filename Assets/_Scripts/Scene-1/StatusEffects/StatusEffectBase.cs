@@ -6,7 +6,8 @@ public enum StatusEffect
 {
     Stun,
     Slow,
-    Bleed
+    Bleed,
+    StatusEffectLain
 }
 
 public class StatusEffectFactory : MonoBehaviour
