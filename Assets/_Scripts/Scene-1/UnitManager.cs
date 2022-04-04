@@ -17,6 +17,10 @@ public class UnitManager : MonoBehaviour
 
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
+
+    public int PlayerAliveCount => _players.Count(player => !player.IsDead());
+    public int MonsterAliveCount => _monsters.Count;
+
     private void Awake()
     {
         if(Instance == null)
@@ -48,7 +52,9 @@ public class UnitManager : MonoBehaviour
             Vector3 pos = new Vector3(x, y, 0);
             GameObject temp = Instantiate(playerPrefab, pos, Quaternion.identity);
             temp.name = name;
-            _players.Add(temp.GetComponent<PlayerController>());
+            var p = temp.GetComponent<PlayerController>();
+            p.OnPlayerDead += HandlePlayerDead;
+            _players.Add(p);
             _players[_players.Count - 1].id = id;
         }
         else
@@ -57,7 +63,17 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    // Delete
+    // Deletion
+    private void HandlePlayerDead(string id)
+    {
+        
+    }
+
+    private void HandlePlayerDisconnect(string id)
+    {
+
+    }
+
     public void DeleteMonsterFromList(int id)
     {
         _monsters.RemoveAt(SearchMonsterIndexById(id));

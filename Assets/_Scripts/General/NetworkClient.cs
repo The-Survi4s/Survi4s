@@ -218,7 +218,7 @@ public class NetworkClient : MonoBehaviour
                     GameMenuManager.Instance.UpdatePlayersInRoom(playersCount);
                     break;
                 case Header.StGm:
-                    GameManager.Instance.GameStarted();
+                    GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SwPy:
                     UnitManager.Instance.SpawnPlayer(info[0], ExtractId(info[0]), float.Parse(info[2]), float.Parse(info[3]),

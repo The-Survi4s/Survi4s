@@ -52,9 +52,16 @@ public class SpawnManager : MonoBehaviour
         _monsterPrefabDuplicates.Clear();
         foreach (var prefabWeight in _monsterPrefabWeights)
         {
-            for (int i = 0; i < prefabWeight.weight; i++)
+            if (prefabWeight.monsterPrefab.TryGetComponent(out Monster monster))
             {
-                _monsterPrefabDuplicates.Add(prefabWeight.monsterPrefab);
+                for (int i = 0; i < prefabWeight.weight; i++)
+                {
+                    _monsterPrefabDuplicates.Add(prefabWeight.monsterPrefab);
+                }
+            }
+            else
+            {
+                Debug.Log("The prefab was not a monster! You lied to me!!!");
             }
         }
     }
@@ -70,7 +77,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public async Task OnSendSpawnMonster(double delayToNext)
+    private async Task OnSendSpawnMonster(double delayToNext)
     {
         NetworkClient.Instance.SpawnMonster(_occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin(),
             Random.Range(-randomMonsterSpawnOffsetMax, randomMonsterSpawnOffsetMax));
@@ -89,7 +96,15 @@ public class SpawnManager : MonoBehaviour
     public void PrepareNextWave()
     {
         _previousWaveInfo = _currentWaveInfo;
-        _currentWaveInfo.CalculateNextWave();
+        _currentWaveInfo = _currentWaveInfo.CalculateNextWave();
+        SelectSpawners();
+    }
+
+    public void PrepareNextWave(WaveInfo nextWaveInfo)
+    {
+        _previousWaveInfo = _currentWaveInfo;
+        _currentWaveInfo = nextWaveInfo;
+        _currentWaveInfo = _currentWaveInfo.CalculateNextWave();
         SelectSpawners();
     }
 
@@ -106,7 +121,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public async void StartWave()
+    public async Task StartWave()
     {
         var monsterLeft = _currentWaveInfo.monsterCount;
         var tasks = new List<Task>();

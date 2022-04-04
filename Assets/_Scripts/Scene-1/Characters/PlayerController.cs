@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterStats),typeof(PlayerWeaponManager))]
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterStats characterStats;
     [SerializeField] private PlayerWeaponManager _playerWeaponManager;
 
+    public event Action<string> OnPlayerDead;
+
     // Frame rate sending mouse pos
     [SerializeField] private float mousePosSendRate;
     private float mousePosSendCoolDown, mousePosNextTime;
@@ -43,11 +46,13 @@ public class PlayerController : MonoBehaviour
 
         mousePosSendCoolDown = 1 / mousePosSendRate;
         mousePosNextTime = 0;
+
+        characterStats.OnPlayerDead += HandlePlayerDead;
     }
 
     private void Update()
     {
-        if (isLocal)
+        if (isLocal && !IsDead())
         {
             // For Movement --------------------------------------------------------
             DetectMovementKeyboard();
@@ -65,6 +70,16 @@ public class PlayerController : MonoBehaviour
                 _playerWeaponManager.Attack();
             }
         }
+    }
+
+    public bool IsDead()
+    {
+        return characterStats.isDead;
+    }
+
+    private void HandlePlayerDead()
+    {
+        OnPlayerDead?.Invoke(id);
     }
 
     private void FixedUpdate()
@@ -218,5 +233,10 @@ public class PlayerController : MonoBehaviour
                 d_IsDown = isDown;
                 break;
         }
+    }
+
+    private void OnDestroy()
+    {
+        characterStats.OnPlayerDead -= HandlePlayerDead;
     }
 }
