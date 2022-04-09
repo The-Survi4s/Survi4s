@@ -8,6 +8,8 @@ public class Monster : MonoBehaviour
 {
     [SerializeField] protected Stat defaultStat; // Di edit di inspector
     [SerializeField] protected float attackRange;
+    [SerializeField] protected LayerMask playerLayerMask;
+    [SerializeField] protected LayerMask wallLayerMask;
     [SerializeField] protected MonsterStat monsterStat;
     public Stat rawStat => monsterStat.getStat;
     private MonsterMovement _monsterMovement;
@@ -88,18 +90,29 @@ public class Monster : MonoBehaviour
         var players = GetTargetPlayers();
         foreach (var player in players)
         {
-            NetworkClient.Instance.ModifyPlayerHp(player.gameObject.name, monsterStat.attack);
+            NetworkClient.Instance.ModifyPlayerHp(player.gameObject.name, -monsterStat.attack);
         }
     }
 
     protected virtual List<PlayerController> GetTargetPlayers()
     {
-        return GetPlayersInRadius(2);
+        return GetPlayersInRadius(attackRange);
     }
 
     protected List<PlayerController> GetPlayersInRadius(float r)
     {
-        return UnitManager.Instance.GetNearestPlayersInRadius(transform.position, r);
+        List<PlayerController> temp = new List<PlayerController>();
+        var colliders = UnitManager.Instance.GetHitObjectInRange(new Vector2(transform.position.x,transform.position.y), r, playerLayerMask);
+        foreach (var col in colliders)
+        {
+            Debug.Log(col.gameObject.name);
+            if (col.TryGetComponent(out PlayerController player))
+            {
+                temp.Add(player);
+            }
+        }
+
+        return temp;
     }
 
     protected List<PlayerController> GetNNearestPlayersHit(int count)

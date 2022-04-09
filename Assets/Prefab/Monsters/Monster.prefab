@@ -54,6 +54,19 @@ MonoBehaviour:
     movSpd: 1
     rotSpd: 5
   attackRange: 5
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  monsterStat:
+    _stat:
+      hp: 0
+      atk: 0
+      atkCd: 0
+      movSpd: 0
+      rotSpd: 0
   <type>k__BackingField: 0
 --- !u!114 &1226200368138906639
 MonoBehaviour:

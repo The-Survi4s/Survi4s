@@ -200,6 +200,8 @@ public class NetworkClient : MonoBehaviour
                     break;
             }
         else
+        {
+            Debug.Log(EnumParse<Header>(info[1]));
             switch (EnumParse<Header>(info[1]))
             {
                 case Header.MPos:
@@ -221,7 +223,8 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SwPy:
-                    UnitManager.Instance.SpawnPlayer(info[0], ExtractId(info[0]), float.Parse(info[2]), float.Parse(info[3]),
+                    UnitManager.Instance.SpawnPlayer(info[0], ExtractId(info[0]), float.Parse(info[2]),
+                        float.Parse(info[3]),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
@@ -246,7 +249,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdMo:
                 {
-                    UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]),float.Parse(info[3]));
+                    UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MoEf:
@@ -257,7 +260,8 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdPl:
                 {
-                    UnitManager.Instance.ModifyPlayerHp(info[1], int.Parse(info[2]));
+                    Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
+                    UnitManager.Instance.ModifyPlayerHp(info[2], float.Parse(info[3]));
                     break;
                 }
                 case Header.PlDd:
@@ -276,9 +280,10 @@ public class NetworkClient : MonoBehaviour
                     break;
                 }
             }
+        }
     }
 
-    // Proccess message that want to be send ---------------------------------------
+        // Proccess message that want to be send ---------------------------------------
     private void SendMessageClient(string target, string message)
     {
         // Message format : target|header|data|data|data...
@@ -434,6 +439,7 @@ public class NetworkClient : MonoBehaviour
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
+        Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
         string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
         SendMessageClient("1", msg);
     }

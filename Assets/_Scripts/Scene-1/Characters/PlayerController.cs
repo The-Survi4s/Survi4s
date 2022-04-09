@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         // Move character based on what button is down ---------------------------------------------
-        MoveCharacter();
+        if(!IsDead()) MoveCharacter();
 
         // Flip character based on mouse position --------------------------------------------------
         if(syncMousePos.x < transform.position.x && !isFacingLeft)

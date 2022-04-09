@@ -12,7 +12,7 @@ public abstract class WeaponMelee : WeaponBase
     }
     public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
     {
-        return Physics2D.OverlapCircleAll(attackPoint, attackRad, targetLayer);
+        return Physics2D.OverlapCircleAll(attackPoint, _attackRad, targetLayer);
     }
 
     public override void PlayAttackAnimation()

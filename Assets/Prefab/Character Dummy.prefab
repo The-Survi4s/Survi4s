@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3734245638782618344}
   - component: {fileID: 2055355670349757396}
   - component: {fileID: 6815912341295409886}
+  - component: {fileID: -7709159900960695899}
   m_Layer: 3
   m_Name: Character Dummy
   m_TagString: Player
@@ -119,6 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHitPoint: 50
   DefaultMoveSpeed: 5
+  _hitPoint: 0
 --- !u!114 &2055355670349757396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,6 +156,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!61 &-7709159900960695899
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123738617261133931}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &2500542996280073990
 GameObject:
   m_ObjectHideFlags: 0

@@ -125,7 +125,7 @@ public class UnitManager : MonoBehaviour
             .SpawnBullet(xSpawnPos, ySpawnPos, xMousePos, yMousePos);
     }
 
-    public void ModifyPlayerHp(string playerName, int amount)
+    public void ModifyPlayerHp(string playerName, float amount)
     {
         Debug.Log(playerName+" "+amount);
         SearchPlayerByName(playerName).gameObject.GetComponent<CharacterStats>().hitPoint += amount;
@@ -223,5 +223,9 @@ public class UnitManager : MonoBehaviour
     public PlayerController GetPlayer(string id)
     {
         return _players.FirstOrDefault(player => player.id == id);
+    }
+    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
+    {
+        return Physics2D.OverlapCircleAll(attackPoint, _attackRad, targetLayer);
     }
 }
