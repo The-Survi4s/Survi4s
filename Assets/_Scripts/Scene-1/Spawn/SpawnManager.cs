@@ -1,81 +1,141 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> monsterPrefabs;
-    private List<bool> occupiedIDs = new List<bool>();
+    private readonly List<bool> _occupiedIDs = new List<bool>();
     [SerializeField] private Spawner[] _spawners = new Spawner[4];
-    private List<Spawner> selectedSpawners = new List<Spawner>();
+    private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
+
+    [SerializeField] private int initialMonsterCount = 3;
+    [SerializeField] private int initialMonsterHp = 30;
+    [SerializeField] private float initialMonsterSpeed = 1;
+    [SerializeField] private float randomMonsterSpawnOffsetMax = 10;
 
     private WaveInfo _previousWaveInfo;
-    private WaveInfo _currentWaveInfo;
-    public int currentWave { get; private set; }
+    [SerializeField] private WaveInfo _currentWaveInfo;
+    public int currentWave => _currentWaveInfo.waveNumber;
 
-    private static SpawnManager _instance;
-    public static SpawnManager Instance
+    [Serializable]
+    private class MonsterPrefabWeight
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new SpawnManager();
-            }
-            return _instance;
-        }
+        public GameObject monsterPrefab;
+        public int weight;
     }
+
+    [SerializeField] private List<MonsterPrefabWeight> _monsterPrefabWeights;
+    private List<GameObject> _monsterPrefabDuplicates;
+
+    public static SpawnManager instance { get; private set; }
 
     private void Awake()
     {
-        _currentWaveInfo.Init(3, 1, 1);
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+        _monsterPrefabDuplicates = new List<GameObject>();
+
+        _currentWaveInfo = new WaveInfo(1, initialMonsterCount, initialMonsterHp, initialMonsterSpeed);
+        _monsterPrefabDuplicates.Clear();
+        foreach (var prefabWeight in _monsterPrefabWeights)
+        {
+            if (prefabWeight.monsterPrefab.TryGetComponent(out Monster monster))
+            {
+                Debug.Log("Yes, this is a monster!" + monster.type);
+                for (int i = 0; i < prefabWeight.weight; i++)
+                {
+                    _monsterPrefabDuplicates.Add(prefabWeight.monsterPrefab);
+                }
+            }
+            else
+            {
+                Debug.Log("The prefab was not a monster! You lied to me!!!");
+            }
+        }
+        //Debug.Log("mpw size:"+_monsterPrefabWeights.Count+", mpd size:"+_monsterPrefabDuplicates.Count);
+        SelectSpawners();
     }
 
-    public void OnReceiveSpawnMonster(int ID, Monster.Type type, Monster.Origin origin)
+    public void OnReceiveSpawnMonster(int id, int monsterPrefabIndex, Monster.Origin origin, float spawnOffset)
     {
+        //Debug.Log("id:" + id + ", index:" + monsterPrefabIndex + ", size:" + _monsterPrefabDuplicates.Count);
         foreach (Spawner spawner in _spawners)
         {
             if (spawner.origin == origin)
             {
-                spawner.SpawnMonster(monsterPrefabs[(int)type], ID);
+                spawner.SpawnMonster(_monsterPrefabDuplicates[monsterPrefabIndex], id, spawnOffset);
             }
         }
     }
 
-    public void OnSendSpawnMonster()
+    private async Task OnSendSpawnMonster(double delayToNext) 
     {
-        
-        NetworkClient.Instance.SpawnMonster(occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin());
-        occupiedIDs.Add(true);
+        NetworkClient.Instance.SpawnMonster(_occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin(),
+            Random.Range(-randomMonsterSpawnOffsetMax, randomMonsterSpawnOffsetMax));
+        _occupiedIDs.Add(true);
+        var end = Time.time + delayToNext;
+        while (Time.time < end)
+        {
+            await Task.Yield();
+        }
     }
 
     private Monster.Origin GetRandomOrigin()
     {
-        return selectedSpawners[Random.Range(0, selectedSpawners.Count - 1)].origin;
+        return _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
     }
 
-    private Monster.Type GetRandomMonsterType()
-    {
-        return Monster.Type.TypeA; // BELUM RANDOM -------------------------------------------------
-    }
+    private int GetRandomMonsterType() => Random.Range(0, _monsterPrefabDuplicates.Count);
 
-    public void NextWave()
+    public void PrepareNextWave()
     {
         _previousWaveInfo = _currentWaveInfo;
-        selectedSpawners.Clear();
-        _currentWaveInfo.CalculateNextWave();
-        while (selectedSpawners.Count < _currentWaveInfo.spawnersUsedCount)
+        _currentWaveInfo = _currentWaveInfo.CalculateNextWave();
+        SelectSpawners();
+    }
+
+    public void PrepareNextWave(WaveInfo nextWaveInfo)
+    {
+        _previousWaveInfo = _currentWaveInfo;
+        _currentWaveInfo = nextWaveInfo;
+        _currentWaveInfo = _currentWaveInfo.CalculateNextWave();
+        SelectSpawners();
+    }
+
+    private void SelectSpawners()
+    {
+        _selectedSpawners.Clear();
+        while (_selectedSpawners.Count < _currentWaveInfo.spawnersUsedCount)
         {
-            int index = Random.Range(0, _spawners.Length - 1);
-            if (!selectedSpawners.Contains(_spawners[index]))
+            int index = Random.Range(0, _spawners.Length);
+            if (!_selectedSpawners.Contains(_spawners[index]))
             {
-                selectedSpawners.Add(_spawners[index]);
+                _selectedSpawners.Add(_spawners[index]);
             }
         }
     }
 
-    public void ClearIDIndex(int index)
+    public async Task StartWave()
     {
-        occupiedIDs[index] = false;
+        var monsterLeft = _currentWaveInfo.monsterCount;
+        while (monsterLeft-- > 0)
+        {
+            await OnSendSpawnMonster(_currentWaveInfo.spawnRate);
+        }
+        PrepareNextWave();
+    }
+
+    public void ClearIdIndex(int index)
+    {
+        _occupiedIDs[index] = false;
     }
 }

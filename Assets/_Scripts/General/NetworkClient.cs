@@ -16,7 +16,7 @@ public class NetworkClient : MonoBehaviour
     private IPAddress ipAd;
 
     // Encryption ---------------------------------------------------------------------
-    RsaEncryption rsaEncryption;
+    private RsaEncryption rsaEncryption;
     [SerializeField] private string ServerPublicKey;
 
     // Player Room and Name -----------------------------------------------------------
@@ -77,7 +77,7 @@ public class NetworkClient : MonoBehaviour
         int count = 0;
         while (!client.Connected)
         {
-            // Wait 2 second and try agaian
+            // Wait 2 second and try again
             yield return new WaitForSeconds(2);
 
             count++;
@@ -146,156 +146,144 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
+    // Header enums
+    private enum Header
+    {
+        Svr,    // Server
+        RCrd,   // Room Created
+        RJnd,   // Room Joined
+        RnFd,   // Room not found
+        RsF,    // Room is full
+        REx,    // Room exit
+        MPos,   // Sync Mouse Pos
+        BtDw,   // Button Down
+        PlCt,   // Player Count
+        StGm,   // Start game
+        SwPy,
+        EqWp,
+        PAtk,
+        SwBl,
+        MdMo,
+        MdPl,
+        PlDd,
+        MdWl,
+        SpwM,
+        MoEf,
+        MAtk
+    }
+
     // Receive and Process incoming message here ----------------------------------
     private void ReceiveMessage(string message)
     {
         // Message format : sender|header|data|data|data... 
         // Svr|RCrd|...
         // ID+NameClient|MPos|...
-        string[] info = message.Split('|');
+        var info = message.Split('|');
 
-        if (info[0] == "Svr")
-        {
-            switch (info[1])
+        if (info[0] == Header.Svr.ToString())
+            switch (EnumParse<Header>(info[1]))
             {
-                case "RCrd":
+                case Header.RCrd:
                     OnCreatedRoom(info[2]);
                     break;
-                case "RJnd":
+                case Header.RJnd:
                     OnJoinedRoom(info[2], int.Parse(info[3]));
                     break;
-                case "RnFd":
+                case Header.RnFd:
                     JoinRoomPanel.Instance.RoomNotFound();
                     break;
-                case "RsF":
+                case Header.RsF:
                     JoinRoomPanel.Instance.RoomIsFull();
                     break;
-                case "REx":
+                case Header.REx:
                     ScenesManager.Instance.LoadScene(0);
                     break;
             }
-        }
         else
         {
-            switch (info[1])
+            Debug.Log(EnumParse<Header>(info[1]));
+            switch (EnumParse<Header>(info[1]))
             {
-                case "MPos":
+                case Header.MPos:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<PlayerController>().SyncMousePos(float.Parse(info[2]), float.Parse(info[3]));
-                    }
+                    UnitManager.Instance.SyncMousePos(info[0], float.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case "BtDw":
+                case Header.BtDw:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<PlayerController>().SetButtonDown((PlayerController.Button) Enum.Parse(typeof(PlayerController.Button), info[2], true));
-                    }
+                    UnitManager.Instance.SetButton(info[0], EnumParse<PlayerController.Button>(info[2]),
+                        bool.Parse(info[3]));
                     break;
                 }
-                case "BtUp":
-                {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<PlayerController>().SetButtonUp((PlayerController.Button)Enum.Parse(typeof(PlayerController.Button), info[2], true));
-                    }
-                    break;
-                }
-                case "PlCt":
+                case Header.PlCt:
                     playersCount = int.Parse(info[2]);
                     GameMenuManager.Instance.UpdatePlayersInRoom(playersCount);
                     break;
-                case "StGm":
-                    GameManager.Instance.GameStarted();
+                case Header.StGm:
+                    GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
-                case "SwPy":
-                    UnitManager.Instance.SpawnPlayer(info[0] ,float.Parse(info[2]), float.Parse(info[3]), int.Parse(info[4]));
+                case Header.SwPy:
+                    UnitManager.Instance.SpawnPlayer(info[0], ExtractId(info[0]), float.Parse(info[2]),
+                        float.Parse(info[3]),
+                        int.Parse(info[4]));
                     break;
-                case "SwM":
-                    SpawnManager.Instance.OnReceiveSpawnMonster(int.Parse(info[2]), (Monster.Type)Enum.Parse(typeof(Monster.Type), info[3], true), (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[4], true));
+                case Header.SpwM:
+                    SpawnManager.instance.OnReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
+                        EnumParse<Monster.Origin>(info[4]), float.Parse(info[5]));
                     break;
-                case "EqWp":
+                case Header.EqWp:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<PlayerWeaponManager>().OnEquipWeapon(info[2]);
-                    }
+                    UnitManager.Instance.OnEquipWeapon(info[0], info[2]);
                     break;
                 }
-                case "PAtk":
+                case Header.PAtk:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<PlayerWeaponManager>().OnAttack();
-                    }
+                    UnitManager.Instance.PlayAttackAnimation(info[0]);
                     break;
                 }
-                case "SwBl":
+                case Header.SwBl:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<PlayerWeaponManager>().SpawnBullet(float.Parse(info[2]), float.Parse(info[3]), float.Parse(info[4]), float.Parse(info[5]));
-                    }
+                    UnitManager.Instance.SpawnBullet(info[0], float.Parse(info[2]), float.Parse(info[3]),
+                        float.Parse(info[4]), float.Parse(info[5]));
                     break;
                 }
-                case "DmgM":
+                case Header.MdMo:
                 {
-                    foreach (var monster in from monster in UnitManager.Instance.monsters let ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true) where monster.ID == int.Parse(info[2]) && monster.origin == ori select monster)
-                    {
-                        monster.ReduceHitPoint(float.Parse(info[4]));
-                    }
+                    UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case "StM":
+                case Header.MoEf:
                 {
-                    foreach (var monster in from monster in UnitManager.Instance.monsters let ori = (Monster.Origin)Enum.Parse(typeof(Monster.Origin), info[3], true) where monster.ID == int.Parse(info[2]) && monster.origin == ori select monster)
-                    {
-                        monster.Stun(float.Parse(info[4]));
-                    }
+                    UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(info[2]),
+                        EnumParse<StatusEffect>(info[3]), int.Parse(info[4]), float.Parse(info[5]));
                     break;
                 }
-                case "HePl":
+                case Header.MdPl:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[2].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<CharacterStats>().hitPointAdd=int.Parse(info[3]);
-                    }
+                    Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
+                    UnitManager.Instance.ModifyPlayerHp(info[2], float.Parse(info[3]));
                     break;
                 }
-                case "DmgPl":
+                case Header.PlDd:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj => obj.name == info[2].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<CharacterStats>().hitPointAdd=int.Parse(info[3]);
-                    }
+                    UnitManager.Instance.CorrectDeadPosition(info[0], float.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case "PlDd":
+                case Header.MdWl:
                 {
-                    foreach (var obj in UnitManager.Instance.players.Where(obj =>
-                                 obj.name == info[0].Substring(0, obj.name.Length)))
-                    {
-                        obj.GetComponent<CharacterStats>().PlayerDead(float.Parse(info[2]), float.Parse(info[3]));
-                    }
+                    WallManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case "HeWl":
+                case Header.MAtk:
                 {
-                    WallManager.Instance.ReceiveRepairWall(int.Parse(info[2]), float.Parse(info[3]));
-                    break;
-                }
-                case "DmgWl":
-                {
-                    WallManager.Instance.ReceiveDamageWall(int.Parse(info[2]), float.Parse(info[3]));
+                    UnitManager.Instance.PlayMonsterAttackAnimation(int.Parse(info[2]));
                     break;
                 }
             }
         }
     }
 
-    // Proccess message that want to be send ---------------------------------------
+        // Proccess message that want to be send ---------------------------------------
     private void SendMessageClient(string target, string message)
     {
         // Message format : target|header|data|data|data...
@@ -325,10 +313,11 @@ public class NetworkClient : MonoBehaviour
     }
 
     // Generate id of 6 random number ------------------------------------------------
+    private const int IdLength = 6;
     public string GeneratePlayerId()
     {
         string genId = "";
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < IdLength; i++)
         {
             genId += UnityEngine.Random.Range(0, 10).ToString();
         }
@@ -358,14 +347,16 @@ public class NetworkClient : MonoBehaviour
     {
         SendMessageClient("2", "StMtc");
     }
+
     public void CreateRoom(string roomName, int maxPlayer, bool isPublic)
     {
-        string[] message = new string[] { "CrR", roomName, maxPlayer.ToString(), isPublic.ToString() } ;
+        string[] message = {"CrR", roomName, maxPlayer.ToString(), isPublic.ToString()};
         SendMessageClient("2", message);
     }
+
     public void JoinRoom(string roomName)
     {
-        string[] message = new string[] { "JnR", roomName, roomName.ToString() };
+        string[] message = {"JnR", roomName, roomName};
         SendMessageClient("2", message);
     }
     public void ExitRoom()
@@ -384,81 +375,95 @@ public class NetworkClient : MonoBehaviour
 
     public void SpawnPlayer(float x, float y, int skin)
     {
-        string[] msg = new string[] { "SwPy", x.ToString("f2"), y.ToString("f2"), skin.ToString() };
-        SendMessageClient("1", msg);
-    }
-    public void SpawnMonster(int Id, Monster.Type type, Monster.Origin origin)
-    {
-        string[] msg = new string[] { "SwM", Id.ToString(), type.ToString(), origin.ToString() };
+        string[] msg = {Header.SwPy.ToString(), x.ToString("f2"), y.ToString("f2"), skin.ToString()};
         SendMessageClient("1", msg);
     }
 
-    public void MovementButtonDown(PlayerController.Button button)
+    public void SpawnMonster(int id, int type, Monster.Origin origin, float spawnOffset)
     {
-        string[] msg = new string[] { "BtDw", button.ToString() };
+        string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
         SendMessageClient("1", msg);
     }
-    public void MovementButtonUp(PlayerController.Button button)
+
+    public void SetMovementButton(PlayerController.Button button, bool isDown)
     {
-        string[] msg = new string[] { "BtUp", button.ToString() };
+        string[] msg = {Header.BtDw.ToString(), button.ToString(), isDown.ToString()};
         SendMessageClient("1", msg);
     }
+
     public void SendMousePos(float x, float y)
     {
-        string[] msg = new string[] { "MPos", x.ToString("f2"), y.ToString("f2") };
+        string[] msg = {Header.MPos.ToString(), x.ToString("f2"), y.ToString("f2")};
         SendMessageClient("1", msg);
     }
 
     public void EquipWeapon(string weapon)
     {
-        string[] msg = new string[] { "EqWp", weapon };
+        string[] msg = {Header.EqWp.ToString(), weapon};
         SendMessageClient("1", msg);
     }
 
-    public void Attack() // Wtf is dis?
+    public void StartAttackAnimation() 
     {
-        string[] msg = new string[] { "PAtk" };
+        string[] msg = {Header.PAtk.ToString()};
         SendMessageClient("1", msg);
     }
+
+    public void StartMonsterAttackAnimation(int targetId) 
+    {
+        string[] msg = {Header.MAtk.ToString(), targetId.ToString()};
+        SendMessageClient("1", msg);
+    }
+
     public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
     {
-        string[] msg = new string[] { "SwBl", xSpawnPos.ToString("f2"), ySpawnPos.ToString("f2"), xMousePos.ToString("f2"), yMousePos.ToString("f2") };
+        string[] msg =
+        {
+            Header.SwBl.ToString(), xSpawnPos.ToString("f2"), ySpawnPos.ToString("f2"), xMousePos.ToString("f2"),
+            yMousePos.ToString("f2")
+        };
         SendMessageClient("1", msg);
     }
 
-    public void DamageMonster(int Id, Monster.Origin origin, float damage)
+    public void ModifyMonsterHp(int id, float amount)
     {
-        string[] msg = new string[] { "DmgM", Id.ToString(), origin.ToString(), damage.ToString("f2") };
+        string[] msg = {Header.MdMo.ToString(), id.ToString(), amount.ToString("f2")};
         SendMessageClient("1", msg);
     }
-    public void StunMonster(int Id, Monster.Origin origin, float time)
+
+    public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, int strength, float duration)
     {
-        string[] msg = new string[] { "StM", Id.ToString(), origin.ToString(), time.ToString("f2") };
+        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), strength.ToString(), duration.ToString("f2")};
         SendMessageClient("1", msg);
     }
-    public void HealPlayer(string Id, string name, float healPoint)
+
+    public void ModifyPlayerHp(string playerName, float amount)
     {
-        string[] msg = new string[] { "HePl", Id+name, healPoint.ToString("f2") };
-        SendMessageClient( "1", msg);
-    }
-    public void DamagePlayer(string Id, string name, float damage)
-    {
-        string[] msg = new string[] { "DmgPl", Id + name, damage.ToString("f2") };
+        Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
+        string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
         SendMessageClient("1", msg);
     }
-    public void PlayerDead(float xPos, float yPos)
+
+    public void CorrectPlayerDeadPosition(float xPos, float yPos)
     {
-        string[] msg = new string[] { "PlDd", xPos.ToString("f2"), yPos.ToString("f2") };
+        string[] msg = {Header.PlDd.ToString(), xPos.ToString("f2"), yPos.ToString("f2")};
         SendMessageClient("1", msg);
     }
-    public void HealWall(int Id, float healPoint)
+
+    public void ModifyWallHp(int id, float amount)
     {
-        string[] msg = new string[] { "HeWl", Id.ToString(), healPoint.ToString("f2") };
+        string[] msg = {Header.MdWl.ToString(), id.ToString(), amount.ToString("f2")};
         SendMessageClient("1", msg);
     }
-    public void DamageWall(int Id, float damage)
+
+    // Utilities
+    private static T EnumParse<T>(string stringToEnum)
     {
-        string[] msg = new string[] { "DmgWl", Id.ToString(), damage.ToString("f2") };
-        SendMessageClient("1", msg);
+        return (T) Enum.Parse(typeof(T), stringToEnum, true);
+    }
+
+    private static string ExtractId(string idAndName)
+    {
+        return idAndName.Substring(0, IdLength);
     }
 }

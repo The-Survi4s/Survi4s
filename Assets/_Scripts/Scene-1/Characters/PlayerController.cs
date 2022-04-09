@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterStats),typeof(PlayerWeaponManager))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
-    public bool isLocal { get; private set; }
+    [field: SerializeField] public bool isLocal { get; private set; }
+    public string id { get; set; }
 
     // For player movement -------------------------------------------------------------
     private bool w_IsDown, a_IsDown, s_IsDown, d_IsDown;
@@ -20,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterStats characterStats;
     [SerializeField] private PlayerWeaponManager _playerWeaponManager;
 
+    public event Action<string> OnPlayerDead;
+
     // Frame rate sending mouse pos
     [SerializeField] private float mousePosSendRate;
     private float mousePosSendCoolDown, mousePosNextTime;
@@ -35,17 +40,19 @@ public class PlayerController : MonoBehaviour
             isLocal = true;
         }
 
-        historyMousePos = new Vector3(0, 0, 0);
-        localMousePos = new Vector3(0, 0, 0);
-        syncMousePos = new Vector3(0, 0, 0);
+        historyMousePos = Vector3.zero;
+        localMousePos = Vector3.zero;
+        syncMousePos = Vector3.zero;
 
         mousePosSendCoolDown = 1 / mousePosSendRate;
         mousePosNextTime = 0;
+
+        characterStats.OnPlayerDead += HandlePlayerDead;
     }
 
     private void Update()
     {
-        if (isLocal)
+        if (isLocal && !IsDead())
         {
             // For Movement --------------------------------------------------------
             DetectMovementKeyboard();
@@ -65,10 +72,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool IsDead()
+    {
+        return characterStats.isDead;
+    }
+
+    private void HandlePlayerDead()
+    {
+        OnPlayerDead?.Invoke(id);
+    }
+
     private void FixedUpdate()
     {
         // Move character based on what button is down ---------------------------------------------
-        MoveCharacter();
+        if(!IsDead()) MoveCharacter();
 
         // Flip character based on mouse position --------------------------------------------------
         if(syncMousePos.x < transform.position.x && !isFacingLeft)
@@ -90,42 +107,42 @@ public class PlayerController : MonoBehaviour
     }
 
     // For detecting input keyboard ------------------------------------------------------
-    private void DetectMovementKeyboard()
+    private static void DetectMovementKeyboard()
     {
         // Detect Keyboard Down -----------------------------------------------------------
         if (Input.GetKeyDown(KeyCode.W))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.w);
+            NetworkClient.Instance.SetMovementButton(Button.w, true);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.a);
+            NetworkClient.Instance.SetMovementButton(Button.a, true);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.s);
+            NetworkClient.Instance.SetMovementButton(Button.s, true);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            NetworkClient.Instance.MovementButtonDown(Button.d);
+            NetworkClient.Instance.SetMovementButton(Button.d, true);
         }
 
         // Detect Keyboard Up -------------------------------------------------------------
         if (Input.GetKeyUp(KeyCode.W))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.w);
+            NetworkClient.Instance.SetMovementButton(Button.w, false);
         }
         else if (Input.GetKeyUp(KeyCode.A))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.a);
+            NetworkClient.Instance.SetMovementButton(Button.a, false);
         }
         else if (Input.GetKeyUp(KeyCode.S))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.s);
+            NetworkClient.Instance.SetMovementButton(Button.s, false);
         }
         else if (Input.GetKeyUp(KeyCode.D))
         {
-            NetworkClient.Instance.MovementButtonUp(Button.d);
+            NetworkClient.Instance.SetMovementButton(Button.d, false);
         }
     }
 
@@ -199,42 +216,27 @@ public class PlayerController : MonoBehaviour
     }
 
     // Set Button up/down --------------------------------------------------------------------
-    public void SetButtonDown(Button button)
+    public void SetButton(Button button, bool isDown)
     {
-        if(button == Button.w)
+        switch (button)
         {
-            w_IsDown = true;
-        }
-        else if (button == Button.a)
-        {
-            a_IsDown = true;
-        }
-        else if (button == Button.s)
-        {
-            s_IsDown = true;
-        }
-        else if (button == Button.d)
-        {
-            d_IsDown = true;
+            case Button.w:
+                w_IsDown = isDown;
+                break;
+            case Button.a:
+                a_IsDown = isDown;
+                break;
+            case Button.s:
+                s_IsDown = isDown;
+                break;
+            case Button.d:
+                d_IsDown = isDown;
+                break;
         }
     }
-    public void SetButtonUp(Button button)
+
+    private void OnDestroy()
     {
-        if (button == Button.w)
-        {
-            w_IsDown = false;
-        }
-        else if (button == Button.a)
-        {
-            a_IsDown = false;
-        }
-        else if (button == Button.s)
-        {
-            s_IsDown = false;
-        }
-        else if (button == Button.d)
-        {
-            d_IsDown = false;
-        }
+        characterStats.OnPlayerDead -= HandlePlayerDead;
     }
 }

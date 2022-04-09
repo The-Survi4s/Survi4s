@@ -12,13 +12,13 @@ public abstract class WeaponMelee : WeaponBase
     }
     public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
     {
-        return Physics2D.OverlapCircleAll(attackPoint, attackRad, targetLayer);
+        return Physics2D.OverlapCircleAll(attackPoint, _attackRad, targetLayer);
     }
 
-    public override void OnAttack()
+    public override void PlayAttackAnimation()
     {
         // Play animation
-        base.OnAttack();
+        base.PlayAttackAnimation();
 
         if (!IsLocal()) return;
         // Detect enemies on range

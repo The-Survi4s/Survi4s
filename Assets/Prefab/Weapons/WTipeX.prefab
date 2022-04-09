@@ -98,10 +98,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultBaseAttack: 10
   DefaultCritRate: 10
-  DefaultCooldownTime: 1
+  MaxCooldownTime: 0
   offset: {x: 0.2, y: -3, z: -1}
-  DefaultShootRange: 10
-  DefaultAmmo: 10
+  MaxAmmo: 3
   bullet: {fileID: 5926505289157146130, guid: 86e02e271c687c043a595287ac3db668, type: 3}
 --- !u!1 &3814862726858889819
 GameObject:

@@ -7,31 +7,30 @@ using Random = UnityEngine.Random;
 
 public class WallManager : MonoBehaviour
 {
-    private static WallManager _instance;
-    public static WallManager Instance
+    public static WallManager instance { get; private set; }
+    private void Awake()
     {
-        get
+        if (instance == null)
         {
-            if (_instance == null)
-            {
-                _instance = new WallManager();
-            }
-            return _instance;
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
         }
     }
 
-    [SerializeField] private List<Wall> walls;
-    private List<Wall> _topWalls;
-    private List<Wall> _bottomWalls;
-    private List<Wall> _rightWalls;
-    private List<Wall> _leftWalls;
-    private int _maxWallID;
+    private List<Wall> walls = new List<Wall>();
+    private List<Wall> _topWalls = new List<Wall>();
+    private List<Wall> _bottomWalls = new List<Wall>();
+    private List<Wall> _rightWalls = new List<Wall>();
+    private List<Wall> _leftWalls = new List<Wall>();
+    private int _maxWallId;
 
-    public int GetNewWallID() => _maxWallID++;
+    public int GetNewWallId() => _maxWallId++;
     public void AddWall(Wall wall) => walls.Add(wall);
 
-    public void ReceiveRepairWall(int id, float healPoint) => GetWall(id).RepairWall(healPoint);
-    public void ReceiveDamageWall(int id, float damage) => GetWall(id).DamageWall(damage);
+    public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyWallHp(amount);
     private Wall GetWall(int id) => walls.FirstOrDefault(wall => wall.ID == id);
     public Wall GetRandomWallOn(Monster.Origin origin)
     {

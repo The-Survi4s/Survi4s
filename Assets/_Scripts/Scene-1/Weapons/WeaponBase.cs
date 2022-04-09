@@ -12,9 +12,10 @@ public abstract class WeaponBase : MonoBehaviour
     public float critRate { get; private set; }
     public float cooldownTime { get; private set; }
     protected float nextAttackTime = 0f;
-
     public GameObject owner { get; private set; }
     public bool IsUsed() => owner != null;
+
+    public int upgradeLevel { get; private set; }
 
     // Animation Variables
     [SerializeField] protected Vector3 offset;
@@ -26,6 +27,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
     [SerializeField] private List<SwingTo> swingQueues = new List<SwingTo>();
     protected float swingDegree;
+    private double animationEndDegree = 5f;
     protected int animationStep;
 
     // Particles -----------------------------------------
@@ -57,7 +59,7 @@ public abstract class WeaponBase : MonoBehaviour
         {
             LerpAnimation();
             if (Mathf.Abs(swingDegree - Mathf.LerpAngle(swingDegree, swingQueues[animationStep].degree,
-                    swingQueues[animationStep].t)) < 5) animationStep++;
+                    swingQueues[animationStep].t)) < animationEndDegree) animationStep++;
         }
         // Rotate weapon based on owner mouse pos
         RotateWeapon(IsLocal()
@@ -71,7 +73,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Check cooldown
         if (!(Time.time >= nextAttackTime)) return;
         // Send attack message
-        NetworkClient.Instance.Attack();
+        NetworkClient.Instance.StartAttackAnimation();
         // Cooldown
         nextAttackTime = Time.time + cooldownTime;
     }
@@ -97,7 +99,7 @@ public abstract class WeaponBase : MonoBehaviour
         ? Vector2.zero 
         : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
 
-    public virtual void OnAttack() => PlayAnimation();
+    public virtual void PlayAttackAnimation() => PlayAnimation();
 
     // Equip / UnEquip -------------------------------------------------
     public void EquipWeapon(PlayerWeaponManager player)
@@ -113,5 +115,13 @@ public abstract class WeaponBase : MonoBehaviour
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
         _ownerPlayerController = null;
+    }
+
+    // Upgrade weapon, dipanggil dari statue
+    public void UpgradeWeapon()
+    {
+        baseAttack *= 1.05f;
+        critRate *= 1.05f;
+        MaxCooldownTime *= 0.9f;
     }
 }

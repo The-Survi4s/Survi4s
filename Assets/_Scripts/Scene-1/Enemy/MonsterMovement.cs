@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MonsterMovement : MonoBehaviour
 {
-    private AIBase AI;
+    [SerializeField] private AIBase AI;
 
     private Transform t;
     // Start is called before the first frame update
@@ -16,6 +16,6 @@ public class MonsterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AI.Move(); // Value vector2 dari AI dipakai gerak
+        //AI.Move(); // Value vector2 dari AI dipakai gerak
     }
 }

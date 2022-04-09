@@ -37,9 +37,9 @@ public class WeaponRange : WeaponBase
 
     public void ReloadAmmo() => ammo = MaxAmmo;
 
-    public override void OnAttack()
+    public override void PlayAttackAnimation()
     {
-        base.OnAttack();
+        base.PlayAttackAnimation();
         Debug.Log(ammo);
         // Only do this if local
         if (IsLocal() && ammo > 0)

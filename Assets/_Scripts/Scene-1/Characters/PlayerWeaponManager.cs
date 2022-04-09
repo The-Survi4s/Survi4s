@@ -55,9 +55,9 @@ public class PlayerWeaponManager : MonoBehaviour
             weapon.SendAttackMessage();
         }
     }
-    public void OnAttack()
+    public void PlayAttackAnimation()
     {
-        weapon.OnAttack();
+        weapon.PlayAttackAnimation();
     }
     public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
     {

@@ -7,18 +7,19 @@ public class CharacterStats : MonoBehaviour
 {
     [SerializeField] private int MaxHitPoint;
     [SerializeField] private float DefaultMoveSpeed;
+    public event Action OnPlayerDead;
 
-    private float _hitPoint;
-    public float hitPointAdd
+    [SerializeField] private float _hitPoint;
+    public float hitPoint
     {
         get => _hitPoint;
         set
         {
-            _hitPoint += value;
+            _hitPoint = value;
 
             if (_hitPoint <= 0)
             {
-                // Dead
+                OnPlayerDead?.Invoke();
             }
 
             if (_hitPoint > MaxHitPoint)
@@ -32,11 +33,11 @@ public class CharacterStats : MonoBehaviour
 
     private void Start()
     {
-        hitPointAdd = MaxHitPoint;
+        hitPoint = MaxHitPoint;
         moveSpeed = DefaultMoveSpeed;
     }
 
-    public void PlayerDead(float xPos, float yPos)
+    public void CorrectDeadPosition(float xPos, float yPos)
     {
         transform.position = new Vector2(xPos, yPos);
     }
