@@ -135,3 +135,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultMoveSpeed: 10
+  DefaultTravelRange: 100
+  CriticalMultiplier: 1.5

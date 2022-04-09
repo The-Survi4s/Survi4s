@@ -11,9 +11,9 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     // List ---------------------------------------------------------------------------
-    private KdTree<PlayerController> _players;
+    private KdTree<PlayerController> _players = new KdTree<PlayerController>();
     [SerializeField] public List<WeaponBase> weapons;
-    private KdTree<Monster> _monsters;
+    private KdTree<Monster> _monsters = new KdTree<Monster>();
 
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
@@ -45,13 +45,13 @@ public class UnitManager : MonoBehaviour
     {
         NetworkClient.Instance.SpawnPlayer(0,0,0);
     }
-    public void SpawnPlayer(string name, string id, float x, float y, int skin)
+    public void SpawnPlayer(string idAndName, string id, float x, float y, int skin)
     {
         if (playerPrefab.TryGetComponent(out PlayerController player))
         {
             Vector3 pos = new Vector3(x, y, 0);
             GameObject temp = Instantiate(playerPrefab, pos, Quaternion.identity);
-            temp.name = name;
+            temp.name = idAndName;
             var p = temp.GetComponent<PlayerController>();
             p.OnPlayerDead += HandlePlayerDead;
             _players.Add(p);
@@ -83,7 +83,7 @@ public class UnitManager : MonoBehaviour
     // Receive
     public void AddMonster(Monster monster)
     {
-        monster.SetTargetWall(WallManager.Instance.GetRandomWallOn(monster.origin));
+        monster.SetTargetWall(WallManager.instance.GetRandomWallOn(monster.origin));
         _monsters.Add(monster);
     }
 
@@ -127,6 +127,7 @@ public class UnitManager : MonoBehaviour
 
     public void ModifyPlayerHp(string playerName, int amount)
     {
+        Debug.Log(playerName+" "+amount);
         SearchPlayerByName(playerName).gameObject.GetComponent<CharacterStats>().hitPoint += amount;
     }
 
@@ -149,7 +150,7 @@ public class UnitManager : MonoBehaviour
     // Utilities ----------------------
     private PlayerController SearchPlayerByName(string playerName)
     {
-        foreach (var player in _players.Where(player => player.gameObject.name == playerName))
+        foreach (var player in _players.Where(player => player.gameObject.name == playerName.Substring(0, player.gameObject.name.Length)))
         {
             return player;
         }

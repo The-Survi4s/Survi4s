@@ -16,8 +16,8 @@ public struct Stat
 [Serializable]
 public class MonsterStat : IHasCooldown
 {
-    [SerializeField] private Stat _defaultStat;
-    private Stat _stat;
+    private Stat _defaultStat;
+    [SerializeField] private Stat _stat;
     private CooldownSystem _cooldownSystem;
     private CooldownData _cooldownData;
     public float cooldownDuration => _defaultStat.atkCd;
@@ -68,6 +68,7 @@ public class MonsterStat : IHasCooldown
         _cooldownSystem = cooldownSystem;
         _defaultStat = newStat;
         _stat = _defaultStat;
+        StartCooldown();
     }
 
     public void UpdateStat()

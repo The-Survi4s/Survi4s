@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 6815912341295409886}
+  <isLocal>k__BackingField: 0
   characterStats: {fileID: 3734245638782618344}
   _playerWeaponManager: {fileID: 2055355670349757396}
   mousePosSendRate: 10
@@ -116,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 028b8bf261a772f4183eaa0e2d3b183f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHitPoint: 0
+  MaxHitPoint: 50
   DefaultMoveSpeed: 5
 --- !u!114 &2055355670349757396
 MonoBehaviour:

@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
 
-    private float _preparationTime = 30f;
+    [SerializeField] private float _preparationTime = 0f;
 
     [Serializable]
     public struct GameSettings
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     {
         //Lakukan sesuatu
 
-        // Display statue HP
+        // Display statue HP dan UI lain
 
         GameStarted();
         ChangeState(GameState.WavePreparation); 

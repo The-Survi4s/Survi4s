@@ -16,6 +16,6 @@ public class MonsterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AI.Move(); // Value vector2 dari AI dipakai gerak
+        //AI.Move(); // Value vector2 dari AI dipakai gerak
     }
 }

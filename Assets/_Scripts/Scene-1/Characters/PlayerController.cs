@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
-    public bool isLocal { get; private set; }
+    [field: SerializeField] public bool isLocal { get; private set; }
     public string id { get; set; }
 
     // For player movement -------------------------------------------------------------

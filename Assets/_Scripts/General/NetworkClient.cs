@@ -180,7 +180,7 @@ public class NetworkClient : MonoBehaviour
         // ID+NameClient|MPos|...
         var info = message.Split('|');
 
-        if (EnumParse<Header>(info[0]) == Header.Svr)
+        if (info[0] == Header.Svr.ToString())
             switch (EnumParse<Header>(info[1]))
             {
                 case Header.RCrd:
@@ -204,12 +204,12 @@ public class NetworkClient : MonoBehaviour
             {
                 case Header.MPos:
                 {
-                    UnitManager.Instance.SyncMousePos(ExtractName(info[0]), float.Parse(info[2]), float.Parse(info[3]));
+                    UnitManager.Instance.SyncMousePos(info[0], float.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.BtDw:
                 {
-                    UnitManager.Instance.SetButton(ExtractName(info[0]), EnumParse<PlayerController.Button>(info[2]),
+                    UnitManager.Instance.SetButton(info[0], EnumParse<PlayerController.Button>(info[2]),
                         bool.Parse(info[3]));
                     break;
                 }
@@ -230,17 +230,17 @@ public class NetworkClient : MonoBehaviour
                     break;
                 case Header.EqWp:
                 {
-                    UnitManager.Instance.OnEquipWeapon(ExtractName(info[0]), info[2]);
+                    UnitManager.Instance.OnEquipWeapon(info[0], info[2]);
                     break;
                 }
                 case Header.PAtk:
                 {
-                    UnitManager.Instance.PlayAttackAnimation(ExtractName(info[0]));
+                    UnitManager.Instance.PlayAttackAnimation(info[0]);
                     break;
                 }
                 case Header.SwBl:
                 {
-                    UnitManager.Instance.SpawnBullet(ExtractName(info[0]), float.Parse(info[2]), float.Parse(info[3]),
+                    UnitManager.Instance.SpawnBullet(info[0], float.Parse(info[2]), float.Parse(info[3]),
                         float.Parse(info[4]), float.Parse(info[5]));
                     break;
                 }
@@ -257,17 +257,17 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdPl:
                 {
-                    UnitManager.Instance.ModifyPlayerHp(ExtractName(info[2]), int.Parse(info[3]));
+                    UnitManager.Instance.ModifyPlayerHp(info[1], int.Parse(info[2]));
                     break;
                 }
                 case Header.PlDd:
                 {
-                    UnitManager.Instance.CorrectDeadPosition(ExtractName(info[0]), float.Parse(info[2]), float.Parse(info[3]));
+                    UnitManager.Instance.CorrectDeadPosition(info[0], float.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MdWl:
                 {
-                    WallManager.Instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    WallManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
@@ -374,9 +374,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SpawnMonster(int Id, int type, Monster.Origin origin, float spawnOffset)
+    public void SpawnMonster(int id, int type, Monster.Origin origin, float spawnOffset)
     {
-        string[] msg = {Header.SpwM.ToString(), Id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
+        string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
         SendMessageClient("1", msg);
     }
 
@@ -432,9 +432,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void ModifyPlayerHp(string id, string playerName, float amount)
+    public void ModifyPlayerHp(string playerName, float amount)
     {
-        string[] msg = {Header.MdPl.ToString(), id + playerName, amount.ToString("f2")};
+        string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
         SendMessageClient("1", msg);
     }
 
@@ -456,13 +456,8 @@ public class NetworkClient : MonoBehaviour
         return (T) Enum.Parse(typeof(T), stringToEnum, true);
     }
 
-    private static string ExtractName(string nameAndId)
+    private static string ExtractId(string idAndName)
     {
-        return nameAndId.Substring(0, nameAndId.Length - IdLength);
-    }
-
-    private static string ExtractId(string nameAndId)
-    {
-        return nameAndId.Substring(nameAndId.Length - IdLength);
+        return idAndName.Substring(0, IdLength);
     }
 }

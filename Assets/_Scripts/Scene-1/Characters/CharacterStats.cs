@@ -9,7 +9,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private float DefaultMoveSpeed;
     public event Action OnPlayerDead;
 
-    private float _hitPoint;
+    [SerializeField] private float _hitPoint;
     public float hitPoint
     {
         get => _hitPoint;

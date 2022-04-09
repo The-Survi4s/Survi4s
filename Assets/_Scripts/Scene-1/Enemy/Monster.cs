@@ -8,7 +8,7 @@ public class Monster : MonoBehaviour
 {
     [SerializeField] protected Stat defaultStat; // Di edit di inspector
     [SerializeField] protected float attackRange;
-    protected MonsterStat monsterStat;
+    [SerializeField] protected MonsterStat monsterStat;
     public Stat rawStat => monsterStat.getStat;
     private MonsterMovement _monsterMovement;
     private List<StatusEffectBase> _activeStatusEffects;
@@ -28,7 +28,7 @@ public class Monster : MonoBehaviour
         this.id = Id == -1 ? Id : this.id;
     }
 
-    private void Awake()
+    private void Start()
     {
         id = -1;
         monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), defaultStat);
@@ -88,7 +88,7 @@ public class Monster : MonoBehaviour
         var players = GetTargetPlayers();
         foreach (var player in players)
         {
-            NetworkClient.Instance.ModifyPlayerHp(player.id, player.gameObject.name, monsterStat.attack);
+            NetworkClient.Instance.ModifyPlayerHp(player.gameObject.name, monsterStat.attack);
         }
     }
 

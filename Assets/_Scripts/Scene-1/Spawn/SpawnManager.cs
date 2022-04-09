@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class SpawnManager : MonoBehaviour
 {
     private readonly List<bool> _occupiedIDs = new List<bool>();
-    [SerializeField] private readonly Spawner[] _spawners = new Spawner[4];
+    [SerializeField] private Spawner[] _spawners = new Spawner[4];
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 
     [SerializeField] private int initialMonsterCount = 3;
@@ -17,7 +17,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float randomMonsterSpawnOffsetMax = 10;
 
     private WaveInfo _previousWaveInfo;
-    private WaveInfo _currentWaveInfo;
+    [SerializeField] private WaveInfo _currentWaveInfo;
     public int currentWave => _currentWaveInfo.waveNumber;
 
     [Serializable]
@@ -30,30 +30,27 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private List<MonsterPrefabWeight> _monsterPrefabWeights;
     private List<GameObject> _monsterPrefabDuplicates;
 
-    private static SpawnManager _instance;
-    public static SpawnManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new SpawnManager();
-            }
-            return _instance;
-        }
-    }
+    public static SpawnManager instance { get; private set; }
 
     private void Awake()
     {
-        _monsterPrefabWeights = new List<MonsterPrefabWeight>();
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
         _monsterPrefabDuplicates = new List<GameObject>();
 
-        _currentWaveInfo = new WaveInfo(0, initialMonsterCount, initialMonsterHp, initialMonsterSpeed);
+        _currentWaveInfo = new WaveInfo(1, initialMonsterCount, initialMonsterHp, initialMonsterSpeed);
         _monsterPrefabDuplicates.Clear();
         foreach (var prefabWeight in _monsterPrefabWeights)
         {
             if (prefabWeight.monsterPrefab.TryGetComponent(out Monster monster))
             {
+                Debug.Log("Yes, this is a monster!" + monster.type);
                 for (int i = 0; i < prefabWeight.weight; i++)
                 {
                     _monsterPrefabDuplicates.Add(prefabWeight.monsterPrefab);
@@ -64,10 +61,13 @@ public class SpawnManager : MonoBehaviour
                 Debug.Log("The prefab was not a monster! You lied to me!!!");
             }
         }
+        //Debug.Log("mpw size:"+_monsterPrefabWeights.Count+", mpd size:"+_monsterPrefabDuplicates.Count);
+        SelectSpawners();
     }
 
     public void OnReceiveSpawnMonster(int id, int monsterPrefabIndex, Monster.Origin origin, float spawnOffset)
     {
+        //Debug.Log("id:" + id + ", index:" + monsterPrefabIndex + ", size:" + _monsterPrefabDuplicates.Count);
         foreach (Spawner spawner in _spawners)
         {
             if (spawner.origin == origin)
@@ -77,7 +77,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private async Task OnSendSpawnMonster(double delayToNext)
+    private async Task OnSendSpawnMonster(double delayToNext) 
     {
         NetworkClient.Instance.SpawnMonster(_occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin(),
             Random.Range(-randomMonsterSpawnOffsetMax, randomMonsterSpawnOffsetMax));
@@ -89,7 +89,10 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private Monster.Origin GetRandomOrigin() => _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
+    private Monster.Origin GetRandomOrigin()
+    {
+        return _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
+    }
 
     private int GetRandomMonsterType() => Random.Range(0, _monsterPrefabDuplicates.Count);
 
@@ -124,14 +127,10 @@ public class SpawnManager : MonoBehaviour
     public async Task StartWave()
     {
         var monsterLeft = _currentWaveInfo.monsterCount;
-        var tasks = new List<Task>();
         while (monsterLeft-- > 0)
         {
-            tasks.Add(OnSendSpawnMonster(_currentWaveInfo.spawnRate));
+            await OnSendSpawnMonster(_currentWaveInfo.spawnRate);
         }
-
-        await Task.WhenAll(tasks);
-        tasks.Clear();
         PrepareNextWave();
     }
 
