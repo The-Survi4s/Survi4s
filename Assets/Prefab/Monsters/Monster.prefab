@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2377165867587476519}
   - component: {fileID: 5297857289526348701}
   - component: {fileID: 8199000041367107212}
+  - component: {fileID: 3877551159812359091}
   m_Layer: 6
   m_Name: Monster
   m_TagString: Enemy
@@ -47,19 +48,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773f9b9b6fdce3d4bb08159cfd0df8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultStat:
-    hp: 100
-    atk: 5
-    atkCd: 2
-    movSpd: 1
-    rotSpd: 5
-  attackRange: 5
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 8
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  monsterLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   monsterStat:
     _stat:
       hp: 0
@@ -68,6 +65,18 @@ MonoBehaviour:
       movSpd: 0
       rotSpd: 0
   <type>k__BackingField: 0
+  setting:
+    attackRange: 0
+    detectionRange: 0
+    targetPlayerPriority: 0
+    targetWallPriority: 0
+    defaultStat:
+      hp: 0
+      atk: 0
+      atkCd: 0
+      movSpd: 0
+      rotSpd: 0
+  <id>k__BackingField: 0
 --- !u!114 &1226200368138906639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5882cc9c8becb88429f6d024082c0e66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AI: {fileID: 0}
 --- !u!212 &2377165867587476519
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -179,3 +187,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!195 &3877551159812359091
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377165867587476512}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4

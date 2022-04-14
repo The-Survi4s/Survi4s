@@ -111,35 +111,35 @@ public class UnitManager : MonoBehaviour
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
-        SearchPlayerByName(playerName).gameObject.GetComponent<PlayerWeaponManager>().OnEquipWeapon(weaponName);
+        SearchPlayerByName(playerName).GetComponent<PlayerWeaponManager>().OnEquipWeapon(weaponName);
     }
 
     public void PlayAttackAnimation(string playerName)
     {
-        SearchPlayerByName(playerName).gameObject.GetComponent<PlayerWeaponManager>().PlayAttackAnimation();
+        SearchPlayerByName(playerName).GetComponent<PlayerWeaponManager>().PlayAttackAnimation();
     }
 
     public void SpawnBullet(string playerName, float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
     {
-        SearchPlayerByName(playerName).gameObject.GetComponent<PlayerWeaponManager>()
+        SearchPlayerByName(playerName).GetComponent<PlayerWeaponManager>()
             .SpawnBullet(xSpawnPos, ySpawnPos, xMousePos, yMousePos);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
         Debug.Log(playerName+" "+amount);
-        SearchPlayerByName(playerName).gameObject.GetComponent<CharacterStats>().hitPoint += amount;
+        SearchPlayerByName(playerName).GetComponent<CharacterStats>().hitPoint += amount;
     }
 
     public void CorrectDeadPosition(string playerName, float x, float y)
     {
-        SearchPlayerByName(playerName).gameObject.GetComponent<CharacterStats>().CorrectDeadPosition(x, y);
+        SearchPlayerByName(playerName).GetComponent<CharacterStats>().CorrectDeadPosition(x, y);
     }
 
-    public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, int strength, float duration)
+    public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, float duration, int strength)
     {
         var monster = SearchMonsterById(targetId);
-        monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster.rawStat,statusEffect,strength,duration));
+        monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster, statusEffect, duration, strength));
     }
 
     public void PlayMonsterAttackAnimation(int monsterId)
@@ -150,7 +150,7 @@ public class UnitManager : MonoBehaviour
     // Utilities ----------------------
     private PlayerController SearchPlayerByName(string playerName)
     {
-        foreach (var player in _players.Where(player => player.gameObject.name == playerName.Substring(0, player.gameObject.name.Length)))
+        foreach (var player in _players.Where(player => player.name == playerName.Substring(0, player.name.Length)))
         {
             return player;
         }
@@ -182,7 +182,7 @@ public class UnitManager : MonoBehaviour
 
     public float RangeFromNearestPlayer(Vector3 pos)
     {
-        return Vector3.Distance(_players.FindClosest(pos).transform.position, pos);
+        return Vector3.Distance(GetNearestPlayer(pos).transform.position, pos);
     }
 
     public PlayerController GetNearestPlayer(Vector3 pos)
@@ -193,21 +193,6 @@ public class UnitManager : MonoBehaviour
     public List<PlayerController> GetNearestPlayers(Vector3 pos, int count)
     {
         return _players.FindClose(pos).TakeWhile(player => count-- >= 0).ToList();
-    }
-
-    public List<PlayerController> GetNearestPlayersInRadius(Vector3 pos, float r)
-    {
-        var collider = Physics.OverlapSphere(pos, r);
-        List<PlayerController> temp = new List<PlayerController>();
-        foreach (var col in collider)
-        {
-            if (col.TryGetComponent(out PlayerController player))
-            {
-                temp.Add(player);
-            }
-        }
-
-        return temp;
     }
 
     public float RangeFromNearestMonster(Vector3 pos)
@@ -224,8 +209,20 @@ public class UnitManager : MonoBehaviour
     {
         return _players.FirstOrDefault(player => player.id == id);
     }
-    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
+
+    public List<T> GetObjectsInRadius<T>(Vector2 point, float r, LayerMask layerMask)
     {
-        return Physics2D.OverlapCircleAll(attackPoint, _attackRad, targetLayer);
+        List<T> temp = new List<T>();
+        var colliders = Physics2D.OverlapCircleAll(point, r, layerMask);
+        foreach (var col in colliders)
+        {
+            //Debug.Log(col.name);
+            if (col.TryGetComponent(out T obj))
+            {
+                temp.Add(obj);
+            }
+        }
+
+        return temp;
     }
 }

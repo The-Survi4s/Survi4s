@@ -110,7 +110,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
     public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {
-        if (player.gameObject.name != owner.name) return;
+        if (player.name != owner.name) return;
         owner = null;
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);

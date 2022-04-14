@@ -255,7 +255,7 @@ public class NetworkClient : MonoBehaviour
                 case Header.MoEf:
                 {
                     UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(info[2]),
-                        EnumParse<StatusEffect>(info[3]), int.Parse(info[4]), float.Parse(info[5]));
+                        EnumParse<StatusEffect>(info[3]), float.Parse(info[4]), int.Parse(info[5]));
                     break;
                 }
                 case Header.MdPl:
@@ -431,9 +431,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, int strength, float duration)
+    public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, float duration, int strength)
     {
-        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), strength.ToString(), duration.ToString("f2")};
+        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), duration.ToString("f2"), strength.ToString() };
         SendMessageClient("1", msg);
     }
 

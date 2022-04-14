@@ -12,7 +12,7 @@ public class Statue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _maxHp = GameManager.Instance.GameSetting.initialStatueHp;
+        _maxHp = GameManager.Instance.gameSetting.initialStatueHp;
     }
 
     // Update is called once per frame

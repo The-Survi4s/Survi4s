@@ -72,32 +72,17 @@ public class WallManager : MonoBehaviour
         Wall.OnWallRebuilt -= OnWallRebuilt;
     }
 
-    public static event Action<Wall> OnWallFallenTop;
-    public static event Action<Wall> OnWallFallenRight;
-    public static event Action<Wall> OnWallFallenBottom;
-    public static event Action<Wall> OnWallFallenLeft;
+    public static event Action<Wall> BroadcastWallFallen;
+    public static event Action<Monster.Origin> BroadcastWallRebuilt;
+
     private static void OnWallDestroyed(Wall wall)
     {
-        switch (wall.origin)
-        {
-            case Monster.Origin.Top:
-                OnWallFallenTop?.Invoke(wall);
-                break;
-            case Monster.Origin.Right:
-                OnWallFallenRight?.Invoke(wall);
-                break;
-            case Monster.Origin.Bottom:
-                OnWallFallenBottom?.Invoke(wall);
-                break;
-            case Monster.Origin.Left:
-                OnWallFallenLeft?.Invoke(wall);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        NavMeshController.UpdateNavMesh();
+        BroadcastWallFallen?.Invoke(wall);
     }
     private void OnWallRebuilt(Wall wall)
     {
-        throw new NotImplementedException();
+        NavMeshController.UpdateNavMesh();
+        BroadcastWallRebuilt?.Invoke(wall.origin);
     }
 }

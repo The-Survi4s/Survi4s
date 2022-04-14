@@ -9,6 +9,6 @@ public class BulletTipeX : BulletBase
     protected override void OnCriticalShot(Monster monster)
     {
         base.OnCriticalShot(monster);
-        NetworkClient.Instance.ApplyStatusEffectToMonster(monster.id, StatusEffect.Stun, 1, StunDuration);
+        NetworkClient.Instance.ApplyStatusEffectToMonster(monster.id, StatusEffect.Stun, StunDuration, 1);
     }
 }

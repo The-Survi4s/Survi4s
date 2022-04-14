@@ -76,7 +76,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         foreach (WeaponBase x in UnitManager.Instance.weapons)
         {
-            float dist = Vector3.Distance(x.gameObject.transform.position, transform.position);
+            float dist = Vector3.Distance(x.transform.position, transform.position);
             if (dist < minDist && !x.IsUsed())
             {
                 temp = x.gameObject;

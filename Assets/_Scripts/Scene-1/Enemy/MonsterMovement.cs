@@ -1,21 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MonsterMovement : MonoBehaviour
 {
-    [SerializeField] private AIBase AI;
+    private Monster _owner;
+    private NavMeshAgent _agent;
+    private Transform _currentTarget;
+    private Vector3 _currentTargetPreviousPos;
+    [SerializeField] private float _maxOffset = 1;
 
-    private Transform t;
-    // Start is called before the first frame update
     void Start()
     {
-        
+        _owner = GetComponent<Monster>();
+        _agent = GetComponent<NavMeshAgent>();
+        _currentTarget = transform;
+        _currentTargetPreviousPos = Vector3.zero;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //AI.Move(); // Value vector2 dari AI dipakai gerak
+        SetStat();
+        if (Vector3.Distance(_currentTargetPreviousPos, _currentTarget.position) > _maxOffset)
+        {
+            _agent.SetDestination(_currentTarget.position);
+            _currentTargetPreviousPos = _currentTarget.position;
+        }
+    }
+
+    public void UpdateTarget(Transform target)
+    {
+        _currentTarget = target;
+    }
+
+    private void SetStat()
+    {
+        _agent.speed = _owner.currentStat.movSpd;
     }
 }

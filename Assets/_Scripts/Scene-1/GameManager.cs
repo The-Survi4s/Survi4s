@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [field: SerializeField] public GameSettings GameSetting { get; private set; }
+    [field: SerializeField] public GameSettings gameSetting { get; private set; }
 
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }

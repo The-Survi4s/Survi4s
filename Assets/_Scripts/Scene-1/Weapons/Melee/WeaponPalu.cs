@@ -9,7 +9,7 @@ public class WeaponPalu : WeaponMelee
         foreach (Collider2D x in targets)
         {
             Debug.Log("We hit " + x.name);
-            if (x.gameObject.TryGetComponent(out Wall wall))
+            if (x.TryGetComponent(out Wall wall))
             {
                 wall.ModifyWallHp(10);
                 Debug.Log("We repair " + x.name);

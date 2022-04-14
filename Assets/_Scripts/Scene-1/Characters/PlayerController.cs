@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         {
             // Set the camera ----------------------------------------------------------
             mainCamera = Camera.main;
-            CameraController.Instance.SetTargetFollow(this.gameObject.transform);
+            CameraController.Instance.SetTargetFollow(transform);
             isLocal = true;
         }
 
@@ -90,12 +90,12 @@ public class PlayerController : MonoBehaviour
         // Flip character based on mouse position --------------------------------------------------
         if(syncMousePos.x < transform.position.x && !isFacingLeft)
         {
-            gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            transform.rotation = Quaternion.Euler(0, 180, 0);
             isFacingLeft = true;
         }
         else if (syncMousePos.x > transform.position.x && isFacingLeft)
         {
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
             isFacingLeft = false;
         }
 

@@ -28,7 +28,7 @@ public class Spawner : MonoBehaviour
         this.spawnOffset = spawnOffset;
         GameObject temp = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         Monster monster = temp.GetComponent<Monster>();
-        monster.Init(origin, monsterID);
+        monster.SetIdAndOrigin(origin, monsterID);
         UnitManager.Instance.AddMonster(monster);
     }
 }

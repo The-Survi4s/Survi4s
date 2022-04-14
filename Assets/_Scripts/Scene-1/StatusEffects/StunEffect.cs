@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StunEffect : StatusEffectBase
 {
-    public StunEffect(CooldownSystem cooldownSystem, Stat originalStat, float duration) : base(cooldownSystem, originalStat, 1, duration)
+    public StunEffect(CooldownSystem cooldownSystem, Monster owner, float duration) : base(cooldownSystem, owner, duration, 1)
     {
         statusEffectName = StatusEffect.Stun;
         StartApplyEffect();
