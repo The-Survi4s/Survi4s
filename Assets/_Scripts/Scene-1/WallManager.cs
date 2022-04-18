@@ -79,13 +79,13 @@ public class WallManager : MonoBehaviour
 
     private static void OnWallDestroyed(Wall wall)
     {
-        wall.GetComponent<NavMeshModifier>().overrideArea = false;
+        wall.GetComponent<NavMeshModifier>().area = 0; //Walkable
         NavMeshController.UpdateNavMesh();
         BroadcastWallFallen?.Invoke(wall);
     }
     private void OnWallRebuilt(Wall wall)
     {
-        wall.GetComponent<NavMeshModifier>().overrideArea = true;
+        wall.GetComponent<NavMeshModifier>().area = 1; //Not walkable
         NavMeshController.UpdateNavMesh();
         BroadcastWallRebuilt?.Invoke(wall.origin);
     }

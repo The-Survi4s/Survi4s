@@ -101,6 +101,21 @@ public class Monster : MonoBehaviour
 
     private void SetTargetMovement()
     {
+        if (_targetWall == null)
+        {
+            Debug.Log("TargetWall null");
+            return;
+        }
+        if (_nearestPlayer == null)
+        {
+            Debug.Log("NearestPlayer null");
+            return;
+        }
+        if (GameManager.Instance.statue == null)
+        {
+            Debug.Log("statue null");
+            return;
+        }
         if (Mathf.Min(DistanceTo(_targetWall), DistanceTo(GameManager.Instance.statue), DistanceTo(_nearestPlayer)) <
             setting.minRange) _monsterMovement.UpdateTarget(transform);
         if (_targetWall.isDestroyed && DistanceTo(_targetWall) < setting.collisionRange ||

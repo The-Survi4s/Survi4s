@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditor;
 using UnityEngine;
 
 public class NetworkClient : MonoBehaviour
