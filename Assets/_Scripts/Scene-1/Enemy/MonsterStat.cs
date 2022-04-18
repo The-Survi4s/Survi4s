@@ -67,6 +67,7 @@ public class MonsterStat : IHasCooldown
     public MonsterStat(CooldownSystem cooldownSystem, Stat newStat, Monster owner)
     {
         _cooldownSystem = cooldownSystem;
+        _cooldownData = new CooldownData(this);
         _defaultStat = newStat;
         _rawStat = _defaultStat;
         this._owner = owner;

@@ -65,10 +65,13 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         id = -1;
-        monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), setting.defaultStat, this);
         _monsterMovement = GetComponent<MonsterMovement>();
         _activeStatusEffects = new List<StatusEffectBase>();
+    }
 
+    private void Start()
+    {
+        monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), setting.defaultStat, this);
         monsterStat.OnHpZero += HpZeroEventHandler;
     }
 
@@ -117,6 +120,7 @@ public class Monster : MonoBehaviour
     {
         monsterStat.StartCooldown();
         NetworkClient.Instance.StartMonsterAttackAnimation(id);
+        if(!NetworkClient.Instance.isMaster) return;
         switch (nearestObj)
         {
             case Wall wall:

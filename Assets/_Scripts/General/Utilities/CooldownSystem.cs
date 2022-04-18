@@ -15,6 +15,11 @@ public class CooldownSystem : MonoBehaviour
         }
     }
 
+    public bool IsOnCooldown(CooldownData data)
+    {
+        return _cooldownList.Contains(data);
+    }
+
     public CooldownData PutOnCooldown(IHasCooldown cooldown)
     {
         CooldownData data = new CooldownData(cooldown);

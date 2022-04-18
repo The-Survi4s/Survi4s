@@ -13,14 +13,9 @@ public enum StatusEffect
 
 public class StatusEffectFactory : MonoBehaviour
 {
-    private static CooldownSystem _cooldownSystem;
-    void Awake()
-    {
-        _cooldownSystem = FindObjectOfType<CooldownSystem>();
-    }
-
     public static StatusEffectBase CreateNew(Monster owner, StatusEffect statusEffect, float duration, int strength = 1)
     {
+        var _cooldownSystem = FindObjectOfType<CooldownSystem>();
         switch (statusEffect)
         {
             case StatusEffect.Stun:

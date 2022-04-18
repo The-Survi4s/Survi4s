@@ -51,7 +51,7 @@ public class WallManager : MonoBehaviour
         {
             wallList = GroupWalls(origin);
         }
-        return wallList[Random.Range(0, wallList.Count - 1)];
+        return wallList[Random.Range(0, wallList.Count)];
     }
 
     private List<Wall> GroupWalls(Monster.Origin origin)
