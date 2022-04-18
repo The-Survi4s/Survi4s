@@ -14,7 +14,15 @@ public class Monster : MonoBehaviour
     [SerializeField] protected LayerMask monsterLayerMask;
     [SerializeField] protected MonsterStat monsterStat;
     
-    public Stat rawStat => monsterStat.getRawStat;
+    public Stat rawStat
+    {
+        get
+        {
+            if (monsterStat == null) return new Stat(); 
+            return monsterStat.getRawStat;
+        }
+    }
+
     public Stat currentStat;
     private MonsterMovement _monsterMovement;
     private List<StatusEffectBase> _activeStatusEffects;
@@ -29,13 +37,15 @@ public class Monster : MonoBehaviour
     protected struct MonsterSetting
     {
         public float attackRange;
+        public float collisionRange;
         public float detectionRange;
+        public float minRange;
         public Target priority;
         public TargetMethod attackPlayer;
         public TargetMethod attackWall;
         public Stat defaultStat;
 
-        public MonsterSetting(Stat defaultStat, float attackRange, float detectionRange, Target priority, TargetMethod attackPlayer, TargetMethod attackWall)
+        public MonsterSetting(Stat defaultStat, float attackRange, float collisionRange, float detectionRange, float minRange, Target priority, TargetMethod attackPlayer, TargetMethod attackWall)
         {
             this.defaultStat = defaultStat;
             this.attackRange = attackRange;
@@ -43,11 +53,14 @@ public class Monster : MonoBehaviour
             this.priority = priority;
             this.attackPlayer = attackPlayer;
             this.attackWall = attackWall;
+            this.collisionRange = collisionRange;
+            this.minRange = minRange;
         }
 
-        public static MonsterSetting defaultMonsterSetting = new MonsterSetting(new Stat(), 1, 5, Target.Wall, TargetMethod.Nearest, TargetMethod.Nearest);
+        public static MonsterSetting defaultMonsterSetting = new MonsterSetting(new Stat(), 1, 2, 5, 0, Target.Wall, TargetMethod.Nearest, TargetMethod.Nearest);
     }
     [SerializeField] protected MonsterSetting setting;
+    public Stat defaultStat => setting.defaultStat;
 
     private Wall _targetWall;
     private Wall _previousTargetWall;
@@ -56,10 +69,12 @@ public class Monster : MonoBehaviour
 
     public static event Action<int> OnMonsterDeath;
 
-    public void SetIdAndOrigin(Origin ori, int id)
+    public void Initialize(Origin ori, int id, Stat stat)
     {
         origin = ori;
         this.id = this.id == -1 ? id : this.id;
+        monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), stat, this);
+        monsterStat.OnHpZero += HpZeroEventHandler;
     }
 
     private void Awake()
@@ -71,12 +86,12 @@ public class Monster : MonoBehaviour
 
     private void Start()
     {
-        monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), setting.defaultStat, this);
-        monsterStat.OnHpZero += HpZeroEventHandler;
+        
     }
 
     private void Update()
     {
+        if (monsterStat == null) return;
         monsterStat.UpdateStatCooldown();
         ApplyStatusEffects();
         _nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position);
@@ -86,7 +101,14 @@ public class Monster : MonoBehaviour
 
     private void SetTargetMovement()
     {
-        _monsterMovement.UpdateTarget(_targetWall.transform);
+        if (Mathf.Min(DistanceTo(_targetWall), DistanceTo(GameManager.Instance.statue), DistanceTo(_nearestPlayer)) <
+            setting.minRange) _monsterMovement.UpdateTarget(transform);
+        if (_targetWall.isDestroyed && DistanceTo(_targetWall) < setting.collisionRange ||
+            DistanceTo(GameManager.Instance.statue) < DistanceTo(_targetWall))
+        {
+            _monsterMovement.UpdateTarget(GameManager.Instance.statue.transform);
+            return;
+        }
         if (setting.priority == Target.Player)
         {
             _monsterMovement.UpdateTarget(_nearestPlayer.transform);
@@ -97,6 +119,7 @@ public class Monster : MonoBehaviour
         }
         else
         {
+            _monsterMovement.UpdateTarget(_targetWall.transform);
             if (DistanceTo(_nearestPlayer) < setting.detectionRange && setting.attackPlayer != TargetMethod.DontAttack)
             {
                 _monsterMovement.UpdateTarget(_nearestPlayer.transform);
@@ -133,6 +156,9 @@ public class Monster : MonoBehaviour
                     NetworkClient.Instance.ModifyPlayerHp(player.name, -currentStat.atk);
                 }
                 break;
+            case Statue _:
+                NetworkClient.Instance.ModifyStatueHp(-currentStat.atk);
+                break;
         }
     }
 
@@ -156,8 +182,9 @@ public class Monster : MonoBehaviour
 
     private void HpZeroEventHandler()
     {
+        Debug.Log($"Monster {id} of type {type} and from {origin} has been killed");
         OnMonsterDeath?.Invoke(id);
-        SpawnManager.instance.ClearIdIndex(id);
+        SpawnManager.Instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);
         Destroy(gameObject);
     }

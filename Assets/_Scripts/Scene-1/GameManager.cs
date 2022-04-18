@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Statue _statue;
+    [field: SerializeField] public Statue statue { get; private set; }
 
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
@@ -52,9 +52,9 @@ public class GameManager : MonoBehaviour
     private void CheckGameOver()
     {
         if (_gameState == GameState.StartGame || _gameState == GameState.GameOver) return;
-        if (UnitManager.Instance.PlayerAliveCount <= 0 || _statue.Hp <= 0)
+        if (UnitManager.Instance.playerAliveCount <= 0 || statue.Hp <= 0)
         {
-            _statue.PlayDestroyedAnimation();
+            statue.PlayDestroyedAnimation();
             ChangeState(GameState.GameOver);
         }
     }
@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
     private async void HandleWaveOver()
     {
         //Wait enemy habis
-        while (UnitManager.Instance.MonsterAliveCount > 0)
+        while (UnitManager.Instance.monsterAliveCount > 0)
         {
             await Task.Yield();
         }
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
 
     private async void HandleWaveSpawn()
     {
-        await SpawnManager.instance.StartWave();
+        await SpawnManager.Instance.StartWave();
         ChangeState(GameState.WaveOver);
     }
 
@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
     private void GameStarted()
     {
         // Spawn Player ---------------------------------------------------------------------
-        UnitManager.Instance.SendSpawnPlayer(0, 0, 0);
+        SpawnManager.Instance.SendSpawnPlayer();
 
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);

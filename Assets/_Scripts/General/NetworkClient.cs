@@ -169,7 +169,8 @@ public class NetworkClient : MonoBehaviour
         MdWl,
         SpwM,
         MoEf,
-        MAtk
+        MAtk,
+        MdSt
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -223,12 +224,12 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SwPy:
-                    UnitManager.Instance.SpawnPlayer(info[0], ExtractId(info[0]), float.Parse(info[2]),
-                        float.Parse(info[3]),
+                    SpawnManager.Instance.OnReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
+                        new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
-                    SpawnManager.instance.OnReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
+                    SpawnManager.Instance.OnReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
                         EnumParse<Monster.Origin>(info[4]), float.Parse(info[5]));
                     break;
                 case Header.EqWp:
@@ -271,12 +272,17 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    WallManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    WallManager.Instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
                 {
                     UnitManager.Instance.PlayMonsterAttackAnimation(int.Parse(info[2]));
+                    break;
+                }
+                case Header.MdSt:
+                {
+                    WallManager.Instance.ReceiveModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
             }
@@ -373,9 +379,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("2", "LcR");
     }
 
-    public void SpawnPlayer(float x, float y, int skin)
+    public void SpawnPlayer(Vector2 spawnPos, int skin)
     {
-        string[] msg = {Header.SwPy.ToString(), x.ToString("f2"), y.ToString("f2"), skin.ToString()};
+        string[] msg = {Header.SwPy.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), skin.ToString()};
         SendMessageClient("1", msg);
     }
 
@@ -453,6 +459,12 @@ public class NetworkClient : MonoBehaviour
     public void ModifyWallHp(int id, float amount)
     {
         string[] msg = {Header.MdWl.ToString(), id.ToString(), amount.ToString("f2")};
+        SendMessageClient("1", msg);
+    }
+
+    public void ModifyStatueHp(float amount)
+    {
+        string[] msg = {Header.MdSt.ToString(), amount.ToString("f2")};
         SendMessageClient("1", msg);
     }
 

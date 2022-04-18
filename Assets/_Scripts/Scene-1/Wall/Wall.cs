@@ -18,8 +18,8 @@ public class Wall : MonoBehaviour
     private void Start()
     {
         isInitialized = false;
-        Init(WallManager.instance.GetNewWallId());
-        WallManager.instance.AddWall(this); // Auto add
+        Init(WallManager.Instance.GetNewWallId());
+        WallManager.Instance.AddWall(this); // Auto add
     }
 
     public void Init(int id)
@@ -38,6 +38,7 @@ public class Wall : MonoBehaviour
             if (!isDestroyed) return;
             GetComponent<Collider2D>().enabled = true;
             isDestroyed = false;
+            Debug.Log($"Wall {Id} from {origin} has been rebuilt!");
             OnWallRebuilt?.Invoke(this);
         }
         else if (hitPoint <= 0)
@@ -47,6 +48,7 @@ public class Wall : MonoBehaviour
             GetComponent<Collider2D>().enabled = false;
             isDestroyed = true;
             // Tell all that this is destroyed
+            Debug.Log($"Wall {Id} from {origin} has been destroyed");
             OnWallDestroyed?.Invoke(this);
         }
     }

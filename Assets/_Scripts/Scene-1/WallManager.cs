@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class WallManager : MonoBehaviour
 {
-    public static WallManager instance { get; private set; }
+    public static WallManager Instance { get; private set; }
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -31,6 +32,7 @@ public class WallManager : MonoBehaviour
     public void AddWall(Wall wall) => walls.Add(wall);
 
     public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyWallHp(amount);
+    public void ReceiveModifyStatueHp(float amount) => GameManager.Instance.statue.ModifyHp((int)amount);
     private Wall GetWall(int id) => walls.FirstOrDefault(wall => wall.Id == id);
     public Wall GetRandomWallOn(Monster.Origin origin)
     {
@@ -77,11 +79,13 @@ public class WallManager : MonoBehaviour
 
     private static void OnWallDestroyed(Wall wall)
     {
+        wall.GetComponent<NavMeshModifier>().overrideArea = false;
         NavMeshController.UpdateNavMesh();
         BroadcastWallFallen?.Invoke(wall);
     }
     private void OnWallRebuilt(Wall wall)
     {
+        wall.GetComponent<NavMeshModifier>().overrideArea = true;
         NavMeshController.UpdateNavMesh();
         BroadcastWallRebuilt?.Invoke(wall.origin);
     }

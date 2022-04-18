@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 public class UnitManager : MonoBehaviour
 {
     // Prefab -------------------------------------------------------------------------
-    [SerializeField] private GameObject playerPrefab;
 
     // List ---------------------------------------------------------------------------
     private KdTree<PlayerController> _players = new KdTree<PlayerController>();
@@ -18,8 +17,9 @@ public class UnitManager : MonoBehaviour
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
-    public int PlayerAliveCount => _players.Count(player => !player.IsDead());
-    public int MonsterAliveCount => _monsters.Count;
+    public int playerAliveCount => _players.Count(player => !player.IsDead());
+    public int playerCount => _players.Count;
+    public int monsterAliveCount => _monsters.Count;
 
     private void Awake()
     {
@@ -41,32 +41,16 @@ public class UnitManager : MonoBehaviour
     }
 
     // Spawn Player ------------------------------------------------------------------
-    public void SendSpawnPlayer(float x, float y, int skin)
+    public void AddPlayer(PlayerController p)
     {
-        NetworkClient.Instance.SpawnPlayer(0,0,0);
-    }
-    public void SpawnPlayer(string idAndName, string id, float x, float y, int skin)
-    {
-        if (playerPrefab.TryGetComponent(out PlayerController player))
-        {
-            Vector3 pos = new Vector3(x, y, 0);
-            GameObject temp = Instantiate(playerPrefab, pos, Quaternion.identity);
-            temp.name = idAndName;
-            var p = temp.GetComponent<PlayerController>();
-            p.OnPlayerDead += HandlePlayerDead;
-            _players.Add(p);
-            _players[_players.Count - 1].id = id;
-        }
-        else
-        {
-            Debug.Log("Object is not a player!");
-        }
+        p.OnPlayerDead += HandlePlayerDead;
+        _players.Add(p);
     }
 
     // Deletion
     private void HandlePlayerDead(string id)
     {
-        
+        _players.RemoveAt(SearchPlayerIndexById(id));
     }
 
     private void HandlePlayerDisconnect(string id)
@@ -83,7 +67,7 @@ public class UnitManager : MonoBehaviour
     // Receive
     public void AddMonster(Monster monster)
     {
-        monster.SetTargetWall(WallManager.instance.GetRandomWallOn(monster.origin));
+        monster.SetTargetWall(WallManager.Instance.GetRandomWallOn(monster.origin));
         _monsters.Add(monster);
     }
 
@@ -172,6 +156,19 @@ public class UnitManager : MonoBehaviour
         for (int i = 0; i < _monsters.Count; i++)
         {
             if (_monsters[i].id == monsterId)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int SearchPlayerIndexById(string playerId)
+    {
+        for (int i = 0; i < _players.Count; i++)
+        {
+            if (_players[i].id == playerId)
             {
                 return i;
             }

@@ -13,6 +13,7 @@ public class Statue : MonoBehaviour
     void Start()
     {
         _maxHp = GameManager.Instance.gameSetting.initialStatueHp;
+        Hp = _maxHp;
     }
 
     // Update is called once per frame

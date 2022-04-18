@@ -73,11 +73,12 @@ MonoBehaviour:
     rotSpd: 0
   <type>k__BackingField: 0
   setting:
-    attackRange: 0
-    detectionRange: 0
+    attackRange: 2
+    collisionRange: 2
+    detectionRange: 10
     priority: 0
-    attackPlayer: 0
-    attackWall: 0
+    attackPlayer: 1
+    attackWall: 1
     defaultStat:
       hp: 20
       atk: 2

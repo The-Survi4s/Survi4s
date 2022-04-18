@@ -1001,7 +1001,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bec25c588225d488d094f6edbab285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 123738617261133931, guid: 2e90f74633581604fbabca89e95df3e5, type: 3}
   weapons:
   - {fileID: 361628168857281629}
   - {fileID: 8166647610060320884}
@@ -1564,15 +1563,16 @@ MonoBehaviour:
   - {fileID: 1065950599}
   - {fileID: 119523960}
   - {fileID: 328989969}
-  initialMonsterCount: 3
-  initialMonsterHp: 30
-  initialMonsterSpeed: 1
-  randomMonsterSpawnOffsetMax: 10
+  _monsterSpawnSetting:
+    count: 3
+    hpMultiplier: 1
+    speedMultiplier: 1
+    randomSpawnOffsetMax: 10
   _currentWaveInfo:
     waveNumber: 1
     monsterCount: 3
-    monsterHp: 30
-    monsterSpd: 1
+    monsterHpIncrease: 0
+    monsterSpdIncrease: 0
     spawnRate: 2
     spawnersUsedCount: 3
   _monsterPrefabWeights:
@@ -1580,6 +1580,9 @@ MonoBehaviour:
     weight: 6
   - monsterPrefab: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
     weight: 2
+  _playerSpawnPos: {x: 1.05, y: 1.81}
+  playerPrefab:
+  - {fileID: 123738617261133931, guid: 2e90f74633581604fbabca89e95df3e5, type: 3}
 --- !u!1 &1024943867
 GameObject:
   m_ObjectHideFlags: 0
@@ -2062,7 +2065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89115cc99c2c9b34fb50cd9b35c663bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _statue: {fileID: 169812530}
+  <statue>k__BackingField: {fileID: 169812530}
   _preparationTime: 0
   <gameSetting>k__BackingField:
     maxPlayer: 4
@@ -17652,7 +17655,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf00000000000000000000803f0000803f0000803f00000000000000000000803f00000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2

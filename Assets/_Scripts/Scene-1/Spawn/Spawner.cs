@@ -23,12 +23,12 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void SpawnMonster(GameObject monsterPrefab, int monsterId, float spawnOffset)
+    public void SpawnMonster(GameObject monsterPrefab, int monsterId, float spawnOffset, WaveInfo waveInfo)
     {
         this.spawnOffset = spawnOffset;
         GameObject temp = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         Monster monster = temp.GetComponent<Monster>();
-        monster.SetIdAndOrigin(origin, monsterId);
+        monster.Initialize(origin, monsterId, waveInfo.CalculateStat(monster.defaultStat));
         UnitManager.Instance.AddMonster(monster);
     }
 }
