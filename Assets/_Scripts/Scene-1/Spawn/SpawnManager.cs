@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    private readonly List<bool> _occupiedIDs = new List<bool>();
+    [SerializeField] private List<bool> _occupiedIDs = new List<bool>();
     [SerializeField] private Spawner[] _spawners = new Spawner[4];
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 

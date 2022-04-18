@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773f9b9b6fdce3d4bb08159cfd0df8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <id>k__BackingField: 0
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -58,25 +59,31 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   monsterStat:
-    _stat:
+    _rawStat:
       hp: 0
       atk: 0
       atkCd: 0
       movSpd: 0
       rotSpd: 0
+  currentStat:
+    hp: 0
+    atk: 0
+    atkCd: 0
+    movSpd: 0
+    rotSpd: 0
   <type>k__BackingField: 0
   setting:
     attackRange: 0
     detectionRange: 0
-    targetPlayerPriority: 0
-    targetWallPriority: 0
+    priority: 0
+    attackPlayer: 0
+    attackWall: 0
     defaultStat:
-      hp: 0
-      atk: 0
-      atkCd: 0
-      movSpd: 0
-      rotSpd: 0
-  <id>k__BackingField: 0
+      hp: 20
+      atk: 2
+      atkCd: 2
+      movSpd: 1
+      rotSpd: 1
 --- !u!114 &1226200368138906639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5882cc9c8becb88429f6d024082c0e66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxOffset: 1
 --- !u!212 &2377165867587476519
 SpriteRenderer:
   m_ObjectHideFlags: 0

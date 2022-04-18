@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeState(GameState newState)
     {
+        Debug.Log(newState);
         _gameState = newState;
         switch (newState)
         {
@@ -127,6 +128,7 @@ public class GameManager : MonoBehaviour
     private void DoStuffWhileCountDown()
     {
         // Tampilkan timer, update timer
+        //Debug.Log("Countdown");
     }
 
     private void HandleStartGame()

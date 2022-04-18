@@ -8,7 +8,7 @@ public class Wall : MonoBehaviour
     [SerializeField] private float DefaultHitPoint;
     [field: SerializeField] public float hitPoint { get; private set; }
 
-    public int ID { get; private set; }
+    [field: SerializeField] public int Id { get; private set; }
     public bool isDestroyed { get; private set; }
     public bool isInitialized { get; private set; }
     public static event Action<Wall> OnWallDestroyed;
@@ -24,7 +24,7 @@ public class Wall : MonoBehaviour
 
     public void Init(int id)
     {
-        ID = id;
+        Id = id;
         hitPoint = DefaultHitPoint;
         isInitialized = true;
         isDestroyed = false;

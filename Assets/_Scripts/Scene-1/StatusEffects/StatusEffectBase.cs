@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public enum StatusEffect
@@ -64,11 +65,12 @@ public abstract class StatusEffectBase : IHasCooldown
         originalStat = updatedOriginalStat;
     }
 
-    protected void StartApplyEffect()
+    protected async void StartApplyEffect()
     {
         while (!_cooldownData.isDone)
         {
             ApplyEffect();
+            await Task.Yield();
         }
     }
     protected abstract void ApplyEffect();

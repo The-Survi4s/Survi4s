@@ -25,13 +25,13 @@ public class WallManager : MonoBehaviour
     private List<Wall> _bottomWalls = new List<Wall>();
     private List<Wall> _rightWalls = new List<Wall>();
     private List<Wall> _leftWalls = new List<Wall>();
-    private int _maxWallId;
+    private int _maxWallId = 0;
 
     public int GetNewWallId() => _maxWallId++;
     public void AddWall(Wall wall) => walls.Add(wall);
 
     public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyWallHp(amount);
-    private Wall GetWall(int id) => walls.FirstOrDefault(wall => wall.ID == id);
+    private Wall GetWall(int id) => walls.FirstOrDefault(wall => wall.Id == id);
     public Wall GetRandomWallOn(Monster.Origin origin)
     {
         return origin switch

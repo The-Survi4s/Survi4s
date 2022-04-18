@@ -59,7 +59,7 @@ public class Monster : MonoBehaviour
     public void SetIdAndOrigin(Origin ori, int id)
     {
         origin = ori;
-        this.id = id == -1 ? id : this.id;
+        this.id = this.id == -1 ? id : this.id;
     }
 
     private void Awake()
@@ -124,7 +124,7 @@ public class Monster : MonoBehaviour
         switch (nearestObj)
         {
             case Wall wall:
-                NetworkClient.Instance.ModifyWallHp(wall.ID, -currentStat.atk);
+                NetworkClient.Instance.ModifyWallHp(wall.Id, -currentStat.atk);
                 break;
             case PlayerController _:
                 var players = GetTargetPlayers();
@@ -171,9 +171,9 @@ public class Monster : MonoBehaviour
         Stat temp = rawStat;
         for (int i = _activeStatusEffects.Count - 1; i >= 0; i--)
         {
-            if (_activeStatusEffects[i].remainingTime <= 0) _activeStatusEffects.RemoveAt(i);
             _activeStatusEffects[i].UpdateStat(temp);
             temp = _activeStatusEffects[i].newStat;
+            if (_activeStatusEffects[i].remainingTime <= 0) _activeStatusEffects.RemoveAt(i);
         }
 
         currentStat = temp;

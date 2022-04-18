@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Statue : MonoBehaviour
 {
-    public int Hp { get; private set; }
+    [field: SerializeField] public int Hp { get; private set; }
     private int _maxHp;
 
     public static event Action StatueDestroyed;

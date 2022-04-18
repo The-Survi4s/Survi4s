@@ -67,5 +67,21 @@ PrefabInstance:
       propertyPath: <type>k__BackingField
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.hp
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.atk
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.atkCd
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.movSpd
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
