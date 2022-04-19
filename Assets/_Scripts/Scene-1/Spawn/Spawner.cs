@@ -14,11 +14,11 @@ public class Spawner : MonoBehaviour
         {
             if (origin == Monster.Origin.Top || origin == Monster.Origin.Bottom)
             {
-                return transform.position + new Vector3(spawnOffset, 0, 0);
+                return transform.position + new Vector3(spawnOffset, 0, -1);
             }
             else
             {
-                return transform.position + new Vector3(0, spawnOffset, 0);
+                return transform.position + new Vector3(0, spawnOffset, -1);
             }
         }
     }

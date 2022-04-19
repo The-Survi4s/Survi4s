@@ -11,8 +11,8 @@ public class Wall : MonoBehaviour
     [field: SerializeField] public int Id { get; private set; }
     public bool isDestroyed { get; private set; }
     public bool isInitialized { get; private set; }
-    public static event Action<Wall> OnWallDestroyed;
-    public static event Action<Wall> OnWallRebuilt;
+    public event Action<Wall> OnWallDestroyed;
+    public event Action<Wall> OnWallRebuilt;
     [field: SerializeField] public Monster.Origin origin { get; private set; } // Di set di inspector
 
     private void Start()
@@ -51,5 +51,17 @@ public class Wall : MonoBehaviour
             Debug.Log($"Wall {Id} from {origin} has been destroyed");
             OnWallDestroyed?.Invoke(this);
         }
+    }
+
+    // ----------- cheats
+    [ContextMenu(nameof(DamageWallBy10))]
+    private void DamageWallBy10()
+    {
+        ModifyWallHp(-10);
+    }
+    [ContextMenu(nameof(HealWallBy10))]
+    private void HealWallBy10()
+    {
+        ModifyWallHp(10);
     }
 }

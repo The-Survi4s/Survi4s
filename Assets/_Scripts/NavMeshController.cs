@@ -9,6 +9,7 @@ public class NavMeshController : MonoBehaviour
     private void Awake()
     {
         _surface2d = GetComponent<NavMeshSurface2d>();
+        UpdateNavMesh();
     }
 
     public static void UpdateNavMesh()

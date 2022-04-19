@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterStats),typeof(PlayerWeaponManager))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D _rigidbody;
+    private Rigidbody2D _rigidbody;
     [field: SerializeField] public bool isLocal { get; private set; }
     public string id { get; set; }
 
@@ -13,46 +13,53 @@ public class PlayerController : MonoBehaviour
     public enum Button { w, a, s, d }
 
     // For player facing ---------------------------------------------------------------
-    private Camera mainCamera;
+    private Camera _mainCamera;
     public Vector3 localMousePos { get; private set; }
-    private Vector3 historyMousePos;
+    private Vector3 _historyMousePos;
     public Vector3 syncMousePos { get; private set; }
     public bool isFacingLeft { get; private set; }
 
     // Character Stats -----------------------------------------------------------------
-    [SerializeField] private CharacterStats characterStats;
-    [SerializeField] private PlayerWeaponManager _playerWeaponManager;
+    private CharacterStats _characterStats;
+    private PlayerWeaponManager _playerWeaponManager;
 
     public event Action<string> OnPlayerDead;
 
     // Frame rate sending mouse pos
-    [SerializeField] private float mousePosSendRate;
-    private float mousePosSendCoolDown, mousePosNextTime;
+    [SerializeField] private float _mousePosSendRate;
+    private float _mousePosSendCoolDown, _mousePosNextTime;
 
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _characterStats = GetComponent<CharacterStats>();
+        _playerWeaponManager = GetComponent<PlayerWeaponManager>();
+    }
+    
     private void Start()
     {
         // Tell camera to follow this object --------------------------------------------
         if(name == NetworkClient.Instance.myId + NetworkClient.Instance.myName)
         {
             // Set the camera ----------------------------------------------------------
-            mainCamera = Camera.main;
+            _mainCamera = Camera.main;
             CameraController.Instance.SetTargetFollow(transform);
             isLocal = true;
         }
 
-        historyMousePos = Vector3.zero;
+        _historyMousePos = Vector3.zero;
         localMousePos = Vector3.zero;
         syncMousePos = Vector3.zero;
 
-        mousePosSendCoolDown = 1 / mousePosSendRate;
-        mousePosNextTime = 0;
+        _mousePosSendCoolDown = 1 / _mousePosSendRate;
+        _mousePosNextTime = 0;
 
-        characterStats.OnPlayerDead += HandlePlayerDead;
+        _characterStats.OnPlayerDead += HandlePlayerDead;
     }
 
     private void Update()
     {
-        if (isLocal && !IsDead())
+        if (isLocal && !isDead)
         {
             // For Movement --------------------------------------------------------
             DetectMovementKeyboard();
@@ -72,10 +79,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool IsDead()
-    {
-        return characterStats.isDead;
-    }
+    public bool isDead => _characterStats.isDead;
 
     private void HandlePlayerDead()
     {
@@ -85,7 +89,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         // Move character based on what button is down ---------------------------------------------
-        if(!IsDead()) MoveCharacter();
+        if(!isDead) MoveCharacter();
 
         // Flip character based on mouse position --------------------------------------------------
         if(syncMousePos.x < transform.position.x && !isFacingLeft)
@@ -149,7 +153,7 @@ public class PlayerController : MonoBehaviour
     // For detecting input mouse ---------------------------------------------------------
     private void DetectMovementMouse()
     {
-        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mouseWorldPos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
         localMousePos = mouseWorldPos;
     }
@@ -157,7 +161,7 @@ public class PlayerController : MonoBehaviour
     // For moving character ------------------------------------------------------------------
     private void MoveCharacter()
     {
-        float baseSpeed = characterStats.moveSpeed;
+        float baseSpeed = _characterStats.moveSpeed;
         if (w_IsDown && a_IsDown)
         {
             _rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / 2);
@@ -200,12 +204,12 @@ public class PlayerController : MonoBehaviour
     private void SendMousePos()
     {
         // Need update for better connection
-        if (localMousePos != historyMousePos && Time.time >= mousePosNextTime)
+        if (localMousePos != _historyMousePos && Time.time >= _mousePosNextTime)
         {
-            historyMousePos = localMousePos;
+            _historyMousePos = localMousePos;
             NetworkClient.Instance.SendMousePos(localMousePos.x, localMousePos.y);
 
-            mousePosNextTime = Time.time + mousePosSendCoolDown;
+            _mousePosNextTime = Time.time + _mousePosSendCoolDown;
         }
     }
 
@@ -213,6 +217,7 @@ public class PlayerController : MonoBehaviour
     public void SyncMousePos(float x, float y)
     {
         syncMousePos = new Vector3(x, y, 0);
+        Debug.Log(syncMousePos);
     }
 
     // Set Button up/down --------------------------------------------------------------------
@@ -237,6 +242,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        characterStats.OnPlayerDead -= HandlePlayerDead;
+        _characterStats.OnPlayerDead -= HandlePlayerDead;
     }
 }

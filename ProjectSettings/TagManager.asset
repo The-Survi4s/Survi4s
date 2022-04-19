@@ -43,3 +43,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 1797203401
+    locked: 0
+  - name: Above Ground
+    uniqueID: 2976307213
+    locked: 0
+  - name: Above Above Ground
+    uniqueID: 3948188383
+    locked: 0

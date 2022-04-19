@@ -10,14 +10,15 @@ public class UnitManager : MonoBehaviour
     // Prefab -------------------------------------------------------------------------
 
     // List ---------------------------------------------------------------------------
-    private KdTree<PlayerController> _players = new KdTree<PlayerController>();
+    private KdTree<PlayerController> _players;
+    private List<GameObject> _playerUsernames;
     [SerializeField] public List<WeaponBase> weapons;
-    private KdTree<Monster> _monsters = new KdTree<Monster>();
+    private KdTree<Monster> _monsters;
 
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
-    public int playerAliveCount => _players.Count(player => !player.IsDead());
+    public int playerAliveCount => _players.Count(player => !player.isDead);
     public int playerCount => _players.Count;
     public int monsterAliveCount => _monsters.Count;
 
@@ -32,12 +33,16 @@ public class UnitManager : MonoBehaviour
             Destroy(this);
         }
         _players = new KdTree<PlayerController>(true);
+        _monsters = new KdTree<Monster>();
+        _playerUsernames = new List<GameObject>();
     }
 
     private void Update()
     {
         _players.UpdatePositions();
         _monsters.UpdatePositions();
+
+        //Update player username to whatever the hell
     }
 
     // Spawn Player ------------------------------------------------------------------
@@ -45,22 +50,28 @@ public class UnitManager : MonoBehaviour
     {
         p.OnPlayerDead += HandlePlayerDead;
         _players.Add(p);
+
+        //Get player username text object from child
     }
 
     // Deletion
-    private void HandlePlayerDead(string id)
+    private void HandlePlayerDead(string idAndName)
     {
-        _players.RemoveAt(SearchPlayerIndexById(id));
+        //Set that player to
+        //Set camera spectator ke player lain
     }
 
-    private void HandlePlayerDisconnect(string id)
+    public void HandlePlayerDisconnect(string idAndName)
     {
-
+        HandlePlayerDead(idAndName);
+        var index = SearchPlayerIndexById(idAndName);
+        if (index >= 0) _players.RemoveAt(index);
     }
 
     public void DeleteMonsterFromList(int id)
     {
-        _monsters.RemoveAt(SearchMonsterIndexById(id));
+        var index = SearchMonsterIndexById(id);
+        if(index >= 0) _monsters.RemoveAt(index);
     }
 
     // Spawn Monster -----------------------------------------------------------------
@@ -85,45 +96,52 @@ public class UnitManager : MonoBehaviour
     // Player
     public void SyncMousePos(string playerName, float x, float y)
     {
-        SearchPlayerByName(playerName).SyncMousePos(x, y);
+        var player = SearchPlayerByName(playerName);
+        if (player) player.SyncMousePos(x, y);
     }
 
     public void SetButton(string playerName, PlayerController.Button button, bool isDown)
     {
-        SearchPlayerByName(playerName).SetButton(button, isDown);
+        var player = SearchPlayerByName(playerName);
+        if (player) player.SetButton(button, isDown);
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
-        SearchPlayerByName(playerName).GetComponent<PlayerWeaponManager>().OnEquipWeapon(weaponName);
+        var player = SearchPlayerByName(playerName);
+        if (player) player.GetComponent<PlayerWeaponManager>().OnEquipWeapon(weaponName);
     }
 
     public void PlayAttackAnimation(string playerName)
     {
-        SearchPlayerByName(playerName).GetComponent<PlayerWeaponManager>().PlayAttackAnimation();
+        var player = SearchPlayerByName(playerName);
+        if (player) player.GetComponent<PlayerWeaponManager>().PlayAttackAnimation();
     }
 
     public void SpawnBullet(string playerName, float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
     {
-        SearchPlayerByName(playerName).GetComponent<PlayerWeaponManager>()
+        var player = SearchPlayerByName(playerName);
+        if (player) player.GetComponent<PlayerWeaponManager>()
             .SpawnBullet(xSpawnPos, ySpawnPos, xMousePos, yMousePos);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
         Debug.Log(playerName+" "+amount);
-        SearchPlayerByName(playerName).GetComponent<CharacterStats>().hitPoint += amount;
+        var player = SearchPlayerByName(playerName);
+        if (player) player.GetComponent<CharacterStats>().hitPoint += amount;
     }
 
     public void CorrectDeadPosition(string playerName, float x, float y)
     {
-        SearchPlayerByName(playerName).GetComponent<CharacterStats>().CorrectDeadPosition(x, y);
+        var player = SearchPlayerByName(playerName);
+        if (player) player.GetComponent<CharacterStats>().CorrectDeadPosition(x, y);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, float duration, int strength)
     {
         var monster = SearchMonsterById(targetId);
-        monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster, statusEffect, duration, strength));
+        if(monster) monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster, statusEffect, duration, strength));
     }
 
     public void PlayMonsterAttackAnimation(int monsterId)
@@ -134,11 +152,7 @@ public class UnitManager : MonoBehaviour
     // Utilities ----------------------
     private PlayerController SearchPlayerByName(string playerName)
     {
-        foreach (var player in _players.Where(player => player.name == playerName.Substring(0, player.name.Length)))
-        {
-            return player;
-        }
-        return null;
+        return _players.FirstOrDefault(player => player.name == playerName.Substring(0, player.name.Length));
     }
 
     private Monster SearchMonsterById(int monsterId)

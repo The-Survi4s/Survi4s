@@ -8,6 +8,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private int MaxHitPoint;
     [SerializeField] private float DefaultMoveSpeed;
     public event Action OnPlayerDead;
+    private bool _actionInvoked = false;
 
     [SerializeField] private float _hitPoint;
     public float hitPoint
@@ -17,9 +18,11 @@ public class CharacterStats : MonoBehaviour
         {
             _hitPoint = value;
 
-            if (_hitPoint <= 0)
+            if (_hitPoint <= 0 && !_actionInvoked)
             {
                 OnPlayerDead?.Invoke();
+                _hitPoint = 0;
+                _actionInvoked = true;
             }
 
             if (_hitPoint > MaxHitPoint)

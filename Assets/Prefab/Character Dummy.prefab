@@ -101,11 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b783c0c74d966c498cc2830b499ebea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 6815912341295409886}
   <isLocal>k__BackingField: 0
-  characterStats: {fileID: 3734245638782618344}
-  _playerWeaponManager: {fileID: 2055355670349757396}
-  mousePosSendRate: 10
+  _mousePosSendRate: 10
 --- !u!114 &3734245638782618344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHitPoint: 50
-  DefaultMoveSpeed: 5
+  DefaultMoveSpeed: 10
   _hitPoint: 0
 --- !u!114 &2055355670349757396
 MonoBehaviour:

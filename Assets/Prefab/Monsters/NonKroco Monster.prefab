@@ -63,12 +63,32 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.16409683
       objectReference: {fileID: 0}
+    - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.08628178
+      objectReference: {fileID: 0}
+    - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.minRange
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: setting.attackRange
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <type>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.collisionRange
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
@@ -77,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: setting.detectionRange
-      value: 15
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: setting.defaultStat.atk

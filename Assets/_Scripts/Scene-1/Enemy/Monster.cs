@@ -14,14 +14,7 @@ public class Monster : MonoBehaviour
     [SerializeField] protected LayerMask monsterLayerMask;
     [SerializeField] protected MonsterStat monsterStat;
     
-    public Stat rawStat
-    {
-        get
-        {
-            if (monsterStat == null) return new Stat(); 
-            return monsterStat.getRawStat;
-        }
-    }
+    private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
 
     public Stat currentStat;
     private MonsterMovement _monsterMovement;
@@ -99,46 +92,60 @@ public class Monster : MonoBehaviour
         CheckCanAttack();
     }
 
+    //Ini harusnya pakai state machine
     private void SetTargetMovement()
     {
-        if (_targetWall == null)
+        // Jika wall sudah hancur, target statue
+        if (_targetWall.isDestroyed)
         {
-            Debug.Log("TargetWall null");
-            return;
+            SetTargetMovementIfTargetWallDestroyed();
         }
-        if (_nearestPlayer == null)
+        else
         {
-            Debug.Log("NearestPlayer null");
-            return;
+            SetTargetMovementIfTargetWallExists();
         }
-        if (GameManager.Instance.statue == null)
-        {
-            Debug.Log("statue null");
-            return;
-        }
+
+        // Jika terlalu dekat, stop
         if (Mathf.Min(DistanceTo(_targetWall), DistanceTo(GameManager.Instance.statue), DistanceTo(_nearestPlayer)) <
             setting.minRange) _monsterMovement.UpdateTarget(transform);
-        if (_targetWall.isDestroyed && DistanceTo(_targetWall) < setting.collisionRange ||
-            DistanceTo(GameManager.Instance.statue) < DistanceTo(_targetWall))
-        {
-            _monsterMovement.UpdateTarget(GameManager.Instance.statue.transform);
-            return;
-        }
+    }
+
+    private void SetTargetMovementIfTargetWallExists()
+    {
         if (setting.priority == Target.Player)
         {
-            _monsterMovement.UpdateTarget(_nearestPlayer.transform);
+            if (!_nearestPlayer.isDead) _monsterMovement.UpdateTarget(_nearestPlayer.transform);
             if (DistanceTo(_targetWall) < setting.attackRange && setting.attackWall != TargetMethod.DontAttack)
             {
-                _monsterMovement.UpdateTarget(_targetWall.transform);
+                if (!_targetWall.isDestroyed) _monsterMovement.UpdateTarget(_targetWall.transform);
             }
         }
         else
         {
-            _monsterMovement.UpdateTarget(_targetWall.transform);
+            if (!_targetWall.isDestroyed) _monsterMovement.UpdateTarget(_targetWall.transform);
             if (DistanceTo(_nearestPlayer) < setting.detectionRange && setting.attackPlayer != TargetMethod.DontAttack)
+            {
+                if (!_nearestPlayer.isDead) _monsterMovement.UpdateTarget(_nearestPlayer.transform);
+            }
+        }
+    }
+
+    private void SetTargetMovementIfTargetWallDestroyed()
+    {
+        if (setting.priority == Target.Player)
+        {
+            if (DistanceTo(_nearestPlayer) > setting.attackRange && !_nearestPlayer.isDead)
+            {
+                _monsterMovement.UpdateTarget(GameManager.Instance.statue.transform);
+            }
+            else if (setting.attackPlayer != TargetMethod.DontAttack)
             {
                 _monsterMovement.UpdateTarget(_nearestPlayer.transform);
             }
+        }
+        else
+        {
+            _monsterMovement.UpdateTarget(GameManager.Instance.statue.transform);
         }
     }
 
@@ -192,7 +199,8 @@ public class Monster : MonoBehaviour
             }
         }
 
-        return res;
+        if (res != null) return res;
+        else return components[0];
     }
 
     private void HpZeroEventHandler()

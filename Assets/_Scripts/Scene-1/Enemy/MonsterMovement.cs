@@ -7,7 +7,7 @@ public class MonsterMovement : MonoBehaviour
 {
     private Monster _owner;
     private NavMeshAgent _agent;
-    private Transform _currentTarget;
+    [SerializeField] private Transform _currentTarget;
     private Vector3 _currentTargetPreviousPos;
     [SerializeField] private float _maxOffset = 1;
 
@@ -15,6 +15,8 @@ public class MonsterMovement : MonoBehaviour
     {
         _owner = GetComponent<Monster>();
         _agent = GetComponent<NavMeshAgent>();
+        _agent.updateUpAxis = false;
+        _agent.updateRotation = false;
         _currentTarget = transform;
         _currentTargetPreviousPos = Vector3.zero;
     }

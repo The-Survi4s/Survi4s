@@ -29,7 +29,13 @@ public class WallManager : MonoBehaviour
     private int _maxWallId = 0;
 
     public int GetNewWallId() => _maxWallId++;
-    public void AddWall(Wall wall) => walls.Add(wall);
+    public void AddWall(Wall wall)
+    {
+        wall.OnWallDestroyed += OnWallDestroyed;
+        wall.OnWallRebuilt += OnWallRebuilt;
+        wall.gameObject.name = $"Wall {wall.Id} {wall.origin}";
+        walls.Add(wall);
+    }
 
     public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyWallHp(amount);
     public void ReceiveModifyStatueHp(float amount) => GameManager.Instance.statue.ModifyHp((int)amount);
@@ -62,16 +68,14 @@ public class WallManager : MonoBehaviour
     }
 
     // Event -------------------------------------------------------------------------
-    private void OnEnable()
-    {
-        Wall.OnWallDestroyed += OnWallDestroyed;
-        Wall.OnWallRebuilt += OnWallRebuilt;
-    }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        Wall.OnWallDestroyed -= OnWallDestroyed;
-        Wall.OnWallRebuilt -= OnWallRebuilt;
+        foreach (var wall in walls)
+        {
+            wall.OnWallDestroyed -= OnWallDestroyed;
+            wall.OnWallRebuilt -= OnWallRebuilt;
+        }
     }
 
     public static event Action<Wall> BroadcastWallFallen;
@@ -79,13 +83,13 @@ public class WallManager : MonoBehaviour
 
     private static void OnWallDestroyed(Wall wall)
     {
-        wall.GetComponent<NavMeshModifier>().area = 0; //Walkable
+        wall.GetComponent<NavMeshModifier>().ignoreFromBuild = true;
         NavMeshController.UpdateNavMesh();
         BroadcastWallFallen?.Invoke(wall);
     }
     private void OnWallRebuilt(Wall wall)
     {
-        wall.GetComponent<NavMeshModifier>().area = 1; //Not walkable
+        wall.GetComponent<NavMeshModifier>().ignoreFromBuild = false;
         NavMeshController.UpdateNavMesh();
         BroadcastWallRebuilt?.Invoke(wall.origin);
     }
