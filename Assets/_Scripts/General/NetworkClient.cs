@@ -172,7 +172,7 @@ public class NetworkClient : MonoBehaviour
         MoEf,
         MAtk,
         MdSt,
-        PlDc
+        LRm
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -287,7 +287,7 @@ public class NetworkClient : MonoBehaviour
                     WallManager.Instance.ReceiveModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
-                case Header.PlDc:
+                case Header.LRm:
                 {
                     UnitManager.Instance.HandlePlayerDisconnect(info[1]);
                     break;

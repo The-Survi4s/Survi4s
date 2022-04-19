@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHitPoint: 50
-  DefaultMoveSpeed: 10
+  DefaultMoveSpeed: 5
   _hitPoint: 0
 --- !u!114 &2055355670349757396
 MonoBehaviour:

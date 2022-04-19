@@ -137,7 +137,13 @@ public class GameManager : MonoBehaviour
 
         // Display statue HP dan UI lain
 
-        GameStarted();
+        // Spawn Player ---------------------------------------------------------------------
+        SpawnManager.Instance.SendSpawnPlayer();
+
+        // Deactivate Panels ----------------------------------------------------------------
+        GameMenuManager.Instance.SetActivePreparationPanel(false);
+
+        Physics2D.IgnoreLayerCollision(3, 6); //Supaya player tidak collision dengan monster
         ChangeState(GameState.WavePreparation); 
     }
 
@@ -147,13 +153,4 @@ public class GameManager : MonoBehaviour
         NetworkClient.Instance.StartGame();
         NetworkClient.Instance.LockTheRoom();
     }
-    private void GameStarted()
-    {
-        // Spawn Player ---------------------------------------------------------------------
-        SpawnManager.Instance.SendSpawnPlayer();
-
-        // Deactivate Panels ----------------------------------------------------------------
-        GameMenuManager.Instance.SetActivePreparationPanel(false);
-    }
-
 }

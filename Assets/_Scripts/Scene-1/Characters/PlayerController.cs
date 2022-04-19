@@ -217,7 +217,6 @@ public class PlayerController : MonoBehaviour
     public void SyncMousePos(float x, float y)
     {
         syncMousePos = new Vector3(x, y, 0);
-        Debug.Log(syncMousePos);
     }
 
     // Set Button up/down --------------------------------------------------------------------

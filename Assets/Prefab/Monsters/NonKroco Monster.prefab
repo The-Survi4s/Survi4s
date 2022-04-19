@@ -7,6 +7,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.10661459
+      objectReference: {fileID: 0}
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Name
       value: NonKroco Monster
