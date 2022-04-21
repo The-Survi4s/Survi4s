@@ -70,7 +70,6 @@ public class SpawnManager : MonoBehaviour
             }
         }
         //Debug.Log("mpw size:"+_monsterPrefabWeights.Count+", mpd size:"+_monsterPrefabDuplicates.Count);
-        SelectSpawners();
     }
 
     public void AddSpawner(Spawner spawner)
@@ -124,6 +123,7 @@ public class SpawnManager : MonoBehaviour
 
     private Monster.Origin GetRandomOrigin()
     {
+        if(_selectedSpawners.Count == 0) SelectSpawners();
         return _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
     }
 

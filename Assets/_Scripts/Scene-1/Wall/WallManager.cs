@@ -26,13 +26,14 @@ public class WallManager : MonoBehaviour
     private readonly Dictionary<Monster.Origin, List<Wall>> _wallDictionary =
         new Dictionary<Monster.Origin, List<Wall>>();
     private int _maxWallId = 0;
+    public int maxWallHp => 100;
 
     [SerializeField] private Tilemap _wallTilemap;
     [SerializeField] private TileStages _wallTileStages;
     private Dictionary<Vector3Int, Wall> _wallTiles = new Dictionary<Vector3Int, Wall>();
 
     public int GetNewWallId() => _maxWallId++;
-    public Monster.Origin GetWallOrigin(Vector3 position)
+    public Monster.Origin GetOriginFromWorldPos(Vector3 position)
     {
         var angle = Mathf.Atan2(position.y, position.x) * Mathf.Rad2Deg;
         angle += angle < 0 ? 360 : 0;
@@ -46,6 +47,11 @@ public class WallManager : MonoBehaviour
         wall.gameObject.name = $"Wall {wall.Id} {wall.origin}";
         _walls.Add(wall);
         _wallTiles.Add(_wallTilemap.WorldToCell(wall.transform.position), wall);
+    }
+
+    public Vector3Int GetCellPosition(Vector3 worldPos)
+    {
+        return _wallTilemap.WorldToCell(worldPos);
     }
 
     public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyWallHp(amount);
@@ -85,16 +91,21 @@ public class WallManager : MonoBehaviour
     public static event Action<Wall> BroadcastWallFallen;
     public static event Action<Monster.Origin> BroadcastWallRebuilt;
 
-    private static void OnWallDestroyed(Wall wall)
+    private void OnWallDestroyed(Wall wall)
     {
-        wall.GetComponent<NavMeshModifier>().ignoreFromBuild = true;
         NavMeshController.UpdateNavMesh();
         BroadcastWallFallen?.Invoke(wall);
     }
     private void OnWallRebuilt(Wall wall)
     {
-        wall.GetComponent<NavMeshModifier>().ignoreFromBuild = false;
         NavMeshController.UpdateNavMesh();
         BroadcastWallRebuilt?.Invoke(wall.origin);
+    }
+
+    public void UpdateWall(Wall wall)
+    {
+        var tile = _wallTilemap.GetTile(wall.cellPos);
+        var stage = _wallTileStages.getTileStages.Length - Mathf.FloorToInt(wall.hitPoint / 25);
+        _wallTilemap.SetTile(wall.cellPos,_wallTileStages.GetTileStage(stage));
     }
 }
