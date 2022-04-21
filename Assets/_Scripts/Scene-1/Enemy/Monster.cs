@@ -20,7 +20,7 @@ public class Monster : MonoBehaviour
     private MonsterMovement _monsterMovement;
     private List<StatusEffectBase> _activeStatusEffects;
 
-    public enum Origin { Top, Right, Bottom, Left }
+    public enum Origin { Right, Top, Left, Bottom }
     public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu}
     public enum Target {Wall, Player}
     public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}

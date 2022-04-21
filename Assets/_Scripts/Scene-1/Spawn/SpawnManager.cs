@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class SpawnManager : MonoBehaviour
 {
     private List<bool> _occupiedIDs = new List<bool>();
-    [SerializeField] private Spawner[] _spawners = new Spawner[4];
+    [SerializeField] private List<Spawner> _spawners = new List<Spawner>();
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 
     [Serializable]
@@ -71,6 +71,11 @@ public class SpawnManager : MonoBehaviour
         }
         //Debug.Log("mpw size:"+_monsterPrefabWeights.Count+", mpd size:"+_monsterPrefabDuplicates.Count);
         SelectSpawners();
+    }
+
+    public void AddSpawner(Spawner spawner)
+    {
+        _spawners.Add(spawner);
     }
 
     public void SendSpawnPlayer()
@@ -144,7 +149,7 @@ public class SpawnManager : MonoBehaviour
         _selectedSpawners.Clear();
         while (_selectedSpawners.Count < _currentWaveInfo.spawnersUsedCount)
         {
-            int index = Random.Range(0, _spawners.Length);
+            int index = Random.Range(0, _spawners.Count);
             if (!_selectedSpawners.Contains(_spawners[index]))
             {
                 _selectedSpawners.Add(_spawners[index]);

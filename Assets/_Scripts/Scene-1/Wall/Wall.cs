@@ -18,13 +18,14 @@ public class Wall : MonoBehaviour
     private void Start()
     {
         isInitialized = false;
-        Init(WallManager.Instance.GetNewWallId());
-        WallManager.Instance.AddWall(this); // Auto add
+        Init(WallManager.instance.GetNewWallId(), WallManager.instance.GetWallOrigin(transform.position));
+        WallManager.instance.AddWall(this); // Auto add
     }
 
-    public void Init(int id)
+    public void Init(int id, Monster.Origin _origin)
     {
         Id = id;
+        this.origin = _origin;
         hitPoint = DefaultHitPoint;
         isInitialized = true;
         isDestroyed = false;

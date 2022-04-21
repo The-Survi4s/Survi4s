@@ -274,7 +274,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    WallManager.Instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    WallManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
@@ -284,7 +284,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                    WallManager.Instance.ReceiveModifyStatueHp(float.Parse(info[2]));
+                    WallManager.instance.ReceiveModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
                 case Header.LRm:
