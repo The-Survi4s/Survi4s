@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 6178263123641857816
-    second: Wall100_Corner_0
+    second: Wall100_L_0
   - first:
       213: -4789033314329122055
-    second: Wall100_Corner_1
+    second: Wall100_L_1
   - first:
       213: 641683670635204630
-    second: Wall100_Corner_2
+    second: Wall100_L_2
   - first:
       213: 7603054232335843876
-    second: Wall100_Corner_3
+    second: Wall100_L_3
   - first:
       213: 1788623002755669289
     second: Wall100_Straight_4
@@ -22,67 +22,67 @@ TextureImporter:
     second: Wall100_Straight_5
   - first:
       213: -4637339059802987703
-    second: Wall100_Three_6
+    second: Wall100_T_10
   - first:
       213: -7084577158403715451
-    second: Wall100_Three_7
+    second: Wall100_T_10
   - first:
       213: -7185252963481622778
-    second: Wall100_Three_8
+    second: Wall100_T_10
   - first:
       213: -9103924440817486275
-    second: Wall100_Three_9
+    second: Wall100_T_10
   - first:
       213: 1516333890574147863
-    second: Wall100_End_10
+    second: Wall100_End_14
   - first:
       213: -1538957209361348810
-    second: Wall100_End_11
+    second: Wall100_End_14
   - first:
       213: -3220721641940309459
-    second: Wall100_End_12
+    second: Wall100_End_14
   - first:
       213: -1803042518104505456
-    second: Wall100_End_13
+    second: Wall100_End_14
   - first:
       213: -1576604634399194402
-    second: Wall100_GateFrameH_R_14
+    second: Wall100_GateFrameHL_15
   - first:
       213: -3137629627343724419
-    second: Wall100_GateH_L_Close_15
+    second: Wall100_GateHCL_16
   - first:
       213: -6177042625983152170
-    second: Wall100_GateH_R_Close_16
+    second: Wall100_GateHCR_17
   - first:
       213: 1613054054695777165
-    second: Wall100_GateFrameH_R_17
+    second: Wall100_GateFrameHR_18
   - first:
       213: -3590294060413231666
-    second: Wall100_GateFrameV_L_18
+    second: Wall100_GateFrameVL_19
   - first:
       213: -1413946819906476065
-    second: Wall100_GateV_L_19
+    second: Wall100_GateVCL_20
   - first:
       213: -7219999215041164638
-    second: Wall100_GateV_R_20
+    second: Wall100_GateVCR_21
   - first:
       213: 8226631635576152471
-    second: Wall100_GateFrameV_R_21
+    second: Wall100_GateFrameVR_22
   - first:
       213: -1366915554790068183
-    second: Wall100_GateH_L_Open_22
+    second: Wall100_GateHOL_23
   - first:
       213: 192609193198249470
-    second: Wall100_GateH_R_Open_23
+    second: Wall100_GateHOR_24
   - first:
       213: 3056258617906112637
-    second: Wall100_GateV_L_Open_24
+    second: Wall100_GateVOL_25
   - first:
       213: 5936786883386257568
-    second: Wall100_GateV_R_Open_25
+    second: Wall100_GateVOR_26
   - first:
       213: 4428238156419850040
-    second: Wall100_4Dir_26
+    second: Wall100_Plus_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -184,7 +184,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wall100_Corner_0
+      name: Wall100_L_0
       rect:
         serializedVersion: 2
         x: 0
@@ -205,7 +205,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Corner_1
+      name: Wall100_L_1
       rect:
         serializedVersion: 2
         x: 16
@@ -226,7 +226,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Corner_2
+      name: Wall100_L_2
       rect:
         serializedVersion: 2
         x: 32
@@ -247,7 +247,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Corner_3
+      name: Wall100_L_3
       rect:
         serializedVersion: 2
         x: 48
@@ -310,7 +310,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Three_6
+      name: Wall100_T_7
       rect:
         serializedVersion: 2
         x: 0
@@ -331,7 +331,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Three_7
+      name: Wall100_T_8
       rect:
         serializedVersion: 2
         x: 16
@@ -352,7 +352,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Three_8
+      name: Wall100_T_9
       rect:
         serializedVersion: 2
         x: 32
@@ -373,7 +373,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_Three_9
+      name: Wall100_T_10
       rect:
         serializedVersion: 2
         x: 48
@@ -394,7 +394,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_End_10
+      name: Wall100_End_11
       rect:
         serializedVersion: 2
         x: 0
@@ -415,7 +415,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_End_11
+      name: Wall100_End_12
       rect:
         serializedVersion: 2
         x: 16
@@ -436,7 +436,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_End_12
+      name: Wall100_End_13
       rect:
         serializedVersion: 2
         x: 32
@@ -457,7 +457,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_End_13
+      name: Wall100_End_14
       rect:
         serializedVersion: 2
         x: 48
@@ -478,7 +478,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateFrameH_R_14
+      name: Wall100_GateFrameHL_15
       rect:
         serializedVersion: 2
         x: 0
@@ -499,7 +499,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateH_L_Close_15
+      name: Wall100_GateHCL_16
       rect:
         serializedVersion: 2
         x: 16
@@ -520,7 +520,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateH_R_Close_16
+      name: Wall100_GateHCR_17
       rect:
         serializedVersion: 2
         x: 32
@@ -541,7 +541,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateFrameH_R_17
+      name: Wall100_GateFrameHR_18
       rect:
         serializedVersion: 2
         x: 48
@@ -562,7 +562,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateFrameV_L_18
+      name: Wall100_GateFrameVL_19
       rect:
         serializedVersion: 2
         x: 0
@@ -583,7 +583,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateV_L_19
+      name: Wall100_GateVCL_20
       rect:
         serializedVersion: 2
         x: 16
@@ -604,7 +604,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateV_R_20
+      name: Wall100_GateVCR_21
       rect:
         serializedVersion: 2
         x: 32
@@ -625,7 +625,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateFrameV_R_21
+      name: Wall100_GateFrameVR_22
       rect:
         serializedVersion: 2
         x: 48
@@ -646,7 +646,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateH_L_Open_22
+      name: Wall100_GateHOL_23
       rect:
         serializedVersion: 2
         x: 0
@@ -667,7 +667,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateH_R_Open_23
+      name: Wall100_GateHOR_24
       rect:
         serializedVersion: 2
         x: 16
@@ -688,7 +688,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateV_L_Open_24
+      name: Wall100_GateVOL_25
       rect:
         serializedVersion: 2
         x: 32
@@ -709,7 +709,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_GateV_R_Open_25
+      name: Wall100_GateVOR_26
       rect:
         serializedVersion: 2
         x: 48
@@ -730,7 +730,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall100_4Dir_26
+      name: Wall100_Plus_6
       rect:
         serializedVersion: 2
         x: 32

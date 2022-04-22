@@ -25,8 +25,8 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        origin = WallManager.instance.GetOriginFromWorldPos(transform.position);
-        SpawnManager.Instance.AddSpawner(this);
+        origin = TilemapManager.instance.GetOriginFromWorldPos(transform.position);
+        SpawnManager.instance.AddSpawner(this);
         this.gameObject.name = "Spawner " + origin;
     }
 

@@ -9,7 +9,11 @@ public class MonsterMovement : MonoBehaviour
     private NavMeshAgent _agent;
     [SerializeField] private Transform _currentTarget;
     private Vector3 _currentTargetPreviousPos;
-    [SerializeField] private float _maxOffset = 1;
+    private float _previousDistance;
+    public float stationaryTime { get; private set; }
+    public Vector3 velocity => _agent.velocity;
+    [SerializeField] private float Tolerance = 0.5f;
+    [SerializeField] private float MaxOffset = 1;
 
     void Start()
     {
@@ -19,20 +23,32 @@ public class MonsterMovement : MonoBehaviour
         _agent.updateRotation = false;
         _currentTarget = transform;
         _currentTargetPreviousPos = Vector3.zero;
+        stationaryTime = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         SetStat();
-        if (Vector3.Distance(_currentTargetPreviousPos, _currentTarget.position) > _maxOffset)
+        if (Vector3.Distance(_currentTargetPreviousPos, _currentTarget.position) > MaxOffset)
         {
             _agent.SetDestination(_currentTarget.position);
             _currentTargetPreviousPos = _currentTarget.position;
         }
+
+        if (_agent.remainingDistance < _previousDistance + Tolerance &&
+            _agent.remainingDistance > _previousDistance - Tolerance)
+        {
+            stationaryTime += Time.deltaTime;
+        }
+        else
+        {
+            _previousDistance = _agent.remainingDistance;
+            stationaryTime = 0;
+        }
     }
 
-    public void UpdateTarget(Transform target)
+    public void SetTarget(Transform target)
     {
         _currentTarget = target;
     }
@@ -40,5 +56,8 @@ public class MonsterMovement : MonoBehaviour
     private void SetStat()
     {
         _agent.speed = _owner.currentStat.movSpd;
+        _agent.acceleration = _owner.currentStat.acceleration;
+        _agent.stoppingDistance = _owner.setting.minRange;
+        _agent.angularSpeed = _owner.currentStat.rotSpd;
     }
 }

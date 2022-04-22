@@ -11,6 +11,7 @@ public struct Stat
     public float atkCd;
     public float movSpd;
     public float rotSpd;
+    public float acceleration;
 }
 
 [Serializable]

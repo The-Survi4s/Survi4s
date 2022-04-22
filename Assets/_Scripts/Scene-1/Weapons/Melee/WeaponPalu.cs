@@ -11,7 +11,7 @@ public class WeaponPalu : WeaponMelee
             Debug.Log("We hit " + x.name);
             if (x.TryGetComponent(out Wall wall))
             {
-                wall.ModifyWallHp(10);
+                wall.ModifyHp(10);
                 Debug.Log("We repair " + x.name);
             }
         }

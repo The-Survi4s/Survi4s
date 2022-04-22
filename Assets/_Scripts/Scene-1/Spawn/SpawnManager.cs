@@ -7,8 +7,8 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    private List<bool> _occupiedIDs = new List<bool>();
-    [SerializeField] private List<Spawner> _spawners = new List<Spawner>();
+    private readonly List<bool> _occupiedIDs = new List<bool>();
+    private readonly List<Spawner> _spawners = new List<Spawner>();
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 
     [Serializable]
@@ -35,16 +35,16 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private List<MonsterPrefabWeight> _monsterPrefabWeights;
     private List<GameObject> _monsterPrefabDuplicates;
 
-    [SerializeField] private Vector2 _playerSpawnPos;
+    [SerializeField] private Vector2 _playerSpawnPos = new Vector2(2, 2);
     [SerializeField] private List<GameObject> playerPrefab;
 
-    public static SpawnManager Instance { get; private set; }
+    public static SpawnManager instance { get; private set; }
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
         }
         else
         {

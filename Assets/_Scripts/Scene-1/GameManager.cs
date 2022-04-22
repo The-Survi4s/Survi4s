@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [field: SerializeField] public Statue statue { get; private set; }
-
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
 
@@ -52,9 +50,9 @@ public class GameManager : MonoBehaviour
     private void CheckGameOver()
     {
         if (_gameState == GameState.StartGame || _gameState == GameState.GameOver) return;
-        if (UnitManager.Instance.playerAliveCount <= 0 || statue.Hp <= 0)
+        if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
         {
-            statue.PlayDestroyedAnimation();
+            TilemapManager.instance.statue.PlayDestroyedAnimation();
             ChangeState(GameState.GameOver);
         }
     }
@@ -103,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     private async void HandleWaveSpawn()
     {
-        await SpawnManager.Instance.StartWave();
+        await SpawnManager.instance.StartWave();
         ChangeState(GameState.WaveOver);
     }
 
@@ -138,7 +136,7 @@ public class GameManager : MonoBehaviour
         // Display statue HP dan UI lain
 
         // Spawn Player ---------------------------------------------------------------------
-        SpawnManager.Instance.SendSpawnPlayer();
+        SpawnManager.instance.SendSpawnPlayer();
 
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);

@@ -59,34 +59,30 @@ MonoBehaviour:
   monsterLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  monsterStat:
-    _rawStat:
-      hp: 0
-      atk: 0
-      atkCd: 0
-      movSpd: 0
-      rotSpd: 0
-  currentStat:
+  _currentStat:
     hp: 0
     atk: 0
     atkCd: 0
     movSpd: 0
     rotSpd: 0
+    acceleration: 0
   <type>k__BackingField: 0
-  setting:
+  <setting>k__BackingField:
     attackRange: 2
-    collisionRange: 1
-    detectionRange: 4
+    detectionRange: 3
     minRange: 0
     priority: 0
-    attackPlayer: 1
-    attackWall: 1
+    attackPlayer: 0
+    attackWall: 0
     defaultStat:
-      hp: 20
-      atk: 2
+      hp: 30
+      atk: 10
       atkCd: 2
       movSpd: 1
-      rotSpd: 1
+      rotSpd: 60
+      acceleration: 10
+  _targetWall: {fileID: 0}
+  MaxStationaryTime: 5
 --- !u!114 &1226200368138906639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,7 +96,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentTarget: {fileID: 0}
-  _maxOffset: 1
+  Tolerance: 0.5
+  MaxOffset: 1
 --- !u!61 &5297857289526348701
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -147,7 +144,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!195 &3877551159812359091
 NavMeshAgent:
   m_ObjectHideFlags: 0

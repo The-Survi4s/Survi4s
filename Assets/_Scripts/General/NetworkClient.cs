@@ -226,12 +226,12 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SwPy:
-                    SpawnManager.Instance.OnReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
+                    SpawnManager.instance.OnReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
-                    SpawnManager.Instance.OnReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
+                    SpawnManager.instance.OnReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
                         EnumParse<Monster.Origin>(info[4]), float.Parse(info[5]));
                     break;
                 case Header.EqWp:
@@ -274,7 +274,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    WallManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    TilemapManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
@@ -284,7 +284,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                    WallManager.instance.ReceiveModifyStatueHp(float.Parse(info[2]));
+                    TilemapManager.instance.ReceiveModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
                 case Header.LRm:
