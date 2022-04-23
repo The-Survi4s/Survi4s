@@ -64,6 +64,11 @@ public class Wall : DestroyableTile
         isDestroyed = !wallEnabled;
     }
 
+    private void OnDestroy()
+    {
+        TilemapManager.instance.RemoveWall(this);
+    }
+
     // ----------- cheats
     [ContextMenu(nameof(DamageWallBy10))]
     private void DamageWallBy10()

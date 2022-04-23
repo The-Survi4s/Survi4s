@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(MonsterMovement))]
 public class Monster : MonoBehaviour
@@ -13,7 +15,7 @@ public class Monster : MonoBehaviour
     [SerializeField] protected LayerMask wallLayerMask;
     [SerializeField] protected LayerMask monsterLayerMask;
     protected MonsterStat monsterStat;
-    
+
     private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
     public Stat currentStat => _currentStat;
     [SerializeField] private Stat _currentStat;
@@ -23,42 +25,66 @@ public class Monster : MonoBehaviour
 
     public enum Origin { Right, Top, Left, Bottom }
     public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu}
-    public enum Target {Wall, Player}
+    public enum Target {Wall, Player, Statue}
     public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}
     public Origin origin { get; private set; }
     [field: SerializeField] public Type type { get; private set; }
+
+    [Serializable]
+    public struct TargetSettings
+    {
+        public TargetSettings(Target target, TargetMethod method) : this()
+        {
+            this.target = target;
+            this.method = method;
+        }
+
+        public Target target;
+        public TargetMethod method;
+    }
     [Serializable]
     public struct Setting
     {
-        public float attackRange;
         public float detectionRange;
+        public float attackRange;
         public float minRange;
         public Target priority;
-        public TargetMethod attackPlayer;
-        public TargetMethod attackWall;
+        public List<TargetSettings> attackMethods;
         public Stat defaultStat;
 
-        public Setting(Stat defaultStat, float attackRange, float detectionRange, float minRange, Target priority, TargetMethod attackPlayer, TargetMethod attackWall)
+        public Setting(Stat defaultStat, float attackRange, float detectionRange, float minRange, Target priority, List<TargetSettings> attackMethods) : this()
         {
             this.defaultStat = defaultStat;
             this.attackRange = attackRange;
             this.detectionRange = detectionRange;
             this.priority = priority;
-            this.attackPlayer = attackPlayer;
-            this.attackWall = attackWall;
             this.minRange = minRange;
+            this.attackMethods = attackMethods;
         }
 
-        public static Setting defaultSetting = new Setting(new Stat(), 1, 5, 0, Target.Wall, TargetMethod.Nearest, TargetMethod.Nearest);
+        public static Setting DefaultSetting()
+        {
+            var dict = new List<TargetSettings>
+            {
+                new TargetSettings(Target.Player, TargetMethod.Nearest),
+                new TargetSettings(Target.Wall, TargetMethod.Nearest),
+                new TargetSettings(Target.Statue, TargetMethod.Nearest),
+            };
+            return new Setting(new Stat(), 1, 5, 0, Target.Statue, dict);
+        }
+
+        public TargetMethod MethodOf(Target target) =>
+            attackMethods.Where(ts => ts.target == target).Select(ts => ts.method).FirstOrDefault();
     }
     [field: SerializeField] public Setting setting { get; private set; }
     public Stat defaultStat => setting.defaultStat;
 
-    [SerializeField] private Wall _targetWall;
+    [field: SerializeField] public Wall targetWall { get; private set; }
+    private Vector3Int _targetWallCellPos;
     private Wall _previousTargetWall;
     private PlayerController _currentTargetPlayer;
-    private PlayerController _nearestPlayer;
-    [SerializeField] private float MaxStationaryTime = 5;
+    public PlayerController nearestPlayer { get; private set; }
+    [field: SerializeField] public Target currentTarget { get; private set; }
 
     public static event Action<int> OnMonsterDeath;
 
@@ -77,6 +103,11 @@ public class Monster : MonoBehaviour
         _activeStatusEffects = new List<StatusEffectBase>();
         _animator = GetComponent<Animator>();
         _animator.SetBool(IsDeadBool, false);
+
+        if (setting.attackMethods.Any(ts => ts.target == setting.priority && ts.method == TargetMethod.DontAttack))
+        {
+            throw new Exception($"Priority {setting.priority} conflicted with {setting.attackMethods}");
+        }
     }
 
     private void Update()
@@ -85,9 +116,9 @@ public class Monster : MonoBehaviour
         monsterStat.UpdateStatCooldown();
         ApplyStatusEffects();
 
-        _nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position);
-        if (_monsterMovement.stationaryTime > MaxStationaryTime || !_targetWall) RequestNewTargetWall();
-        SetTargetMovement();
+        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position);
+
+        if (!targetWall) ReRequestWall(_targetWallCellPos);
         
         CheckCanAttack();
         
@@ -105,72 +136,27 @@ public class Monster : MonoBehaviour
         _animator.SetBool(IsMovingBool,_monsterMovement.velocity != Vector3.zero);
     }
 
-    private void RequestNewTargetWall()
+    public void RequestNewTargetWall()
     {
-        _targetWall = TilemapManager.instance.GetNearestWallFrom(transform.position);
-        _monsterMovement.SetTarget(_targetWall.transform);
+        targetWall = TilemapManager.instance.GetNearestNotDestroyedWallFrom(transform.position);
+        Debug.Log($"Monster {name} has requested a new targetWall {targetWall}");
     }
 
-    //Ini harusnya pakai state machine
-    private void SetTargetMovement()
+    public void ReRequestWall(Vector3Int cellPos)
     {
-        // Jika wall sudah hancur, target statue
-        if (_targetWall.isDestroyed)
+        targetWall = TilemapManager.instance.GetWall(cellPos);
+        if(!targetWall)
         {
-            SetTargetMovementIfTargetWallDestroyed();
+            RequestNewTargetWall();
         }
-        else
-        {
-            SetTargetMovementIfTargetWallExists();
-        }
-    }
-
-    private void SetTargetMovementIfTargetWallExists()
-    {
-        if (setting.priority == Target.Player)
-        {
-            if (!_nearestPlayer.isDead) _monsterMovement.SetTarget(_nearestPlayer.transform);
-            if (DistanceTo(_targetWall) < setting.attackRange && 
-                setting.attackWall != TargetMethod.DontAttack)
-            {
-                if (!_targetWall.isDestroyed) _monsterMovement.SetTarget(_targetWall.transform);
-            }
-        }
-        else
-        {
-            if (!_targetWall.isDestroyed) _monsterMovement.SetTarget(_targetWall.transform);
-            if (DistanceTo(_nearestPlayer) < setting.detectionRange && 
-                setting.attackPlayer != TargetMethod.DontAttack)
-            {
-                if (!_nearestPlayer.isDead) _monsterMovement.SetTarget(_nearestPlayer.transform);
-            }
-        }
-    }
-
-    private void SetTargetMovementIfTargetWallDestroyed()
-    {
-        if (setting.priority == Target.Player)
-        {
-            if (DistanceTo(_nearestPlayer) > setting.attackRange && !_nearestPlayer.isDead)
-            {
-                _monsterMovement.SetTarget(TilemapManager.instance.statue.transform);
-            }
-            else if (setting.attackPlayer != TargetMethod.DontAttack)
-            {
-                _monsterMovement.SetTarget(_nearestPlayer.transform);
-            }
-        }
-        else
-        {
-            _monsterMovement.SetTarget(TilemapManager.instance.statue.transform);
-        }
+        Debug.Log($"Monster {name} has re-requested targetWall [{targetWall}]");
     }
 
     private void CheckCanAttack()
     {
         if (monsterStat.isAttackReady)
         {
-            var nearestObj = PickNearest(_nearestPlayer, _targetWall, TilemapManager.instance.statue);
+            var nearestObj = PickNearest(nearestPlayer, targetWall, TilemapManager.instance.statue);
             if (DistanceTo(nearestObj) < setting.attackRange)
             {
                 SendAttackMessage(nearestObj);
@@ -196,6 +182,7 @@ public class Monster : MonoBehaviour
                 }
                 break;
             case Statue _:
+                Debug.Log("Send damage statue!");
                 NetworkClient.Instance.ModifyStatueHp(-_currentStat.atk);
                 break;
         }
@@ -259,20 +246,25 @@ public class Monster : MonoBehaviour
 
     private void OnEnable()
     {
-        TilemapManager.BroadcastWallFallen += SetTargetWall;
+        TilemapManager.BroadcastWallFallen += WallFallenEventHandler;
         TilemapManager.BroadcastWallRebuilt += SetTargetWallToPrevious;
     }
 
     private void SetTargetWallToPrevious(Origin obj)
     {
         if (origin != obj) return;
-        _targetWall = _previousTargetWall;
+        targetWall = _previousTargetWall;
     }
 
     private void OnDisable()
     {
-        TilemapManager.BroadcastWallFallen -= SetTargetWall;
+        TilemapManager.BroadcastWallFallen -= WallFallenEventHandler;
         TilemapManager.BroadcastWallRebuilt -= SetTargetWallToPrevious;
+    }
+
+    private void WallFallenEventHandler(Wall obj)
+    {
+        
     }
 
     private void OnDestroy()
@@ -282,12 +274,14 @@ public class Monster : MonoBehaviour
 
     public void SetTargetWall(Wall wall)
     {
-        if (_targetWall)
-        {
-            _previousTargetWall = _targetWall;
-        }
         if (origin != wall.origin) return;
-        _targetWall = wall;
-        _monsterMovement.SetTarget(wall.transform);
+        if (targetWall)
+        {
+            _previousTargetWall = targetWall;
+        }
+        targetWall = wall;
+        _targetWallCellPos = wall.cellPos;
+        //_monsterMovement.SetTarget(wall.transform);
+        currentTarget = Target.Wall;
     }
 }

@@ -16,7 +16,7 @@ public abstract class DestroyableTile : MonoBehaviour
     public void ModifyHp(float amount)
     {
         hp += Mathf.FloorToInt(amount);
-        Debug.Log($"amount modified {amount}, current hp {hp}");
+        //Debug.Log($"amount modified {amount}, current hp {hp}");
         if (hp > 0)
         {
             if (hp > maxHp) hp = maxHp;

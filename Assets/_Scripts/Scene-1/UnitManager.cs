@@ -78,7 +78,7 @@ public class UnitManager : MonoBehaviour
     // Receive
     public void AddMonster(Monster monster)
     {
-        monster.SetTargetWall(TilemapManager.instance.GetRandomWallOn(monster.origin));
+        monster.SetTargetWall(TilemapManager.instance.GetRandomNonDestroyedWallOn(monster.origin));
         _monsters.Add(monster);
     }
 

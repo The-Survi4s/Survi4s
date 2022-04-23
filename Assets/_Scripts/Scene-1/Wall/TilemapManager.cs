@@ -39,7 +39,7 @@ public class TilemapManager : MonoBehaviour
         var angle = Mathf.Atan2(position.y, position.x) * Mathf.Rad2Deg;
         angle += angle < 0 ? 360 : 0;
         //Debug.Log(position + ", " + angle + ", " + Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90));
-        return (Monster.Origin)Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90);
+        return (Monster.Origin)Mathf.Clamp(Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90), 0, 3);
     }
     public void AddWall(Wall wall)
     {
@@ -47,7 +47,16 @@ public class TilemapManager : MonoBehaviour
         wall.OnRebuilt += OnRebuilt;
         wall.gameObject.name = $"Wall {wall.id} {wall.origin}";
         _walls.Add(wall);
-        _wallTiles.Add(_wallTilemap.WorldToCell(wall.transform.position), wall);
+        if (!_wallTiles.ContainsKey(wall.cellPos)) _wallTiles.Add(wall.cellPos, wall);
+        else _wallTiles[wall.cellPos] = wall;
+    }
+
+    public void RemoveWall(Wall wall)
+    {
+        _wallTiles.Remove(wall.cellPos);
+        _walls.Remove(wall);
+        _wallDictionary[wall.origin] = GroupWalls(wall.origin);
+        _wallTiles.Remove(wall.cellPos);
     }
 
     public void SetStatue(Statue statueObj)
@@ -64,14 +73,15 @@ public class TilemapManager : MonoBehaviour
 
     public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyHp(amount);
     public void ReceiveModifyStatueHp(float amount) => statue.ModifyHp((int)amount);
-    private Wall GetWall(int id) => _walls.FirstOrDefault(wall => wall.id == id);
-    public Wall GetRandomWallOn(Monster.Origin origin)
+    public Wall GetWall(int id) => _walls.FirstOrDefault(wall => wall.id == id);
+    public Wall GetWall(Vector3Int cellPos) => _walls.FirstOrDefault(wall => wall.cellPos == cellPos);
+    public Wall GetRandomNonDestroyedWallOn(Monster.Origin origin)
     {
         if(!_wallDictionary.ContainsKey(origin)) _wallDictionary.Add(origin, new List<Wall>());
-        return GetRandomWallFrom(_wallDictionary[origin], origin);
+        return GetRandomNonDestroyedWallFrom(_wallDictionary[origin], origin);
     }
 
-    private Wall GetRandomWallFrom(List<Wall> wallList, Monster.Origin origin)
+    private Wall GetRandomNonDestroyedWallFrom(List<Wall> wallList, Monster.Origin origin)
     {
         if (wallList == _walls)
         {
@@ -80,9 +90,32 @@ public class TilemapManager : MonoBehaviour
         }
         if (wallList.Count == 0)
         {
-            wallList = _walls.Where(wall => wall.origin == origin).ToList();
+            wallList = GroupWalls(origin);
         }
-        return wallList[Random.Range(0, wallList.Count)];
+        var nonDestroyedWallList = wallList.Where(wall => !wall.isDestroyed).ToList();
+        return nonDestroyedWallList[Random.Range(0, wallList.Count)];
+    }
+
+    private List<Wall> GroupWalls(Monster.Origin origin)
+    {
+        return _walls.Where(wall => wall.origin == origin).ToList();
+    }
+
+    public Wall GetNearestNotDestroyedWallFrom(Vector3 position)
+    {
+        var dist = float.MaxValue;
+        var res = _walls[0];
+        foreach (var wall in _walls.Where(w => !w.isDestroyed).ToList())
+        {
+            var dist2 = Vector3.Distance(position, wall.transform.position);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                res = wall;
+            }
+        }
+
+        return res;
     }
 
     // Event -------------------------------------------------------------------------
@@ -139,13 +172,13 @@ public class TilemapManager : MonoBehaviour
         var variantCount = tileStages.getTileStages.Length;
         var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount));
         if (tile.spriteVariantId == variantId) return;
-        Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
-        Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
+        //Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
+        //Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
         tile.spriteVariantId = variantId;
         if (variantId == variantCount - 1)
         {
             _wallTilemap.SetTile(tile.cellPos, null);
-            Debug.Log($"Tile at {tile.cellPos} set to null");
+            //Debug.Log($"Tile at {tile.cellPos} set to null");
             return;
         }
 
@@ -154,26 +187,11 @@ public class TilemapManager : MonoBehaviour
         var go2 = Instantiate(go);
         _wallTilemap.SetTile(tile.cellPos, tileStages.GetTileStage(variantId));
         go2.transform.SetParent(_wallTilemap.transform);
-        Debug.Log($"Tile at {cellPos} set to {tileStages.GetTileStage(variantId)}");
+        //Debug.Log($"Tile at {cellPos} set to {tileStages.GetTileStage(variantId)}");
+
         _wallTilemap.RefreshTile(cellPos);
-
-        
-    }
-
-    public Wall GetNearestWallFrom(Vector3 position)
-    {
-        var dist = float.MaxValue;
-        var res = _walls[0];
-        foreach (var wall in _walls)
-        {
-            var dist2 = Vector3.Distance(position, wall.transform.position);
-            if (dist2 < dist)
-            {
-                dist = dist2;
-                res = wall;
-            }
-        }
-
-        return res;
+        NavMeshController.UpdateNavMesh();
+        _wallTilemap.RefreshTile(cellPos);
+        NavMeshController.UpdateNavMesh();
     }
 }
