@@ -7,9 +7,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4811860006863910226, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Name
-      value: NonKroco Monster
+      value: Pramuka
       objectReference: {fileID: 0}
     - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_RootOrder

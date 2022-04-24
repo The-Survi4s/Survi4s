@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 5e9555b587e3986418e4a380964d21c1
+guid: e952bcae5ad40f74ba81222e767995c2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3927550810139793302
-    second: Idle Mainchar_0
+      213: 5095934461547829101
+    second: Minions_Idle_withShadow_0
   - first:
-      213: -4518998141534428165
-    second: Idle Mainchar_1
+      213: -2638893571159152808
+    second: Minions_Idle_withShadow_1
   - first:
-      213: 5290829061424805948
-    second: Idle Mainchar_2
+      213: -1041483116136588583
+    second: Minions_Idle_withShadow_2
   - first:
-      213: -5150826268247132159
-    second: Idle Mainchar_3
+      213: -4087614621312898990
+    second: Minions_Idle_withShadow_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -44,7 +44,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -58,7 +58,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 18
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -115,34 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle Mainchar_0
+      name: Minions_Idle_withShadow_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 16
-        height: 24
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 16, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6971eab17a6718630800000000000000
-      internalID: 3927550810139793302
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle Mainchar_1
-      rect:
-        serializedVersion: 2
-        x: 17
-        y: 0
-        width: 16
-        height: 24
+        width: 15
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,20 +129,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bf3a039022b4941c0800000000000000
-      internalID: -4518998141534428165
+      spriteID: d67da33b46568b640800000000000000
+      internalID: 5095934461547829101
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle Mainchar_2
+      name: Minions_Idle_withShadow_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 17
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8572ffa4744c06bd0800000000000000
+      internalID: -2638893571159152808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minions_Idle_withShadow_2
       rect:
         serializedVersion: 2
         x: 34
         y: 0
-        width: 16
-        height: 24
+        width: 19
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,20 +171,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c38f985dffccc6940800000000000000
-      internalID: 5290829061424805948
+      spriteID: 9da9c17bf98eb81f0800000000000000
+      internalID: -1041483116136588583
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle Mainchar_3
+      name: Minions_Idle_withShadow_3
       rect:
         serializedVersion: 2
-        x: 51
+        x: 54
         y: 0
-        width: 16
-        height: 24
+        width: 17
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,8 +192,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 108f06d9cc69488b0800000000000000
-      internalID: -5150826268247132159
+      spriteID: 258a3f5b820e547c0800000000000000
+      internalID: -4087614621312898990
       vertices: []
       indices: 
       edges: []
