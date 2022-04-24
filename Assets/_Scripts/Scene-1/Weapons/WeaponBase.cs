@@ -34,7 +34,7 @@ public abstract class WeaponBase : MonoBehaviour
     
 
     // Cached components --------------------
-    protected PlayerController _ownerPlayerController;
+    protected Player ownerPlayer;
 
 
     // -------------------
@@ -43,7 +43,7 @@ public abstract class WeaponBase : MonoBehaviour
         baseAttack = DefaultBaseAttack;
         critRate = DefaultCritRate;
         cooldownTime = MaxCooldownTime;
-        _ownerPlayerController = owner?.GetComponent<PlayerController>();
+        ownerPlayer = owner?.GetComponent<Player>();
     }
 
     private void Awake() => Init();
@@ -53,7 +53,7 @@ public abstract class WeaponBase : MonoBehaviour
         if (owner == null) return;
         // Follow owner
         transform.position = owner.transform.position +
-                             (_ownerPlayerController.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
+                             (ownerPlayer.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
         // Swing animation
         if (animationStep < swingQueues.Count)
         {
@@ -62,9 +62,9 @@ public abstract class WeaponBase : MonoBehaviour
                     swingQueues[animationStep].t)) < animationEndDegree) animationStep++;
         }
         // Rotate weapon based on owner mouse pos
-        RotateWeapon(IsLocal()
-            ? _ownerPlayerController.localMousePos
-            : _ownerPlayerController.syncMousePos);
+        RotateWeapon(IsLocal
+            ? ownerPlayer.localMousePos
+            : ownerPlayer.syncMousePos);
     }
     
     // Network methods -----------------------------------
@@ -77,7 +77,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Cooldown
         nextAttackTime = Time.time + cooldownTime;
     }
-    public bool IsLocal() => _ownerPlayerController.isLocal;
+    public bool IsLocal => ownerPlayer.isLocal;
 
     // Animation methods ---------------------------------------
     protected virtual void PlayAnimation() => animationStep = 0;
@@ -88,7 +88,7 @@ public abstract class WeaponBase : MonoBehaviour
     {
         var angleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
         var angleDeg = (180 / Mathf.PI) * angleRad +
-                       swingDegree * (_ownerPlayerController.isFacingLeft ? -1 : 1);
+                       swingDegree * (ownerPlayer.isFacingLeft ? -1 : 1);
         transform.rotation = Quaternion.Euler(0, 0, angleDeg);
     }
 
@@ -106,7 +106,7 @@ public abstract class WeaponBase : MonoBehaviour
     {
         if (owner != null) return;
         owner = player.gameObject;
-        _ownerPlayerController = owner.GetComponent<PlayerController>();
+        ownerPlayer = owner.GetComponent<Player>();
     }
     public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {
@@ -114,7 +114,7 @@ public abstract class WeaponBase : MonoBehaviour
         owner = null;
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
-        _ownerPlayerController = null;
+        ownerPlayer = null;
     }
 
     // Upgrade weapon, dipanggil dari statue

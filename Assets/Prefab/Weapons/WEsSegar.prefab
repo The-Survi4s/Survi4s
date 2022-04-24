@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5347629818904414351}
-  - component: {fileID: 8125261469877633826}
   - component: {fileID: 9137849247755373613}
+  - component: {fileID: 8125261469877633826}
   m_Layer: 0
   m_Name: WEsSegar
   m_TagString: Weapon
@@ -32,6 +32,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9137849247755373613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8550891108610605926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultBaseAttack: 5
+  DefaultCritRate: 10
+  MaxCooldownTime: 3
+  offset: {x: 0.2, y: -3, z: -1}
+  _maxAmmo: 0
+  _bullet: {fileID: 6655036926467217695, guid: 602d62a42d1a8f34ba091fbd9a40f30d, type: 3}
+  <inAccuracy>k__BackingField: 1
 --- !u!212 &8125261469877633826
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -83,21 +102,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9137849247755373613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8550891108610605926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DefaultBaseAttack: 10
-  DefaultCritRate: 10
-  MaxCooldownTime: 0
-  offset: {x: 0.2, y: -3, z: -1}
-  MaxAmmo: 5
-  bullet: {fileID: 6655036926467217695, guid: 602d62a42d1a8f34ba091fbd9a40f30d, type: 3}

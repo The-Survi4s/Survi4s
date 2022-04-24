@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1535391126129136169}
-  - component: {fileID: 3439321459017308548}
   - component: {fileID: 9106936058835306326}
+  - component: {fileID: 3439321459017308548}
   m_Layer: 0
   m_Name: WTipeX
   m_TagString: Weapon
@@ -32,6 +32,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9106936058835306326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3013621511692704192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultBaseAttack: 1
+  DefaultCritRate: 5
+  MaxCooldownTime: 0.5
+  offset: {x: 0.2, y: -3, z: -1}
+  _maxAmmo: 10
+  _bullet: {fileID: 5926505289157146130, guid: 86e02e271c687c043a595287ac3db668, type: 3}
+  <inAccuracy>k__BackingField: 0.5
 --- !u!212 &3439321459017308548
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -83,21 +102,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9106936058835306326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3013621511692704192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DefaultBaseAttack: 10
-  DefaultCritRate: 10
-  MaxCooldownTime: 0
-  offset: {x: 0.2, y: -3, z: -1}
-  MaxAmmo: 3
-  bullet: {fileID: 5926505289157146130, guid: 86e02e271c687c043a595287ac3db668, type: 3}

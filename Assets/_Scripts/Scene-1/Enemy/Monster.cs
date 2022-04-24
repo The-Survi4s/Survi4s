@@ -6,8 +6,8 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(MonsterMovement))]
-public class Monster : MonoBehaviour
+[RequireComponent(typeof(MonsterMovement),typeof(Animator))]
+public abstract class Monster : MonoBehaviour
 {
     [field: SerializeField] public int id { get; private set; }
 
@@ -25,7 +25,7 @@ public class Monster : MonoBehaviour
 
     public enum Origin { Right, Top, Left, Bottom }
     public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu}
-    public enum Target {Wall, Player, Statue}
+    public enum Target {Statue, Wall, Player}
     public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}
     public Origin origin { get; private set; }
     [field: SerializeField] public Type type { get; private set; }
@@ -82,8 +82,8 @@ public class Monster : MonoBehaviour
     [field: SerializeField] public Wall targetWall { get; private set; }
     private Vector3Int _targetWallCellPos;
     private Wall _previousTargetWall;
-    private PlayerController _currentTargetPlayer;
-    public PlayerController nearestPlayer { get; private set; }
+    private Player _currentTargetPlayer;
+    public Player nearestPlayer { get; private set; }
     [field: SerializeField] public Target currentTarget { get; private set; }
 
     public static event Action<int> OnMonsterDeath;
@@ -168,25 +168,10 @@ public class Monster : MonoBehaviour
     {
         monsterStat.StartCooldown();
         NetworkClient.Instance.StartMonsterAttackAnimation(id);
-        if(!NetworkClient.Instance.isMaster) return;
-        switch (nearestObj)
-        {
-            case Wall wall:
-                NetworkClient.Instance.ModifyWallHp(wall.id, -_currentStat.atk);
-                break;
-            case PlayerController _:
-                var players = GetTargetPlayers();
-                foreach (var player in players)
-                {
-                    NetworkClient.Instance.ModifyPlayerHp(player.name, -_currentStat.atk);
-                }
-                break;
-            case Statue _:
-                Debug.Log("Send damage statue!");
-                NetworkClient.Instance.ModifyStatueHp(-_currentStat.atk);
-                break;
-        }
+        Attack(nearestObj);
     }
+
+    protected abstract void Attack(Component nearestObj);
 
     private float DistanceTo(Component obj) => Vector3.Distance(obj.transform.position, transform.position);
 
@@ -234,9 +219,9 @@ public class Monster : MonoBehaviour
         _currentStat = temp;
     }
 
-    protected virtual List<PlayerController> GetTargetPlayers()
+    protected virtual List<Player> GetTargetPlayers()
     {
-        return UnitManager.Instance.GetObjectsInRadius<PlayerController>(transform.position, setting.attackRange, playerLayerMask);
+        return UnitManager.Instance.GetObjectsInRadius<Player>(transform.position, setting.attackRange, playerLayerMask);
     }
 
     public void PlayAttackAnimation()

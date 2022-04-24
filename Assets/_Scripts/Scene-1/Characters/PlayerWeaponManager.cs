@@ -59,9 +59,9 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         weapon.PlayAttackAnimation();
     }
-    public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos)
     {
-        (weapon as WeaponRange).SpawnBullet(new Vector2(xSpawnPos, ySpawnPos), new Vector2(xMousePos, yMousePos));
+        (weapon as WeaponRange).SpawnBullet(spawnPos, mousePos);
     }
     public Transform GetAttackPoint()
     {

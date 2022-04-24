@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4433021215518527550}
-  - component: {fileID: 536319729483946899}
   - component: {fileID: 5943900322292448313}
+  - component: {fileID: 536319729483946899}
   m_Layer: 0
   m_Name: WPentilan
   m_TagString: Weapon
@@ -32,6 +32,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5943900322292448313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79102828930210775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultBaseAttack: 10
+  DefaultCritRate: 20
+  MaxCooldownTime: 3
+  offset: {x: 0.2, y: -3, z: -1}
+  _maxAmmo: 5
+  _bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
+  <inAccuracy>k__BackingField: 5
 --- !u!212 &536319729483946899
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -83,21 +102,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5943900322292448313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 79102828930210775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DefaultBaseAttack: 10
-  DefaultCritRate: 10
-  MaxCooldownTime: 0
-  offset: {x: 0.2, y: -3, z: -1}
-  MaxAmmo: 10
-  bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}

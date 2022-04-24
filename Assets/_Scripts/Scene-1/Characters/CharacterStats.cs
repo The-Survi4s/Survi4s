@@ -40,9 +40,9 @@ public class CharacterStats : MonoBehaviour
         moveSpeed = DefaultMoveSpeed;
     }
 
-    public void CorrectDeadPosition(float xPos, float yPos)
+    public void CorrectDeadPosition(Vector2 pos)
     {
-        transform.position = new Vector2(xPos, yPos);
+        transform.position = pos;
     }
     public bool isDead => _hitPoint <= 0;
 }

@@ -10,17 +10,22 @@ public class UnitManager : MonoBehaviour
     // Prefab -------------------------------------------------------------------------
 
     // List ---------------------------------------------------------------------------
-    private KdTree<PlayerController> _players;
+    private KdTree<Player> _playerKdTree;
+    private Dictionary<string, Player> _players;
     private List<GameObject> _playerUsernames;
     [SerializeField] public List<WeaponBase> weapons;
-    private KdTree<Monster> _monsters;
+    private KdTree<Monster> _monsterKdTree;
+    private Dictionary<int, Monster> _monsters;
+    private Dictionary<int, BulletBase> _bullets;
+
+    private int _bulletIdCount = 0;
 
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
-    public int playerAliveCount => _players.Count(player => !player.isDead);
-    public int playerCount => _players.Count;
-    public int monsterAliveCount => _monsters.Count;
+    public int playerAliveCount => _playerKdTree.Count(player => !player.isDead);
+    public int playerCount => _playerKdTree.Count;
+    public int monsterAliveCount => _monsterKdTree.Count;
 
     private void Awake()
     {
@@ -32,26 +37,44 @@ public class UnitManager : MonoBehaviour
         {
             Destroy(this);
         }
-        _players = new KdTree<PlayerController>(true);
-        _monsters = new KdTree<Monster>();
+        _playerKdTree = new KdTree<Player>(true);
+        _monsterKdTree = new KdTree<Monster>();
         _playerUsernames = new List<GameObject>();
+        _bullets = new Dictionary<int, BulletBase>();
+        _players = new Dictionary<string, Player>();
+        _monsters = new Dictionary<int, Monster>();
     }
 
     private void Update()
     {
-        _players.UpdatePositions();
-        _monsters.UpdatePositions();
+        _playerKdTree.UpdatePositions();
+        _monsterKdTree.UpdatePositions();
 
         //Update player username to whatever the hell
     }
 
-    // Spawn Player ------------------------------------------------------------------
-    public void AddPlayer(PlayerController p)
+    // Spawn ------------------------------------------------------------------
+    public void AddPlayer(Player p)
     {
         p.OnPlayerDead += HandlePlayerDead;
-        _players.Add(p);
+        _playerKdTree.Add(p);
+        _players.Add(p.name, p);
 
         //Get player username text object from child
+    }
+
+    public void AddMonster(Monster monster)
+    {
+        monster.SetTargetWall(TilemapManager.instance.GetRandomNonDestroyedWallOn(monster.origin));
+        _monsterKdTree.Add(monster);
+        _monsters.Add(monster.id, monster);
+    }
+
+    public int GetIdThenAddBullet(BulletBase bullet)
+    {
+        _bulletIdCount++;
+        _bullets.Add(_bulletIdCount, bullet);
+        return _bulletIdCount;
     }
 
     // Deletion
@@ -64,112 +87,97 @@ public class UnitManager : MonoBehaviour
     public void HandlePlayerDisconnect(string idAndName)
     {
         HandlePlayerDead(idAndName);
-        var index = SearchPlayerIndexById(idAndName);
-        if (index >= 0) _players.RemoveAt(index);
+        var index = SearchPlayerIndex(_players[idAndName]);
+        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void DeleteMonsterFromList(int id)
     {
-        var index = SearchMonsterIndexById(id);
-        if(index >= 0) _monsters.RemoveAt(index);
-    }
-
-    // Spawn Monster -----------------------------------------------------------------
-    // Receive
-    public void AddMonster(Monster monster)
-    {
-        monster.SetTargetWall(TilemapManager.instance.GetRandomNonDestroyedWallOn(monster.origin));
-        _monsters.Add(monster);
+        var index = SearchMonsterIndex(_monsters[id]);
+        if(index >= 0) _monsterKdTree.RemoveAt(index);
     }
 
     // Send command to units
     // Monster
     public void ModifyMonsterHp(int id, float amount)
     {
-        foreach (var monster in _monsters.Where(monster => monster.id == id))
-        {
-            monster.ModifyHitPoint(amount);
-            break;
-        }
+        _monsters[id].ModifyHitPoint(amount);
     }
 
     // Player
     public void SyncMousePos(string playerName, float x, float y)
     {
-        var player = SearchPlayerByName(playerName);
+        var player = _players[playerName];
         if (player) player.SyncMousePos(x, y);
     }
 
-    public void SetButton(string playerName, PlayerController.Button button, bool isDown)
+    public void SetButton(string playerName, Player.Button button, bool isDown)
     {
-        var player = SearchPlayerByName(playerName);
+        var player = _players[playerName];
         if (player) player.SetButton(button, isDown);
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
-        var player = SearchPlayerByName(playerName);
-        if (player) player.GetComponent<PlayerWeaponManager>().OnEquipWeapon(weaponName);
+        var player = _players[playerName];
+        if (player) player.weaponManager.OnEquipWeapon(weaponName);
     }
 
     public void PlayAttackAnimation(string playerName)
     {
-        var player = SearchPlayerByName(playerName);
-        if (player) player.GetComponent<PlayerWeaponManager>().PlayAttackAnimation();
+        var player = _players[playerName];
+        if (player) player.weaponManager.PlayAttackAnimation();
     }
 
-    public void SpawnBullet(string playerName, float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    public void SpawnBullet(string playerName, Vector2 spawnPos, Vector2 mousePos)
     {
-        var player = SearchPlayerByName(playerName);
-        if (player) player.GetComponent<PlayerWeaponManager>()
-            .SpawnBullet(xSpawnPos, ySpawnPos, xMousePos, yMousePos);
+        var player = _players[playerName];
+        if (player) player.weaponManager.SpawnBullet(spawnPos, mousePos);
+    }
+
+    public void SpawnBullet(int monsterId, Vector2 spawnPos, Vector2 targetPos)
+    {
+        var monster = _monsters[monsterId];
+        if(monster is RangedMonsterBase rangedMonster) rangedMonster.SpawnBullet(spawnPos, targetPos);
+    }
+
+    public void DestroyBullet(int id)
+    {
+        Destroy(_bullets[id]);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
-        Debug.Log(playerName+" "+amount);
-        var player = SearchPlayerByName(playerName);
-        if (player) player.GetComponent<CharacterStats>().hitPoint += amount;
+        Debug.Log(playerName + " " + amount);
+        var player = _players[playerName];
+        if (player) player.stats.hitPoint += amount;
     }
 
-    public void CorrectDeadPosition(string playerName, float x, float y)
+    public void CorrectDeadPosition(string playerName, Vector2 pos)
     {
-        var player = SearchPlayerByName(playerName);
-        if (player) player.GetComponent<CharacterStats>().CorrectDeadPosition(x, y);
+        var player = _players[playerName];
+        if (player) player.stats.CorrectDeadPosition(pos);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, float duration, int strength)
     {
-        var monster = SearchMonsterById(targetId);
+        var monster = _monsters[targetId];
         if(monster) monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster, statusEffect, duration, strength));
     }
 
     public void PlayMonsterAttackAnimation(int monsterId)
     {
-        SearchMonsterById(monsterId).PlayAttackAnimation();
+        var monster = _monsters[monsterId];
+        monster.PlayAttackAnimation();
     }
 
     // Utilities ----------------------
-    private PlayerController SearchPlayerByName(string playerName)
-    {
-        return _players.FirstOrDefault(player => player.name == playerName.Substring(0, player.name.Length));
-    }
 
-    private Monster SearchMonsterById(int monsterId)
+    private int SearchMonsterIndex(Monster monster)
     {
-        foreach (var monster in _monsters.Where(monster => monster.id == monsterId))
+        for (int i = 0; i < _monsterKdTree.Count; i++)
         {
-            return monster;
-        }
-        Debug.Log($"Monster with id {monsterId} not found.");
-        return null;
-    }
-
-    private int SearchMonsterIndexById(int monsterId)
-    {
-        for (int i = 0; i < _monsters.Count; i++)
-        {
-            if (_monsters[i].id == monsterId)
+            if (_monsterKdTree[i] == monster)
             {
                 return i;
             }
@@ -178,11 +186,11 @@ public class UnitManager : MonoBehaviour
         return -1;
     }
 
-    private int SearchPlayerIndexById(string playerId)
+    private int SearchPlayerIndex(Player player)
     {
-        for (int i = 0; i < _players.Count; i++)
+        for (int i = 0; i < _playerKdTree.Count; i++)
         {
-            if (_players[i].id == playerId)
+            if (_playerKdTree[i] == player)
             {
                 return i;
             }
@@ -196,29 +204,29 @@ public class UnitManager : MonoBehaviour
         return Vector3.Distance(GetNearestPlayer(pos).transform.position, pos);
     }
 
-    public PlayerController GetNearestPlayer(Vector3 pos)
+    public Player GetNearestPlayer(Vector3 pos)
     {
-        return _players.FindClosest(pos);
+        return _playerKdTree.FindClosest(pos);
     }
 
-    public List<PlayerController> GetNearestPlayers(Vector3 pos, int count)
+    public List<Player> GetNearestPlayers(Vector3 pos, int count)
     {
-        return _players.FindClose(pos).TakeWhile(player => count-- >= 0).ToList();
+        return _playerKdTree.FindClose(pos).TakeWhile(player => count-- >= 0).ToList();
     }
 
     public float RangeFromNearestMonster(Vector3 pos)
     {
-        return Vector3.Distance(_monsters.FindClosest(pos).transform.position, pos);
+        return Vector3.Distance(_monsterKdTree.FindClosest(pos).transform.position, pos);
     }
 
     public Monster GetNearestMonster(Vector3 pos)
     {
-        return _monsters.FindClosest(pos);
+        return _monsterKdTree.FindClosest(pos);
     }
 
-    public PlayerController GetPlayer(string id)
+    public Player GetPlayer(string id)
     {
-        return _players.FirstOrDefault(player => player.id == id);
+        return _playerKdTree.FirstOrDefault(player => player.id == id);
     }
 
     public List<T> GetObjectsInRadius<T>(Vector2 point, float r, LayerMask layerMask)

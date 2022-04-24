@@ -172,7 +172,8 @@ public class NetworkClient : MonoBehaviour
         MoEf,
         MAtk,
         MdSt,
-        LRm
+        LRm,
+        DBl
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -214,7 +215,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.BtDw:
                 {
-                    UnitManager.Instance.SetButton(info[0], EnumParse<PlayerController.Button>(info[2]),
+                    UnitManager.Instance.SetButton(info[0], EnumParse<Player.Button>(info[2]),
                         bool.Parse(info[3]));
                     break;
                 }
@@ -246,8 +247,17 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.SwBl:
                 {
-                    UnitManager.Instance.SpawnBullet(info[0], float.Parse(info[2]), float.Parse(info[3]),
-                        float.Parse(info[4]), float.Parse(info[5]));
+                    var monsterId = int.Parse(info[6]);
+                    var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
+                    var b = new Vector2(float.Parse(info[4]), float.Parse(info[5]));
+                    if (monsterId != -1)
+                    {
+                        UnitManager.Instance.SpawnBullet(monsterId, a, b);
+                    }
+                    else
+                    {
+                        UnitManager.Instance.SpawnBullet(info[0], a, b);
+                    }
                     break;
                 }
                 case Header.MdMo:
@@ -269,7 +279,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.PlDd:
                 {
-                    UnitManager.Instance.CorrectDeadPosition(info[0], float.Parse(info[2]), float.Parse(info[3]));
+                    UnitManager.Instance.CorrectDeadPosition(info[0], new Vector2(float.Parse(info[2]), float.Parse(info[3])));
                     break;
                 }
                 case Header.MdWl:
@@ -290,6 +300,11 @@ public class NetworkClient : MonoBehaviour
                 case Header.LRm:
                 {
                     UnitManager.Instance.HandlePlayerDisconnect(info[1]);
+                    break;
+                }
+                case Header.DBl:
+                {
+                    UnitManager.Instance.DestroyBullet(int.Parse(info[1]));
                     break;
                 }
             }
@@ -398,7 +413,7 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SetMovementButton(PlayerController.Button button, bool isDown)
+    public void SetMovementButton(Player.Button button, bool isDown)
     {
         string[] msg = {Header.BtDw.ToString(), button.ToString(), isDown.ToString()};
         SendMessageClient("1", msg);
@@ -428,13 +443,19 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos, int spawnedByMonsterId = -1)
     {
         string[] msg =
         {
-            Header.SwBl.ToString(), xSpawnPos.ToString("f2"), ySpawnPos.ToString("f2"), xMousePos.ToString("f2"),
-            yMousePos.ToString("f2")
+            Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), mousePos.x.ToString("f2"),
+            mousePos.y.ToString("f2"), spawnedByMonsterId.ToString()
         };
+        SendMessageClient("1", msg);
+    }
+
+    public void DestroyBullet(int id)
+    {
+        string[] msg = {Header.DBl.ToString(), id.ToString()};
         SendMessageClient("1", msg);
     }
 

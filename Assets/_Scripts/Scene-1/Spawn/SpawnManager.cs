@@ -83,11 +83,11 @@ public class SpawnManager : MonoBehaviour
     }
     public void OnReceiveSpawnPlayer(string idAndName, string id, Vector2 pos, int skin)
     {
-        if (playerPrefab[skin].TryGetComponent(out PlayerController player))
+        if (playerPrefab[skin].TryGetComponent(out Player player))
         {
             GameObject temp = Instantiate(playerPrefab[skin], pos, Quaternion.identity);
-            temp.name = idAndName;
-            var p = temp.GetComponent<PlayerController>();
+            temp.name = idAndName.Trim();
+            var p = temp.GetComponent<Player>();
             p.id = id;
             UnitManager.Instance.AddPlayer(p);
         }

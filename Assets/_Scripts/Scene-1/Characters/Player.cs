@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterStats),typeof(PlayerWeaponManager))]
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
     [field: SerializeField] public bool isLocal { get; private set; }
@@ -20,20 +20,20 @@ public class PlayerController : MonoBehaviour
     public bool isFacingLeft { get; private set; }
 
     // Character Stats -----------------------------------------------------------------
-    private CharacterStats _characterStats;
-    private PlayerWeaponManager _playerWeaponManager;
+    public CharacterStats stats { get; private set; }
+    public PlayerWeaponManager weaponManager { get; private set; }
 
     public event Action<string> OnPlayerDead;
 
     // Frame rate sending mouse pos
-    [SerializeField] private float _mousePosSendRate;
+    [SerializeField] private float _mousePosSendRate = 0.2f;
     private float _mousePosSendCoolDown, _mousePosNextTime;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _characterStats = GetComponent<CharacterStats>();
-        _playerWeaponManager = GetComponent<PlayerWeaponManager>();
+        stats = GetComponent<CharacterStats>();
+        weaponManager = GetComponent<PlayerWeaponManager>();
     }
     
     private void Start()
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         _mousePosSendCoolDown = 1 / _mousePosSendRate;
         _mousePosNextTime = 0;
 
-        _characterStats.OnPlayerDead += HandlePlayerDead;
+        stats.OnPlayerDead += HandlePlayerDead;
     }
 
     private void Update()
@@ -68,18 +68,18 @@ public class PlayerController : MonoBehaviour
             // For equip weapon ----------------------------------------------------
             if(Input.GetKeyDown(KeyCode.F))
             {
-                _playerWeaponManager.EquipWeapon();
+                weaponManager.EquipWeapon();
             }
 
             // For SendAttackMessage ----------------------------------------------------------
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                _playerWeaponManager.Attack();
+                weaponManager.Attack();
             }
         }
     }
 
-    public bool isDead => _characterStats.isDead;
+    public bool isDead => stats.isDead;
 
     private void HandlePlayerDead()
     {
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
     // For moving character ------------------------------------------------------------------
     private void MoveCharacter()
     {
-        float baseSpeed = _characterStats.moveSpeed;
+        float baseSpeed = stats.moveSpeed;
         if (w_IsDown && a_IsDown)
         {
             _rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / 2);
@@ -241,6 +241,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        _characterStats.OnPlayerDead -= HandlePlayerDead;
+        stats.OnPlayerDead -= HandlePlayerDead;
     }
 }

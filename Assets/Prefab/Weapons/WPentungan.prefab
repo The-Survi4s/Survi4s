@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6425351186635166818}
-  - component: {fileID: 7196554710628310991}
   - component: {fileID: 5894215051549350909}
+  - component: {fileID: 7196554710628310991}
   m_Layer: 0
   m_Name: WPentungan
   m_TagString: Weapon
@@ -32,6 +32,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5894215051549350909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329370933919719307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10be08f60cfc4334c9c36c7f658f90dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultBaseAttack: 10
+  DefaultCritRate: 30
+  MaxCooldownTime: 2
+  offset: {x: 0.3, y: -0.2, z: -1}
+  DefaultAttackRad: 1.6
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!212 &7196554710628310991
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -83,23 +103,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5894215051549350909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7329370933919719307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10be08f60cfc4334c9c36c7f658f90dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DefaultBaseAttack: 10
-  DefaultCritRate: 15
-  MaxCooldownTime: 0
-  offset: {x: 0.3, y: -0.2, z: -1}
-  DefaultAttackRad: 1.6
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 64

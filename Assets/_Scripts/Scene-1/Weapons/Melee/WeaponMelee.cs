@@ -20,7 +20,7 @@ public abstract class WeaponMelee : WeaponBase
         // Play animation
         base.PlayAttackAnimation();
 
-        if (!IsLocal()) return;
+        if (!IsLocal) return;
         // Detect enemies on range
         Collider2D[] hitObjects = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
         if (IsCritical()) OnCritical(hitObjects);

@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7275417983501075228}
+  - component: {fileID: 7346992578660823924}
   - component: {fileID: 6408391587937443035}
   - component: {fileID: 7738415550703709026}
   - component: {fileID: 251544381647372455}
-  - component: {fileID: 7346992578660823924}
   m_Layer: 0
   m_Name: BulletTipeX
   m_TagString: Untagged
@@ -34,6 +34,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7346992578660823924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5926505289157146130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5f8d01d4bca1c40bf4926f3e00beb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMoveSpeed: 0.5
+  maxTravelRange: 5
+  particleToSpawn: {fileID: 0}
+  particleSpawnRate: 0.2
+  criticalMultiplier: 1.5
 --- !u!212 &6408391587937443035
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -122,18 +139,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7346992578660823924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5926505289157146130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a5f8d01d4bca1c40bf4926f3e00beb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DefaultMoveSpeed: 7
-  DefaultTravelRange: 30
-  CriticalMultiplier: 1.5

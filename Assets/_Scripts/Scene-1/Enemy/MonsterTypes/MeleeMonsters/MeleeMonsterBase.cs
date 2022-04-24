@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class MeleeMonsterBase : Monster
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void Attack(Component nearestObj)
     {
-        
-    }
+        if (!NetworkClient.Instance.isMaster) return;
+        switch (nearestObj)
+        {
+            case Wall wall:
+                NetworkClient.Instance.ModifyWallHp(wall.id, -currentStat.atk);
+                break;
+            case Player _:
+                var players = GetTargetPlayers();
+                foreach (var player in players)
+                {
+                    NetworkClient.Instance.ModifyPlayerHp(player.name, -currentStat.atk);
+                }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+                break;
+            case Statue _:
+                Debug.Log("Send damage statue!");
+                NetworkClient.Instance.ModifyStatueHp(-currentStat.atk);
+                break;
+        }
     }
 }
