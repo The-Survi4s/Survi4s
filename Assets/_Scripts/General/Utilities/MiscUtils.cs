@@ -36,6 +36,11 @@ public class MiscUtils
 
     public static bool IsPrime(int number)
     {
+        if (number < 1 || number > generatedPrimeArray.Length)
+        {
+            Debug.Log("number is " + number);
+            return false;
+        }
         return generatedPrimeArray[number - 1];
     }
 }

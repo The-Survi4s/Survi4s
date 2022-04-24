@@ -102,7 +102,7 @@ public abstract class Monster : MonoBehaviour
         _monsterMovement = GetComponent<MonsterMovement>();
         _activeStatusEffects = new List<StatusEffectBase>();
         _animator = GetComponent<Animator>();
-        _animator.SetBool(IsDeadBool, false);
+        //_animator.SetBool(IsDeadBool, false);
 
         if (setting.attackMethods.Any(ts => ts.target == setting.priority && ts.method == TargetMethod.DontAttack))
         {
@@ -122,7 +122,7 @@ public abstract class Monster : MonoBehaviour
         
         CheckCanAttack();
         
-        SetAnimation();
+        //SetAnimation();
     }
 
     //--------------------------------------
@@ -226,7 +226,7 @@ public abstract class Monster : MonoBehaviour
 
     public void PlayAttackAnimation()
     {
-        _animator.SetTrigger(AttackTrigger);
+        //_animator.SetTrigger(AttackTrigger);
     }
 
     private void OnEnable()

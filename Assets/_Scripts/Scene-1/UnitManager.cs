@@ -58,7 +58,7 @@ public class UnitManager : MonoBehaviour
     {
         p.OnPlayerDead += HandlePlayerDead;
         _playerKdTree.Add(p);
-        _players.Add(p.name, p);
+        _players.Add(p.name.Trim(), p);
 
         //Get player username text object from child
     }
@@ -87,7 +87,7 @@ public class UnitManager : MonoBehaviour
     public void HandlePlayerDisconnect(string idAndName)
     {
         HandlePlayerDead(idAndName);
-        var index = SearchPlayerIndex(_players[idAndName]);
+        var index = SearchPlayerIndex(_players[idAndName.Trim()]);
         if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
@@ -107,31 +107,31 @@ public class UnitManager : MonoBehaviour
     // Player
     public void SyncMousePos(string playerName, float x, float y)
     {
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.SyncMousePos(x, y);
     }
 
     public void SetButton(string playerName, Player.Button button, bool isDown)
     {
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.SetButton(button, isDown);
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.weaponManager.OnEquipWeapon(weaponName);
     }
 
     public void PlayAttackAnimation(string playerName)
     {
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.weaponManager.PlayAttackAnimation();
     }
 
     public void SpawnBullet(string playerName, Vector2 spawnPos, Vector2 mousePos)
     {
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.weaponManager.SpawnBullet(spawnPos, mousePos);
     }
 
@@ -149,13 +149,13 @@ public class UnitManager : MonoBehaviour
     public void ModifyPlayerHp(string playerName, float amount)
     {
         Debug.Log(playerName + " " + amount);
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.stats.hitPoint += amount;
     }
 
     public void CorrectDeadPosition(string playerName, Vector2 pos)
     {
-        var player = _players[playerName];
+        var player = _players[playerName.Trim()];
         if (player) player.stats.CorrectDeadPosition(pos);
     }
 

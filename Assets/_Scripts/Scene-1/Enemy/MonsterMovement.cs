@@ -92,7 +92,7 @@ public class MonsterMovement : MonoBehaviour
             case NavMeshPathStatus.PathComplete:
                 break;
             case NavMeshPathStatus.PathPartial:
-                Debug.Log($"{name} path partial");
+                //Debug.Log($"{name} path partial");
                 TargetWallInstead();
                 break;
             case NavMeshPathStatus.PathInvalid:
