@@ -44,7 +44,11 @@ public class SpawnManager : MonoBehaviour
         }
         _monsterPrefabDuplicates = new List<GameObject>();
 
+<<<<<<< Updated upstream
         _currentWaveInfo = new WaveInfo(1, initialMonsterCount, initialMonsterHp, initialMonsterSpeed);
+=======
+        //_currentWaveInfo = new WaveInfo(1, _monsterSpawnSetting.count, _monsterSpawnSetting.hpMultiplier, _monsterSpawnSetting.speedMultiplier);
+>>>>>>> Stashed changes
         _monsterPrefabDuplicates.Clear();
         foreach (var prefabWeight in _monsterPrefabWeights)
         {

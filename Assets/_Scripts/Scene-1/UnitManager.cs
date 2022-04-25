@@ -76,7 +76,13 @@ public class UnitManager : MonoBehaviour
 
     public void DeleteMonsterFromList(int id)
     {
+<<<<<<< Updated upstream
         _monsters.RemoveAt(SearchMonsterIndexById(id));
+=======
+        HandlePlayerDead(idAndName);
+        var index = SearchPlayerIndex(_players[idAndName]);
+        if (index >= 0) _playerKdTree.RemoveAt(index);
+>>>>>>> Stashed changes
     }
 
     // Spawn Monster -----------------------------------------------------------------
@@ -101,22 +107,54 @@ public class UnitManager : MonoBehaviour
     // Player
     public void SyncMousePos(string playerName, float x, float y)
     {
+<<<<<<< Updated upstream
         SearchPlayerByName(playerName).SyncMousePos(x, y);
+=======
+        var player = _players[playerName];
+        if (player) player.SyncMousePos(x, y);
+>>>>>>> Stashed changes
     }
 
     public void SetButton(string playerName, PlayerController.Button button, bool isDown)
     {
+<<<<<<< Updated upstream
         SearchPlayerByName(playerName).SetButton(button, isDown);
+=======
+        var player = _players[playerName];
+        if (player) player.SetButton(button, isDown);
+>>>>>>> Stashed changes
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
+<<<<<<< Updated upstream
         SearchPlayerByName(playerName).gameObject.GetComponent<PlayerWeaponManager>().OnEquipWeapon(weaponName);
+=======
+        var player = _players[playerName];
+        if (player) player.weaponManager.OnEquipWeapon(weaponName);
+>>>>>>> Stashed changes
     }
 
     public void PlayAttackAnimation(string playerName)
     {
+<<<<<<< Updated upstream
         SearchPlayerByName(playerName).gameObject.GetComponent<PlayerWeaponManager>().PlayAttackAnimation();
+=======
+        var player = _players[playerName];
+        if (player) player.weaponManager.PlayAttackAnimation();
+    }
+
+    public void SpawnBullet(string playerName, Vector2 spawnPos, Vector2 mousePos)
+    {
+        var player = _players[playerName];
+        if (player) player.weaponManager.SpawnBullet(spawnPos, mousePos);
+    }
+
+    public void SpawnBullet(int monsterId, Vector2 spawnPos, Vector2 targetPos)
+    {
+        var monster = _monsters[monsterId];
+        if(monster is RangedMonsterBase rangedMonster) rangedMonster.SpawnBullet(spawnPos, targetPos);
+>>>>>>> Stashed changes
     }
 
     public void SpawnBullet(string playerName, float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
@@ -133,7 +171,12 @@ public class UnitManager : MonoBehaviour
 
     public void CorrectDeadPosition(string playerName, float x, float y)
     {
+<<<<<<< Updated upstream
         SearchPlayerByName(playerName).gameObject.GetComponent<CharacterStats>().CorrectDeadPosition(x, y);
+=======
+        var player = _players[playerName];
+        if (player) player.stats.CorrectDeadPosition(pos);
+>>>>>>> Stashed changes
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, int strength, float duration)

@@ -179,7 +179,7 @@ public class NetworkClient : MonoBehaviour
         // Svr|RCrd|...
         // ID+NameClient|MPos|...
         var info = message.Split('|');
-
+        info[0] = info[0].Trim('\0');
         if (info[0] == Header.Svr.ToString())
             switch (EnumParse<Header>(info[1]))
             {
