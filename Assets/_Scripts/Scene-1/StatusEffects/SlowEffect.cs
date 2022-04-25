@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlowEffect : StatusEffectBase
 {
-    public SlowEffect(CooldownSystem cooldownSystem, Stat originalStat, int strength, float duration) : base(cooldownSystem, originalStat, strength, duration)
+    public SlowEffect(CooldownSystem cooldownSystem, Monster owner, float duration, int strength) : base(cooldownSystem, owner, duration, strength)
     {
         statusEffectName = StatusEffect.Slow;
         StartApplyEffect();

@@ -1,53 +1,83 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Wall : MonoBehaviour
+public class Wall : DestroyableTile
 {
-    [SerializeField] private float DefaultHitPoint;
-    [field: SerializeField] public float hitPoint { get; private set; }
+    [field: SerializeField] public int id { get; private set; }
+    public override int maxHp { get; protected set; }
+    private bool _isInitialized = false;
 
-    public int ID { get; private set; }
-    public bool isDestroyed { get; private set; }
-    public bool isInitialized { get; private set; }
-    public static event Action<Wall> OnWallDestroyed;
-    public static event Action<Wall> OnWallRebuilt;
+    private NavMeshModifier _navMesh;
+    private Collider2D _collider;
     [field: SerializeField] public Monster.Origin origin { get; private set; } // Di set di inspector
 
     private void Start()
     {
-        isInitialized = false;
-        Init(WallManager.instance.GetNewWallId());
-        WallManager.instance.AddWall(this); // Auto add
+        _isInitialized = false;
+        _navMesh = GetComponent<NavMeshModifier>();
+        _collider = GetComponent<Collider2D>();
+        EnableWall(true);
+        Init(TilemapManager.instance.GetNewWallId(), 
+            TilemapManager.instance.GetOriginFromWorldPos(transform.position),
+            TilemapManager.instance.GetCellPosition(transform.position));
+        TilemapManager.instance.AddWall(this); // Auto add
     }
 
-    public void Init(int id)
+    public void Init(int id, Monster.Origin wallOrigin, Vector3Int cellPosition)
     {
-        ID = id;
-        hitPoint = DefaultHitPoint;
-        isInitialized = true;
+        if (_isInitialized) return;
+        this.id = id;
+        origin = wallOrigin;
+        maxHp = TilemapManager.instance.maxWallHp;
+        hp = maxHp;
+        cellPos = cellPosition;
+        _isInitialized = true;
         isDestroyed = false;
     }
 
-    public void ModifyWallHp(float amount)
+    protected override void AfterModifyHp()
     {
-        hitPoint += amount;
-        if (hitPoint > 0)
-        {
-            if (!isDestroyed) return;
-            GetComponent<Collider2D>().enabled = true;
-            isDestroyed = false;
-            OnWallRebuilt?.Invoke(this);
-        }
-        else if (hitPoint <= 0)
-        {
-            hitPoint = 0;
-            if (isDestroyed) return;
-            GetComponent<Collider2D>().enabled = false;
-            isDestroyed = true;
-            // Tell all that this is destroyed
-            OnWallDestroyed?.Invoke(this);
-        }
+        TilemapManager.instance.UpdateWallTilemap(this);
+    }
+
+    protected override void InvokeRebuiltEvent()
+    {
+        if (!isDestroyed) return;
+        base.InvokeRebuiltEvent();
+        EnableWall(true);
+        Debug.Log($"Wall {id} from {origin} has been rebuilt!");
+    }
+
+    protected override void InvokeDestroyedEvent()
+    {
+        if (isDestroyed) return;
+        base.InvokeDestroyedEvent();
+        EnableWall(false);
+        // Tell all that this is destroyed
+        Debug.Log($"Wall {id} from {origin} has been destroyed");
+    }
+
+    private void EnableWall(bool wallEnabled)
+    {
+        _collider.enabled = wallEnabled;
+        _navMesh.ignoreFromBuild = !wallEnabled;
+        isDestroyed = !wallEnabled;
+    }
+
+    private void OnDestroy()
+    {
+        TilemapManager.instance.RemoveWall(this);
+    }
+
+    // ----------- cheats
+    [ContextMenu(nameof(DamageWallBy10))]
+    private void DamageWallBy10()
+    {
+        ModifyHp(-10);
+    }
+    [ContextMenu(nameof(HealWallBy10))]
+    private void HealWallBy10()
+    {
+        ModifyHp(10);
     }
 }

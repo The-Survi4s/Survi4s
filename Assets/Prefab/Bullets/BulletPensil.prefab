@@ -9,10 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 575251052408178641}
+  - component: {fileID: 6299571263945626312}
   - component: {fileID: 4315547821722523670}
   - component: {fileID: 605899225614135215}
   - component: {fileID: 6949445219279553642}
-  - component: {fileID: 6299571263945626312}
+  - component: {fileID: 4594289766084295441}
   m_Layer: 0
   m_Name: BulletPensil
   m_TagString: Untagged
@@ -29,11 +30,29 @@ Transform:
   m_GameObject: {fileID: 3545429094865367775}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.24078, y: -4.1800613, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6299571263945626312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3545429094865367775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9debd00fe5c736649b2a796c7571e5ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMoveSpeed: 20
+  maxTravelRange: 20
+  _maxTriggerTimes: 3
+  particleToSpawn: {fileID: 0}
+  particleSpawnRate: 0.2
+  criticalMultiplier: 1.5
 --- !u!212 &4315547821722523670
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -71,11 +90,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -916554939
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0.9056604, g: 0.7064005, b: 0.16575289, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 9a72567c910053b488bda119bca7548d, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -122,19 +141,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6299571263945626312
-MonoBehaviour:
+--- !u!95 &4594289766084295441
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3545429094865367775}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9debd00fe5c736649b2a796c7571e5ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DefaultMoveSpeed: 10
-  DefaultTravelRange: 120
-  CriticalMultiplier: 1.5
-  piercingPower: 3
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

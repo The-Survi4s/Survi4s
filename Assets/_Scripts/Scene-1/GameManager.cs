@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Statue _statue;
-
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
 
@@ -28,7 +26,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [field: SerializeField] public GameSettings GameSetting { get; private set; }
+    [field: SerializeField] public GameSettings gameSetting { get; private set; }
 
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }
@@ -52,15 +50,16 @@ public class GameManager : MonoBehaviour
     private void CheckGameOver()
     {
         if (_gameState == GameState.StartGame || _gameState == GameState.GameOver) return;
-        if (UnitManager.Instance.PlayerAliveCount <= 0 || _statue.Hp <= 0)
+        if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
         {
-            _statue.PlayDestroyedAnimation();
+            TilemapManager.instance.statue.PlayDestroyedAnimation();
             ChangeState(GameState.GameOver);
         }
     }
 
     public void ChangeState(GameState newState)
     {
+        Debug.Log(newState);
         _gameState = newState;
         switch (newState)
         {
@@ -93,7 +92,7 @@ public class GameManager : MonoBehaviour
     private async void HandleWaveOver()
     {
         //Wait enemy habis
-        while (UnitManager.Instance.MonsterAliveCount > 0)
+        while (UnitManager.Instance.monsterAliveCount > 0)
         {
             await Task.Yield();
         }
@@ -127,6 +126,7 @@ public class GameManager : MonoBehaviour
     private void DoStuffWhileCountDown()
     {
         // Tampilkan timer, update timer
+        //Debug.Log("Countdown");
     }
 
     private void HandleStartGame()
@@ -135,7 +135,13 @@ public class GameManager : MonoBehaviour
 
         // Display statue HP dan UI lain
 
-        GameStarted();
+        // Spawn Player ---------------------------------------------------------------------
+        SpawnManager.instance.SendSpawnPlayer();
+
+        // Deactivate Panels ----------------------------------------------------------------
+        GameMenuManager.Instance.SetActivePreparationPanel(false);
+
+        Physics2D.IgnoreLayerCollision(3, 6); //Supaya player tidak collision dengan monster
         ChangeState(GameState.WavePreparation); 
     }
 
@@ -145,13 +151,4 @@ public class GameManager : MonoBehaviour
         NetworkClient.Instance.StartGame();
         NetworkClient.Instance.LockTheRoom();
     }
-    private void GameStarted()
-    {
-        // Spawn Player ---------------------------------------------------------------------
-        UnitManager.Instance.SendSpawnPlayer(0, 0, 0);
-
-        // Deactivate Panels ----------------------------------------------------------------
-        GameMenuManager.Instance.SetActivePreparationPanel(false);
-    }
-
 }

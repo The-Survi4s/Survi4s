@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditor;
 using UnityEngine;
 
 public class NetworkClient : MonoBehaviour
@@ -169,7 +170,10 @@ public class NetworkClient : MonoBehaviour
         MdWl,
         SpwM,
         MoEf,
-        MAtk
+        MAtk,
+        MdSt,
+        LRm,
+        DBl
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -179,7 +183,7 @@ public class NetworkClient : MonoBehaviour
         // Svr|RCrd|...
         // ID+NameClient|MPos|...
         var info = message.Split('|');
-
+        info[0] = info[0].Trim('\0');
         if (info[0] == Header.Svr.ToString())
             switch (EnumParse<Header>(info[1]))
             {
@@ -198,6 +202,11 @@ public class NetworkClient : MonoBehaviour
                 case Header.REx:
                     ScenesManager.Instance.LoadScene(0);
                     break;
+                case Header.LRm:
+                {
+                    UnitManager.Instance.HandlePlayerDisconnect(info[1]);
+                    break;
+                }
             }
         else
         {
@@ -211,7 +220,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.BtDw:
                 {
-                    UnitManager.Instance.SetButton(info[0], EnumParse<PlayerController.Button>(info[2]),
+                    UnitManager.Instance.SetButton(info[0], EnumParse<Player.Button>(info[2]),
                         bool.Parse(info[3]));
                     break;
                 }
@@ -223,8 +232,8 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SwPy:
-                    UnitManager.Instance.SpawnPlayer(info[0], ExtractId(info[0]), float.Parse(info[2]),
-                        float.Parse(info[3]),
+                    SpawnManager.instance.OnReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
+                        new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
@@ -243,8 +252,18 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.SwBl:
                 {
-                    UnitManager.Instance.SpawnBullet(info[0], float.Parse(info[2]), float.Parse(info[3]),
-                        float.Parse(info[4]), float.Parse(info[5]));
+                    var monsterId = int.Parse(info[6]);
+                    var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
+                    var b = new Vector2(float.Parse(info[4]), float.Parse(info[5]));
+                    Debug.Log($"shooter is monster?:{monsterId}");
+                    if (monsterId != -1)
+                    {
+                        UnitManager.Instance.SpawnBullet(monsterId, a, b);
+                    }
+                    else
+                    {
+                        UnitManager.Instance.SpawnBullet(info[0], a, b);
+                    }
                     break;
                 }
                 case Header.MdMo:
@@ -255,7 +274,7 @@ public class NetworkClient : MonoBehaviour
                 case Header.MoEf:
                 {
                     UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(info[2]),
-                        EnumParse<StatusEffect>(info[3]), int.Parse(info[4]), float.Parse(info[5]));
+                        EnumParse<StatusEffect>(info[3]), float.Parse(info[4]), int.Parse(info[5]));
                     break;
                 }
                 case Header.MdPl:
@@ -266,17 +285,27 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.PlDd:
                 {
-                    UnitManager.Instance.CorrectDeadPosition(info[0], float.Parse(info[2]), float.Parse(info[3]));
+                    UnitManager.Instance.CorrectDeadPosition(info[0], new Vector2(float.Parse(info[2]), float.Parse(info[3])));
                     break;
                 }
                 case Header.MdWl:
                 {
-                    WallManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    TilemapManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
                 {
                     UnitManager.Instance.PlayMonsterAttackAnimation(int.Parse(info[2]));
+                    break;
+                }
+                case Header.MdSt:
+                {
+                    TilemapManager.instance.ReceiveModifyStatueHp(float.Parse(info[2]));
+                    break;
+                }
+                case Header.DBl:
+                {
+                    UnitManager.Instance.DestroyBullet(int.Parse(info[2]));
                     break;
                 }
             }
@@ -373,9 +402,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("2", "LcR");
     }
 
-    public void SpawnPlayer(float x, float y, int skin)
+    public void SpawnPlayer(Vector2 spawnPos, int skin)
     {
-        string[] msg = {Header.SwPy.ToString(), x.ToString("f2"), y.ToString("f2"), skin.ToString()};
+        string[] msg = {Header.SwPy.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), skin.ToString()};
         SendMessageClient("1", msg);
     }
 
@@ -385,7 +414,7 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SetMovementButton(PlayerController.Button button, bool isDown)
+    public void SetMovementButton(Player.Button button, bool isDown)
     {
         string[] msg = {Header.BtDw.ToString(), button.ToString(), isDown.ToString()};
         SendMessageClient("1", msg);
@@ -415,13 +444,19 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos, int spawnedByMonsterId = -1)
     {
         string[] msg =
         {
-            Header.SwBl.ToString(), xSpawnPos.ToString("f2"), ySpawnPos.ToString("f2"), xMousePos.ToString("f2"),
-            yMousePos.ToString("f2")
+            Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), mousePos.x.ToString("f2"),
+            mousePos.y.ToString("f2"), spawnedByMonsterId.ToString()
         };
+        SendMessageClient("1", msg);
+    }
+
+    public void DestroyBullet(int id)
+    {
+        string[] msg = {Header.DBl.ToString(), id.ToString()};
         SendMessageClient("1", msg);
     }
 
@@ -431,9 +466,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, int strength, float duration)
+    public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, float duration, int strength)
     {
-        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), strength.ToString(), duration.ToString("f2")};
+        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), duration.ToString("f2"), strength.ToString() };
         SendMessageClient("1", msg);
     }
 
@@ -453,6 +488,12 @@ public class NetworkClient : MonoBehaviour
     public void ModifyWallHp(int id, float amount)
     {
         string[] msg = {Header.MdWl.ToString(), id.ToString(), amount.ToString("f2")};
+        SendMessageClient("1", msg);
+    }
+
+    public void ModifyStatueHp(float amount)
+    {
+        string[] msg = {Header.MdSt.ToString(), amount.ToString("f2")};
         SendMessageClient("1", msg);
     }
 

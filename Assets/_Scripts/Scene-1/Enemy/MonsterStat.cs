@@ -11,15 +11,17 @@ public struct Stat
     public float atkCd;
     public float movSpd;
     public float rotSpd;
+    public float acceleration;
 }
 
 [Serializable]
 public class MonsterStat : IHasCooldown
 {
     private Stat _defaultStat;
-    [SerializeField] private Stat _stat;
+    [SerializeField] private Stat _rawStat;
     private CooldownSystem _cooldownSystem;
     private CooldownData _cooldownData;
+    private readonly Monster _owner;
     public float cooldownDuration => _defaultStat.atkCd;
     public bool isAttackReady => _cooldownData.isDone;
     public float remainingAttackCooldown => _cooldownData.remainingTime;
@@ -29,25 +31,25 @@ public class MonsterStat : IHasCooldown
     // Getter n setters
     public int hitPoint
     {
-        get => _stat.hp;
-        set => _stat.hp = ValidateHp(value);
+        get => _rawStat.hp;
+        set => _rawStat.hp = ValidateHp(value);
     }
 
     public float attack
     {
-        get => _stat.atk;
-        set => _stat.atk = value;
+        get => _rawStat.atk;
+        set => _rawStat.atk = value;
     }
 
-    public float cooldown => _stat.atkCd;
+    public float cooldown => _rawStat.atkCd;
 
     public float moveSpeed
     {
-        get => _stat.movSpd;
-        set => _stat.movSpd = value;
+        get => _rawStat.movSpd;
+        set => _rawStat.movSpd = value;
     }
 
-    public float rotationSpeed => _stat.rotSpd;
+    public float rotationSpeed => _rawStat.rotSpd;
 
     // Validation methods
     private int ValidateHp(int value)
@@ -63,17 +65,19 @@ public class MonsterStat : IHasCooldown
     }
 
     // ------------------------
-    public MonsterStat(CooldownSystem cooldownSystem, Stat newStat)
+    public MonsterStat(CooldownSystem cooldownSystem, Stat defaultStat, Monster owner)
     {
         _cooldownSystem = cooldownSystem;
-        _defaultStat = newStat;
-        _stat = _defaultStat;
+        _cooldownData = new CooldownData(this);
+        _defaultStat = defaultStat;
+        _rawStat = _defaultStat;
+        _owner = owner;
         StartCooldown();
     }
 
-    public void UpdateStat()
+    public void UpdateStatCooldown()
     {
-        _stat.atkCd = _cooldownData.remainingTime;
+        _rawStat.atkCd = _cooldownData.remainingTime;
     }
 
     // -------------------------
@@ -81,7 +85,9 @@ public class MonsterStat : IHasCooldown
     public void StartCooldown()
     {
         _cooldownData = _cooldownSystem.PutOnCooldown(this);
+        _owner.AddStatusEffect(StatusEffectFactory.CreateNew(_owner, StatusEffect.Stun, 1));
     }
 
-    public Stat getStat => _stat;
+    public Stat getRawStat => _rawStat;
+    public Stat getDefaultStat => _defaultStat;
 }

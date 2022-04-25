@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public enum StatusEffect
@@ -7,29 +9,33 @@ public enum StatusEffect
     Stun,
     Slow,
     Bleed,
-    StatusEffectLain
+    Weaken
 }
 
 public class StatusEffectFactory : MonoBehaviour
 {
-    private static CooldownSystem _cooldownSystem;
-    void Awake()
+    public static StatusEffectBase CreateNew(Monster owner, StatusEffect statusEffect, float duration, int strength = 1)
     {
-        _cooldownSystem = FindObjectOfType<CooldownSystem>();
-    }
-    public static StatusEffectBase Stun(Stat originalStat, float duration)
-    {
-        return new StunEffect(_cooldownSystem, originalStat, 4f);
-    }
-
-    public static StatusEffectBase CreateNew(Stat rawStat, StatusEffect statusEffect, int strength, float duration)
-    {
-        throw new System.NotImplementedException();
+        var _cooldownSystem = FindObjectOfType<CooldownSystem>();
+        switch (statusEffect)
+        {
+            case StatusEffect.Stun:
+                return new StunEffect(_cooldownSystem, owner, duration);
+            case StatusEffect.Slow:
+                return new SlowEffect(_cooldownSystem, owner, duration, strength);
+            case StatusEffect.Bleed:
+                return new BleedEffect(_cooldownSystem, owner, duration, strength);
+            case StatusEffect.Weaken:
+                return new WeakenEffect(_cooldownSystem, owner, duration, strength);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(statusEffect), statusEffect, null);
+        }
     }
 }
 
 public abstract class StatusEffectBase : IHasCooldown
 {
+    protected Monster owner;
     protected Stat originalStat;
     protected Stat modifiedStat;
 
@@ -41,11 +47,14 @@ public abstract class StatusEffectBase : IHasCooldown
     private readonly CooldownData _cooldownData;
 
     public float cooldownDuration => duration;
+    public float remainingTime => _cooldownData.remainingTime;
 
-    protected StatusEffectBase(CooldownSystem cooldownSystem, Stat originalStat, int strength, float duration)
+    protected StatusEffectBase(CooldownSystem cooldownSystem, Monster owner, float duration, int strength)
     {
-        this.originalStat = originalStat;
+        this.owner = owner;
+        originalStat = owner.currentStat;
         modifiedStat = originalStat;
+        if (strength < 0) strength = 0;
         this.strength = strength;
         this.duration = duration;
         _cooldownData = cooldownSystem.PutOnCooldown(this);
@@ -56,13 +65,14 @@ public abstract class StatusEffectBase : IHasCooldown
         originalStat = updatedOriginalStat;
     }
 
-    protected void StartApplyEffect()
+    protected async void StartApplyEffect()
     {
         while (!_cooldownData.isDone)
         {
             ApplyEffect();
+            await Task.Yield();
         }
     }
     protected abstract void ApplyEffect();
-    public Stat NewStat => modifiedStat;
+    public Stat newStat => modifiedStat;
 }

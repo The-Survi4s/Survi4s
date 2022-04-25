@@ -3,66 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Statue : MonoBehaviour
+public class Statue : DestroyableTile
 {
-    public int Hp { get; private set; }
-    private int _maxHp;
+    public override int maxHp { get; protected set; }
 
-    public static event Action StatueDestroyed;
-    // Start is called before the first frame update
+    [SerializeField] private Sprite[] _haloStageSprites;
+
     void Start()
     {
-        _maxHp = GameManager.Instance.GameSetting.initialStatueHp;
+        maxHp = GameManager.Instance.gameSetting.initialStatueHp;
+        cellPos = TilemapManager.instance.GetCellPosition(transform.position);
+        hp = maxHp;
+        TilemapManager.instance.SetStatue(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void AfterModifyHp()
     {
-        
-    }
-
-    public void ModifyHp(int amount)
-    {
-        Hp += amount;
-        if (Hp <= 0)
-        {
-            StatueDestroyed?.Invoke();
-        }
-
-        if (Hp > _maxHp)
-        {
-            Hp = _maxHp;
-        }
-
-        ChangeTexture();
-    }
-
-    private void ChangeTexture()
-    {
-        if (Hp == _maxHp)
-        {
-
-        }
-        else if(Hp > 75/100*_maxHp)
-        {
-            
-        }
-        else if (Hp > 50 / 100 * _maxHp)
-        {
-            
-        }
-        else if (Hp > 25 / 100 * _maxHp)
-        {
-            
-        }
-        else if (Hp > 0)
-        {
-            
-        }
-        else
-        {
-            
-        }
+        TilemapManager.instance.UpdateWallTilemap(this);
     }
 
     public void PlayDestroyedAnimation()
@@ -76,5 +33,10 @@ public class Statue : MonoBehaviour
         // Upgrade statue, or
 
         // Upgrade weapon
+    }
+
+    private void UpdateHaloSprite()
+    {
+
     }
 }

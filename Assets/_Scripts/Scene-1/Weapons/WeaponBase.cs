@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour
 {
-    [SerializeField] protected float DefaultBaseAttack;
-    [SerializeField] protected float DefaultCritRate;
-    [SerializeField] protected float MaxCooldownTime;
+    [SerializeField] protected float defaultBaseAttack;
+    [SerializeField] protected float defaultCritRate;
+    [SerializeField] protected float maxCooldownTime;
 
-    public float baseAttack { get; private set; }
-    public float critRate { get; private set; }
-    public float cooldownTime { get; private set; }
-    protected float nextAttackTime = 0f;
+    public float baseAttack { get; protected set; }
+    public float critRate { get; protected set; }
+    public float cooldownTime { get; protected set; }
+    protected float nextAttackTime;
     public GameObject owner { get; private set; }
     public bool IsUsed() => owner != null;
 
@@ -34,16 +35,16 @@ public abstract class WeaponBase : MonoBehaviour
     
 
     // Cached components --------------------
-    protected PlayerController _ownerPlayerController;
+    protected Player ownerPlayer;
 
 
     // -------------------
     protected virtual void Init()
     {
-        baseAttack = DefaultBaseAttack;
-        critRate = DefaultCritRate;
-        cooldownTime = MaxCooldownTime;
-        _ownerPlayerController = owner?.GetComponent<PlayerController>();
+        baseAttack = defaultBaseAttack;
+        critRate = defaultCritRate;
+        cooldownTime = maxCooldownTime;
+        ownerPlayer = owner?.GetComponent<Player>();
     }
 
     private void Awake() => Init();
@@ -53,7 +54,7 @@ public abstract class WeaponBase : MonoBehaviour
         if (owner == null) return;
         // Follow owner
         transform.position = owner.transform.position +
-                             (_ownerPlayerController.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
+                             (ownerPlayer.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
         // Swing animation
         if (animationStep < swingQueues.Count)
         {
@@ -62,9 +63,9 @@ public abstract class WeaponBase : MonoBehaviour
                     swingQueues[animationStep].t)) < animationEndDegree) animationStep++;
         }
         // Rotate weapon based on owner mouse pos
-        RotateWeapon(IsLocal()
-            ? _ownerPlayerController.localMousePos
-            : _ownerPlayerController.syncMousePos);
+        RotateWeapon(isLocal
+            ? ownerPlayer.localMousePos
+            : ownerPlayer.syncMousePos);
     }
     
     // Network methods -----------------------------------
@@ -77,7 +78,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Cooldown
         nextAttackTime = Time.time + cooldownTime;
     }
-    public bool IsLocal() => _ownerPlayerController.isLocal;
+    public bool isLocal => ownerPlayer.isLocal;
 
     // Animation methods ---------------------------------------
     protected virtual void PlayAnimation() => animationStep = 0;
@@ -88,7 +89,7 @@ public abstract class WeaponBase : MonoBehaviour
     {
         var angleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
         var angleDeg = (180 / Mathf.PI) * angleRad +
-                       swingDegree * (_ownerPlayerController.isFacingLeft ? -1 : 1);
+                       swingDegree * (ownerPlayer.isFacingLeft ? -1 : 1);
         transform.rotation = Quaternion.Euler(0, 0, angleDeg);
     }
 
@@ -99,22 +100,22 @@ public abstract class WeaponBase : MonoBehaviour
         ? Vector2.zero 
         : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
 
-    public virtual void PlayAttackAnimation() => PlayAnimation();
+    public virtual void ReceiveAttackMessage() => PlayAnimation();
 
     // Equip / UnEquip -------------------------------------------------
     public void EquipWeapon(PlayerWeaponManager player)
     {
         if (owner != null) return;
         owner = player.gameObject;
-        _ownerPlayerController = owner.GetComponent<PlayerController>();
+        ownerPlayer = owner.GetComponent<Player>();
     }
     public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {
-        if (player.gameObject.name != owner.name) return;
+        if (player.name != owner.name) return;
         owner = null;
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
-        _ownerPlayerController = null;
+        ownerPlayer = null;
     }
 
     // Upgrade weapon, dipanggil dari statue
@@ -122,6 +123,6 @@ public abstract class WeaponBase : MonoBehaviour
     {
         baseAttack *= 1.05f;
         critRate *= 1.05f;
-        MaxCooldownTime *= 0.9f;
+        maxCooldownTime *= 0.9f;
     }
 }

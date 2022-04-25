@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef74442d6b529f74b89bc2737923b0ed, type: 3}
+  m_Name: WallStages
+  m_EditorClassIdentifier: 
+  _tileStages:
+  - {fileID: 11400000, guid: 8104cb134f1be1142aa59c7384f99b2f, type: 2}
+  - {fileID: 11400000, guid: 39f0e50e1b10e684f91b585c3357b45b, type: 2}
+  - {fileID: 11400000, guid: bc0ca01e579e62a4cb70a86511c9b751, type: 2}
+  - {fileID: 11400000, guid: ead0f39bcb50be541ac9b85d762041ac, type: 2}
+  - {fileID: 11400000, guid: 2b3d556a52fccd94e8eaccb82f80a485, type: 2}

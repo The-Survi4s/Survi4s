@@ -1378,7 +1378,6 @@ MonoBehaviour:
   ServerPublicKey: <?xml version="1.0" encoding="utf-16"?> <RSAParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">   <Exponent>AQAB</Exponent>   <Modulus>m/ufbYGnudVzx+ekRjb2G94vKft8yPxYfwA1HvmTxdAipbcgT2BlGevufClzwvTKIYdAKRTxeRx5T73kT0EJFEYjb5iKSFbCkRASfPc3Tl0EOqR2IPrsmaGWovZn6sfsWbBkmLHs9/KkBwqXLyCLMe27AW6Jhg0+1x92fFPtqfMVkp7lEzj+w91B2dJpw4PCpGFe2s1NQagd5t4ft1CPIlw2gwDv8B+F8HcxKxybQ/eAQHgV+cmCFEIeg9SdMqM+jcm2owaYjEjg78Tz8/EUkK12A3nXXkkFLUoee//s4B6Os+bVXiiRcz05EXZpVG0VAYx1X2EemwtKy/n3s6oHrQ==</Modulus>
     </RSAParameters>
-  customId: 123456
 --- !u!1 &556430473
 GameObject:
   m_ObjectHideFlags: 0

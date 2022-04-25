@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7140993317558166326
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.b
+      value: 0.388339
+      objectReference: {fileID: 0}
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.19953722
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Name
+      value: TukangSapu
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476518, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476519, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377165867587476519, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.16409683
+      objectReference: {fileID: 0}
+    - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.08628178
+      objectReference: {fileID: 0}
+    - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <type>k__BackingField
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.priority
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.attackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.hp
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.detectionRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.atk
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.atkCd
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.movSpd
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.acceleration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.attackMethods.Array.data[2].method
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.minRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.attackRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <type>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.collisionRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.hp
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.detectionRange
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.atk
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.atkCd
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: setting.defaultStat.movSpd
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.minRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.attackRange
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.detectionRange
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.atk
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.atkCd
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773981490425168370, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.movSpd
+      value: 0.3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}

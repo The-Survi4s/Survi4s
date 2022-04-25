@@ -2,22 +2,14 @@ using UnityEngine;
 
 public class WeaponRange : WeaponBase
 {
-    [SerializeField] private int MaxAmmo;
-    public GameObject bullet;
-
+    [SerializeField] private int _maxAmmo;
+    [SerializeField] private GameObject _bullet;
+    [field: SerializeField] public float inAccuracy { get; private set; }
     private int _ammo;
-
     public int ammo
     {
         get => _ammo;
-        set
-        {
-            _ammo += value;
-            if (_ammo > MaxAmmo)
-            {
-                _ammo = MaxAmmo;
-            }
-        }
+        set => _ammo = Mathf.Clamp(value, 0, _maxAmmo);
     }
 
     private void Start()
@@ -32,32 +24,43 @@ public class WeaponRange : WeaponBase
             return new Vector2(0, 0);
         }
 
-        return _ownerPlayerController.syncMousePos;
+        return ownerPlayer.syncMousePos;
     }
 
-    public void ReloadAmmo() => ammo = MaxAmmo;
+    public void ReloadAmmo() => ammo = _maxAmmo;
 
-    public override void PlayAttackAnimation()
+    public override void ReceiveAttackMessage()
     {
-        base.PlayAttackAnimation();
+        base.ReceiveAttackMessage();
         Debug.Log(ammo);
         // Only do this if local
-        if (IsLocal() && ammo > 0)
+        if (isLocal)
         {
-            // Send message to spawn bullet
-            Vector2 attackPoint = GetOwnerAttackPoint();
-            Vector2 mousePos = GetOwnerMousePos();
-            NetworkClient.Instance.SpawnBullet(attackPoint.x, attackPoint.y, mousePos.x, mousePos.y);
+            if(ammo > 0)
+            {
+                // Send message to spawn bullet
+                Vector2 attackPoint = GetOwnerAttackPoint();
+                Vector2 mousePos = GetOwnerMousePos();
+                NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
+            }
+            else
+            {
+                var distanceToStatue = Vector2.Distance(transform.position,TilemapManager.instance.statue.transform.position);
+                if(distanceToStatue < 3)
+                {
+                    ReloadAmmo();
+                }
+            }
         }
     }
 
     public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos)
     {
         // Make a bullet
-        GameObject temp = Instantiate(bullet, spawnPos, Quaternion.identity);
-        BulletBase bulTemp = temp.GetComponent<BulletBase>();
+        GameObject temp = Instantiate(_bullet, spawnPos, Quaternion.identity);
+        PlayerBulletBase bulTemp = temp.GetComponent<PlayerBulletBase>();
 
         // init bullet
-        bulTemp.Init(this,mousePos,IsLocal());
+        bulTemp.Init(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
     }
 }

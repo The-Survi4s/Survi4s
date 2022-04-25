@@ -8,13 +8,18 @@ using Random = UnityEngine.Random;
 public class SpawnManager : MonoBehaviour
 {
     private readonly List<bool> _occupiedIDs = new List<bool>();
-    [SerializeField] private Spawner[] _spawners = new Spawner[4];
+    private readonly List<Spawner> _spawners = new List<Spawner>();
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 
-    [SerializeField] private int initialMonsterCount = 3;
-    [SerializeField] private int initialMonsterHp = 30;
-    [SerializeField] private float initialMonsterSpeed = 1;
-    [SerializeField] private float randomMonsterSpawnOffsetMax = 10;
+    [Serializable]
+    public class InitialMonsterSpawnSetting
+    {
+        public int count = 3;
+        public int hpMultiplier = 1;
+        public float speedMultiplier = 1;
+        public float randomSpawnOffsetMax = 10;
+    }
+    [SerializeField] private InitialMonsterSpawnSetting _monsterSpawnSetting;
 
     private WaveInfo _previousWaveInfo;
     [SerializeField] private WaveInfo _currentWaveInfo;
@@ -30,6 +35,9 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private List<MonsterPrefabWeight> _monsterPrefabWeights;
     private List<GameObject> _monsterPrefabDuplicates;
 
+    [SerializeField] private Vector2 _playerSpawnPos = new Vector2(2, 2);
+    [SerializeField] private List<GameObject> playerPrefab;
+
     public static SpawnManager instance { get; private set; }
 
     private void Awake()
@@ -44,13 +52,13 @@ public class SpawnManager : MonoBehaviour
         }
         _monsterPrefabDuplicates = new List<GameObject>();
 
-        _currentWaveInfo = new WaveInfo(1, initialMonsterCount, initialMonsterHp, initialMonsterSpeed);
+        _currentWaveInfo = new WaveInfo(1, _monsterSpawnSetting.count, _monsterSpawnSetting.hpMultiplier, _monsterSpawnSetting.speedMultiplier);
         _monsterPrefabDuplicates.Clear();
         foreach (var prefabWeight in _monsterPrefabWeights)
         {
             if (prefabWeight.monsterPrefab.TryGetComponent(out Monster monster))
             {
-                Debug.Log("Yes, this is a monster!" + monster.type);
+                //Debug.Log("Yes, this is a monster!" + monster.type);
                 for (int i = 0; i < prefabWeight.weight; i++)
                 {
                     _monsterPrefabDuplicates.Add(prefabWeight.monsterPrefab);
@@ -62,7 +70,31 @@ public class SpawnManager : MonoBehaviour
             }
         }
         //Debug.Log("mpw size:"+_monsterPrefabWeights.Count+", mpd size:"+_monsterPrefabDuplicates.Count);
-        SelectSpawners();
+    }
+
+    public void AddSpawner(Spawner spawner)
+    {
+        _spawners.Add(spawner);
+    }
+
+    public void SendSpawnPlayer()
+    {
+        NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, UnitManager.Instance.playerCount);
+    }
+    public void OnReceiveSpawnPlayer(string idAndName, string id, Vector2 pos, int skin)
+    {
+        if (playerPrefab[skin].TryGetComponent(out Player player))
+        {
+            GameObject temp = Instantiate(playerPrefab[skin], pos, Quaternion.identity);
+            temp.name = idAndName.Trim();
+            var p = temp.GetComponent<Player>();
+            p.id = id;
+            UnitManager.Instance.AddPlayer(p);
+        }
+        else
+        {
+            Debug.Log("Object is not a player!");
+        }
     }
 
     public void OnReceiveSpawnMonster(int id, int monsterPrefabIndex, Monster.Origin origin, float spawnOffset)
@@ -72,7 +104,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (spawner.origin == origin)
             {
-                spawner.SpawnMonster(_monsterPrefabDuplicates[monsterPrefabIndex], id, spawnOffset);
+                spawner.SpawnMonster(_monsterPrefabDuplicates[monsterPrefabIndex], id, spawnOffset, _currentWaveInfo);
             }
         }
     }
@@ -80,7 +112,7 @@ public class SpawnManager : MonoBehaviour
     private async Task OnSendSpawnMonster(double delayToNext) 
     {
         NetworkClient.Instance.SpawnMonster(_occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin(),
-            Random.Range(-randomMonsterSpawnOffsetMax, randomMonsterSpawnOffsetMax));
+            Random.Range(-_monsterSpawnSetting.randomSpawnOffsetMax, _monsterSpawnSetting.randomSpawnOffsetMax));
         _occupiedIDs.Add(true);
         var end = Time.time + delayToNext;
         while (Time.time < end)
@@ -91,6 +123,7 @@ public class SpawnManager : MonoBehaviour
 
     private Monster.Origin GetRandomOrigin()
     {
+        if(_selectedSpawners.Count == 0) SelectSpawners();
         return _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
     }
 
@@ -116,7 +149,7 @@ public class SpawnManager : MonoBehaviour
         _selectedSpawners.Clear();
         while (_selectedSpawners.Count < _currentWaveInfo.spawnersUsedCount)
         {
-            int index = Random.Range(0, _spawners.Length);
+            int index = Random.Range(0, _spawners.Count);
             if (!_selectedSpawners.Contains(_spawners[index]))
             {
                 _selectedSpawners.Add(_spawners[index]);

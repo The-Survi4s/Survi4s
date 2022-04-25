@@ -55,13 +55,13 @@ public class PlayerWeaponManager : MonoBehaviour
             weapon.SendAttackMessage();
         }
     }
-    public void PlayAttackAnimation()
+    public void ReceiveAttackMessage()
     {
-        weapon.PlayAttackAnimation();
+        weapon.ReceiveAttackMessage();
     }
-    public void SpawnBullet(float xSpawnPos, float ySpawnPos, float xMousePos, float yMousePos)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos)
     {
-        (weapon as WeaponRange).SpawnBullet(new Vector2(xSpawnPos, ySpawnPos), new Vector2(xMousePos, yMousePos));
+        (weapon as WeaponRange).SpawnBullet(spawnPos, mousePos);
     }
     public Transform GetAttackPoint()
     {
@@ -76,7 +76,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         foreach (WeaponBase x in UnitManager.Instance.weapons)
         {
-            float dist = Vector3.Distance(x.gameObject.transform.position, transform.position);
+            float dist = Vector3.Distance(x.transform.position, transform.position);
             if (dist < minDist && !x.IsUsed())
             {
                 temp = x.gameObject;
