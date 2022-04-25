@@ -1487,7 +1487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monsterSpawnSetting:
-    count: 50
+    count: 10
     hpMultiplier: 1
     speedMultiplier: 1
     randomSpawnOffsetMax: 10
