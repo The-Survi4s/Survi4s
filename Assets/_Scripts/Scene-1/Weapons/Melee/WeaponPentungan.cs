@@ -6,7 +6,7 @@ public class WeaponPentungan : WeaponMelee
     {
         base.OnNormalAttack(targets);
         critRate += 10;
-        baseAttack += 5;
+        baseAttack += 3;
     }
 
     protected override void OnCritical(Collider2D[] targets)

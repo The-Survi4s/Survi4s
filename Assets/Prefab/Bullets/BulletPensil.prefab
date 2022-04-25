@@ -49,10 +49,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 20
   maxTravelRange: 20
+  _maxTriggerTimes: 3
   particleToSpawn: {fileID: 0}
   particleSpawnRate: 0.2
   criticalMultiplier: 1.5
-  _piercingPower: 2
 --- !u!212 &4315547821722523670
 SpriteRenderer:
   m_ObjectHideFlags: 0

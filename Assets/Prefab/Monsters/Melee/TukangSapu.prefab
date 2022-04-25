@@ -117,7 +117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <setting>k__BackingField.defaultStat.movSpd
-      value: 0.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <setting>k__BackingField.defaultStat.acceleration

@@ -37,7 +37,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4185724672583048720, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: <setting>k__BackingField.defaultStat.movSpd
-      value: 0.8
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -4185724672583048720, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: <setting>k__BackingField.defaultStat.rotSpd

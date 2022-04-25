@@ -28,17 +28,19 @@ public class MonsterMovement : MonoBehaviour
         _agent.updateUpAxis = false;
         _agent.updateRotation = false;
         _agent.isStopped = false;
+
         _currentTargetPreviousPos = Vector3.zero;
-        _targetWallPos = _owner.targetWall.transform.position;
         _statuePos = TilemapManager.instance.statue.transform.position;
+
         stationaryTime = 0;
+        _agent.SetDestination(_statuePos);
     }
 
     // Update is called once per frame
     void Update()
     {
-        DecideTarget();
         SetStat();
+        DecideTarget();
         UpdateStationaryTime();
         RecalculatePath();
     }
@@ -69,7 +71,6 @@ public class MonsterMovement : MonoBehaviour
     private void DecideTarget()
     {
         _currentTarget = _owner.setting.priority;
-        _agent.SetDestination(_statuePos);
         switch (_owner.setting.priority)
         {
             case Monster.Target.Wall:
@@ -118,6 +119,7 @@ public class MonsterMovement : MonoBehaviour
         if (_owner.setting.MethodOf(Monster.Target.Wall) != Monster.TargetMethod.DontAttack)
         {
             if (!_owner.targetWall) _owner.RequestNewTargetWall();
+            _targetWallPos = _owner.targetWall.transform.position;
             _currentTargetPos = _targetWallPos;
             _currentTarget = Monster.Target.Wall;
         }
@@ -130,6 +132,7 @@ public class MonsterMovement : MonoBehaviour
         _agent.stoppingDistance = _owner.setting.minRange;
         _agent.angularSpeed = _owner.currentStat.rotSpd;
 
-        _targetPlayerPos = _owner.nearestPlayer.transform.position;
+        if (!_owner.nearestPlayer.isDead) _targetPlayerPos = _owner.nearestPlayer.transform.position;
+        else _targetPlayerPos = _statuePos;
     }
 }

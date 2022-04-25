@@ -11,6 +11,7 @@ public class UnitManager : MonoBehaviour
 
     // List ---------------------------------------------------------------------------
     private KdTree<Player> _playerKdTree;
+    private KdTree<Player> _playerAliveKdTree;
     private Dictionary<string, Player> _players;
     private List<GameObject> _playerUsernames;
     [SerializeField] public List<WeaponBase> weapons;
@@ -38,7 +39,8 @@ public class UnitManager : MonoBehaviour
             Destroy(this);
         }
         _playerKdTree = new KdTree<Player>(true);
-        _monsterKdTree = new KdTree<Monster>();
+        _playerAliveKdTree = new KdTree<Player>(true);
+        _monsterKdTree = new KdTree<Monster>(true);
         _playerUsernames = new List<GameObject>();
         _bullets = new Dictionary<int, BulletBase>();
         _players = new Dictionary<string, Player>();
@@ -48,6 +50,7 @@ public class UnitManager : MonoBehaviour
     private void Update()
     {
         _playerKdTree.UpdatePositions();
+        _playerAliveKdTree.UpdatePositions();
         _monsterKdTree.UpdatePositions();
 
         //Update player username to whatever the hell
@@ -58,6 +61,7 @@ public class UnitManager : MonoBehaviour
     {
         p.OnPlayerDead += HandlePlayerDead;
         _playerKdTree.Add(p);
+        _playerAliveKdTree.Add(p);
         _players.Add(p.name.Trim(), p);
 
         //Get player username text object from child
@@ -80,15 +84,19 @@ public class UnitManager : MonoBehaviour
     // Deletion
     private void HandlePlayerDead(string idAndName)
     {
-        //Set that player to
-        //Set camera spectator ke player lain
+        if(!_players.ContainsKey(idAndName)) return;
+        var player = _players[idAndName];
+        var index = SearchPlayerIndex(player, true);
+        if(index >= 0) _playerAliveKdTree.RemoveAt(index);
+
+        index = SearchPlayerIndex(player);
+        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void HandlePlayerDisconnect(string idAndName)
     {
+        Debug.Log(idAndName + " disconnected");
         HandlePlayerDead(idAndName);
-        var index = SearchPlayerIndex(_players[idAndName]);
-        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void DeleteMonsterFromList(int id)
@@ -199,6 +207,20 @@ public class UnitManager : MonoBehaviour
         return -1;
     }
 
+    private int SearchPlayerIndex(Player player, bool isAlive)
+    {
+        if (!isAlive) return SearchPlayerIndex(player);
+        for (int i = 0; i < _playerAliveKdTree.Count; i++)
+        {
+            if (_playerKdTree[i] == player)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public float RangeFromNearestPlayer(Vector3 pos)
     {
         return Vector3.Distance(GetNearestPlayer(pos).transform.position, pos);
@@ -207,6 +229,11 @@ public class UnitManager : MonoBehaviour
     public Player GetNearestPlayer(Vector3 pos)
     {
         return _playerKdTree.FindClosest(pos);
+    }
+
+    public Player GetNearestPlayer(Vector3 pos, bool isAlive)
+    {
+        return !isAlive ? GetNearestPlayer(pos) : _playerAliveKdTree.FindClosest(pos);
     }
 
     public List<Player> GetNearestPlayers(Vector3 pos, int count)

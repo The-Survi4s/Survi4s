@@ -85,7 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <setting>k__BackingField.defaultStat.hp
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <setting>k__BackingField.detectionRange
@@ -98,6 +98,10 @@ PrefabInstance:
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <setting>k__BackingField.defaultStat.atkCd
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: <setting>k__BackingField.defaultStat.movSpd
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <setting>k__BackingField.attackMethods.Array.data[2].method

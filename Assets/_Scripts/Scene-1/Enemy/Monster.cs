@@ -116,7 +116,7 @@ public abstract class Monster : MonoBehaviour
         monsterStat.UpdateStatCooldown();
         ApplyStatusEffects();
 
-        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position);
+        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
 
         if (!targetWall) ReRequestWall(_targetWallCellPos);
         

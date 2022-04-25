@@ -172,8 +172,8 @@ public class TilemapManager : MonoBehaviour
         var variantCount = tileStages.getTileStages.Length;
         var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount));
         if (tile.spriteVariantId == variantId) return;
-        //Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
-        //Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
+        Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
+        Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
         tile.spriteVariantId = variantId;
         if (variantId == variantCount - 1)
         {

@@ -11,6 +11,8 @@ public abstract class BulletBase : MonoBehaviour
     protected float moveSpeed;
     private bool _rotationIsSet;
     private Animator _animator;
+    private int _triggerCount;
+    [SerializeField] private int _maxTriggerTimes = 1;
 
     [SerializeField] protected GameObject particleToSpawn; //Note: Ada ParticleSystem. Coba cari2 tahu tentang itu
     [SerializeField] protected float particleSpawnRate = 0.2f;
@@ -40,6 +42,7 @@ public abstract class BulletBase : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D col)
     {
+        if (_triggerCount >= _maxTriggerTimes) return;
         PlayAnimation();
         OnHit(col);
     }

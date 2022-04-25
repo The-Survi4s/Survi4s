@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-    [SerializeField] private int MaxHitPoint;
-    [SerializeField] private float DefaultMoveSpeed;
+    [SerializeField] private int _maxHitPoint;
+    [SerializeField] private float _defaultMoveSpeed;
     public event Action OnPlayerDead;
+    public event Action OnPlayerRevived;
     private bool _actionInvoked = false;
 
     [SerializeField] private float _hitPoint;
@@ -25,9 +26,15 @@ public class CharacterStats : MonoBehaviour
                 _actionInvoked = true;
             }
 
-            if (_hitPoint > MaxHitPoint)
+            if (_actionInvoked && _hitPoint > 0)
             {
-                _hitPoint = MaxHitPoint;
+                OnPlayerRevived?.Invoke();
+                _actionInvoked = false;
+            }
+
+            if (_hitPoint > _maxHitPoint)
+            {
+                _hitPoint = _maxHitPoint;
             }
         }
     }
@@ -36,8 +43,8 @@ public class CharacterStats : MonoBehaviour
 
     private void Start()
     {
-        hitPoint = MaxHitPoint;
-        moveSpeed = DefaultMoveSpeed;
+        hitPoint = _maxHitPoint;
+        moveSpeed = _defaultMoveSpeed;
     }
 
     public void CorrectDeadPosition(Vector2 pos)

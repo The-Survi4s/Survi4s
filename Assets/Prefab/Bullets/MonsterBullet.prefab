@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 3082794662705287549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06105da2275b0fb42a763a55d66dce9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMoveSpeed: 20
+  defaultMoveSpeed: 10
   maxTravelRange: 100
+  _maxTriggerTimes: 1
   particleToSpawn: {fileID: 0}
   particleSpawnRate: 0.2
 --- !u!212 &-3427419256100365185
