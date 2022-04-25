@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5884052807918234493}
   - component: {fileID: 7071543227132304580}
   - component: {fileID: 737146271870072577}
+  - component: {fileID: 4272137926693709281}
   m_Layer: 0
   m_Name: BulletPentilan
   m_TagString: Untagged
@@ -46,11 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ecb406663641a14c9edacb574192358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMoveSpeed: 1
+  defaultMoveSpeed: 15
   maxTravelRange: 10
   particleToSpawn: {fileID: 0}
   particleSpawnRate: 0.2
-  criticalMultiplier: 1.5
+  criticalMultiplier: 2
 --- !u!212 &5884052807918234493
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -88,8 +89,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -916554939
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b3cebd7ca3f87724d9a6d5563b79147c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -139,3 +140,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &4272137926693709281
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6591116743017005492}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -29,17 +29,28 @@ public class WeaponRange : WeaponBase
 
     public void ReloadAmmo() => ammo = _maxAmmo;
 
-    public override void PlayAttackAnimation()
+    public override void ReceiveAttackMessage()
     {
-        base.PlayAttackAnimation();
+        base.ReceiveAttackMessage();
         Debug.Log(ammo);
         // Only do this if local
-        if (IsLocal && ammo > 0)
+        if (isLocal)
         {
-            // Send message to spawn bullet
-            Vector2 attackPoint = GetOwnerAttackPoint();
-            Vector2 mousePos = GetOwnerMousePos();
-            NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
+            if(ammo > 0)
+            {
+                // Send message to spawn bullet
+                Vector2 attackPoint = GetOwnerAttackPoint();
+                Vector2 mousePos = GetOwnerMousePos();
+                NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
+            }
+            else
+            {
+                var distanceToStatue = Vector2.Distance(transform.position,TilemapManager.instance.statue.transform.position);
+                if(distanceToStatue < 3)
+                {
+                    ReloadAmmo();
+                }
+            }
         }
     }
 
@@ -50,6 +61,6 @@ public class WeaponRange : WeaponBase
         PlayerBulletBase bulTemp = temp.GetComponent<PlayerBulletBase>();
 
         // init bullet
-        bulTemp.Init(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), IsLocal);
+        bulTemp.Init(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
     }
 }

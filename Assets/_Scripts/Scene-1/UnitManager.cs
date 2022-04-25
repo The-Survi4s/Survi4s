@@ -126,7 +126,7 @@ public class UnitManager : MonoBehaviour
     public void PlayAttackAnimation(string playerName)
     {
         var player = _players[playerName];
-        if (player) player.weaponManager.PlayAttackAnimation();
+        if (player) player.weaponManager.ReceiveAttackMessage();
     }
 
     public void SpawnBullet(string playerName, Vector2 spawnPos, Vector2 mousePos)

@@ -8,21 +8,32 @@ public class WeaponPalu : WeaponMelee
     {
         foreach (Collider2D x in targets)
         {
-            Debug.Log("We hit " + x.name);
             if (x.TryGetComponent(out Wall wall))
             {
-                wall.ModifyHp(10);
+                NetworkClient.Instance.ModifyWallHp(wall.id, 10);
                 Debug.Log("We repair " + x.name);
+            }
+            else if(x.TryGetComponent(out Monster monster))
+            {
+                NetworkClient.Instance.ModifyMonsterHp(monster.id, -baseAttack);
             }
         }
     }
 
     protected override void OnCritical(Collider2D[] targets)
     {
-        // Damage them more
         foreach (Collider2D x in targets)
         {
-            Debug.Log("We Crit hit " + x.name);
+            if (x.TryGetComponent(out Wall wall))
+            {
+                NetworkClient.Instance.ModifyWallHp(wall.id, 20);
+                Debug.Log("We super repair " + x.name);
+            }
+            else if (x.TryGetComponent(out Monster monster))
+            {
+                NetworkClient.Instance.ModifyMonsterHp(monster.id, -baseAttack);
+                NetworkClient.Instance.ApplyStatusEffectToMonster(monster.id, StatusEffect.Stun, 1, 1);
+            }
         }
     }
 }

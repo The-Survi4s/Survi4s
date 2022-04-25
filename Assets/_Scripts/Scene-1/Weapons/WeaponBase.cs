@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour
 {
-    [SerializeField] protected float DefaultBaseAttack;
-    [SerializeField] protected float DefaultCritRate;
-    [SerializeField] protected float MaxCooldownTime;
+    [SerializeField] protected float defaultBaseAttack;
+    [SerializeField] protected float defaultCritRate;
+    [SerializeField] protected float maxCooldownTime;
 
-    public float baseAttack { get; private set; }
-    public float critRate { get; private set; }
-    public float cooldownTime { get; private set; }
-    protected float nextAttackTime = 0f;
+    public float baseAttack { get; protected set; }
+    public float critRate { get; protected set; }
+    public float cooldownTime { get; protected set; }
+    protected float nextAttackTime;
     public GameObject owner { get; private set; }
     public bool IsUsed() => owner != null;
 
@@ -40,9 +41,9 @@ public abstract class WeaponBase : MonoBehaviour
     // -------------------
     protected virtual void Init()
     {
-        baseAttack = DefaultBaseAttack;
-        critRate = DefaultCritRate;
-        cooldownTime = MaxCooldownTime;
+        baseAttack = defaultBaseAttack;
+        critRate = defaultCritRate;
+        cooldownTime = maxCooldownTime;
         ownerPlayer = owner?.GetComponent<Player>();
     }
 
@@ -62,7 +63,7 @@ public abstract class WeaponBase : MonoBehaviour
                     swingQueues[animationStep].t)) < animationEndDegree) animationStep++;
         }
         // Rotate weapon based on owner mouse pos
-        RotateWeapon(IsLocal
+        RotateWeapon(isLocal
             ? ownerPlayer.localMousePos
             : ownerPlayer.syncMousePos);
     }
@@ -77,7 +78,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Cooldown
         nextAttackTime = Time.time + cooldownTime;
     }
-    public bool IsLocal => ownerPlayer.isLocal;
+    public bool isLocal => ownerPlayer.isLocal;
 
     // Animation methods ---------------------------------------
     protected virtual void PlayAnimation() => animationStep = 0;
@@ -99,7 +100,7 @@ public abstract class WeaponBase : MonoBehaviour
         ? Vector2.zero 
         : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
 
-    public virtual void PlayAttackAnimation() => PlayAnimation();
+    public virtual void ReceiveAttackMessage() => PlayAnimation();
 
     // Equip / UnEquip -------------------------------------------------
     public void EquipWeapon(PlayerWeaponManager player)
@@ -122,6 +123,6 @@ public abstract class WeaponBase : MonoBehaviour
     {
         baseAttack *= 1.05f;
         critRate *= 1.05f;
-        MaxCooldownTime *= 0.9f;
+        maxCooldownTime *= 0.9f;
     }
 }

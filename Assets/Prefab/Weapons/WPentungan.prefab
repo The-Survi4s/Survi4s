@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10be08f60cfc4334c9c36c7f658f90dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultBaseAttack: 10
-  DefaultCritRate: 30
-  MaxCooldownTime: 2
+  defaultBaseAttack: 5
+  defaultCritRate: 5
+  maxCooldownTime: 1
   offset: {x: 0.3, y: -0.2, z: -1}
-  DefaultAttackRad: 1.6
+  defaultAttackRad: 3
   targetMask:
     serializedVersion: 2
     m_Bits: 64

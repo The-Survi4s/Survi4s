@@ -1494,8 +1494,8 @@ MonoBehaviour:
   _currentWaveInfo:
     waveNumber: 1
     monsterCount: 3
-    monsterHpIncrease: 0
-    monsterSpdIncrease: 0
+    monsterHpIncrease: 2
+    monsterSpdIncrease: 2
     spawnRate: 2
     spawnersUsedCount: 3
   _monsterPrefabWeights:

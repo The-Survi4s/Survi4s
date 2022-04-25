@@ -17,6 +17,7 @@ public abstract class MonsterBulletBase : BulletBase
             else if(wall) AttackSomething(wall);
             else if(statue) AttackSomething(statue);
         }
+        OnEndOfTrigger();
     }
 
     protected virtual void AttackSomething(Component component)

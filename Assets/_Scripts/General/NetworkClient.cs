@@ -202,6 +202,11 @@ public class NetworkClient : MonoBehaviour
                 case Header.REx:
                     ScenesManager.Instance.LoadScene(0);
                     break;
+                case Header.LRm:
+                {
+                    UnitManager.Instance.HandlePlayerDisconnect(info[1]);
+                    break;
+                }
             }
         else
         {
@@ -250,6 +255,7 @@ public class NetworkClient : MonoBehaviour
                     var monsterId = int.Parse(info[6]);
                     var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
                     var b = new Vector2(float.Parse(info[4]), float.Parse(info[5]));
+                    Debug.Log($"shooter is monster?:{monsterId}");
                     if (monsterId != -1)
                     {
                         UnitManager.Instance.SpawnBullet(monsterId, a, b);
@@ -297,14 +303,9 @@ public class NetworkClient : MonoBehaviour
                     TilemapManager.instance.ReceiveModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
-                case Header.LRm:
-                {
-                    UnitManager.Instance.HandlePlayerDisconnect(info[1]);
-                    break;
-                }
                 case Header.DBl:
                 {
-                    UnitManager.Instance.DestroyBullet(int.Parse(info[1]));
+                    UnitManager.Instance.DestroyBullet(int.Parse(info[2]));
                     break;
                 }
             }

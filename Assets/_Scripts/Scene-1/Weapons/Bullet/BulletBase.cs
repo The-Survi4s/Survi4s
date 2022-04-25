@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public abstract class BulletBase : MonoBehaviour
 {
     [SerializeField] protected float defaultMoveSpeed;
@@ -41,12 +42,11 @@ public abstract class BulletBase : MonoBehaviour
     {
         PlayAnimation();
         OnHit(col);
-        OnEndOfTrigger();
     }
 
     protected virtual void PlayAnimation()
     {
-        _animator.SetTrigger(DestroyTrigger);
+        //_animator.SetTrigger(DestroyTrigger);
     }
 
     protected virtual void SpawnParticle()
@@ -58,6 +58,7 @@ public abstract class BulletBase : MonoBehaviour
 
     protected virtual void OnEndOfTrigger()
     {
+        //Dipanggil setelah OnHit
         if(NetworkClient.Instance.isMaster) NetworkClient.Instance.DestroyBullet(id);
     }
 

@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultBaseAttack: 1
-  DefaultCritRate: 5
-  MaxCooldownTime: 0.5
+  defaultBaseAttack: 1
+  defaultCritRate: 5
+  maxCooldownTime: 0.2
   offset: {x: 0.2, y: -3, z: -1}
   _maxAmmo: 10
   _bullet: {fileID: 5926505289157146130, guid: 86e02e271c687c043a595287ac3db668, type: 3}

@@ -48,7 +48,7 @@ MonoBehaviour:
   DefaultCritRate: 10
   MaxCooldownTime: 3
   offset: {x: 0.2, y: -3, z: -1}
-  _maxAmmo: 0
+  _maxAmmo: 5
   _bullet: {fileID: 6655036926467217695, guid: 602d62a42d1a8f34ba091fbd9a40f30d, type: 3}
   <inAccuracy>k__BackingField: 1
 --- !u!212 &8125261469877633826

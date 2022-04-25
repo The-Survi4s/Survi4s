@@ -19,7 +19,7 @@ public class SpawnManager : MonoBehaviour
         public float speedMultiplier = 1;
         public float randomSpawnOffsetMax = 10;
     }
-    [SerializeField] private InitialMonsterSpawnSetting _monsterSpawnSetting = new InitialMonsterSpawnSetting();
+    [SerializeField] private InitialMonsterSpawnSetting _monsterSpawnSetting;
 
     private WaveInfo _previousWaveInfo;
     [SerializeField] private WaveInfo _currentWaveInfo;

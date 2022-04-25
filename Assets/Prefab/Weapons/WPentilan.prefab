@@ -44,13 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultBaseAttack: 10
-  DefaultCritRate: 20
-  MaxCooldownTime: 3
+  defaultBaseAttack: 10
+  defaultCritRate: 30
+  maxCooldownTime: 2
   offset: {x: 0.2, y: -3, z: -1}
   _maxAmmo: 5
   _bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
-  <inAccuracy>k__BackingField: 5
+  <inAccuracy>k__BackingField: 1.5
 --- !u!212 &536319729483946899
 SpriteRenderer:
   m_ObjectHideFlags: 0

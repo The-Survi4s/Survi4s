@@ -53,5 +53,7 @@ MonoBehaviour:
   m_Sprites:
   - m_OriginalSprite: {fileID: 8757724683017325597, guid: 9fd1d8e03e86ccd41825b9c7a82c231c, type: 3}
     m_OverrideSprite: {fileID: 6201508468409723133, guid: 9fd1d8e03e86ccd41825b9c7a82c231c, type: 3}
-  m_GameObjects: []
+  m_GameObjects:
+  - m_OriginalGameObject: {fileID: 4972422398260719754, guid: ab9ec3b10746ac746ac4fb04fecf991b, type: 3}
+    m_OverrideGameObject: {fileID: 4972422398260719754, guid: ab9ec3b10746ac746ac4fb04fecf991b, type: 3}
   m_InstanceTile: {fileID: -6500949863179007995}

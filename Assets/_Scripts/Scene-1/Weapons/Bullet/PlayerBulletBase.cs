@@ -11,10 +11,13 @@ public abstract class PlayerBulletBase : BulletBase
 
     protected override void OnHit(Collider2D col)
     {
+        Debug.Log("Hit a collider!");
         Monster monster = col.GetComponent<Monster>();
         if (!monster) return;
+        Debug.Log($"it's a {monster}");
         if (weapon && isLocal)
         {
+            Debug.Log("Attack!");
             if (!weapon.IsCritical())
             {
                 OnNormalShot(monster);
@@ -45,6 +48,7 @@ public abstract class PlayerBulletBase : BulletBase
         if (weaponOrigin is WeaponRange wr) inAccuracy = wr.inAccuracy;
         mousePos += new Vector2(Random.Range(-inAccuracy, inAccuracy), Random.Range(-inAccuracy, inAccuracy));
         weapon = weaponOrigin;
+        this.isLocal = isLocal;
         Initialize(mousePos, bulletId);
     }
 }
