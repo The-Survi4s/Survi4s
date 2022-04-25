@@ -24,7 +24,7 @@ public class UnitManager : MonoBehaviour
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
-    public int playerAliveCount => _playerKdTree.Count(player => !player.isDead);
+    public int playerAliveCount => _playerAliveKdTree.Count();
     public int playerCount => _playerKdTree.Count;
     public int monsterAliveCount => _monsterKdTree.Count;
 
@@ -85,18 +85,18 @@ public class UnitManager : MonoBehaviour
     private void HandlePlayerDead(string idAndName)
     {
         if(!_players.ContainsKey(idAndName)) return;
-        var player = _players[idAndName];
-        var index = SearchPlayerIndex(player, true);
+        var index = SearchPlayerIndex(_players[idAndName], true);
         if(index >= 0) _playerAliveKdTree.RemoveAt(index);
-
-        index = SearchPlayerIndex(player);
-        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void HandlePlayerDisconnect(string idAndName)
     {
         Debug.Log(idAndName + " disconnected");
         HandlePlayerDead(idAndName);
+        if (!_players.ContainsKey(idAndName)) return;
+
+        var index = SearchPlayerIndex(_players[idAndName]);
+        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void DeleteMonsterFromList(int id)

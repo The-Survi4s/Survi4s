@@ -7,12 +7,12 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class WaveInfo
 {
-    public int waveNumber;
-    public int monsterCount;
-    public float monsterHpIncrease;
-    public float monsterSpdIncrease;
-    public double spawnRate;
-    public int spawnersUsedCount;
+    public int waveNumber = 1;
+    public int monsterCount = 3;
+    public float monsterHpIncrease = 1;
+    public float monsterSpdIncrease = 1;
+    public double spawnRate = 2;
+    public int spawnersUsedCount = 4;
     public struct WaveSettings
     {
         public float countMultiplier;

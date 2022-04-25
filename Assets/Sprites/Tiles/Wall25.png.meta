@@ -1,88 +1,88 @@
 fileFormatVersion: 2
-guid: 6a87eb719a7954d46acfb81e0ae636fc
+guid: e2f6000b460255c49aaa071e922b617d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5083358447716817459
-    second: Wall50_L_0
+      213: 3703452691794804956
+    second: Wall25_0
   - first:
-      213: 338874527580568891
-    second: Wall50_L_1
+      213: -7644335331866284672
+    second: Wall25_1
   - first:
-      213: -8587640307528355334
-    second: Wall50_L_2
+      213: -4863928259544045677
+    second: Wall25_2
   - first:
-      213: -5069243760857305561
-    second: Wall50_L_3
+      213: 5811314148688296722
+    second: Wall25_3
   - first:
-      213: -6882503462604624273
-    second: Wall50_Straight_4
+      213: 7941283930517533634
+    second: Wall25_4
   - first:
-      213: 5632666563236655581
-    second: Wall50_Straight_5
+      213: -7249517920629540361
+    second: Wall25_5
   - first:
-      213: -7101531379899075018
-    second: Wall50_Plus_6
+      213: -6751292291432282949
+    second: Wall25_6
   - first:
-      213: 7939725945098103860
-    second: Wall50_T_7
+      213: 5953272384562802483
+    second: Wall25_7
   - first:
-      213: -2367087275001350000
-    second: Wall50_T_8
+      213: -6419108234742139528
+    second: Wall25_8
   - first:
-      213: 5094005507073649325
-    second: Wall50_T_9
+      213: -7508340567804022448
+    second: Wall25_9
   - first:
-      213: 4724305398876574328
-    second: Wall50_T_10
+      213: -4039148948877118968
+    second: Wall25_10
   - first:
-      213: -2447972705288650185
-    second: Wall50_End_11
+      213: -5873707017536520645
+    second: Wall25_11
   - first:
-      213: -5792342238399839045
-    second: Wall50_End_12
+      213: -1825263564827663659
+    second: Wall25_12
   - first:
-      213: 5629350288854281527
-    second: Wall50_End_13
+      213: -8039665361912714688
+    second: Wall25_13
   - first:
-      213: 1525833406342338669
-    second: Wall50_End_14
+      213: 4011049095471621830
+    second: Wall25_14
   - first:
-      213: 7632948447307973886
-    second: Wall50_GateFrameHL_15
+      213: -1034416849936545744
+    second: Wall25_15
   - first:
-      213: -2457130991960065332
-    second: Wall50_GateHCL_16
+      213: 8230202347714625525
+    second: Wall25_16
   - first:
-      213: 927520028636182640
-    second: Wall50_GateHCR_17
+      213: 8042664359730180598
+    second: Wall25_17
   - first:
-      213: 1664895527905148141
-    second: Wall50_GateFrameHR_18
+      213: -224574297553745069
+    second: Wall25_18
   - first:
-      213: -8642072736523430229
-    second: Wall50_GateFrameVL_19
+      213: -4458271024495255060
+    second: Wall25_19
   - first:
-      213: -5307570702137160519
-    second: Wall50_GateVCL_20
+      213: -6093411147995696415
+    second: Wall25_20
   - first:
-      213: 1999342661757641200
-    second: Wall50_GateVCR_21
+      213: 3835820849510362107
+    second: Wall25_21
   - first:
-      213: -7153823876436881816
-    second: Wall50_GateFrameVR_22
+      213: -8692138789159282510
+    second: Wall25_22
   - first:
-      213: -1931032271103666815
-    second: Wall50_GateHOL_23
+      213: -2929471094851885146
+    second: Wall25_23
   - first:
-      213: -1167720306906272734
-    second: Wall50_GateHOR_24
+      213: 8066041258700894677
+    second: Wall25_24
   - first:
-      213: 3648328098082374873
-    second: Wall50_GateVOL_25
+      213: 8942962030275121061
+    second: Wall25_25
   - first:
-      213: 7777906982757178772
-    second: Wall50_GateVOR_26
+      213: -5263061561192135421
+    second: Wall25_26
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -184,7 +184,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wall50_L_0
+      name: Wall25_0
       rect:
         serializedVersion: 2
         x: 0
@@ -198,14 +198,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dc5abd1bc684479b0800000000000000
-      internalID: -5083358447716817459
+      spriteID: cd0c4e8f99e456330800000000000000
+      internalID: 3703452691794804956
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_L_1
+      name: Wall25_1
       rect:
         serializedVersion: 2
         x: 16
@@ -219,14 +219,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3d3edf569ce3b400800000000000000
-      internalID: 338874527580568891
+      spriteID: 08d6420648dd9e590800000000000000
+      internalID: -7644335331866284672
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_L_2
+      name: Wall25_2
       rect:
         serializedVersion: 2
         x: 32
@@ -240,14 +240,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: af132fab3a292d880800000000000000
-      internalID: -8587640307528355334
+      spriteID: 397a4e4a40bdf7cb0800000000000000
+      internalID: -4863928259544045677
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_L_3
+      name: Wall25_3
       rect:
         serializedVersion: 2
         x: 48
@@ -261,14 +261,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72e2c3258ad66a9b0800000000000000
-      internalID: -5069243760857305561
+      spriteID: 21b74c6bd6fe5a050800000000000000
+      internalID: 5811314148688296722
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_Straight_4
+      name: Wall25_4
       rect:
         serializedVersion: 2
         x: 0
@@ -282,14 +282,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f6e2e0ad09f6c70a0800000000000000
-      internalID: -6882503462604624273
+      spriteID: 2c3f30bf8ab153e60800000000000000
+      internalID: 7941283930517533634
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_Straight_5
+      name: Wall25_5
       rect:
         serializedVersion: 2
         x: 16
@@ -303,14 +303,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dd1f0f765604b2e40800000000000000
-      internalID: 5632666563236655581
+      spriteID: 7f93c0c5cd9846b90800000000000000
+      internalID: -7249517920629540361
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_Plus_6
+      name: Wall25_6
       rect:
         serializedVersion: 2
         x: 32
@@ -324,14 +324,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 63673d3e5da427d90800000000000000
-      internalID: -7101531379899075018
+      spriteID: bb4885a4e679e42a0800000000000000
+      internalID: -6751292291432282949
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_T_7
+      name: Wall25_7
       rect:
         serializedVersion: 2
         x: 0
@@ -345,14 +345,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 43c668b3ea29f2e60800000000000000
-      internalID: 7939725945098103860
+      spriteID: 33f220521b54e9250800000000000000
+      internalID: 5953272384562802483
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_T_8
+      name: Wall25_8
       rect:
         serializedVersion: 2
         x: 16
@@ -366,14 +366,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 098723d2aaa662fd0800000000000000
-      internalID: -2367087275001350000
+      spriteID: 875f865021fbae6a0800000000000000
+      internalID: -6419108234742139528
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_T_9
+      name: Wall25_9
       rect:
         serializedVersion: 2
         x: 32
@@ -387,14 +387,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: daa220df40b81b640800000000000000
-      internalID: 5094005507073649325
+      spriteID: 051f263d8040dc790800000000000000
+      internalID: -7508340567804022448
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_T_10
+      name: Wall25_10
       rect:
         serializedVersion: 2
         x: 48
@@ -408,14 +408,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8729f76daba109140800000000000000
-      internalID: 4724305398876574328
+      spriteID: 802794b6e6f02f7c0800000000000000
+      internalID: -4039148948877118968
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_End_11
+      name: Wall25_11
       rect:
         serializedVersion: 2
         x: 0
@@ -429,14 +429,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7320b616bcd070ed0800000000000000
-      internalID: -2447972705288650185
+      spriteID: b3e340976966c7ea0800000000000000
+      internalID: -5873707017536520645
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_End_12
+      name: Wall25_12
       rect:
         serializedVersion: 2
         x: 16
@@ -450,14 +450,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bb4cfae5c677d9fa0800000000000000
-      internalID: -5792342238399839045
+      spriteID: 5d2ebfc557c5ba6e0800000000000000
+      internalID: -1825263564827663659
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_End_13
+      name: Wall25_13
       rect:
         serializedVersion: 2
         x: 32
@@ -471,14 +471,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73de66b13487f1e40800000000000000
-      internalID: 5629350288854281527
+      spriteID: 04a2e2603fe5d6090800000000000000
+      internalID: -8039665361912714688
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_End_14
+      name: Wall25_14
       rect:
         serializedVersion: 2
         x: 48
@@ -492,14 +492,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d68957b1669dc2510800000000000000
-      internalID: 1525833406342338669
+      spriteID: 6c6ec30a6eb1aa730800000000000000
+      internalID: 4011049095471621830
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateFrameHL_15
+      name: Wall25_15
       rect:
         serializedVersion: 2
         x: 0
@@ -513,14 +513,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef449a6fb2eade960800000000000000
-      internalID: 7632948447307973886
+      spriteID: 0388ad50b5305a1f0800000000000000
+      internalID: -1034416849936545744
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateHCL_16
+      name: Wall25_16
       rect:
         serializedVersion: 2
         x: 16
@@ -534,14 +534,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ccafd99916486edd0800000000000000
-      internalID: -2457130991960065332
+      spriteID: 5ffbd150e6d873270800000000000000
+      internalID: 8230202347714625525
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateHCR_17
+      name: Wall25_17
       rect:
         serializedVersion: 2
         x: 32
@@ -555,14 +555,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0787be44d863fdc00800000000000000
-      internalID: 927520028636182640
+      spriteID: 6f179619f984d9f60800000000000000
+      internalID: 8042664359730180598
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateFrameHR_18
+      name: Wall25_18
       rect:
         serializedVersion: 2
         x: 48
@@ -576,14 +576,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dec3ce069a5ea1710800000000000000
-      internalID: 1664895527905148141
+      spriteID: 35b40a0cdd622ecf0800000000000000
+      internalID: -224574297553745069
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateFrameVL_19
+      name: Wall25_19
       rect:
         serializedVersion: 2
         x: 0
@@ -597,14 +597,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba6de6042a0311880800000000000000
-      internalID: -8642072736523430229
+      spriteID: ce12b88cf1a0122c0800000000000000
+      internalID: -4458271024495255060
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateVCL_20
+      name: Wall25_20
       rect:
         serializedVersion: 2
         x: 16
@@ -618,14 +618,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9bc08de2198b756b0800000000000000
-      internalID: -5307570702137160519
+      spriteID: 1e2bf4d58dadf6ba0800000000000000
+      internalID: -6093411147995696415
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateVCR_21
+      name: Wall25_21
       rect:
         serializedVersion: 2
         x: 32
@@ -639,14 +639,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0f12952de871fbb10800000000000000
-      internalID: 1999342661757641200
+      spriteID: bfb2a155db29b3530800000000000000
+      internalID: 3835820849510362107
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateFrameVR_22
+      name: Wall25_22
       rect:
         serializedVersion: 2
         x: 48
@@ -660,14 +660,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 86e8543461388bc90800000000000000
-      internalID: -7153823876436881816
+      spriteID: 2b854cdf2d15f5780800000000000000
+      internalID: -8692138789159282510
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateHOL_23
+      name: Wall25_23
       rect:
         serializedVersion: 2
         x: 0
@@ -681,14 +681,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 185dc0761689335e0800000000000000
-      internalID: -1931032271103666815
+      spriteID: 6a7249b6f8d6857d0800000000000000
+      internalID: -2929471094851885146
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateHOR_24
+      name: Wall25_24
       rect:
         serializedVersion: 2
         x: 16
@@ -702,14 +702,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 22c67d5519c6bcfe0800000000000000
-      internalID: -1167720306906272734
+      spriteID: 5d1f2800ac550ff60800000000000000
+      internalID: 8066041258700894677
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateVOL_25
+      name: Wall25_25
       rect:
         serializedVersion: 2
         x: 32
@@ -723,14 +723,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d4c646531771a230800000000000000
-      internalID: 3648328098082374873
+      spriteID: 5afca5ea598cb1c70800000000000000
+      internalID: 8942962030275121061
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall50_GateVOR_26
+      name: Wall25_26
       rect:
         serializedVersion: 2
         x: 48
@@ -744,8 +744,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 49d9543113da0fb60800000000000000
-      internalID: 7777906982757178772
+      spriteID: 305412e1569d5f6b0800000000000000
+      internalID: -5263061561192135421
       vertices: []
       indices: 
       edges: []
