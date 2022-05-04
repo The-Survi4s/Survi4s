@@ -61,8 +61,8 @@ public class TilemapManager : MonoBehaviour
 
     public void SetStatue(Statue statueObj)
     {
-        if (statue) Destroy(statue);
-        statueObj.name = "Statue";
+        if (statue) Destroy(statueObj);
+        statueObj.name += "Statue";
         statue = statueObj;
     }
 
@@ -170,7 +170,7 @@ public class TilemapManager : MonoBehaviour
             _ => new TileStages()
         };
         var variantCount = tileStages.getTileStages.Length;
-        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount));
+        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount)) - 1;
         if (tile.spriteVariantId == variantId) return;
         Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
         Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
