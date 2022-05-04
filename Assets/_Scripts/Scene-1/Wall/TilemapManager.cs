@@ -175,22 +175,20 @@ public class TilemapManager : MonoBehaviour
         Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
         Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
         tile.spriteVariantId = variantId;
+        var cellPos = tile.cellPos;
+        var go = _wallTilemap.GetObjectToInstantiate(tile.cellPos);
+        var go2 = Instantiate(go);
         if (variantId == variantCount - 1)
         {
             _wallTilemap.SetTile(tile.cellPos, null);
             //Debug.Log($"Tile at {tile.cellPos} set to null");
-            return;
         }
-
-        var cellPos = tile.cellPos;
-        var go = _wallTilemap.GetObjectToInstantiate(tile.cellPos);
-        var go2 = Instantiate(go);
-        _wallTilemap.SetTile(tile.cellPos, tileStages.GetTileStage(variantId));
-        go2.transform.SetParent(_wallTilemap.transform);
-        //Debug.Log($"Tile at {cellPos} set to {tileStages.GetTileStage(variantId)}");
-
-        _wallTilemap.RefreshTile(cellPos);
-        NavMeshController.UpdateNavMesh();
+        else
+        {
+            _wallTilemap.SetTile(tile.cellPos, tileStages.GetTileStage(variantId));
+            go2.transform.SetParent(_wallTilemap.transform);
+            //Debug.Log($"Tile at {cellPos} set to {tileStages.GetTileStage(variantId)}");
+        }
         _wallTilemap.RefreshTile(cellPos);
         NavMeshController.UpdateNavMesh();
     }
