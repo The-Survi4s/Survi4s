@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedMonsterBase : Monster
+public abstract class RangedMonsterBase : Monster
 {
     [SerializeField] private GameObject _bulletPrefab;
 
     protected override void Attack(Component nearestObj)
+    {
+        RangedAttack(nearestObj);
+    }
+
+    private void RangedAttack(Component nearestObj)
     {
         NetworkClient.Instance.SpawnBullet(transform.position, nearestObj.transform.position, id);
     }

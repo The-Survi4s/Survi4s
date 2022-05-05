@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -170,5 +171,15 @@ public class SpawnManager : MonoBehaviour
     public void ClearIdIndex(int index)
     {
         _occupiedIDs[index] = false;
+    }
+
+    public Vector3 GetSpawnerPos(Monster.Origin origin)
+    {
+        foreach (var spawner in _spawners.Where(spawner => spawner.origin == origin))
+        {
+            return spawner.transform.position;
+        }
+
+        return new Vector3();
     }
 }

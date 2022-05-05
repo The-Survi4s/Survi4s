@@ -113,3 +113,52 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+--- !u!1 &6108645726365500224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 540803284662950770, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+  m_PrefabInstance: {fileID: 6000788481315067954}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-7317519133698065155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6108645726365500224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 010a76757fcd50343a5a94586f5f028b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentStat:
+    hp: 0
+    atk: 0
+    atkCd: 0
+    movSpd: 0
+    rotSpd: 0
+    acceleration: 0
+  <setting>k__BackingField:
+    type: 2
+    detectionRange: 25
+    attackRange: 8
+    minRange: 5
+    priority: 2
+    attackMethods:
+    - target: 0
+      method: 1
+    - target: 1
+      method: 1
+    - target: 2
+      method: 1
+    defaultStat:
+      hp: 20
+      atk: 4
+      atkCd: 3
+      movSpd: 10
+      rotSpd: 120
+      acceleration: 20
+    doEvasion: 1
+  <targetWall>k__BackingField: {fileID: 0}
+  <nearestPlayer>k__BackingField: {fileID: 0}
+  <currentTarget>k__BackingField: 0
+  _bulletPrefab: {fileID: 3082794662705287549, guid: 4c19149c04a1d5543aeb05eb28685219, type: 3}

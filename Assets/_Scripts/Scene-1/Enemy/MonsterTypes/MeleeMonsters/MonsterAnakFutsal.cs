@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class MonsterAnakFutsal : MeleeMonsterBase
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
+    [SerializeField] private Vector3 _chaseOffset;
+    [SerializeField] private float _chaseOffsetAngle;
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        
+        base.Update();
+        _monsterMovement.SetOffset(_chaseOffset, transform.rotation.z + _chaseOffsetAngle);
     }
 }

@@ -167,8 +167,9 @@ public class TilemapManager : MonoBehaviour
         {
             Wall _ => _wallTileStages,
             Statue _ => _statueTileStages,
-            _ => new TileStages()
+            _ => null
         };
+        if(!tileStages) return;
         var variantCount = tileStages.getTileStages.Length;
         var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount)) - 1;
         if (tile.spriteVariantId == variantId) return;

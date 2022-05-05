@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6219795559681374532}
-  - component: {fileID: -4185724672583048720}
   - component: {fileID: -2278418198599272616}
   - component: {fileID: 5464984151315559400}
   - component: {fileID: -9200941611457798578}
@@ -37,58 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-4185724672583048720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540803284662950770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ca366cba80969f4b8479569726e9b31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <id>k__BackingField: 0
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  wallLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  monsterLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _currentStat:
-    hp: 0
-    atk: 0
-    atkCd: 0
-    movSpd: 0
-    rotSpd: 0
-    acceleration: 0
-  <type>k__BackingField: 0
-  <setting>k__BackingField:
-    detectionRange: 15
-    attackRange: 8
-    minRange: 7
-    priority: 0
-    attackMethods:
-    - target: 0
-      method: 1
-    - target: 1
-      method: 1
-    - target: 2
-      method: 1
-    defaultStat:
-      hp: 20
-      atk: 5
-      atkCd: 5
-      movSpd: 1
-      rotSpd: 60
-      acceleration: 10
-  <targetWall>k__BackingField: {fileID: 0}
-  <currentTarget>k__BackingField: 0
-  _bulletPrefab: {fileID: 3082794662705287549, guid: 4c19149c04a1d5543aeb05eb28685219, type: 3}
 --- !u!114 &-2278418198599272616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,9 +51,9 @@ MonoBehaviour:
   _currentTarget: 0
   _currentTargetPos: {x: 0, y: 0, z: 0}
   stationaryTime: 0
-  maxStationaryTime: 5
-  Tolerance: 0.5
-  MaxOffset: 1
+  _maxStationaryTime: 5
+  minMoveDistance: 0.5
+  maxDistanceDifference: 1
 --- !u!95 &5464984151315559400
 Animator:
   serializedVersion: 3

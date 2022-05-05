@@ -10,8 +10,8 @@ public class WeaponPalu : WeaponMelee
         {
             if (x.TryGetComponent(out Wall wall))
             {
+                Debug.Log("It's a wall! So we repair " + x.name);
                 NetworkClient.Instance.ModifyWallHp(wall.id, 10);
-                Debug.Log("We repair " + x.name);
             }
             else if(x.TryGetComponent(out Monster monster))
             {
@@ -26,8 +26,8 @@ public class WeaponPalu : WeaponMelee
         {
             if (x.TryGetComponent(out Wall wall))
             {
-                NetworkClient.Instance.ModifyWallHp(wall.id, 20);
                 Debug.Log("We super repair " + x.name);
+                NetworkClient.Instance.ModifyWallHp(wall.id, 20);
             }
             else if (x.TryGetComponent(out Monster monster))
             {

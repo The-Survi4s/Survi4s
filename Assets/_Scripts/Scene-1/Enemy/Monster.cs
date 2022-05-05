@@ -9,26 +9,25 @@ using UnityEngine.AI;
 [RequireComponent(typeof(MonsterMovement),typeof(Animator))]
 public abstract class Monster : MonoBehaviour
 {
-    [field: SerializeField] public int id { get; private set; }
+    public int id { get; private set; }
 
-    [SerializeField] protected LayerMask playerLayerMask;
-    [SerializeField] protected LayerMask wallLayerMask;
-    [SerializeField] protected LayerMask monsterLayerMask;
+    private LayerMask _playerLayerMask;
+    private LayerMask _wallLayerMask;
+    private LayerMask _monsterLayerMask;
     protected MonsterStat monsterStat;
 
     private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
     public Stat currentStat => _currentStat;
     [SerializeField] private Stat _currentStat;
-    private MonsterMovement _monsterMovement;
+    protected MonsterMovement _monsterMovement;
     private Animator _animator;
     private List<StatusEffectBase> _activeStatusEffects;
 
     public enum Origin { Right, Top, Left, Bottom }
-    public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu}
+    public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal}
     public enum Target {Statue, Wall, Player}
     public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}
     public Origin origin { get; private set; }
-    [field: SerializeField] public Type type { get; private set; }
 
     [Serializable]
     public struct TargetSettings
@@ -45,45 +44,26 @@ public abstract class Monster : MonoBehaviour
     [Serializable]
     public struct Setting
     {
+        public Type type;
         public float detectionRange;
         public float attackRange;
         public float minRange;
         public Target priority;
         public List<TargetSettings> attackMethods;
         public Stat defaultStat;
-
-        public Setting(Stat defaultStat, float attackRange, float detectionRange, float minRange, Target priority, List<TargetSettings> attackMethods) : this()
-        {
-            this.defaultStat = defaultStat;
-            this.attackRange = attackRange;
-            this.detectionRange = detectionRange;
-            this.priority = priority;
-            this.minRange = minRange;
-            this.attackMethods = attackMethods;
-        }
-
-        public static Setting DefaultSetting()
-        {
-            var dict = new List<TargetSettings>
-            {
-                new TargetSettings(Target.Player, TargetMethod.Nearest),
-                new TargetSettings(Target.Wall, TargetMethod.Nearest),
-                new TargetSettings(Target.Statue, TargetMethod.Nearest),
-            };
-            return new Setting(new Stat(), 1, 5, 0, Target.Statue, dict);
-        }
+        public bool doEvasion;
 
         public TargetMethod MethodOf(Target target) =>
             attackMethods.Where(ts => ts.target == target).Select(ts => ts.method).FirstOrDefault();
     }
-    [field: SerializeField] public Setting setting { get; private set; }
+    [field: SerializeField] public Setting setting { get; protected set; }
     public Stat defaultStat => setting.defaultStat;
 
     [field: SerializeField] public Wall targetWall { get; private set; }
     private Vector3Int _targetWallCellPos;
     private Wall _previousTargetWall;
     private Player _currentTargetPlayer;
-    public Player nearestPlayer { get; private set; }
+    [field:SerializeField]public Player nearestPlayer { get; private set; }
     [field: SerializeField] public Target currentTarget { get; private set; }
 
     public static event Action<int> OnMonsterDeath;
@@ -96,13 +76,17 @@ public abstract class Monster : MonoBehaviour
         monsterStat.OnHpZero += HpZeroEventHandler;
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         id = -1;
         _monsterMovement = GetComponent<MonsterMovement>();
         _activeStatusEffects = new List<StatusEffectBase>();
         _animator = GetComponent<Animator>();
         //_animator.SetBool(IsDeadBool, false);
+        _playerLayerMask = LayerMask.NameToLayer("Player");
+        _wallLayerMask = LayerMask.NameToLayer("Wall");
+        _monsterLayerMask = LayerMask.NameToLayer("Enemy");
+        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
 
         if (setting.attackMethods.Any(ts => ts.target == setting.priority && ts.method == TargetMethod.DontAttack))
         {
@@ -110,7 +94,12 @@ public abstract class Monster : MonoBehaviour
         }
     }
 
-    private void Update()
+    protected virtual void Start()
+    {
+
+    }
+
+    protected virtual void Update()
     {
         if (monsterStat == null) return;
         monsterStat.UpdateStatCooldown();
@@ -194,7 +183,7 @@ public abstract class Monster : MonoBehaviour
 
     private void HpZeroEventHandler()
     {
-        Debug.Log($"Monster {id} of type {type} and from {origin} has been killed");
+        Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
         _animator.SetBool(IsDeadBool, true);
         OnMonsterDeath?.Invoke(id);
         SpawnManager.instance.ClearIdIndex(id);
@@ -221,7 +210,7 @@ public abstract class Monster : MonoBehaviour
 
     protected virtual List<Player> GetTargetPlayers()
     {
-        return UnitManager.Instance.GetObjectsInRadius<Player>(transform.position, setting.attackRange, playerLayerMask);
+        return UnitManager.Instance.GetObjectsInRadius<Player>(transform.position, setting.attackRange, _playerLayerMask);
     }
 
     public void PlayAttackAnimation()

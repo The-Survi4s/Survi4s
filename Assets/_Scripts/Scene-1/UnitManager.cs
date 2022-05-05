@@ -27,6 +27,7 @@ public class UnitManager : MonoBehaviour
     public int playerAliveCount => _playerAliveKdTree.Count();
     public int playerCount => _playerKdTree.Count;
     public int monsterAliveCount => _monsterKdTree.Count;
+    public int bulletCount => _bullets.Count;
 
     private void Awake()
     {
@@ -249,6 +250,41 @@ public class UnitManager : MonoBehaviour
     public Monster GetNearestMonster(Vector3 pos)
     {
         return _monsterKdTree.FindClosest(pos);
+    }
+
+    public BulletBase GetNearestBullet(Vector3 pos)
+    {
+        var dist = float.MaxValue;
+        var nearest = _bullets[0];
+        foreach (var bullet in _bullets)
+        {
+            var dist2 = Vector2.Distance(bullet.Value.transform.position, pos);
+            if (dist2 < dist)
+            {
+                nearest = bullet.Value;
+                dist = dist2;
+            }
+        }
+
+        return nearest;
+    }
+
+    public BulletBase GetNearestBullet(Vector3 pos, bool isPlayerOwned)
+    {
+        var dist = float.MaxValue;
+        BulletBase nearest = null;
+        foreach (var bullet in _bullets)
+        {
+            if (!isPlayerOwned || !(bullet.Value is PlayerBulletBase)) continue;
+            var dist2 = Vector2.Distance(bullet.Value.transform.position, pos);
+            if (dist2 < dist)
+            {
+                nearest = bullet.Value;
+                dist = dist2;
+            }
+        }
+
+        return nearest;
     }
 
     public Player GetPlayer(string id)
