@@ -106,6 +106,11 @@ public class UnitManager : MonoBehaviour
         if(index >= 0) _monsterKdTree.RemoveAt(index);
     }
 
+    public void RemoveBullet(int id)
+    {
+        _bullets.Remove(id);
+    }
+
     // Send command to units
     // Monster
     public void ModifyMonsterHp(int id, float amount)
@@ -153,8 +158,7 @@ public class UnitManager : MonoBehaviour
     public void DestroyBullet(int id)
     {
         var bullet = _bullets[id];
-        _bullets.Remove(id);
-        Destroy(bullet);
+        if(bullet) Destroy(bullet);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)

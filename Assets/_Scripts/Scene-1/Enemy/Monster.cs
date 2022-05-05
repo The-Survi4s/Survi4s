@@ -258,4 +258,10 @@ public abstract class Monster : MonoBehaviour
         //_monsterMovement.SetTarget(wall.transform);
         currentTarget = Target.Wall;
     }
+
+    [ContextMenu(nameof(DamageMonsterBy10))]
+    private void DamageMonsterBy10()
+    {
+        NetworkClient.Instance.ModifyMonsterHp(id, -10);
+    }
 }

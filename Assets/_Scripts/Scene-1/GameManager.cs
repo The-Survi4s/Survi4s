@@ -148,6 +148,8 @@ public class GameManager : MonoBehaviour
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
         Physics2D.IgnoreLayerCollision(3, 6); //Supaya player tidak collision dengan monster
+        Physics2D.IgnoreLayerCollision(8, 6); 
+        Physics2D.IgnoreLayerCollision(8, 9); 
         ChangeState(GameState.WavePreparation); 
     }
 

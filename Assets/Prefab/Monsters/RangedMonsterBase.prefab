@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7154413559571422011}
   - component: {fileID: -2021839836439849659}
   - component: {fileID: 6314513733400163849}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RangedMonsterBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -157,8 +157,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1318660083
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 8013623640643141616, guid: 22cb2c2bf31bac645a38f51a916f465c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

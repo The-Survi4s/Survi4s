@@ -8,7 +8,7 @@ public abstract class BulletBase : MonoBehaviour
     [SerializeField] protected float defaultMoveSpeed;
     [SerializeField] protected float maxTravelRange;
     private Vector2 _startPos;
-    protected float moveSpeed;
+    [SerializeField]protected float moveSpeed;
     private bool _rotationIsSet;
     private Animator _animator;
     private int _triggerCount;
@@ -32,7 +32,7 @@ public abstract class BulletBase : MonoBehaviour
         {
             // Move bullet
             transform.position += moveSpeed * transform.right * Time.deltaTime;
-            if(this is MonsterBulletBase)
+            if(this as MonsterBulletBase)
             {
                 Debug.Log($"monster bullet moveSpd = {moveSpeed}");
             }
@@ -69,9 +69,8 @@ public abstract class BulletBase : MonoBehaviour
         if (_triggerCount < _maxTriggerTimes)
         {
             _triggerCount++;
-            return;
         }
-        if (NetworkClient.Instance.isMaster) NetworkClient.Instance.DestroyBullet(id);
+        else if (NetworkClient.Instance.isMaster) NetworkClient.Instance.DestroyBullet(id);
     }
 
     protected void RotateTowards(Vector2 target)
@@ -101,6 +100,7 @@ public abstract class BulletBase : MonoBehaviour
 
     private void OnDestroy()
     {
+        UnitManager.Instance.RemoveBullet(id);
         Destroy(gameObject);
     }
 }

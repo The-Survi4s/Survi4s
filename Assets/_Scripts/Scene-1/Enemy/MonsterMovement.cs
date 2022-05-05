@@ -145,8 +145,6 @@ public class MonsterMovement : MonoBehaviour
     {
         if (_owner.setting.MethodOf(Monster.Target.Wall) != Monster.TargetMethod.DontAttack)
         {
-            if (!_owner.targetWall) _owner.RequestNewTargetWall();
-            _targetWallPos = _owner.targetWall.transform.position;
             _currentTargetPos = _targetWallPos;
             _currentTarget = Monster.Target.Wall;
         }
@@ -163,6 +161,9 @@ public class MonsterMovement : MonoBehaviour
         _agent.acceleration = _owner.currentStat.acceleration;
         _agent.stoppingDistance = _owner.setting.minRange;
         _agent.angularSpeed = _owner.currentStat.rotSpd;
+
+        if (!_owner.targetWall) _owner.RequestNewTargetWall();
+        _targetWallPos = _owner.targetWall.transform.position;
 
         if (!_owner.nearestPlayer.isDead) _targetPlayerPos = _owner.nearestPlayer.transform.position;
         else _targetPlayerPos = _statuePos;

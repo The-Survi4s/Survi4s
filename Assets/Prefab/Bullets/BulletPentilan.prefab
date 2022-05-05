@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7071543227132304580}
   - component: {fileID: 737146271870072577}
   - component: {fileID: 4272137926693709281}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletPentilan
   m_TagString: Untagged
   m_Icon: {fileID: 0}

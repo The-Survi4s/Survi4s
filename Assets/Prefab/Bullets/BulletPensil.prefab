@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 605899225614135215}
   - component: {fileID: 6949445219279553642}
   - component: {fileID: 4594289766084295441}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletPensil
   m_TagString: Untagged
   m_Icon: {fileID: 0}

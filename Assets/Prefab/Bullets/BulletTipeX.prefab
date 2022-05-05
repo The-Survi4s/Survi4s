@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7738415550703709026}
   - component: {fileID: 251544381647372455}
   - component: {fileID: 8616464766068853945}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletTipeX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
