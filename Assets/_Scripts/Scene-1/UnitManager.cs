@@ -152,7 +152,9 @@ public class UnitManager : MonoBehaviour
 
     public void DestroyBullet(int id)
     {
-        Destroy(_bullets[id]);
+        var bullet = _bullets[id];
+        _bullets.Remove(id);
+        Destroy(bullet);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
@@ -275,6 +277,7 @@ public class UnitManager : MonoBehaviour
         BulletBase nearest = null;
         foreach (var bullet in _bullets)
         {
+            if(!bullet.Value) continue;
             if (!isPlayerOwned || !(bullet.Value is PlayerBulletBase)) continue;
             var dist2 = Vector2.Distance(bullet.Value.transform.position, pos);
             if (dist2 < dist)

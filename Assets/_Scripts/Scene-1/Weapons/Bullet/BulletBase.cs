@@ -12,7 +12,7 @@ public abstract class BulletBase : MonoBehaviour
     private bool _rotationIsSet;
     private Animator _animator;
     private int _triggerCount;
-    [SerializeField] private int _maxTriggerTimes = 1;
+    [SerializeField] private int _maxTriggerTimes;
 
     [SerializeField] protected GameObject particleToSpawn; //Note: Ada ParticleSystem. Coba cari2 tahu tentang itu
     [SerializeField] protected float particleSpawnRate = 0.2f;
@@ -32,6 +32,10 @@ public abstract class BulletBase : MonoBehaviour
         {
             // Move bullet
             transform.position += moveSpeed * transform.right * Time.deltaTime;
+            if(this is MonsterBulletBase)
+            {
+                Debug.Log($"monster bullet moveSpd = {moveSpeed}");
+            }
 
             if(Vector2.Distance(transform.position, _startPos) > maxTravelRange)
             {
@@ -62,7 +66,12 @@ public abstract class BulletBase : MonoBehaviour
     protected virtual void OnEndOfTrigger()
     {
         //Dipanggil setelah OnHit
-        if(NetworkClient.Instance.isMaster) NetworkClient.Instance.DestroyBullet(id);
+        if (_triggerCount < _maxTriggerTimes)
+        {
+            _triggerCount++;
+            return;
+        }
+        if (NetworkClient.Instance.isMaster) NetworkClient.Instance.DestroyBullet(id);
     }
 
     protected void RotateTowards(Vector2 target)

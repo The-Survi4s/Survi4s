@@ -28,8 +28,10 @@ public class MonsterPramuka : RangedMonsterBase
         base.Update();
         if (!NetworkClient.Instance.isMaster) return;
         if(UnitManager.Instance.bulletCount == 0) return;
+        var nearestPlayerBullet = UnitManager.Instance.GetNearestBullet(transform.position, true);
+        if(!nearestPlayerBullet) return;
         var distanceToNearestPlayerBullet = Vector2.Distance(
-            UnitManager.Instance.GetNearestBullet(transform.position, true).transform.position,
+            nearestPlayerBullet.transform.position,
             transform.position);
         if (distanceToNearestPlayerBullet < _evadeDistance && _evadeCooldownEndTime < Time.time)
         {
@@ -40,6 +42,7 @@ public class MonsterPramuka : RangedMonsterBase
     private void Evade()
     {
         //Pinginnya ke dodge samping tapi aku males jadi teleport ke spawner aja
+        Debug.Log("EVADE!");
         transform.SetPositionAndRotation(SpawnManager.instance.GetSpawnerPos(origin), transform.rotation);
         _evadeCooldownEndTime = Time.time + _evadeCooldown;
     }

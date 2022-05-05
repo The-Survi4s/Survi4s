@@ -170,16 +170,26 @@ public class TilemapManager : MonoBehaviour
             _ => null
         };
         if(!tileStages) return;
-        var variantCount = tileStages.getTileStages.Length;
-        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount)) - 1;
+        var variantCount = tileStages.getTileStages.Length - 1;
+        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount));
         if (tile.spriteVariantId == variantId) return;
         Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
-        Debug.Log($"Tile on {tile.cellPos} = level{tile.spriteVariantId}->{variantId}. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
+        Debug.Log($"Tile on {tile.cellPos} = level [{tile.spriteVariantId}] => [{variantId}]. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
         tile.spriteVariantId = variantId;
         var cellPos = tile.cellPos;
         var go = _wallTilemap.GetObjectToInstantiate(tile.cellPos);
-        var go2 = Instantiate(go);
-        if (variantId == variantCount - 1)
+        GameObject go2;
+        if(go)
+        {
+            go2 = Instantiate(go);
+        }
+        else
+        {
+            Debug.Log($"tile {tile} has no gameObject!");
+            return;
+        }
+
+        if (variantId == variantCount)
         {
             _wallTilemap.SetTile(tile.cellPos, null);
             //Debug.Log($"Tile at {tile.cellPos} set to null");

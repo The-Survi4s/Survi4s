@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2565197147147888315}
   - component: {fileID: -3339637740217977315}
   - component: {fileID: 1308128620185157725}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76ffa97b3fbb47341a6ee925bef82180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultHitPoint: 100
-  <hitPoint>k__BackingField: 0
-  <Id>k__BackingField: 0
+  <hp>k__BackingField: 0
+  spriteVariantId: 0
+  <id>k__BackingField: 0
   <origin>k__BackingField: 0
 --- !u!114 &-3339637740217977315
 MonoBehaviour:

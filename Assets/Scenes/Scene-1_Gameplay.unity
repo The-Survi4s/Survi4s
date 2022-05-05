@@ -944,7 +944,7 @@ GameObject:
   - component: {fileID: 563793409}
   - component: {fileID: 563793411}
   - component: {fileID: 563793410}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MiscObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2204,9 +2204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89115cc99c2c9b34fb50cd9b35c663bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _preparationTime: 0
   <gameSetting>k__BackingField:
-    maxPlayer: 4
+    preparationTime: 0
     initialStatueHp: 100
     maxWave: 100
 --- !u!114 &1176654309
@@ -2564,7 +2563,7 @@ GameObject:
   - component: {fileID: 1392350909}
   - component: {fileID: 1392350910}
   - component: {fileID: 1392350908}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundWalkable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24643,7 +24642,7 @@ GameObject:
   - component: {fileID: 1914334642}
   - component: {fileID: 1914334645}
   - component: {fileID: 1914334644}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StaticObstacleObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25279,7 +25278,7 @@ GameObject:
   - component: {fileID: 2125633943}
   - component: {fileID: 2125633946}
   - component: {fileID: 2125633945}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}

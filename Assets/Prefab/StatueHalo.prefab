@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4626501177848612251}
   - component: {fileID: 7727412823715851198}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Halo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 4972422398260719755}
   - component: {fileID: 4972422398260719752}
   - component: {fileID: 5430826882583810306}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StatueHalo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
