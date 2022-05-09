@@ -13,27 +13,35 @@ public abstract class DestroyableTile : MonoBehaviour
     public event Action<DestroyableTile> OnRebuilt;
     public int spriteVariantId = 0;
 
-    public void ModifyHp(float amount)
+    public void ModifyHp(float amount, int silentLevel = 0)
     {
         hp += Mathf.FloorToInt(amount);
         //Debug.Log($"amount modified {amount}, current hp {hp}");
         if (hp > 0)
         {
             if (hp > maxHp) hp = maxHp;
+            if (silentLevel > 1) return;
             InvokeRebuiltEvent();
         }
         else if (hp <= 0)
         {
             hp = 0;
+            if (silentLevel > 1) return;
             InvokeDestroyedEvent();
         }
-
+        if(silentLevel > 0) return;
+        SpawnParticle();
         AfterModifyHp();
     }
 
-    protected virtual void AfterModifyHp()
+    private void SpawnParticle()
     {
-        
+
+    }
+
+    private void AfterModifyHp()
+    {
+        TilemapManager.instance.UpdateWallTilemap(this);
     }
 
     protected virtual void InvokeRebuiltEvent()
@@ -46,5 +54,16 @@ public abstract class DestroyableTile : MonoBehaviour
     {
         if (isDestroyed) return;
         OnDestroyed?.Invoke(this);
+    }
+
+    [ContextMenu(nameof(DamageTileBy10))]
+    private void DamageTileBy10()
+    {
+        ModifyHp(-10);
+    }
+    [ContextMenu(nameof(HealTileBy10))]
+    private void HealTileBy10()
+    {
+        ModifyHp(10);
     }
 }

@@ -53,7 +53,7 @@ public class WaveInfo
     private void CalculateThisWave()
     {
         spawnRate = Math.Floor(30 / monsterCount * waveNumber *
-                               (settings.spawnSpeedPercent - Mathf.Floor(waveNumber / (settings.waveCountInfluence + 1)))) / 100;
+                               (settings.spawnSpeedPercent - Mathf.Floor(waveNumber / (settings.waveCountInfluence + 1.0f)))) / 100;
         spawnersUsedCount = MiscUtils.IsPrime(monsterCount) ? 1 :
             monsterCount % 4 == 0 ? 4 :
             monsterCount % 3 == 0 ? 3 :
@@ -63,13 +63,15 @@ public class WaveInfo
     public WaveInfo CalculateNextWave()
     {
         var count = Mathf.FloorToInt(monsterCount + 2 +
-                                  waveNumber % (10 + Mathf.FloorToInt(waveNumber / 20)) * settings.countMultiplier);
+                                  waveNumber % (10 + Mathf.FloorToInt(waveNumber / 20.0f)) * settings.countMultiplier);
         //Debug.Log("hpIncreaseEvery:"+_settings.hpIncreaseEvery + ", hp multiplier:" + _settings.hpMultiplier);
         var newMonsterHp = (waveNumber % settings.hpIncreaseEvery == 0 ? 1 + settings.hpIncreaseMultiplier / 100 : 1) * monsterHpIncrease;
         var newBaseSpd = Mathf.FloorToInt(
             (waveNumber % settings.speedIncreaseEvery == 0 ? 1 + settings.speedIncreaseMultiplier / 100 : 1) * monsterSpdIncrease *
             100) / 100;
-        var newSpeed = Mathf.Floor(newBaseSpd * (settings.dirInfluence / 4 * spawnersUsedCount + (100 -settings.dirInfluence))/ 100 * 100)/100;
+        var newBaseSpd2 = newBaseSpd * (settings.dirInfluence / 4 * spawnersUsedCount + (100 - settings.dirInfluence)) /
+                          100.0f;
+        var newSpeed = Mathf.Floor(newBaseSpd2 * 100) / 100;
         return new WaveInfo(waveNumber + 1, count, newMonsterHp, newSpeed);
     }
 

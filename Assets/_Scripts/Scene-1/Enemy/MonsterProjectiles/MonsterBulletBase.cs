@@ -38,7 +38,7 @@ public abstract class MonsterBulletBase : BulletBase
 
     public void Init(Monster owner, Vector2 targetPos, int bulletId)
     {
-        Debug.Log($"monster bullet {bulletId}: from {transform.position} to {targetPos}");
+        //Debug.Log($"monster bullet {bulletId}: from {transform.position} to {targetPos}");
         this.owner = owner;
         Initialize(targetPos, bulletId);
     }

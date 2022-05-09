@@ -102,6 +102,7 @@ public class UnitManager : MonoBehaviour
 
     public void DeleteMonsterFromList(int id)
     {
+        if (!_monsters.ContainsKey(id)) return;
         var index = SearchMonsterIndex(_monsters[id]);
         if(index >= 0) _monsterKdTree.RemoveAt(index);
     }
@@ -115,75 +116,76 @@ public class UnitManager : MonoBehaviour
     // Monster
     public void ModifyMonsterHp(int id, float amount)
     {
+        if (!_monsters.ContainsKey(id)) return;
         _monsters[id].ModifyHitPoint(amount);
     }
 
     // Player
     public void SyncMousePos(string playerName, float x, float y)
     {
-        var player = _players[playerName];
-        if (player) player.SyncMousePos(x, y);
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].SyncMousePos(x, y);
     }
 
     public void SetButton(string playerName, Player.Button button, bool isDown)
     {
-        var player = _players[playerName];
-        if (player) player.SetButton(button, isDown);
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].SetButton(button, isDown);
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
-        var player = _players[playerName];
-        if (player) player.weaponManager.OnEquipWeapon(weaponName);
+        if (!_players.ContainsKey(playerName)) return; 
+        _players[playerName].weaponManager.OnEquipWeapon(weaponName);
     }
 
     public void PlayAttackAnimation(string playerName)
     {
-        var player = _players[playerName];
-        if (player) player.weaponManager.ReceiveAttackMessage();
+        if (!_players.ContainsKey(playerName)) return; 
+        _players[playerName].weaponManager.ReceiveAttackMessage();
     }
 
     public void SpawnBullet(string playerName, Vector2 spawnPos, Vector2 mousePos)
     {
-        var player = _players[playerName];
-        if (player) player.weaponManager.SpawnBullet(spawnPos, mousePos);
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].weaponManager.SpawnBullet(spawnPos, mousePos);
     }
 
     public void SpawnBullet(int monsterId, Vector2 spawnPos, Vector2 targetPos)
     {
-        var monster = _monsters[monsterId];
-        if(monster is RangedMonsterBase rangedMonster) rangedMonster.SpawnBullet(spawnPos, targetPos);
+        if (!_monsters.ContainsKey(monsterId)) return;
+        if(_monsters[monsterId] is RangedMonsterBase rangedMonster) rangedMonster.SpawnBullet(spawnPos, targetPos);
     }
 
     public void DestroyBullet(int id)
     {
-        var bullet = _bullets[id];
-        if(bullet) Destroy(bullet);
+        if(!_bullets.ContainsKey(id)) return;
+        Destroy(_bullets[id]);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
+        if (!_players.ContainsKey(playerName)) return;
         Debug.Log(playerName + " " + amount);
-        var player = _players[playerName];
-        if (player) player.stats.hitPoint += amount;
+        _players[playerName].stats.hitPoint += amount;
     }
 
     public void CorrectDeadPosition(string playerName, Vector2 pos)
     {
-        var player = _players[playerName];
-        if (player) player.stats.CorrectDeadPosition(pos);
+        if (!_players.ContainsKey(playerName)) return; 
+        _players[playerName].stats.CorrectDeadPosition(pos);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, float duration, int strength)
     {
-        var monster = _monsters[targetId];
-        if(monster) monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster, statusEffect, duration, strength));
+        if (!_monsters.ContainsKey(targetId)) return; 
+        _monsters[targetId].AddStatusEffect(StatusEffectFactory.CreateNew(_monsters[targetId], statusEffect, duration, strength));
     }
 
     public void PlayMonsterAttackAnimation(int monsterId)
     {
-        var monster = _monsters[monsterId];
-        monster.PlayAttackAnimation();
+        if (!_monsters.ContainsKey(monsterId)) return;
+        _monsters[monsterId].PlayAttackAnimation();
     }
 
     // Utilities ----------------------

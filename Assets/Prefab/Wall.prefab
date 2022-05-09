@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2565197147147888317}
   - component: {fileID: 2565197147147888315}
-  - component: {fileID: -3339637740217977315}
+  - component: {fileID: -2108218349053613651}
   - component: {fileID: 1308128620185157725}
   m_Layer: 7
   m_Name: Wall
@@ -47,9 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <hp>k__BackingField: 0
   spriteVariantId: 0
-  <id>k__BackingField: 0
   <origin>k__BackingField: 0
---- !u!114 &-3339637740217977315
+--- !u!114 &-2108218349053613651
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class Wall : DestroyableTile
 {
-    [field: SerializeField] public int id { get; private set; }
+    public int id { get; private set; }
     public override int maxHp { get; protected set; }
     private bool _isInitialized = false;
 
@@ -23,21 +23,16 @@ public class Wall : DestroyableTile
         TilemapManager.instance.AddWall(this); // Auto add
     }
 
-    public void Init(int id, Monster.Origin wallOrigin, Vector3Int cellPosition)
+    public void Init(int id, Monster.Origin wallOrigin, Vector3Int cellPosition, int initialHp = 0)
     {
         if (_isInitialized) return;
         this.id = id;
         origin = wallOrigin;
         maxHp = TilemapManager.instance.maxWallHp;
-        hp = maxHp;
+        hp = initialHp == 0 ? maxHp : initialHp;
         cellPos = cellPosition;
         _isInitialized = true;
         isDestroyed = false;
-    }
-
-    protected override void AfterModifyHp()
-    {
-        TilemapManager.instance.UpdateWallTilemap(this);
     }
 
     protected override void InvokeRebuiltEvent()
@@ -67,17 +62,5 @@ public class Wall : DestroyableTile
     private void OnDestroy()
     {
         TilemapManager.instance.RemoveWall(this);
-    }
-
-    // ----------- cheats
-    [ContextMenu(nameof(DamageWallBy10))]
-    private void DamageWallBy10()
-    {
-        ModifyHp(-10);
-    }
-    [ContextMenu(nameof(HealWallBy10))]
-    private void HealWallBy10()
-    {
-        ModifyHp(10);
     }
 }

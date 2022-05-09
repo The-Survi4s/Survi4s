@@ -32,7 +32,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: Statue100Rule (Override)
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 0}
+  m_DefaultSprite: {fileID: 21300000, guid: f8c7341ec48bff64f9c0eb71223c09ab, type: 3}
   m_DefaultGameObject: {fileID: 4972422398260719754, guid: ab9ec3b10746ac746ac4fb04fecf991b, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules:

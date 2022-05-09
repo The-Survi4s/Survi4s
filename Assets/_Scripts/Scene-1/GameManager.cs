@@ -137,8 +137,6 @@ public class GameManager : MonoBehaviour
 
     private void HandleStartGame()
     {
-        //Lakukan sesuatu
-
         // Display statue HP dan UI lain
 
         // Spawn Player ---------------------------------------------------------------------
@@ -147,9 +145,11 @@ public class GameManager : MonoBehaviour
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
-        Physics2D.IgnoreLayerCollision(3, 6); //Supaya player tidak collision dengan monster
-        Physics2D.IgnoreLayerCollision(8, 6); 
-        Physics2D.IgnoreLayerCollision(8, 9); 
+        Physics2D.IgnoreLayerCollision(3, 6); //Player no collision with monster
+        Physics2D.IgnoreLayerCollision(8, 6); //No collision with ground
+        Physics2D.IgnoreLayerCollision(8, 9); //No collision with ground
+        Physics2D.IgnoreLayerCollision(3, 9); //Player no collision with playerbullet
+        Physics2D.IgnoreLayerCollision(6, 10); //Enemy no collision with enemyBullet 
         ChangeState(GameState.WavePreparation); 
     }
 

@@ -173,7 +173,8 @@ public class NetworkClient : MonoBehaviour
         MAtk,
         MdSt,
         LRm,
-        DBl
+        DBl,
+        RbWl
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -210,7 +211,7 @@ public class NetworkClient : MonoBehaviour
             }
         else
         {
-            Debug.Log(EnumParse<Header>(info[1]));
+            //Debug.Log(EnumParse<Header>(info[1]));
             switch (EnumParse<Header>(info[1]))
             {
                 case Header.MPos:
@@ -255,7 +256,6 @@ public class NetworkClient : MonoBehaviour
                     var monsterId = int.Parse(info[6]);
                     var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
                     var b = new Vector2(float.Parse(info[4]), float.Parse(info[5]));
-                    Debug.Log($"shooter is monster?:{monsterId}");
                     if (monsterId != -1)
                     {
                         UnitManager.Instance.SpawnBullet(monsterId, a, b);
@@ -306,6 +306,11 @@ public class NetworkClient : MonoBehaviour
                 case Header.DBl:
                 {
                     UnitManager.Instance.DestroyBullet(int.Parse(info[2]));
+                    break;
+                }
+                case Header.RbWl:
+                {
+                    TilemapManager.instance.ReceiveRebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
                     break;
                 }
             }
@@ -494,6 +499,12 @@ public class NetworkClient : MonoBehaviour
     public void ModifyStatueHp(float amount)
     {
         string[] msg = {Header.MdSt.ToString(), amount.ToString("f2")};
+        SendMessageClient("1", msg);
+    }
+
+    public void RebuildWall(int brokenWallId, int amount)
+    {
+        string[] msg = { Header.RbWl.ToString(), amount.ToString("f2") };
         SendMessageClient("1", msg);
     }
 

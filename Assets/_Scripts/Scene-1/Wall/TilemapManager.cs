@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
@@ -32,6 +33,8 @@ public class TilemapManager : MonoBehaviour
     [SerializeField] private TileStages _wallTileStages;
     [SerializeField] private TileStages _statueTileStages;
     private Dictionary<Vector3Int, Wall> _wallTiles = new Dictionary<Vector3Int, Wall>();
+    [SerializeField] private GameObject _brokenWallPrefab;
+    private Dictionary<Vector3Int, BrokenWall> _brokenWalls = new Dictionary<Vector3Int, BrokenWall>();
 
     public int GetNewWallId() => _maxWallId++;
     public Monster.Origin GetOriginFromWorldPos(Vector3 position)
@@ -61,8 +64,12 @@ public class TilemapManager : MonoBehaviour
 
     public void SetStatue(Statue statueObj)
     {
-        if (statue) Destroy(statueObj);
-        statueObj.name += "Statue";
+        if (statue)
+        {
+            Destroy(statueObj);
+            return;
+        }
+        statueObj.name = "Statue";
         statue = statueObj;
     }
 
@@ -72,6 +79,8 @@ public class TilemapManager : MonoBehaviour
     }
 
     public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyHp(amount);
+    public void ReceiveRebuiltWall(int id, float amount) => GetBrokenWall(id).ModifyHp(amount);
+    private BrokenWall GetBrokenWall(int id) => _brokenWalls.Values.FirstOrDefault(bw => bw.id == id);
     public void ReceiveModifyStatueHp(float amount) => statue.ModifyHp((int)amount);
     public Wall GetWall(int id) => _walls.FirstOrDefault(wall => wall.id == id);
     public Wall GetWall(Vector3Int cellPos) => _walls.FirstOrDefault(wall => wall.cellPos == cellPos);
@@ -127,6 +136,11 @@ public class TilemapManager : MonoBehaviour
             wall.OnDestroyed -= OnDestroyed;
             wall.OnRebuilt -= OnRebuilt;
         }
+
+        foreach (var brokenWall in _brokenWalls)
+        {
+            brokenWall.Value.OnRebuilt -= OnRebuilt;
+        }
     }
 
     public static event Action<Wall> BroadcastWallFallen;
@@ -158,6 +172,11 @@ public class TilemapManager : MonoBehaviour
             case Statue statue:
                 //Statue ngga bisa di rebuilt
                 break;
+            case BrokenWall brokenWall:
+                NavMeshController.UpdateNavMesh();
+                BroadcastWallRebuilt?.Invoke(brokenWall.origin);
+                brokenWall.RemoveFromMap();
+                break;
         }
     }
 
@@ -171,36 +190,48 @@ public class TilemapManager : MonoBehaviour
         };
         if(!tileStages) return;
         var variantCount = tileStages.getTileStages.Length - 1;
-        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp / variantCount));
+        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp * 1.0f / variantCount));
+
         if (tile.spriteVariantId == variantId) return;
-        Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
-        Debug.Log($"Tile on {tile.cellPos} = level [{tile.spriteVariantId}] => [{variantId}]. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
+        //Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
+        //Debug.Log($"Tile on {tile.cellPos} = level [{tile.spriteVariantId}] => [{variantId}]. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
+        
         tile.spriteVariantId = variantId;
         var cellPos = tile.cellPos;
-        var go = _wallTilemap.GetObjectToInstantiate(tile.cellPos);
-        GameObject go2;
-        if(go)
-        {
-            go2 = Instantiate(go);
-        }
-        else
-        {
-            Debug.Log($"tile {tile} has no gameObject!");
-            return;
-        }
 
-        if (variantId == variantCount)
+        if (variantId == variantCount && tile is Wall wall)
         {
-            _wallTilemap.SetTile(tile.cellPos, null);
-            //Debug.Log($"Tile at {tile.cellPos} set to null");
+            SpawnBrokenWall(wall);
         }
-        else
-        {
-            _wallTilemap.SetTile(tile.cellPos, tileStages.GetTileStage(variantId));
-            go2.transform.SetParent(_wallTilemap.transform);
-            //Debug.Log($"Tile at {cellPos} set to {tileStages.GetTileStage(variantId)}");
-        }
+        _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTileStage(variantId));
         _wallTilemap.RefreshTile(cellPos);
         NavMeshController.UpdateNavMesh();
+    }
+
+    private void SpawnBrokenWall(Wall wall)
+    {
+        var brokenWallGameObject = Instantiate(_brokenWallPrefab, wall.transform.position, Quaternion.identity,
+            _wallTilemap.transform);
+        var brokenWall = brokenWallGameObject.GetComponent<BrokenWall>();
+        brokenWall.Init(wall.id, wall.cellPos, wall.origin);
+        _brokenWalls.Add(brokenWall.cellPos, brokenWall);
+        brokenWall.OnRebuilt += OnRebuilt;
+    }
+
+    public void RemoveBrokenWall(Vector3Int cellPos)
+    {
+        if (_brokenWalls.ContainsKey(cellPos))
+        {
+            var bw = _brokenWalls[cellPos];
+            _brokenWalls.Remove(cellPos);
+            bw.OnRebuilt -= OnRebuilt;
+
+            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTileStage(0));
+            var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
+            wall.ModifyHp(-wall.maxHp, 1);
+            wall.ModifyHp(bw.maxHp);
+
+            Destroy(bw);
+        }
     }
 }

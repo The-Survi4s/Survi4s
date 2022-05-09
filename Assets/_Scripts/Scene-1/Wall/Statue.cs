@@ -11,15 +11,11 @@ public class Statue : DestroyableTile
 
     void Start()
     {
+        Debug.Log("Statue start!");
         maxHp = GameManager.Instance.gameSetting.initialStatueHp;
         cellPos = TilemapManager.instance.GetCellPosition(transform.position);
         hp = maxHp;
         TilemapManager.instance.SetStatue(this);
-    }
-
-    protected override void AfterModifyHp()
-    {
-        TilemapManager.instance.UpdateWallTilemap(this);
     }
 
     public void PlayDestroyedAnimation()
@@ -38,5 +34,10 @@ public class Statue : DestroyableTile
     private void UpdateHaloSprite()
     {
 
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(gameObject);
     }
 }

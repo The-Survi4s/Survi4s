@@ -8,7 +8,7 @@ public abstract class BulletBase : MonoBehaviour
     [SerializeField] protected float defaultMoveSpeed;
     [SerializeField] protected float maxTravelRange;
     private Vector2 _startPos;
-    [SerializeField]protected float moveSpeed;
+    protected float moveSpeed;
     private bool _rotationIsSet;
     private Animator _animator;
     private int _triggerCount;
@@ -21,21 +21,17 @@ public abstract class BulletBase : MonoBehaviour
 
     private const string DestroyTrigger = "DestroyTrigger";
 
-    private void Awake()
+    protected void Awake()
     {
         _animator = GetComponent<Animator>();
     }
 
-    private void Update()
+    protected void Update()
     {
         if (_rotationIsSet)
         {
             // Move bullet
             transform.position += moveSpeed * transform.right * Time.deltaTime;
-            if(this as MonsterBulletBase)
-            {
-                Debug.Log($"monster bullet moveSpd = {moveSpeed}");
-            }
 
             if(Vector2.Distance(transform.position, _startPos) > maxTravelRange)
             {
@@ -66,7 +62,7 @@ public abstract class BulletBase : MonoBehaviour
     protected virtual void OnEndOfTrigger()
     {
         //Dipanggil setelah OnHit
-        if (_triggerCount < _maxTriggerTimes)
+        if (_triggerCount + 1 < _maxTriggerTimes)
         {
             _triggerCount++;
         }
