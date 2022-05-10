@@ -134,7 +134,6 @@ public class TilemapManager : MonoBehaviour
         foreach (var wall in _walls)
         {
             wall.OnDestroyed -= OnDestroyed;
-            wall.OnRebuilt -= OnRebuilt;
         }
 
         foreach (var brokenWall in _brokenWalls)
@@ -159,10 +158,11 @@ public class TilemapManager : MonoBehaviour
                 BroadcastStatueFallen?.Invoke(s);
                 break;
         }
-        
     }
+
     private static void OnRebuilt(DestroyableTile obj)
     {
+        Debug.Log("Terima rebuiltnya brokenWall");
         switch (obj)
         {
             case Wall wall:
@@ -212,26 +212,28 @@ public class TilemapManager : MonoBehaviour
     {
         var brokenWallGameObject = Instantiate(_brokenWallPrefab, wall.transform.position, Quaternion.identity,
             _wallTilemap.transform);
+        brokenWallGameObject.name = "Broken Wall " + wall.id;
         var brokenWall = brokenWallGameObject.GetComponent<BrokenWall>();
         brokenWall.Init(wall.id, wall.cellPos, wall.origin);
         _brokenWalls.Add(brokenWall.cellPos, brokenWall);
         brokenWall.OnRebuilt += OnRebuilt;
+        Debug.Log("Broken wall spawned");
     }
 
     public void RemoveBrokenWall(Vector3Int cellPos)
     {
         if (_brokenWalls.ContainsKey(cellPos))
         {
+            Debug.Log("BW found");
             var bw = _brokenWalls[cellPos];
             _brokenWalls.Remove(cellPos);
             bw.OnRebuilt -= OnRebuilt;
+            Destroy(bw);
 
             _wallTilemap.SetTile(cellPos, _wallTileStages.GetTileStage(0));
             var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
             wall.ModifyHp(-wall.maxHp, 1);
-            wall.ModifyHp(bw.maxHp);
-
-            Destroy(bw);
+            wall.ModifyHp(5);
         }
     }
 }

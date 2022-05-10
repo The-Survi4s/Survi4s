@@ -6,16 +6,12 @@ public class Wall : DestroyableTile
     public int id { get; private set; }
     public override int maxHp { get; protected set; }
     private bool _isInitialized = false;
-
-    private NavMeshModifier _navMesh;
-    private Collider2D _collider;
+    
     [field: SerializeField] public Monster.Origin origin { get; private set; } // Di set di inspector
 
     private void Start()
     {
         _isInitialized = false;
-        _navMesh = GetComponent<NavMeshModifier>();
-        _collider = GetComponent<Collider2D>();
         EnableWall(true);
         Init(TilemapManager.instance.GetNewWallId(), 
             TilemapManager.instance.GetOriginFromWorldPos(transform.position),
@@ -54,8 +50,6 @@ public class Wall : DestroyableTile
 
     private void EnableWall(bool wallEnabled)
     {
-        _collider.enabled = wallEnabled;
-        _navMesh.ignoreFromBuild = !wallEnabled;
         isDestroyed = !wallEnabled;
     }
 

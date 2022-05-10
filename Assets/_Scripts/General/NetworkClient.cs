@@ -504,7 +504,7 @@ public class NetworkClient : MonoBehaviour
 
     public void RebuildWall(int brokenWallId, int amount)
     {
-        string[] msg = { Header.RbWl.ToString(), amount.ToString("f2") };
+        string[] msg = { Header.RbWl.ToString(), brokenWallId.ToString(), amount.ToString() };
         SendMessageClient("1", msg);
     }
 

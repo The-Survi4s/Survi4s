@@ -11,7 +11,6 @@ public class Statue : DestroyableTile
 
     void Start()
     {
-        Debug.Log("Statue start!");
         maxHp = GameManager.Instance.gameSetting.initialStatueHp;
         cellPos = TilemapManager.instance.GetCellPosition(transform.position);
         hp = maxHp;
