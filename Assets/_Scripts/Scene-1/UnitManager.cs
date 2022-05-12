@@ -70,7 +70,7 @@ public class UnitManager : MonoBehaviour
 
     public void AddMonster(Monster monster)
     {
-        monster.SetTargetWall(TilemapManager.instance.GetRandomNonDestroyedWallOn(monster.origin));
+        monster.SetTargetWall(TilemapManager.instance.GetWall(monster.origin));
         _monsterKdTree.Add(monster);
         _monsters.Add(monster.id, monster);
     }

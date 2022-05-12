@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
+    [SerializeField] private LayerMask _playerLayer = 3;
+    [SerializeField] private LayerMask _monsterLayer = 6;
+    [SerializeField] private LayerMask _monsterBulletLayer = 10;
+    [SerializeField] private LayerMask _playerBulletLayer = 9;
+    [SerializeField] private LayerMask _groundLayer = 8;
+    [SerializeField] private LayerMask _wallLayer = 7;
     public float preparationDoneTime { get; private set; }
 
     [Serializable]
@@ -145,11 +151,12 @@ public class GameManager : MonoBehaviour
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
-        Physics2D.IgnoreLayerCollision(3, 6); //Player no collision with monster
-        Physics2D.IgnoreLayerCollision(8, 6); //No collision with ground
-        Physics2D.IgnoreLayerCollision(8, 9); //No collision with ground
-        Physics2D.IgnoreLayerCollision(3, 9); //Player no collision with playerbullet
-        Physics2D.IgnoreLayerCollision(6, 10); //Enemy no collision with enemyBullet 
+        Physics2D.IgnoreLayerCollision(_playerLayer, _monsterLayer); //Player no collision with monster
+        Physics2D.IgnoreLayerCollision(_groundLayer, _monsterLayer); //No collision with ground
+        Physics2D.IgnoreLayerCollision(_groundLayer, _playerBulletLayer); //No collision with ground
+        Physics2D.IgnoreLayerCollision(_playerLayer, _playerBulletLayer); //Player no collision with playerbullet
+        Physics2D.IgnoreLayerCollision(_monsterLayer, _monsterBulletLayer); //Enemy no collision with enemyBullet 
+        Physics2D.IgnoreLayerCollision(_playerBulletLayer, _wallLayer); //Enemy no collision with enemyBullet 
         ChangeState(GameState.WavePreparation); 
     }
 

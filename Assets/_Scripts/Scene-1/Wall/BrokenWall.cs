@@ -12,11 +12,11 @@ public class BrokenWall : DestroyableTile
 
     public int id { get; private set; }
 
-    public Monster.Origin origin { get; private set; }
+    public Origin origin { get; private set; }
 
     public override int maxHp { get; protected set; }
 
-    public void Init(int wallId, Vector3Int wallCellPos, Monster.Origin origin)
+    public void Init(int wallId, Vector3Int wallCellPos, Origin origin)
     {
         cellPos = wallCellPos;
         id = wallId;

@@ -23,7 +23,6 @@ public abstract class Monster : MonoBehaviour
     private Animator _animator;
     private List<StatusEffectBase> _activeStatusEffects;
 
-    public enum Origin { Right, Top, Left, Bottom }
     public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal}
     public enum Target {Statue, Wall, Player}
     public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}
@@ -127,8 +126,8 @@ public abstract class Monster : MonoBehaviour
 
     public void RequestNewTargetWall()
     {
-        targetWall = TilemapManager.instance.GetNearestNotDestroyedWallFrom(transform.position);
-        Debug.Log($"Monster {name} has requested a new targetWall {targetWall}");
+        targetWall = TilemapManager.instance.GetWall(transform.position);
+        //Debug.Log($"Monster {name} has requested a new targetWall {targetWall}");
     }
 
     public void ReRequestWall(Vector3Int cellPos)
@@ -138,7 +137,7 @@ public abstract class Monster : MonoBehaviour
         {
             RequestNewTargetWall();
         }
-        Debug.Log($"Monster {name} has re-requested targetWall [{targetWall}]");
+        //Debug.Log($"Monster {name} has re-requested targetWall [{targetWall}]");
     }
 
     private void CheckCanAttack()

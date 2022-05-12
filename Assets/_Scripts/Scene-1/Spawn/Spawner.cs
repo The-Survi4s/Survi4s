@@ -7,13 +7,13 @@ using UnityEngine.AI;
 [Serializable]
 public class Spawner : MonoBehaviour
 {
-    public Monster.Origin origin { get; private set; }
+    public Origin origin { get; private set; }
     private float _spawnOffset = 10.0f;
     public Vector3 spawnPos
     {
         get
         {
-            if (origin == Monster.Origin.Top || origin == Monster.Origin.Bottom)
+            if (origin == Origin.Top || origin == Origin.Bottom)
             {
                 return transform.position + new Vector3(_spawnOffset, 0, -1);
             }
@@ -26,7 +26,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        origin = TilemapManager.instance.GetOriginFromWorldPos(transform.position);
+        origin = TilemapManager.instance.GetOrigin(transform.position);
         SpawnManager.instance.AddSpawner(this);
         this.gameObject.name = "Spawner " + origin;
     }

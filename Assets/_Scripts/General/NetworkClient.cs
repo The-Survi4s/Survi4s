@@ -233,13 +233,13 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SwPy:
-                    SpawnManager.instance.OnReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
+                    SpawnManager.instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
-                    SpawnManager.instance.OnReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
-                        EnumParse<Monster.Origin>(info[4]), float.Parse(info[5]));
+                    SpawnManager.instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
+                        EnumParse<Origin>(info[4]), float.Parse(info[5]));
                     break;
                 case Header.EqWp:
                 {
@@ -290,7 +290,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    TilemapManager.instance.ReceiveModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    TilemapManager.instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
@@ -300,7 +300,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                    TilemapManager.instance.ReceiveModifyStatueHp(float.Parse(info[2]));
+                    TilemapManager.instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
                 case Header.DBl:
@@ -310,14 +310,14 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.RbWl:
                 {
-                    TilemapManager.instance.ReceiveRebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
+                    TilemapManager.instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
                     break;
                 }
             }
         }
     }
 
-        // Proccess message that want to be send ---------------------------------------
+    // Process message that is about to be sent ---------------------------------------
     private void SendMessageClient(string target, string message)
     {
         // Message format : target|header|data|data|data...
@@ -341,10 +341,7 @@ public class NetworkClient : MonoBehaviour
     }
 
     // If want to check connection status -------------------------------------------
-    public bool IsConnected()
-    {
-        return client.Connected;
-    }
+    public bool IsConnected() => client.Connected;
 
     // Generate id of 6 random number ------------------------------------------------
     private const int IdLength = 6;
@@ -357,6 +354,8 @@ public class NetworkClient : MonoBehaviour
         }
         return genId;
     }
+
+    #region Send Message To Server
 
     // Private Method ---------------------------------------------------------------
     private void OnCreatedRoom(string roomName)
@@ -413,7 +412,7 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SpawnMonster(int id, int type, Monster.Origin origin, float spawnOffset)
+    public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
         string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
         SendMessageClient("1", msg);
@@ -508,6 +507,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
+    #endregion
+
+    #region Utilities
     // Utilities
     private static T EnumParse<T>(string stringToEnum)
     {
@@ -518,4 +520,6 @@ public class NetworkClient : MonoBehaviour
     {
         return idAndName.Substring(0, IdLength);
     }
+
+    #endregion
 }

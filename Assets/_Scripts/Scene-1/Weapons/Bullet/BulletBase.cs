@@ -9,7 +9,7 @@ public abstract class BulletBase : MonoBehaviour
     [SerializeField] protected float maxTravelRange;
     private Vector2 _startPos;
     protected float moveSpeed;
-    private bool _rotationIsSet;
+    private bool _isRotationSet;
     private Animator _animator;
     private int _triggerCount;
     [SerializeField] private int _maxTriggerTimes;
@@ -28,12 +28,16 @@ public abstract class BulletBase : MonoBehaviour
 
     protected void Update()
     {
-        if (_rotationIsSet)
+        Move();
+    }
+
+    private void Move()
+    {
+        if (_isRotationSet)
         {
-            // Move bullet
             transform.position += moveSpeed * transform.right * Time.deltaTime;
 
-            if(Vector2.Distance(transform.position, _startPos) > maxTravelRange)
+            if (Vector2.Distance(transform.position, _startPos) > maxTravelRange)
             {
                 Destroy(gameObject);
             }
@@ -52,6 +56,9 @@ public abstract class BulletBase : MonoBehaviour
         //_animator.SetTrigger(DestroyTrigger);
     }
 
+    /// <summary>
+    /// Instantiates <see cref="particleToSpawn"/> after collision
+    /// </summary>
     protected virtual void SpawnParticle()
     {
         //Spawn gameobject particle... atau pelajari ParticleSystem dulu lah
@@ -78,7 +85,7 @@ public abstract class BulletBase : MonoBehaviour
     protected void SetRotation(float degree)
     {
         transform.rotation = Quaternion.Euler(0, 0, degree);
-        _rotationIsSet = true;
+        _isRotationSet = true;
     }
 
     protected void AddRotation(float degree)

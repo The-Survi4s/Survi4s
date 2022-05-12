@@ -7,21 +7,28 @@ public class Wall : DestroyableTile
     public override int maxHp { get; protected set; }
     private bool _isInitialized = false;
     
-    [field: SerializeField] public Monster.Origin origin { get; private set; } // Di set di inspector
+    [field: SerializeField] public Origin origin { get; private set; } // Di set di inspector
 
     private void Start()
     {
-        _isInitialized = false;
         EnableWall(true);
         Init(TilemapManager.instance.GetNewWallId(), 
-            TilemapManager.instance.GetOriginFromWorldPos(transform.position),
-            TilemapManager.instance.GetCellPosition(transform.position));
+            TilemapManager.instance.GetOrigin(transform.position),
+            TilemapManager.instance.ToCellPosition(transform.position));
         TilemapManager.instance.AddWall(this); // Auto add
     }
 
-    public void Init(int id, Monster.Origin wallOrigin, Vector3Int cellPosition, int initialHp = 0)
+    /// <summary>
+    /// Initialize <see cref="Wall"/>'s fields. Valid only once. 
+    /// </summary>
+    /// <param name="id"><see cref="Wall"/>'s id</param>
+    /// <param name="wallOrigin">The <see cref="Origin"/> of this <see cref="Wall"/></param>
+    /// <param name="cellPosition">The cell position of this <see cref="Wall"/>. Not a world position</param>
+    /// <param name="initialHp">0 is <see cref="maxHp"/>. Set initial <see cref="Wall"/> hp here</param>
+    /// <returns></returns>
+    public bool Init(int id, Origin wallOrigin, Vector3Int cellPosition, int initialHp = 0)
     {
-        if (_isInitialized) return;
+        if (_isInitialized) return false;
         this.id = id;
         origin = wallOrigin;
         maxHp = TilemapManager.instance.maxWallHp;
@@ -29,6 +36,7 @@ public class Wall : DestroyableTile
         cellPos = cellPosition;
         _isInitialized = true;
         isDestroyed = false;
+        return true;
     }
 
     protected override void InvokeRebuiltEvent()

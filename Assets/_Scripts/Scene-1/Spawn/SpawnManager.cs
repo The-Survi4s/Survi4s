@@ -12,6 +12,9 @@ public class SpawnManager : MonoBehaviour
     private readonly List<Spawner> _spawners = new List<Spawner>();
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
 
+    /// <summary>
+    /// Class used as the initial setting for wave spawns
+    /// </summary>
     [Serializable]
     public class InitialMonsterSpawnSetting
     {
@@ -20,24 +23,38 @@ public class SpawnManager : MonoBehaviour
         public float speedMultiplier = 1;
         public float randomSpawnOffsetMax = 10;
     }
+    /// <summary>
+    /// First wave's monster spawn settings
+    /// </summary>
     [SerializeField] private InitialMonsterSpawnSetting _monsterSpawnSetting;
 
     private WaveInfo _previousWaveInfo;
     [SerializeField] private WaveInfo _currentWaveInfo;
     public int currentWave => _currentWaveInfo.waveNumber;
 
+    /// <summary>
+    /// Class to store the weight value of a <see cref="GameObject"/>
+    /// </summary>
     [Serializable]
-    private class MonsterPrefabWeight
+    private class PrefabWeight
     {
-        public GameObject monsterPrefab;
+        public GameObject prefab;
         public int weight;
     }
 
-    [SerializeField] private List<MonsterPrefabWeight> _monsterPrefabWeights;
+    /// <summary>
+    /// Assign in inspector. This list stores weight values of each monster type assigned.
+    /// <br/><br/>Used to populate <see cref="_monsterPrefabDuplicates"/>
+    /// </summary>
+    [SerializeField] private List<PrefabWeight> _monsterPrefabWeights;
+    /// <summary>
+    /// A list to store the prefab duplicates of each <see cref="Monster.Type"/>s. Each <see cref="Monster.Type"/> is duplicated by the value of it's weight
+    /// <br/>Select from this list to get a random monster. Chances to get a specific <see cref="Monster.Type"/> is based on it's weight compared to others
+    /// </summary>
     private List<GameObject> _monsterPrefabDuplicates;
 
     [SerializeField] private Vector2 _playerSpawnPos = new Vector2(2, 2);
-    [SerializeField] private List<GameObject> playerPrefab;
+    [SerializeField] private List<GameObject> _playerPrefab;
 
     public static SpawnManager instance { get; private set; }
 
@@ -52,17 +69,24 @@ public class SpawnManager : MonoBehaviour
             Destroy(this);
         }
         _monsterPrefabDuplicates = new List<GameObject>();
-
         _currentWaveInfo = new WaveInfo(1, _monsterSpawnSetting.count, _monsterSpawnSetting.hpMultiplier, _monsterSpawnSetting.speedMultiplier);
+        
+        PopulateMonsterDuplicates();
+    }
+
+    /// <summary>
+    /// Populates <see cref="_monsterPrefabDuplicates"/> with prefabs from <see cref="_monsterPrefabWeights"/> times it's weight
+    /// </summary>
+    private void PopulateMonsterDuplicates()
+    {
         _monsterPrefabDuplicates.Clear();
         foreach (var prefabWeight in _monsterPrefabWeights)
         {
-            if (prefabWeight.monsterPrefab.TryGetComponent(out Monster monster))
+            if (prefabWeight.prefab.TryGetComponent(out Monster monster))
             {
-                //Debug.Log("Yes, this is a monster!" + monster.type);
                 for (int i = 0; i < prefabWeight.weight; i++)
                 {
-                    _monsterPrefabDuplicates.Add(prefabWeight.monsterPrefab);
+                    _monsterPrefabDuplicates.Add(prefabWeight.prefab);
                 }
             }
             else
@@ -70,23 +94,27 @@ public class SpawnManager : MonoBehaviour
                 Debug.Log("The prefab was not a monster! You lied to me!!!");
             }
         }
-        //Debug.Log("mpw size:"+_monsterPrefabWeights.Count+", mpd size:"+_monsterPrefabDuplicates.Count);
     }
 
-    public void AddSpawner(Spawner spawner)
-    {
-        _spawners.Add(spawner);
-    }
+    public void AddSpawner(Spawner spawner) => _spawners.Add(spawner);
 
-    public void SendSpawnPlayer()
+    /// <summary>
+    /// Sends a message to server to spawn player
+    /// </summary>
+    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, UnitManager.Instance.playerCount);
+
+    /// <summary>
+    /// Called by <see cref="NetworkClient"/>. Instantiates a <see cref="Player"/> on <see cref="_playerPrefab"/>
+    /// </summary>
+    /// <param name="idAndName">Player's id and name</param>
+    /// <param name="id">the id of the player</param>
+    /// <param name="pos">the position the <see cref="Player"/> will spawn in</param>
+    /// <param name="skin">Which sprite will the <see cref="Player"/> use</param>
+    public void ReceiveSpawnPlayer(string idAndName, string id, Vector2 pos, int skin)
     {
-        NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, UnitManager.Instance.playerCount);
-    }
-    public void OnReceiveSpawnPlayer(string idAndName, string id, Vector2 pos, int skin)
-    {
-        if (playerPrefab[skin].TryGetComponent(out Player player))
+        if (_playerPrefab[skin].TryGetComponent(out Player player))
         {
-            GameObject temp = Instantiate(playerPrefab[skin], pos, Quaternion.identity);
+            GameObject temp = Instantiate(_playerPrefab[skin], pos, Quaternion.identity);
             temp.name = idAndName.Trim();
             var p = temp.GetComponent<Player>();
             p.id = id;
@@ -98,38 +126,76 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public void OnReceiveSpawnMonster(int id, int monsterPrefabIndex, Monster.Origin origin, float spawnOffset)
+    /// <summary>
+    /// Called by <see cref="NetworkClient"/> to spawn a <see cref="Monster"/>
+    /// </summary>
+    /// <param name="id"><see cref="Monster"/>'s id</param>
+    /// <param name="index">The prefab index of <see cref="_monsterPrefabDuplicates"/> to instantiate</param>
+    /// <param name="origin"><see cref="Monster"/>'s <see cref="Origin"/></param>
+    /// <param name="spawnOffset">The offset to spawn <see cref="Monster"/> from <see cref="Spawner"/>'s center</param>
+    public void ReceiveSpawnMonster(int id, int index, Origin origin, float spawnOffset)
     {
         //Debug.Log("id:" + id + ", index:" + monsterPrefabIndex + ", size:" + _monsterPrefabDuplicates.Count);
-        foreach (Spawner spawner in _spawners)
+        foreach (var spawner in _spawners.Where(spawner => spawner.origin == origin))
         {
-            if (spawner.origin == origin)
-            {
-                spawner.SpawnMonster(_monsterPrefabDuplicates[monsterPrefabIndex], id, spawnOffset, _currentWaveInfo);
-            }
+            spawner.SpawnMonster(_monsterPrefabDuplicates[index], id, spawnOffset, _currentWaveInfo);
         }
     }
 
-    private async Task OnSendSpawnMonster(double delayToNext) 
+    /// <summary>
+    /// Sends a message to server every <paramref name="interval"/> to spawn <see cref="Monster"/>
+    /// </summary>
+    /// <param name="interval">time interval in miliseconds</param>
+    /// <returns></returns>
+    private async Task SendSpawnMonster(double interval) 
     {
-        NetworkClient.Instance.SpawnMonster(_occupiedIDs.Count, GetRandomMonsterType(), GetRandomOrigin(),
+        NetworkClient.Instance.SpawnMonster(GetVacantId(), GetRandomMonsterType(), GetRandomOrigin(),
             Random.Range(-_monsterSpawnSetting.randomSpawnOffsetMax, _monsterSpawnSetting.randomSpawnOffsetMax));
-        _occupiedIDs.Add(true);
-        var end = Time.time + delayToNext;
+        var end = Time.time + interval;
         while (Time.time < end)
         {
             await Task.Yield();
         }
     }
 
-    private Monster.Origin GetRandomOrigin()
+    /// <summary>
+    /// Gets a vacant id in the monster id pool (<see cref="_occupiedIDs"/>)
+    /// </summary>
+    /// <returns></returns>
+    private int GetVacantId()
+    {
+        for (var index = 0; index < _occupiedIDs.Count; index++)
+        {
+            if (!_occupiedIDs[index])
+            {
+                _occupiedIDs[index] = true;
+                return index;
+            }
+        }
+        _occupiedIDs.Add(true);
+        return _occupiedIDs.Count - 1;
+    }
+
+    /// <summary>
+    /// Gets the <see cref="Origin"/> of a random <see cref="_selectedSpawners"/>
+    /// </summary>
+    /// <returns></returns>
+    private Origin GetRandomOrigin()
     {
         if(_selectedSpawners.Count == 0) SelectSpawners();
         return _selectedSpawners[Random.Range(0, _selectedSpawners.Count)].origin;
     }
 
+    /// <summary>
+    /// Gets a random index of <see cref="_monsterPrefabDuplicates"/>.
+    /// <br/>Chance of getting a specific type is based on it's weight compared to others
+    /// </summary>
+    /// <returns></returns>
     private int GetRandomMonsterType() => Random.Range(0, _monsterPrefabDuplicates.Count);
 
+    /// <summary>
+    /// Calculates next <see cref="WaveInfo"/> and selects random <see langword="n"/> spawners.
+    /// </summary>
     public void PrepareNextWave()
     {
         _previousWaveInfo = _currentWaveInfo;
@@ -137,6 +203,11 @@ public class SpawnManager : MonoBehaviour
         SelectSpawners();
     }
 
+    /// <summary>
+    /// Sets the next <see cref="WaveInfo"/> to <paramref name="nextWaveInfo"/>,
+    /// calculates it, then selects random <see langword="n"/> spawners.
+    /// </summary>
+    /// <param name="nextWaveInfo"></param>
     public void PrepareNextWave(WaveInfo nextWaveInfo)
     {
         _previousWaveInfo = _currentWaveInfo;
@@ -145,6 +216,9 @@ public class SpawnManager : MonoBehaviour
         SelectSpawners();
     }
 
+    /// <summary>
+    /// Selects random <see langword="_currentWaveInfo.spawnersUsedCount"/> spawners to use for next wave. 
+    /// </summary>
     private void SelectSpawners()
     {
         _selectedSpawners.Clear();
@@ -158,22 +232,29 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the wave. Requires <see cref="_currentWaveInfo"/> to not be <see langword="null"/>
+    /// </summary>
+    /// <returns></returns>
     public async Task StartWave()
     {
+        if(_currentWaveInfo == null) return;
         var monsterLeft = _currentWaveInfo.monsterCount;
         while (monsterLeft-- > 0)
         {
-            await OnSendSpawnMonster(_currentWaveInfo.spawnRate);
+            await SendSpawnMonster(_currentWaveInfo.spawnRate);
         }
         PrepareNextWave();
     }
 
-    public void ClearIdIndex(int index)
-    {
-        _occupiedIDs[index] = false;
-    }
+    public void ClearIdIndex(int index) => _occupiedIDs[index] = false;
 
-    public Vector3 GetSpawnerPos(Monster.Origin origin)
+    /// <summary>
+    /// Gets the <see cref="Vector3"/> position
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <returns></returns>
+    public Vector3 GetSpawnerPos(Origin origin)
     {
         foreach (var spawner in _spawners.Where(spawner => spawner.origin == origin))
         {

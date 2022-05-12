@@ -20,7 +20,7 @@ public class MonsterPramuka : RangedMonsterBase
             Origin.Bottom => Origin.Top,
             _ => origin
         };
-        _targetWall2 = TilemapManager.instance.GetRandomNonDestroyedWallOn(newOrigin);
+        _targetWall2 = TilemapManager.instance.GetWall(newOrigin);
     }
 
     protected override void Update()

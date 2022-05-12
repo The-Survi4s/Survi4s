@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
+
+public enum Origin { Right, Top, Left, Bottom }
 
 public class TilemapManager : MonoBehaviour
 {
@@ -22,28 +25,94 @@ public class TilemapManager : MonoBehaviour
             Destroy(this);
         }
     }
+
+    #region Statue Handlers
+
+    /// <summary>
+    /// Singleton of the <see cref="Statue"/>
+    /// </summary>
     public Statue statue { get; private set; }
+
+    /// <summary>
+    /// Set in inspector. <see cref="TileStages"/> of <see cref="Statue"/>
+    /// </summary>
+    [SerializeField] private TileStages _statueTileStages;
+
+    /// <summary>
+    /// Sets the main <see cref="Statue"/>. Will fail if <see cref="statue"/> is not <see langword="null"/>
+    /// </summary>
+    /// <param name="statueObj"></param>
+    public void SetStatue(Statue statueObj)
+    {
+        if (statue)
+        {
+            Destroy(statueObj);
+            return;
+        }
+        statueObj.name = "Statue";
+        statue = statueObj;
+    }
+
+    // Used by Network Client
+    public void ModifyStatueHp(float amount) => statue.ModifyHp((int)amount);
+
+    #endregion
+
+    #region Wall Handlers
+
+    #region Wall Variables
+
+    /// <summary>
+    /// The main list of <see cref="Wall"/>s
+    /// </summary>
     private readonly List<Wall> _walls = new List<Wall>();
-    private readonly Dictionary<Monster.Origin, List<Wall>> _wallDictionary =
-        new Dictionary<Monster.Origin, List<Wall>>();
+
+    /// <summary>
+    /// The main list of <see cref="Wall"/>s, but separated by <see cref="Origin"/>
+    /// </summary>
+    private readonly Dictionary<Origin, List<Wall>> _wallDictionary =
+        new Dictionary<Origin, List<Wall>>();
+
+    /// <summary>
+    /// This keeps track of how many walls have been spawned. Used as a unique id for each new wall. 
+    /// </summary>
     private int _maxWallId = 0;
+
+    /// <summary>
+    /// Set in inspector. The maximum and initial <see cref="Wall"/> hp. 
+    /// </summary>
     public int maxWallHp => 100;
 
+    /// <summary>
+    /// Set in inspector. The <see cref="Tilemap"/> of all <see cref="Wall"/>s
+    /// </summary>
     [SerializeField] private Tilemap _wallTilemap;
-    [SerializeField] private TileStages _wallTileStages;
-    [SerializeField] private TileStages _statueTileStages;
-    private Dictionary<Vector3Int, Wall> _wallTiles = new Dictionary<Vector3Int, Wall>();
-    [SerializeField] private GameObject _brokenWallPrefab;
-    private Dictionary<Vector3Int, BrokenWall> _brokenWalls = new Dictionary<Vector3Int, BrokenWall>();
 
-    public int GetNewWallId() => _maxWallId++;
-    public Monster.Origin GetOriginFromWorldPos(Vector3 position)
-    {
-        var angle = Mathf.Atan2(position.y, position.x) * Mathf.Rad2Deg;
-        angle += angle < 0 ? 360 : 0;
-        //Debug.Log(position + ", " + angle + ", " + Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90));
-        return (Monster.Origin)Mathf.Clamp(Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90), 0, 3);
-    }
+    /// <summary>
+    /// Set in inspector. <see cref="TileStages"/> of <see cref="Wall"/>s
+    /// </summary>
+    [SerializeField] private TileStages _wallTileStages;
+
+    /// <summary>
+    /// <see cref="Wall"/>s mapped by their <see cref="Vector3Int"/> cell position
+    /// </summary>
+    private readonly Dictionary<Vector3Int, Wall> _wallTiles = new Dictionary<Vector3Int, Wall>();
+
+    /// <summary>
+    /// The <see cref="BrokenWall"/> <see cref="GameObject"/> to spawn
+    /// </summary>
+    [SerializeField] private GameObject _brokenWallPrefab;
+
+    /// <summary>
+    /// <see cref="BrokenWall"/>s mapped by their <see cref="Vector3Int"/> cell position
+    /// </summary>
+    private readonly Dictionary<Vector3Int, BrokenWall> _brokenWalls = new Dictionary<Vector3Int, BrokenWall>();
+
+    #endregion
+
+    #region Wall Methods
+
+    // Methods to add and remove walls from list
     public void AddWall(Wall wall)
     {
         wall.OnDestroyed += OnDestroyed;
@@ -62,35 +131,90 @@ public class TilemapManager : MonoBehaviour
         _wallTiles.Remove(wall.cellPos);
     }
 
-    public void SetStatue(Statue statueObj)
+    public int GetNewWallId() => _maxWallId++;
+
+    /// <summary>
+    /// Spawns a <see cref="BrokenWall"/> in <paramref name="wall"/>'s position
+    /// </summary>
+    /// <param name="wall">The <see cref="Wall"/> to copy values from</param>
+    private void SpawnBrokenWall(Wall wall)
     {
-        if (statue)
+        var brokenWallGameObject = Instantiate(_brokenWallPrefab, wall.transform.position, Quaternion.identity,
+            _wallTilemap.transform);
+        brokenWallGameObject.name = "Broken Wall " + wall.id;
+        var brokenWall = brokenWallGameObject.GetComponent<BrokenWall>();
+        brokenWall.Init(wall.id, wall.cellPos, wall.origin);
+        _brokenWalls.Add(brokenWall.cellPos, brokenWall);
+        brokenWall.OnRebuilt += OnRebuilt;
+    }
+
+    /// <summary>
+    /// Destroys a <see cref="BrokenWall"/> on <paramref name="cellPos"/> 
+    /// then sets a <see cref="Wall"/> tile on it with 10 Hp.
+    /// </summary>
+    /// <param name="cellPos"></param>
+    public void RemoveBrokenWall(Vector3Int cellPos)
+    {
+        if (_brokenWalls.ContainsKey(cellPos))
         {
-            Destroy(statueObj);
-            return;
+            Debug.Log("BW found");
+            var bw = _brokenWalls[cellPos];
+            _brokenWalls.Remove(cellPos);
+            bw.OnRebuilt -= OnRebuilt;
+            Destroy(bw);
+
+            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTileStage(_wallTileStages.getTileStages.Length - 1));
+            var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
+            wall.Init(GetNewWallId(), GetOrigin(wall.transform.position), cellPos, 10);
+            wall.ModifyHp(0);
+            _wallTilemap.RefreshTile(cellPos);
+            NavMeshController.UpdateNavMesh();
         }
-        statueObj.name = "Statue";
-        statue = statueObj;
     }
 
-    public Vector3Int GetCellPosition(Vector3 worldPos)
-    {
-        return _wallTilemap.WorldToCell(worldPos);
-    }
+    // Methods used by Network Client class
+    public void ModifyWallHp(int id, float amount) => GetWall(id).ModifyHp(amount);
 
-    public void ReceiveModifyWallHp(int id, float amount) => GetWall(id).ModifyHp(amount);
-    public void ReceiveRebuiltWall(int id, float amount) => GetBrokenWall(id).ModifyHp(amount);
-    private BrokenWall GetBrokenWall(int id) => _brokenWalls.Values.FirstOrDefault(bw => bw.id == id);
-    public void ReceiveModifyStatueHp(float amount) => statue.ModifyHp((int)amount);
-    public Wall GetWall(int id) => _walls.FirstOrDefault(wall => wall.id == id);
+    public void RebuiltWall(int id, float amount) => GetWall(id, true).ModifyHp(amount);
+
+    /// <summary>
+    /// Gets a <see cref="DestroyableTile"/> with a matching <paramref name="id"/>
+    /// </summary>
+    /// <param name="id"> The <c>id</c> of the <see cref="DestroyableTile"/> </param>
+    /// <param name="isBroken"> set to true to search for <see cref="BrokenWall"/> instead of <see cref="Wall"/></param>
+    /// <returns><see cref="Wall"/> if not <paramref name="isBroken"/>. Or <see cref="BrokenWall"/> if <paramref name="isBroken"/></returns>
+    public DestroyableTile GetWall(int id, bool isBroken = false) => !isBroken
+        ? _walls.FirstOrDefault(wall => wall.id == id) as DestroyableTile
+        : _brokenWalls.Values.FirstOrDefault(bw => bw.id == id);
+
+    /// <summary>
+    /// Gets a <see cref="Wall"/> with a matching <paramref name="cellPos"/>
+    /// </summary>
+    /// <param name="cellPos"> Cell position of the wall </param>
+    /// <returns></returns>
     public Wall GetWall(Vector3Int cellPos) => _walls.FirstOrDefault(wall => wall.cellPos == cellPos);
-    public Wall GetRandomNonDestroyedWallOn(Monster.Origin origin)
+
+    /// <summary>
+    /// Gets a random <see cref="Wall"/> with a matching <paramref name="origin"/>
+    /// </summary>
+    /// <param name="origin"> Where is it originates from </param>
+    /// <returns></returns>
+    public Wall GetWall(Origin origin)
     {
-        if(!_wallDictionary.ContainsKey(origin)) _wallDictionary.Add(origin, new List<Wall>());
-        return GetRandomNonDestroyedWallFrom(_wallDictionary[origin], origin);
+        if (!_wallDictionary.ContainsKey(origin)) _wallDictionary.Add(origin, new List<Wall>());
+        return GetWall(_wallDictionary[origin], origin);
     }
 
-    private Wall GetRandomNonDestroyedWallFrom(List<Wall> wallList, Monster.Origin origin)
+    /// <summary>
+    /// Gets a <see cref="Random"/> <see cref="Wall"/> from <paramref name="wallList"/>.
+    /// </summary>
+    /// <remarks>
+    /// Fills the <paramref name="wallList"/> with <see cref="Wall"/>s with matching <paramref name="origin"/> if it's empty. 
+    /// </remarks>
+    /// <param name="wallList"> the list of <see cref="Wall"/>s to pick a wall from</param>
+    /// <param name="origin"> The origin of the <see cref="Wall"/></param>
+    /// <returns>A random <see cref="Wall"/>. Returns <see langword="null"/> if <paramref name="wallList"/> is <see cref="_walls"/></returns>
+    private Wall GetWall(List<Wall> wallList, Origin origin)
     {
         if (wallList == _walls)
         {
@@ -105,12 +229,12 @@ public class TilemapManager : MonoBehaviour
         return nonDestroyedWallList[Random.Range(0, wallList.Count)];
     }
 
-    private List<Wall> GroupWalls(Monster.Origin origin)
-    {
-        return _walls.Where(wall => wall.origin == origin).ToList();
-    }
-
-    public Wall GetNearestNotDestroyedWallFrom(Vector3 position)
+    /// <summary>
+    /// Gets the nearest <see cref="Wall"/> from a <paramref name="position"/>
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public Wall GetWall(Vector3 position)
     {
         var dist = float.MaxValue;
         var res = _walls[0];
@@ -127,8 +251,46 @@ public class TilemapManager : MonoBehaviour
         return res;
     }
 
-    // Event -------------------------------------------------------------------------
+    /// <summary>
+    /// Gets a <see cref="List{Wall}"/> of matching <paramref name="origin"/> from <see cref="_walls"/>
+    /// </summary>
+    /// <param name="origin"> The origin of the <see cref="Wall"/></param>
+    /// <returns></returns>
+    private List<Wall> GroupWalls(Origin origin) => _walls.Where(wall => wall.origin == origin).ToList();
 
+    #endregion
+
+    #endregion
+
+    #region Utilities
+
+    /// <summary>
+    /// Converts world <paramref name="position"/> to <see cref="Origin"/>
+    /// </summary>
+    /// <remarks>With <see cref="Vector3.zero"/> as it's center,
+    /// it decides if a position is in an area on top, left, below, or on right of the center.
+    /// Then returns the corresponding <see cref="Origin"/>. </remarks>
+    /// <param name="position"> world position </param>
+    /// <returns></returns>
+    public Origin GetOrigin(Vector3 position)
+    {
+        var angle = Mathf.Atan2(position.y, position.x) * Mathf.Rad2Deg;
+        angle += angle < 0 ? 360 : 0; 
+        //Debug.Log(position + ", " + angle + ", " + Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90));
+        return (Origin)Mathf.Clamp(Mathf.FloorToInt(((angle + 360 + 45) % 360) / 90), 0, 3);
+    }
+
+    /// <summary>
+    /// Converts <paramref name="worldPos"/> to cell position
+    /// </summary>
+    /// <param name="worldPos">The position in world space</param>
+    /// <returns></returns>
+    public Vector3Int ToCellPosition(Vector3 worldPos) => _wallTilemap.WorldToCell(worldPos);
+
+    #endregion
+
+    #region Events
+    // Event -------------------------------------------------------------------------
     private void OnDestroy()
     {
         foreach (var wall in _walls)
@@ -144,7 +306,7 @@ public class TilemapManager : MonoBehaviour
 
     public static event Action<Wall> BroadcastWallFallen;
     public static event Action<Statue> BroadcastStatueFallen;
-    public static event Action<Monster.Origin> BroadcastWallRebuilt;
+    public static event Action<Origin> BroadcastWallRebuilt;
 
     private static void OnDestroyed(DestroyableTile obj)
     {
@@ -156,32 +318,33 @@ public class TilemapManager : MonoBehaviour
                 break;
             case Statue s:
                 BroadcastStatueFallen?.Invoke(s);
+                GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
                 break;
         }
     }
 
     private static void OnRebuilt(DestroyableTile obj)
     {
-        Debug.Log("Terima rebuiltnya brokenWall");
-        switch (obj)
-        {
-            case Wall wall:
-                NavMeshController.UpdateNavMesh();
-                BroadcastWallRebuilt?.Invoke(wall.origin);
-                break;
-            case Statue statue:
-                //Statue ngga bisa di rebuilt
-                break;
-            case BrokenWall brokenWall:
-                NavMeshController.UpdateNavMesh();
-                BroadcastWallRebuilt?.Invoke(brokenWall.origin);
-                brokenWall.RemoveFromMap();
-                break;
-        }
+        if (!(obj is BrokenWall brokenWall)) return;
+        NavMeshController.UpdateNavMesh();
+        BroadcastWallRebuilt?.Invoke(brokenWall.origin);
+        brokenWall.RemoveFromMap();
     }
 
+    #endregion
+
+    /// <summary>
+    /// Updates a specific <paramref name="tile"/> on <see cref="_wallTilemap"/> to be it's variant (<see cref="TileStages"/>).
+    /// <br/>Then updates the <see cref="NavMesh"/>
+    /// </summary>
+    /// <remarks>
+    /// Spawns a <see cref="BrokenWall"/> when a <see cref="Wall"/>'s hp is 0. <br/><br/>
+    /// Must NOT <see langword="null"/>: <br/><code>    <see cref="_wallTileStages"/></code><br/><code>    <see cref="_statueTileStages"/></code>
+    /// </remarks>
+    /// <param name="tile"> The tile to be updated </param>
     public void UpdateWallTilemap(DestroyableTile tile)
     {
+        // Choosing the right Tile Stages
         var tileStages = tile switch
         {
             Wall _ => _wallTileStages,
@@ -189,51 +352,21 @@ public class TilemapManager : MonoBehaviour
             _ => null
         };
         if(!tileStages) return;
+
+        // Calculate variant id
         var variantCount = tileStages.getTileStages.Length - 1;
         var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp * 1.0f / variantCount));
-
         if (tile.spriteVariantId == variantId) return;
-        //Debug.Log($"Variant count {variantCount} - Floor({tile.hp}/{tile.maxHp}/variant count)");
-        //Debug.Log($"Tile on {tile.cellPos} = level [{tile.spriteVariantId}] => [{variantId}]. {tile.name} at {100*tile.hp/tile.maxHp}% HP");
         
         tile.spriteVariantId = variantId;
         var cellPos = tile.cellPos;
 
-        if (variantId == variantCount && tile is Wall wall)
-        {
-            SpawnBrokenWall(wall);
-        }
+        // If wall is destroyed variant, spawn brokenWall
+        if (tile.hp <= 0 && tile is Wall wall) SpawnBrokenWall(wall);
+
+        // Set tile, then update Tilemap and NavMesh
         _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTileStage(variantId));
         _wallTilemap.RefreshTile(cellPos);
         NavMeshController.UpdateNavMesh();
-    }
-
-    private void SpawnBrokenWall(Wall wall)
-    {
-        var brokenWallGameObject = Instantiate(_brokenWallPrefab, wall.transform.position, Quaternion.identity,
-            _wallTilemap.transform);
-        brokenWallGameObject.name = "Broken Wall " + wall.id;
-        var brokenWall = brokenWallGameObject.GetComponent<BrokenWall>();
-        brokenWall.Init(wall.id, wall.cellPos, wall.origin);
-        _brokenWalls.Add(brokenWall.cellPos, brokenWall);
-        brokenWall.OnRebuilt += OnRebuilt;
-        Debug.Log("Broken wall spawned");
-    }
-
-    public void RemoveBrokenWall(Vector3Int cellPos)
-    {
-        if (_brokenWalls.ContainsKey(cellPos))
-        {
-            Debug.Log("BW found");
-            var bw = _brokenWalls[cellPos];
-            _brokenWalls.Remove(cellPos);
-            bw.OnRebuilt -= OnRebuilt;
-            Destroy(bw);
-
-            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTileStage(0));
-            var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
-            wall.ModifyHp(-wall.maxHp, 1);
-            wall.ModifyHp(5);
-        }
     }
 }
