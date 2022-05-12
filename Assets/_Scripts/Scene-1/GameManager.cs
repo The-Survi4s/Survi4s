@@ -8,12 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
-    [SerializeField] private LayerMask _playerLayer = 3;
-    [SerializeField] private LayerMask _monsterLayer = 6;
-    [SerializeField] private LayerMask _monsterBulletLayer = 10;
-    [SerializeField] private LayerMask _playerBulletLayer = 9;
-    [SerializeField] private LayerMask _groundLayer = 8;
-    [SerializeField] private LayerMask _wallLayer = 7;
+    private LayerMask _playerLayer;
+    private LayerMask _monsterLayer;
+    private LayerMask _monsterBulletLayer;
+    private LayerMask _playerBulletLayer;
+    private LayerMask _groundLayer;
+    private LayerMask _wallLayer;
     public float preparationDoneTime { get; private set; }
 
     [Serializable]
@@ -45,6 +45,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        _playerLayer = LayerMask.NameToLayer("Player");
+        _monsterLayer = LayerMask.NameToLayer("Enemy");
+        _monsterBulletLayer = LayerMask.NameToLayer("EnemyBullet");
+        _playerBulletLayer = LayerMask.NameToLayer("PlayerBullet");
+        _groundLayer = LayerMask.NameToLayer("Ground");
+        _wallLayer = LayerMask.NameToLayer("Wall");
     }
 
     private void Update()

@@ -2607,6 +2607,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 1767941296274044509, guid: a118513775d60374ba48d713aa103c71, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 3726680129834783858, guid: f6e54c9fa5f8e69498d23e63dafa39a6, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 311480910460885589, guid: 19a5eab45fc3b634dac436d756639aa9, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[3].prefab
+      value: 
+      objectReference: {fileID: 2750687198860834850, guid: 64c8de8d6dc15234688b3ea5c14135c4, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[4].prefab
+      value: 
+      objectReference: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[4].weight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[5].prefab
+      value: 
+      objectReference: {fileID: 3072205260712185736, guid: efda25e327d7517478fc7ce6505f8457, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[6].prefab
+      value: 
+      objectReference: {fileID: 5684624463149505320, guid: aab3dab3de9591744af74e6ed36115ca, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[7].prefab
+      value: 
+      objectReference: {fileID: 6108645726365500224, guid: 73e8f9d77a58f4642a1e3705a32e0344, type: 3}
     - target: {fileID: 4125814745421116770, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: m_RootOrder
       value: 0
