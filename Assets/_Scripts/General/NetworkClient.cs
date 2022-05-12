@@ -192,7 +192,7 @@ public class NetworkClient : MonoBehaviour
                     OnCreatedRoom(info[2]);
                     break;
                 case Header.RJnd:
-                    OnJoinedRoom(info[2], int.Parse(info[3]));
+                    OnJoinedRoom(info[2]);
                     break;
                 case Header.RnFd:
                     JoinRoomPanel.Instance.RoomNotFound();
@@ -226,8 +226,14 @@ public class NetworkClient : MonoBehaviour
                     break;
                 }
                 case Header.PlCt:
+                    Debug.Log(info[2]);
                     playersCount = int.Parse(info[2]);
-                    GameMenuManager.Instance.UpdatePlayersInRoom(playersCount);
+                    string[] temp = new string[playersCount];
+                    for(int i = 0; i < playersCount; i++)
+                    {
+                        temp[i] = info[i + 3];
+                    }
+                    GameMenuManager.Instance.UpdatePlayersInRoom(temp);
                     break;
                 case Header.StGm:
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
@@ -366,13 +372,18 @@ public class NetworkClient : MonoBehaviour
 
         // Load Scene 
         ScenesManager.Instance.LoadScene(1);
-    }
-    private void OnJoinedRoom(string roomName, int playerCount)
-    {
-        playersCount = playerCount;
 
+        // Debugging
+        Debug.Log("Room Created");
+    }
+
+    private void OnJoinedRoom(string roomName)
+    {
         // Load Scene 
         ScenesManager.Instance.LoadScene(1);
+
+        // Debugging
+        Debug.Log("Room Joined");
     }
 
     // Public method that can be called to send message to server -------------------
