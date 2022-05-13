@@ -11,6 +11,7 @@ public abstract class MeleeMonsterBase : Monster
 
     private void MeleeAttack(Component nearestObj)
     {
+        Debug.Log(name + " melee something");
         if (!NetworkClient.Instance.isMaster) return;
         switch (nearestObj)
         {
@@ -34,7 +35,8 @@ public abstract class MeleeMonsterBase : Monster
 
     protected virtual void OnAttackPlayer(Player player)
     {
-        var players = GetTargetPlayers();
+        Debug.Log(name + " attack " + player.name);
+        var players = GetTargetPlayers(); Debug.Log("Player count : " + players.Count);
         foreach (var p in players)
         {
             NetworkClient.Instance.ModifyPlayerHp(p.name, -currentStat.atk);

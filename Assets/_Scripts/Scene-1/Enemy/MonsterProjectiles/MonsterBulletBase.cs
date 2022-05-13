@@ -25,6 +25,7 @@ public abstract class MonsterBulletBase : BulletBase
         switch (component)
         {
             case Player obj:
+                Debug.Log(name + " attack " + obj.name);
                 NetworkClient.Instance.ModifyPlayerHp(obj.name, -owner.currentStat.atk);
                 break;
             case Wall obj:
