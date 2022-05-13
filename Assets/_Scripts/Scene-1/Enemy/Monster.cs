@@ -11,9 +11,9 @@ public abstract class Monster : MonoBehaviour
 {
     public int id { get; private set; }
 
-    private LayerMask _playerLayerMask;
-    private LayerMask _wallLayerMask;
-    private LayerMask _monsterLayerMask;
+    [SerializeField] private LayerMask _playerLayerMask;
+    [SerializeField] private LayerMask _wallLayerMask;
+    [SerializeField] private LayerMask _monsterLayerMask;
     protected MonsterStat monsterStat;
 
     private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
@@ -82,9 +82,9 @@ public abstract class Monster : MonoBehaviour
         _activeStatusEffects = new List<StatusEffectBase>();
         _animator = GetComponent<Animator>();
         //_animator.SetBool(IsDeadBool, false);
-        _playerLayerMask = LayerMask.NameToLayer("Player");
-        _wallLayerMask = LayerMask.NameToLayer("Wall");
-        _monsterLayerMask = LayerMask.NameToLayer("Enemy");
+        _playerLayerMask = LayerMask.GetMask("Player");
+        _wallLayerMask = LayerMask.GetMask("Wall");
+        _monsterLayerMask = LayerMask.GetMask("Enemy");
         nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
 
         if (setting.attackMethods.Any(ts => ts.target == setting.priority && ts.method == TargetMethod.DontAttack))

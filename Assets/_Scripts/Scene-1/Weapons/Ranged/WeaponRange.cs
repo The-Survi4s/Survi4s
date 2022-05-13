@@ -32,7 +32,7 @@ public class WeaponRange : WeaponBase
     public override void ReceiveAttackMessage()
     {
         base.ReceiveAttackMessage();
-        Debug.Log(ammo);
+        //Debug.Log(ammo);
         // Only do this if local
         if (isLocal)
         {
