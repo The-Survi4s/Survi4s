@@ -6,28 +6,40 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Base class of all Monsters
+/// </summary>
 [RequireComponent(typeof(MonsterMovement),typeof(Animator))]
 public abstract class Monster : MonoBehaviour
 {
-    public int id { get; private set; }
+    #region LayerMasks
+    private LayerMask _playerLayerMask;
+    private LayerMask _wallLayerMask;
+    private LayerMask _monsterLayerMask;
+    #endregion
 
-    [SerializeField] private LayerMask _playerLayerMask;
-    [SerializeField] private LayerMask _wallLayerMask;
-    [SerializeField] private LayerMask _monsterLayerMask;
-    protected MonsterStat monsterStat;
-
-    private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
-    public Stat currentStat => _currentStat;
-    [SerializeField] private Stat _currentStat;
+    #region Components
     protected MonsterMovement _monsterMovement;
-    private Animator _animator;
-    private List<StatusEffectBase> _activeStatusEffects;
+    private Animator _animator; 
+    #endregion
 
-    public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal}
-    public enum Target {Statue, Wall, Player}
-    public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}
-    public Origin origin { get; private set; }
+    #region Data and Containers Definition
+    public enum Type { Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal }
 
+    /// <summary>
+    /// Enum of targets of which a <see cref="Monster"/> can attack
+    /// </summary>
+    public enum Target { Statue, Wall, Player }
+
+    /// <summary>
+    /// Method enums on how to attack a <see cref="Target"/>
+    /// </summary>
+    public enum TargetMethod { DontAttack, Nearest, Furthest, LowestHp }
+
+    /// <summary>
+    /// A struct to store <see cref="Target"/> and <see cref="TargetMethod"/> in pairs. 
+    /// Used by <see cref="Monster"/> to decide how to attack a <see cref="Target"/>
+    /// </summary>
     [Serializable]
     public struct TargetSettings
     {
@@ -40,59 +52,183 @@ public abstract class Monster : MonoBehaviour
         public Target target;
         public TargetMethod method;
     }
+
+    /// <summary>
+    /// A struct to store <see cref="Monster"/>'s settings
+    /// </summary>
     [Serializable]
     public struct Setting
     {
         public Type type;
+        /// <summary>
+        /// Distance before this <see cref="Monster"/> gets distracted and attacks <see cref="Player"/> instead. 
+        /// <br/>In the future this will be used to attack second priority target instead of always <see cref="Player"/>
+        /// </summary>
         public float detectionRange;
+        /// <summary>
+        /// Distance before this <see cref="Monster"/> can start attacking
+        /// </summary>
         public float attackRange;
+        /// <summary>
+        /// Minimum range before the monster stopped chasing it's target. Or backing off if the target is too close
+        /// </summary>
         public float minRange;
+        /// <summary>
+        /// Which <see cref="Target"/> should this <see cref="Monster"/> prioritize. 
+        /// This will be the default <see cref="Target"/> before any changes
+        /// </summary>
         public Target priority;
+        /// <summary>
+        /// List of <see cref="Target"/>s and <see cref="TargetMethod"/>s in pairs. 
+        /// Used by <see cref="Monster"/> to decide how to attack a <see cref="Target"/>
+        /// </summary>
         public List<TargetSettings> attackMethods;
         public Stat defaultStat;
+        /// <summary>
+        /// Enables <see cref="Monster"/> to move away when it gets too close (less than <see cref="minRange"/>)
+        /// </summary>
         public bool doEvasion;
-
+        /// <summary>
+        /// Gets the <see cref="TargetMethod"/> of a <see cref="Target"/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public TargetMethod MethodOf(Target target) =>
             attackMethods.Where(ts => ts.target == target).Select(ts => ts.method).FirstOrDefault();
     }
+
+    #endregion
+
+    #region Stat Variables
+
+    public int id { get; private set; }
+
+    protected MonsterStat monsterStat;
+
+    private bool isInitialized;
+
+    /// <summary>
+    /// <see cref="Monster"/> stat after processed once. Before applying any <see cref="StatusEffectBase"/>
+    /// </summary>
+    private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
+
+    /// <summary>
+    /// <see cref="Monster"/>'s <see cref="Stat"/> after all <see cref="StatusEffectBase"/>s are applied. Property version
+    /// </summary>
+    public Stat currentStat => _currentStat;
+
+    /// <summary>
+    /// <see cref="Monster"/>'s <see cref="Stat"/> after all <see cref="StatusEffectBase"/>s are applied
+    /// </summary>
+    [SerializeField] private Stat _currentStat;
+
+    /// <summary>
+    /// List of all currently active status effects
+    /// </summary>
+    private List<StatusEffectBase> _activeStatusEffects;
+
+    /// <summary>
+    /// The direction of which this <see cref="Monster"/> comes from
+    /// </summary>
+    public Origin origin { get; private set; }
+
+    /// <summary>
+    /// Set in inspector. Important <see cref="Setting"/>s required for <see cref="Monster"/> to work properly
+    /// </summary>
     [field: SerializeField] public Setting setting { get; protected set; }
     public Stat defaultStat => setting.defaultStat;
 
+    #endregion
+
+    #region Target Variables
+
+    /// <summary>
+    /// The current <see cref="Wall"/> as a target candidate to chase or attack. 
+    /// <br/>Used when <see cref="MonsterMovement._currentTarget"/> is set to <see cref="Target.Wall"/>. 
+    /// </summary>
+    /// <remarks>
+    /// <br/> If <see langword="null"/>, calls <see cref="ReRequestWall(Vector3Int)"/> to refills it
+    /// </remarks>
     [field: SerializeField] public Wall targetWall { get; private set; }
+
+    /// <summary>
+    /// The cell position of the last (or current) <see cref="targetWall"/>
+    /// </summary>
     private Vector3Int _targetWallCellPos;
+
     private Wall _previousTargetWall;
+
     private Player _currentTargetPlayer;
-    [field:SerializeField]public Player nearestPlayer { get; private set; }
+
+    /// <summary>
+    /// Current nearest <see cref="Player"/> as a candidate to chase or attack. 
+    /// <br/>Used when <see cref="MonsterMovement._currentTarget"/> is <see cref="Target.Player"/>
+    /// </summary>
+    [field: SerializeField] public Player nearestPlayer { get; private set; }
+
+    /// <summary>
+    /// For visuals only. Checks what is this <see cref="Monster"/> currently targetting
+    /// </summary>
     [field: SerializeField] public Target currentTarget { get; private set; }
+
+    #endregion
 
     public static event Action<int> OnMonsterDeath;
 
-    public void Initialize(Origin ori, int id, Stat stat)
+    /// <summary>
+    /// Initializes Monster. Will only work once
+    /// </summary>
+    /// <param name="origin">The <see cref="Origin"/> of <see cref="Spawner"/> 
+    /// in which this <see cref="Monster"/> was spawned from</param>
+    /// <param name="id">The <see cref="Monster"/>'s id assigned by <see cref="SpawnManager"/></param>
+    /// <param name="stat">The initial stat to set after processed in <see cref="WaveInfo.CalculateStat(Stat)"/></param>
+    public bool Initialize(Origin origin, int id, Stat stat)
     {
-        origin = ori;
+        if (isInitialized) return false;
+        this.origin = origin;
         this.id = this.id == -1 ? id : this.id;
         monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), stat, this);
         monsterStat.OnHpZero += HpZeroEventHandler;
+        isInitialized = true;
+        return true;
     }
 
     protected virtual void Awake()
     {
-        id = -1;
+        // Gets the attached Components
         _monsterMovement = GetComponent<MonsterMovement>();
-        _activeStatusEffects = new List<StatusEffectBase>();
         _animator = GetComponent<Animator>();
+
+        FirstSetup();
+        CheckConflictingPriorities();
+        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
+    }
+
+    private void FirstSetup()
+    {
+        _activeStatusEffects = new List<StatusEffectBase>();
+        id = -1;
         //_animator.SetBool(IsDeadBool, false);
         _playerLayerMask = LayerMask.GetMask("Player");
         _wallLayerMask = LayerMask.GetMask("Wall");
         _monsterLayerMask = LayerMask.GetMask("Enemy");
-        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
+    }
 
+    /// <summary>
+    /// Throws an exception when the <see cref="Setting.priority"/> 
+    /// is set to <see cref="TargetMethod.DontAttack"/> in <see cref="Setting.attackMethods"/>
+    /// </summary>
+    private void CheckConflictingPriorities()
+    {
         if (setting.attackMethods.Any(ts => ts.target == setting.priority && ts.method == TargetMethod.DontAttack))
         {
             throw new Exception($"Priority {setting.priority} conflicted with {setting.attackMethods}");
         }
     }
 
+    /// <summary>
+    /// An empty <see langword="virtual"/> Start(). Do not delete
+    /// </summary>
     protected virtual void Start()
     {
 
@@ -254,7 +390,6 @@ public abstract class Monster : MonoBehaviour
         }
         targetWall = wall;
         _targetWallCellPos = wall.cellPos;
-        //_monsterMovement.SetTarget(wall.transform);
         currentTarget = Target.Wall;
     }
 

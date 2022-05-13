@@ -280,16 +280,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ff2caf20a1df406d9ab8f2f5a57f734, type: 3}
+  m_Script: {fileID: 11500000, guid: 575ffe6325e94cc45bb60022a1cbe61d, type: 3}
   m_Name: Wall0Rule
   m_EditorClassIdentifier: 
-  m_Tile: {fileID: 11400000, guid: 8104cb134f1be1142aa59c7384f99b2f, type: 2}
-  m_Sprites: []
-  m_GameObjects:
-  - m_OriginalGameObject: {fileID: 2565197147147888314, guid: a2980611efbd5ce4fb6a54aaca5db35e, type: 3}
-    m_OverrideGameObject: {fileID: 2565197147147888314, guid: a2980611efbd5ce4fb6a54aaca5db35e, type: 3}
-  m_InstanceTile: {fileID: -8077240321256467913}
   m_DefaultSprite: {fileID: 0}
-  m_DefaultGameObject: {fileID: 0}
+  m_DefaultGameObject: {fileID: 2565197147147888314, guid: a2980611efbd5ce4fb6a54aaca5db35e, type: 3}
   m_DefaultColliderType: 1
-  m_OverrideTilingRules: []
+  m_TilingRules: []
+  alwaysConnect: 1
+  tilesToConnect:
+  - {fileID: 11400000, guid: ead0f39bcb50be541ac9b85d762041ac, type: 2}
+  - {fileID: 11400000, guid: bc0ca01e579e62a4cb70a86511c9b751, type: 2}
+  - {fileID: 11400000, guid: 39f0e50e1b10e684f91b585c3357b45b, type: 2}
+  - {fileID: 11400000, guid: 8104cb134f1be1142aa59c7384f99b2f, type: 2}
+  checkSelf: 1

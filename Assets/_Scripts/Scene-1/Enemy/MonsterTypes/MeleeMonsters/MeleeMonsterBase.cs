@@ -29,7 +29,6 @@ public abstract class MeleeMonsterBase : Monster
 
     protected virtual void OnAttackStatue()
     {
-        Debug.Log("Send damage statue!");
         NetworkClient.Instance.ModifyStatueHp(-currentStat.atk);
     }
 
