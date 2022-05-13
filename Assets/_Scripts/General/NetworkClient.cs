@@ -455,6 +455,7 @@ public class NetworkClient : MonoBehaviour
 
     public void StartMonsterAttackAnimation(int targetId) 
     {
+        //Debug.Log("Monster Attack Animation");
         string[] msg = {Header.MAtk.ToString(), targetId.ToString()};
         SendMessageClient("1", msg);
     }
