@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
+  m_Script: {fileID: 11500000, guid: 575ffe6325e94cc45bb60022a1cbe61d, type: 3}
   m_Name: Wall100Rule
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 4428238156419850040, guid: b061e198ddb408d49aff4e2293023889, type: 3}
@@ -271,3 +271,10 @@ MonoBehaviour:
     - {x: 1, y: 0, z: 0}
     - {x: -1, y: 0, z: 0}
     m_RuleTransform: 0
+  alwaysConnect: 1
+  tilesToConnect:
+  - {fileID: 11400000, guid: 39f0e50e1b10e684f91b585c3357b45b, type: 2}
+  - {fileID: 11400000, guid: bc0ca01e579e62a4cb70a86511c9b751, type: 2}
+  - {fileID: 11400000, guid: ead0f39bcb50be541ac9b85d762041ac, type: 2}
+  - {fileID: 11400000, guid: 2b3d556a52fccd94e8eaccb82f80a485, type: 2}
+  checkSelf: 1

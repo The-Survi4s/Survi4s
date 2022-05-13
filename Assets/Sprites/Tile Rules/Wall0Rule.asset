@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: Wall100Rule (Override)
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 4428238156419850040, guid: b061e198ddb408d49aff4e2293023889, type: 3}
-  m_DefaultGameObject: {fileID: 2565197147147888314, guid: a2980611efbd5ce4fb6a54aaca5db35e, type: 3}
+  m_DefaultSprite: {fileID: 0}
+  m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c779848d9dd029409ca676b49e10a18, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ff2caf20a1df406d9ab8f2f5a57f734, type: 3}
   m_Name: Wall0Rule
   m_EditorClassIdentifier: 
   m_Tile: {fileID: 11400000, guid: 8104cb134f1be1142aa59c7384f99b2f, type: 2}
@@ -289,3 +289,7 @@ MonoBehaviour:
   - m_OriginalGameObject: {fileID: 2565197147147888314, guid: a2980611efbd5ce4fb6a54aaca5db35e, type: 3}
     m_OverrideGameObject: {fileID: 2565197147147888314, guid: a2980611efbd5ce4fb6a54aaca5db35e, type: 3}
   m_InstanceTile: {fileID: -8077240321256467913}
+  m_DefaultSprite: {fileID: 0}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_OverrideTilingRules: []
