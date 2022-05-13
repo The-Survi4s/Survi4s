@@ -6,6 +6,15 @@ TagManager:
   tags:
   - Weapon
   - Enemy
+  - Wall
+  - Spawner1
+  - Spawner2
+  - Spawner3
+  - Spawner4
+  - Wall2
+  - Wall3
+  - Wall4
+  - Tower
   layers:
   - Default
   - TransparentFX
