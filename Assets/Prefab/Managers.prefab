@@ -93,24 +93,24 @@ MonoBehaviour:
     spawnRate: 2
     spawnersUsedCount: 3
   _monsterPrefabWeights:
-  - prefab: {fileID: 1767941296274044509, guid: a118513775d60374ba48d713aa103c71, type: 3}
+  - monsterPrefab: {fileID: 3072205260712185736, guid: efda25e327d7517478fc7ce6505f8457, type: 3}
     weight: 2
-  - prefab: {fileID: 2750687198860834850, guid: 64c8de8d6dc15234688b3ea5c14135c4, type: 3}
+  - monsterPrefab: {fileID: 1767941296274044509, guid: a118513775d60374ba48d713aa103c71, type: 3}
     weight: 2
-  - prefab: {fileID: 3726680129834783858, guid: f6e54c9fa5f8e69498d23e63dafa39a6, type: 3}
+  - monsterPrefab: {fileID: 3726680129834783858, guid: f6e54c9fa5f8e69498d23e63dafa39a6, type: 3}
     weight: 9
-  - prefab: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
+  - monsterPrefab: {fileID: 5684624463149505320, guid: aab3dab3de9591744af74e6ed36115ca, type: 3}
     weight: 1
-  - prefab: {fileID: 311480910460885589, guid: 19a5eab45fc3b634dac436d756639aa9, type: 3}
+  - monsterPrefab: {fileID: 311480910460885589, guid: 19a5eab45fc3b634dac436d756639aa9, type: 3}
     weight: 4
-  - prefab: {fileID: 6108645726365500224, guid: 73e8f9d77a58f4642a1e3705a32e0344, type: 3}
+  - monsterPrefab: {fileID: 6108645726365500224, guid: 73e8f9d77a58f4642a1e3705a32e0344, type: 3}
     weight: 3
-  - prefab: {fileID: 5684624463149505320, guid: aab3dab3de9591744af74e6ed36115ca, type: 3}
+  - monsterPrefab: {fileID: 2750687198860834850, guid: 64c8de8d6dc15234688b3ea5c14135c4, type: 3}
     weight: 3
-  - prefab: {fileID: 3072205260712185736, guid: efda25e327d7517478fc7ce6505f8457, type: 3}
+  - monsterPrefab: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
     weight: 1
   _playerSpawnPos: {x: 2, y: 2}
-  _playerPrefab:
+  playerPrefab:
   - {fileID: 123738617261133931, guid: 2e90f74633581604fbabca89e95df3e5, type: 3}
 --- !u!1 &4125814745277701114
 GameObject:
@@ -242,9 +242,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a04af785e83e834b9f814557db38deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _statueTileStages: {fileID: 11400000, guid: 84c09ac703ef52947812b79c8cea920f, type: 2}
   _wallTilemap: {fileID: 0}
   _wallTileStages: {fileID: 11400000, guid: b7054501170ce16479029a20bda1877f, type: 2}
+  _statueTileStages: {fileID: 11400000, guid: 84c09ac703ef52947812b79c8cea920f, type: 2}
   _brokenWallPrefab: {fileID: 5697039316084575758, guid: 2c5153ae796f00d4590d85633a1c52d7, type: 3}
 --- !u!1 &4125814745862421460
 GameObject:
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <gameSetting>k__BackingField:
-    preparationTime: 3
+    preparationTime: 0
     initialStatueHp: 100
     maxWave: 100
 --- !u!114 &4125814745988642894

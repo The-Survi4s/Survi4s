@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <isLocal>k__BackingField: 0
+  _animator: {fileID: 8987012856656221205}
   _mousePosSendRate: 10
 --- !u!114 &3734245638782618344
 MonoBehaviour:

@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
     [field: SerializeField] public bool isLocal { get; private set; }
+    [SerializeField] private Animator _animator;
     public string id { get; set; }
 
     // For player movement -------------------------------------------------------------
@@ -161,6 +162,15 @@ public class Player : MonoBehaviour
     // For moving character ------------------------------------------------------------------
     private void MoveCharacter()
     {
+        if (w_IsDown || a_IsDown || s_IsDown || d_IsDown)
+        {
+            _animator.SetBool("isWalk", true);
+        }
+        else
+        {
+            _animator.SetBool("isWalk", false);
+        }
+
         float baseSpeed = stats.moveSpeed;
         if (w_IsDown && a_IsDown)
         {
