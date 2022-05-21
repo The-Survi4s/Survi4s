@@ -18,8 +18,11 @@ public class SpawnManager : MonoBehaviour
     [Serializable]
     public class InitialMonsterSpawnSetting
     {
+        [Min(0)]
         public int count = 3;
-        public int hpMultiplier = 1;
+        [Min(0.1f)]
+        public float hpMultiplier = 1;
+        [Min(0)]
         public float speedMultiplier = 1;
         public float randomSpawnOffsetMax = 10;
     }
@@ -39,6 +42,7 @@ public class SpawnManager : MonoBehaviour
     private class PrefabWeight
     {
         public GameObject prefab;
+        [Min(1)]
         public int weight;
     }
 
