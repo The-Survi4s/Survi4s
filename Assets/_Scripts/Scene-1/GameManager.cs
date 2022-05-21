@@ -46,12 +46,12 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
 
-        _playerLayer = LayerMask.NameToLayer("Player");
-        _monsterLayer = LayerMask.NameToLayer("Enemy");
-        _monsterBulletLayer = LayerMask.NameToLayer("EnemyBullet");
-        _playerBulletLayer = LayerMask.NameToLayer("PlayerBullet");
-        _groundLayer = LayerMask.NameToLayer("Ground");
-        _wallLayer = LayerMask.NameToLayer("Wall");
+        _playerLayer = LayerMask.GetMask("Player");
+        _monsterLayer = LayerMask.GetMask("Enemy");
+        _monsterBulletLayer = LayerMask.GetMask("EnemyBullet");
+        _playerBulletLayer = LayerMask.GetMask("PlayerBullet");
+        _groundLayer = LayerMask.GetMask("Ground");
+        _wallLayer = LayerMask.GetMask("Wall");
     }
 
     private void Update()

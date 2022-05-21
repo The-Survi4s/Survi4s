@@ -301,6 +301,8 @@ public class UnitManager : MonoBehaviour
         return _playerKdTree.FirstOrDefault(player => player.id == id);
     }
 
+    public Player GetLocalPlayer() => _playerKdTree.FirstOrDefault(player => player.isLocal == true);
+
     public List<T> GetObjectsInRadius<T>(Vector2 point, float r, LayerMask layerMask)
     {
         List<T> temp = new List<T>();

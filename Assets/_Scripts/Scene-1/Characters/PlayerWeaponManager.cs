@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
-    private WeaponBase weapon;
+    public WeaponBase weapon { get; private set; }
     [SerializeField] private float weaponRadarRange;
     public bool weaponIsInRange { get; private set; }
 

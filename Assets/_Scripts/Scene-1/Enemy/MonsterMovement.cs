@@ -4,9 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Class that handles <see cref="Monster"/>'s movement. 
+/// Requires <see cref="NavMeshAgent"/> component attached. 
+/// </summary>
+[RequireComponent(typeof(NavMeshAgent), typeof(Monster))]
 public class MonsterMovement : MonoBehaviour
 {
+    /// <summary>
+    /// The <see cref="Monster"/> component to get stats from
+    /// </summary>
     private Monster _owner;
+    /// <summary>
+    /// The agent used to move things around
+    /// </summary>
     private NavMeshAgent _agent;
     [SerializeField] private Monster.Target _currentTarget;
     [SerializeField] private Vector3 _currentTargetPos;
@@ -47,6 +58,9 @@ public class MonsterMovement : MonoBehaviour
         RecalculatePath();
     }
 
+    /// <summary>
+    /// Re-calculate path only when target has moved at least <see cref="maxDistanceDifference"/> long
+    /// </summary>
     private void RecalculatePath()
     {
         var targetPos = _currentTargetPos + _targetOffset;
@@ -57,6 +71,9 @@ public class MonsterMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates how long the agent has been idle
+    /// </summary>
     private void UpdateStationaryTime()
     {
         if (_agent.remainingDistance < _previousDistance + minMoveDistance &&
@@ -155,6 +172,9 @@ public class MonsterMovement : MonoBehaviour
         _targetOffset = Quaternion.Euler(new Vector3(0, 0, zRotation)) * offset;
     }
 
+    /// <summary>
+    /// Updates agent stat and target candidates' position. Stats provided by <see cref="_owner"/>
+    /// </summary>
     private void SetStat()
     {
         _agent.speed = _owner.currentStat.movSpd;
