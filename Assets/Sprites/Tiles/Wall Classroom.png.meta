@@ -1,0 +1,596 @@
+fileFormatVersion: 2
+guid: 713938bddf8a6d945adff8a4b29c7ff0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2871796290338948974
+    second: Wall Classroom_0
+  - first:
+      213: 5449506063439451688
+    second: Wall Classroom_1
+  - first:
+      213: -5315802618993362108
+    second: Wall Classroom_2
+  - first:
+      213: -3589054909586515531
+    second: Wall Classroom_3
+  - first:
+      213: -847536960244497299
+    second: Wall Classroom_4
+  - first:
+      213: -8473499082334202262
+    second: Wall Classroom_5
+  - first:
+      213: -5965859664249258539
+    second: Wall Classroom_6
+  - first:
+      213: -727192939478942995
+    second: Wall Classroom_7
+  - first:
+      213: 5463796283292055637
+    second: Wall Classroom_8
+  - first:
+      213: -8495936331747962272
+    second: Wall Classroom_9
+  - first:
+      213: 7525997656333620664
+    second: Wall Classroom_10
+  - first:
+      213: -506896235843723137
+    second: Wall Classroom_11
+  - first:
+      213: 5050104170473517352
+    second: Wall Classroom_12
+  - first:
+      213: 465259461730065634
+    second: Wall Classroom_13
+  - first:
+      213: 1164843374872825203
+    second: Wall Classroom_14
+  - first:
+      213: -345693563271288986
+    second: Door1
+  - first:
+      213: 5782288406903778012
+    second: Door2
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Wall Classroom_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.49999988, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6700f8b28baad720800000000000000
+      internalID: 2871796290338948974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82655a854e880ab40800000000000000
+      internalID: 5449506063439451688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44b3fceaea97a36b0800000000000000
+      internalID: -5315802618993362108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b959ba439d113ec0800000000000000
+      internalID: -3589054909586515531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_4
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d64cc9600a1fc34f0800000000000000
+      internalID: -847536960244497299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_5
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a661fd8aa75186a80800000000000000
+      internalID: -8473499082334202262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dd779c6e32053da0800000000000000
+      internalID: -5965859664249258539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_7
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: dea7f27dfdd78e5f0800000000000000
+      internalID: -727192939478942995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_8
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 558f8be65cd43db40800000000000000
+      internalID: 5463796283292055637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_9
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 062d3df6bee581a80800000000000000
+      internalID: -8495936331747962272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_10
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b510367ef6b17860800000000000000
+      internalID: 7525997656333620664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f706d842f8427f8f0800000000000000
+      internalID: -506896235843723137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_12
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 821fac78cf2951640800000000000000
+      internalID: 5050104170473517352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_13
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ec5fc0f30fe47600800000000000000
+      internalID: 465259461730065634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Classroom_14
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37d034ab0ea5a2010800000000000000
+      internalID: 1164843374872825203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -20}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -20}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66763182989d33bf0800000000000000
+      internalID: -345693563271288986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door2
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5, y: -9}
+        - {x: 5, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdaeb529ba0de3050800000000000000
+      internalID: 5782288406903778012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

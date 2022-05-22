@@ -1,0 +1,634 @@
+fileFormatVersion: 2
+guid: 8b7e4af0a396fc643b779fbf78c5eb10
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8566926133022127990
+    second: Objects 2x1_0_couch_h
+  - first:
+      213: -7381226750730021648
+    second: Objects 2x1_1
+  - first:
+      213: -8151987077415591355
+    second: Objects 2x1_2
+  - first:
+      213: -1537532061723775955
+    second: Objects 2x1_3
+  - first:
+      213: 2246600002539815754
+    second: Objects 2x1_4
+  - first:
+      213: 7077174414562517047
+    second: Objects 2x1_5
+  - first:
+      213: 5873600597678267811
+    second: Objects 2x1_6
+  - first:
+      213: -531695051723791091
+    second: Objects 2x1_7_canteenChair_v_top
+  - first:
+      213: -3520236912139116647
+    second: Objects 2x1_8_canteenChair_v_middle
+  - first:
+      213: -316892263989816190
+    second: Objects 2x1_9_canteenChair_v_bottom
+  - first:
+      213: 4017371426047231385
+    second: Objects 2x1_10_table_h
+  - first:
+      213: -1850888452367409973
+    second: Objects 2x1_11
+  - first:
+      213: 8991082177529442307
+    second: Objects 2x1_12_tableWithDrinks
+  - first:
+      213: 1462520859930678211
+    second: Objects 2x1_13_bench_h
+  - first:
+      213: 7798277156855409923
+    second: Objects 2x1_14_bush
+  - first:
+      213: -1404277550962826190
+    second: Objects 2x1_15_bush
+  - first:
+      213: -4180992323843712592
+    second: Objects 2x1_16_bush
+  - first:
+      213: -8741362130557059059
+    second: Objects 2x1_17_stone
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Objects 2x1_0_couch_h
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 272
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6777bcfade5d3e670800000000000000
+      internalID: 8566926133022127990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f4502ca06d909990800000000000000
+      internalID: -7381226750730021648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 240
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 542a115b1f25ede80800000000000000
+      internalID: -8151987077415591355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 224
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2c2e2e6cb699aae0800000000000000
+      internalID: -1537532061723775955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 208
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4307cf9cc68d2f10800000000000000
+      internalID: 2246600002539815754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7306b7132ac273260800000000000000
+      internalID: 7077174414562517047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 176
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ad9229bf98338150800000000000000
+      internalID: 5873600597678267811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_7_canteenChair_v_top
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -11, y: 2}
+        - {x: -11, y: -8}
+        - {x: 11, y: -8}
+        - {x: 11, y: 2}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d05ab21ea2a0f98f0800000000000000
+      internalID: -531695051723791091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_8_canteenChair_v_middle
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -11, y: 8}
+        - {x: -11, y: -8}
+        - {x: 11, y: -8}
+        - {x: 11, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99fdabeed2b952fc0800000000000000
+      internalID: -3520236912139116647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_9_canteenChair_v_bottom
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -11, y: 8}
+        - {x: -11, y: -4}
+        - {x: 11, y: -4}
+        - {x: 11, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28451d43a2c2a9bf0800000000000000
+      internalID: -316892263989816190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_10_table_h
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 112
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 995895ce60290c730800000000000000
+      internalID: 4017371426047231385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcc94cd42c25056e0800000000000000
+      internalID: -1850888452367409973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_12_tableWithDrinks
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 80
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 300fcf98a9db6cc70800000000000000
+      internalID: 8991082177529442307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_13_bench_h
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 8}
+        - {x: -16, y: -8}
+        - {x: 16, y: -8}
+        - {x: 16, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c354cc29faeb4410800000000000000
+      internalID: 1462520859930678211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_14_bush
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -6, y: 8}
+        - {x: -12, y: 3}
+        - {x: -12, y: -8}
+        - {x: 12, y: -8}
+        - {x: 12, y: 4}
+        - {x: 8, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30de862d1cb093c60800000000000000
+      internalID: 7798277156855409923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_15_bush
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -6, y: 8}
+        - {x: -12, y: 3}
+        - {x: -12, y: -8}
+        - {x: 12, y: -8}
+        - {x: 12, y: 4}
+        - {x: 8, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2342ec0f101038ce0800000000000000
+      internalID: -1404277550962826190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_16_bush
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 9, y: 8}
+        - {x: -7, y: 8}
+        - {x: -12, y: 4}
+        - {x: -12, y: -5}
+        - {x: -11, y: -8}
+        - {x: 12, y: -8}
+        - {x: 12, y: 3}
+        - {x: 11, y: 7}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b919a022a12af5c0800000000000000
+      internalID: -4180992323843712592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects 2x1_17_stone
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -6, y: 5}
+        - {x: -12, y: 2}
+        - {x: -12, y: -8}
+        - {x: 13, y: -8}
+        - {x: 13, y: 0}
+        - {x: 9, y: 5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d00481bb47170b680800000000000000
+      internalID: -8741362130557059059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

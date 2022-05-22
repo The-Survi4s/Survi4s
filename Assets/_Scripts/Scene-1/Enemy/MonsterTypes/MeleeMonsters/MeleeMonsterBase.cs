@@ -11,7 +11,6 @@ public abstract class MeleeMonsterBase : Monster
 
     private void MeleeAttack(Component nearestObj)
     {
-        if (!NetworkClient.Instance.isMaster) return;
         switch (nearestObj)
         {
             case Wall wall:
@@ -28,13 +27,13 @@ public abstract class MeleeMonsterBase : Monster
 
     protected virtual void OnAttackStatue()
     {
-        Debug.Log("Send damage statue!");
         NetworkClient.Instance.ModifyStatueHp(-currentStat.atk);
     }
 
     protected virtual void OnAttackPlayer(Player player)
     {
-        var players = GetTargetPlayers();
+        Debug.Log(name + " attack " + player.name);
+        var players = GetPlayersInRadius(); Debug.Log("Player count : " + players.Count);
         foreach (var p in players)
         {
             NetworkClient.Instance.ModifyPlayerHp(p.name, -currentStat.atk);

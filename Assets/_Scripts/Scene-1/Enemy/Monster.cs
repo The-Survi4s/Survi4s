@@ -6,28 +6,40 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Base class of all Monsters
+/// </summary>
 [RequireComponent(typeof(MonsterMovement),typeof(Animator))]
 public abstract class Monster : MonoBehaviour
 {
-    public int id { get; private set; }
-
+    #region LayerMasks
     private LayerMask _playerLayerMask;
     private LayerMask _wallLayerMask;
     private LayerMask _monsterLayerMask;
-    protected MonsterStat monsterStat;
+    #endregion
 
-    private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
-    public Stat currentStat => _currentStat;
-    [SerializeField] private Stat _currentStat;
+    #region Components
     protected MonsterMovement _monsterMovement;
-    private Animator _animator;
-    private List<StatusEffectBase> _activeStatusEffects;
+    private Animator _animator; 
+    #endregion
 
-    public enum Type {Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal}
-    public enum Target {Statue, Wall, Player}
-    public enum TargetMethod {DontAttack, Nearest, Furthest, LowestHp}
-    public Origin origin { get; private set; }
+    #region Data and Containers Definition
+    public enum Type { Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal }
 
+    /// <summary>
+    /// Enum of targets of which a <see cref="Monster"/> can attack
+    /// </summary>
+    public enum Target { Statue, Wall, Player }
+
+    /// <summary>
+    /// Method enums on how to attack a <see cref="Target"/>
+    /// </summary>
+    public enum TargetMethod { DontAttack, Nearest, Furthest, LowestHp }
+
+    /// <summary>
+    /// A struct to store <see cref="Target"/> and <see cref="TargetMethod"/> in pairs. 
+    /// Used by <see cref="Monster"/> to decide how to attack a <see cref="Target"/>
+    /// </summary>
     [Serializable]
     public struct TargetSettings
     {
@@ -40,63 +52,189 @@ public abstract class Monster : MonoBehaviour
         public Target target;
         public TargetMethod method;
     }
+
+    /// <summary>
+    /// A struct to store <see cref="Monster"/>'s settings
+    /// </summary>
     [Serializable]
     public struct Setting
     {
         public Type type;
+        /// <summary>
+        /// Distance before this <see cref="Monster"/> gets distracted and attacks <see cref="Player"/> instead. 
+        /// <br/>In the future this will be used to attack second priority target instead of always <see cref="Player"/>
+        /// </summary>
         public float detectionRange;
+        /// <summary>
+        /// Distance before this <see cref="Monster"/> can start attacking
+        /// </summary>
         public float attackRange;
+        /// <summary>
+        /// Minimum range before the monster stopped chasing it's target. Or backing off if the target is too close
+        /// </summary>
         public float minRange;
+        /// <summary>
+        /// Which <see cref="Target"/> should this <see cref="Monster"/> prioritize. 
+        /// This will be the default <see cref="Target"/> before any changes
+        /// </summary>
         public Target priority;
+        /// <summary>
+        /// List of <see cref="Target"/>s and <see cref="TargetMethod"/>s in pairs. 
+        /// Used by <see cref="Monster"/> to decide how to attack a <see cref="Target"/>
+        /// </summary>
         public List<TargetSettings> attackMethods;
         public Stat defaultStat;
+        /// <summary>
+        /// Enables <see cref="Monster"/> to move away when it gets too close (less than <see cref="minRange"/>)
+        /// </summary>
         public bool doEvasion;
-
+        /// <summary>
+        /// Gets the <see cref="TargetMethod"/> of a <see cref="Target"/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public TargetMethod MethodOf(Target target) =>
             attackMethods.Where(ts => ts.target == target).Select(ts => ts.method).FirstOrDefault();
     }
+
+    #endregion
+
+    #region Stat Variables
+
+    public int id { get; private set; }
+
+    protected MonsterStat monsterStat;
+
+    private bool isInitialized;
+
+    /// <summary>
+    /// <see cref="Monster"/> stat after processed once. Before applying any <see cref="StatusEffectBase"/>
+    /// </summary>
+    private Stat rawStat => monsterStat?.getRawStat ?? new Stat();
+
+    /// <summary>
+    /// <see cref="Monster"/>'s <see cref="Stat"/> after all <see cref="StatusEffectBase"/>s are applied. Property version
+    /// </summary>
+    public Stat currentStat => _currentStat;
+
+    /// <summary>
+    /// <see cref="Monster"/>'s <see cref="Stat"/> after all <see cref="StatusEffectBase"/>s are applied
+    /// </summary>
+    [SerializeField] private Stat _currentStat;
+
+    /// <summary>
+    /// List of all currently active status effects
+    /// </summary>
+    private List<StatusEffectBase> _activeStatusEffects;
+
+    /// <summary>
+    /// The direction of which this <see cref="Monster"/> comes from
+    /// </summary>
+    public Origin origin { get; private set; }
+
+    /// <summary>
+    /// Set in inspector. Important <see cref="Setting"/>s required for <see cref="Monster"/> to work properly
+    /// </summary>
     [field: SerializeField] public Setting setting { get; protected set; }
     public Stat defaultStat => setting.defaultStat;
 
+    #endregion
+
+    #region Target Variables
+
+    /// <summary>
+    /// The current <see cref="Wall"/> as a target candidate to chase or attack. 
+    /// <br/>Used when <see cref="MonsterMovement._currentTarget"/> is set to <see cref="Target.Wall"/>. 
+    /// </summary>
+    /// <remarks>
+    /// <br/> If <see langword="null"/>, calls <see cref="ReRequestWall(Vector3Int)"/> to refills it
+    /// </remarks>
     [field: SerializeField] public Wall targetWall { get; private set; }
+
+    /// <summary>
+    /// The cell position of the last (or current) <see cref="targetWall"/>
+    /// </summary>
     private Vector3Int _targetWallCellPos;
+
     private Wall _previousTargetWall;
+
     private Player _currentTargetPlayer;
-    [field:SerializeField]public Player nearestPlayer { get; private set; }
+
+    /// <summary>
+    /// Current nearest <see cref="Player"/> as a candidate to chase or attack. 
+    /// <br/>Used when <see cref="MonsterMovement._currentTarget"/> is <see cref="Target.Player"/>
+    /// </summary>
+    [field: SerializeField] public Player nearestPlayer { get; private set; }
+
+    /// <summary>
+    /// For visuals only. Checks what is this <see cref="Monster"/> currently targetting
+    /// </summary>
     [field: SerializeField] public Target currentTarget { get; private set; }
 
-    public static event Action<int> OnMonsterDeath;
+    #endregion
 
-    public void Initialize(Origin ori, int id, Stat stat)
+    #region Initial Setup
+
+    /// <summary>
+    /// Initializes Monster. Will only work once
+    /// </summary>
+    /// <param name="origin">The <see cref="Origin"/> of <see cref="Spawner"/> 
+    /// in which this <see cref="Monster"/> was spawned from</param>
+    /// <param name="id">The <see cref="Monster"/>'s id assigned by <see cref="SpawnManager"/></param>
+    /// <param name="stat">The initial stat to set after processed in <see cref="WaveInfo.CalculateStat(Stat)"/></param>
+    public bool Initialize(Origin origin, int id, Stat stat)
     {
-        origin = ori;
+        if (isInitialized) return false;
+        this.origin = origin;
         this.id = this.id == -1 ? id : this.id;
         monsterStat = new MonsterStat(FindObjectOfType<CooldownSystem>(), stat, this);
         monsterStat.OnHpZero += HpZeroEventHandler;
+        isInitialized = true;
+        return true;
     }
 
     protected virtual void Awake()
     {
-        id = -1;
+        // Gets the attached Components
         _monsterMovement = GetComponent<MonsterMovement>();
-        _activeStatusEffects = new List<StatusEffectBase>();
         _animator = GetComponent<Animator>();
-        //_animator.SetBool(IsDeadBool, false);
-        _playerLayerMask = LayerMask.NameToLayer("Player");
-        _wallLayerMask = LayerMask.NameToLayer("Wall");
-        _monsterLayerMask = LayerMask.NameToLayer("Enemy");
-        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
 
+        FirstSetup();
+        CheckConflictingPriorities();
+        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
+    }
+
+    private void FirstSetup()
+    {
+        _activeStatusEffects = new List<StatusEffectBase>();
+        id = -1;
+        //_animator.SetBool(IsDeadBool, false);
+        _playerLayerMask = LayerMask.GetMask("Player");
+        _wallLayerMask = LayerMask.GetMask("Wall");
+        _monsterLayerMask = LayerMask.GetMask("Enemy");
+    }
+
+    /// <summary>
+    /// Throws an exception when the <see cref="Setting.priority"/> 
+    /// is set to <see cref="TargetMethod.DontAttack"/> in <see cref="Setting.attackMethods"/>
+    /// </summary>
+    private void CheckConflictingPriorities()
+    {
         if (setting.attackMethods.Any(ts => ts.target == setting.priority && ts.method == TargetMethod.DontAttack))
         {
             throw new Exception($"Priority {setting.priority} conflicted with {setting.attackMethods}");
         }
     }
 
+    /// <summary>
+    /// An empty <see langword="virtual"/> Start(). Do not delete
+    /// </summary>
     protected virtual void Start()
     {
 
-    }
+    } 
+
+    #endregion
 
     protected virtual void Update()
     {
@@ -108,38 +246,64 @@ public abstract class Monster : MonoBehaviour
 
         if (!targetWall) ReRequestWall(_targetWallCellPos);
         
-        CheckCanAttack();
+        if(NetworkClient.Instance.isMaster) CheckCanAttack();
         
         //SetAnimation();
     }
 
     //--------------------------------------
 
-    private const string AttackTrigger = "attack";
-    private const string IsDeadBool = "isDead";
-    private const string IsMovingBool = "isMoving";
-
-    private void SetAnimation()
+    #region Set Target Wall
+    /// <summary>
+    /// Sets <see cref="targetWall"/>. Must have the same <see cref="Origin"/> as <see cref="Monster"/>
+    /// </summary>
+    /// <param name="wall"></param>
+    public void SetTargetWall(Wall wall)
     {
-        _animator.SetBool(IsMovingBool,_monsterMovement.velocity != Vector3.zero);
+        if (origin != wall.origin) return;
+        if (targetWall)
+        {
+            _previousTargetWall = targetWall;
+        }
+        targetWall = wall;
+        _targetWallCellPos = wall.cellPos;
+        currentTarget = Target.Wall;
     }
 
-    public void RequestNewTargetWall()
-    {
-        targetWall = TilemapManager.instance.GetWall(transform.position);
-        //Debug.Log($"Monster {name} has requested a new targetWall {targetWall}");
-    }
+    /// <summary>
+    /// Requests a nearest target <see cref="Wall"/> as a candidate to attack or chase. 
+    /// Stored in <see cref="targetWall"/>
+    /// </summary>
+    public void RequestNewTargetWall() => targetWall = TilemapManager.instance.GetWall(transform.position);
 
+    /// <summary>
+    /// Re-requests a target <see cref="Wall"/> on the same <paramref name="cellPos"/>
+    /// <br/>in case it gets destroyed because of <see cref="TilemapManager.UpdateWallTilemap(DestroyableTile)"/>
+    /// </summary>
+    /// <param name="cellPos">enter <see cref="_targetWallCellPos"/>'s here</param>
     public void ReRequestWall(Vector3Int cellPos)
     {
         targetWall = TilemapManager.instance.GetWall(cellPos);
-        if(!targetWall)
+        if (!targetWall)
         {
             RequestNewTargetWall();
         }
         //Debug.Log($"Monster {name} has re-requested targetWall [{targetWall}]");
     }
+    #endregion
 
+    #region Attack
+    /// <summary>
+    /// Checks for whenever this <see cref="Monster"/> can attack, if so, attack. (<see cref="NetworkClient.isMaster"/> only)
+    /// </summary>
+    /// <remarks>
+    /// Whenever <see cref="MonsterStat.isAttackReady"/> and one of these 
+    /// <br/>objects' distance to this <see cref="Monster"/> 
+    /// are less than <see cref="Setting.attackRange"/> before attacking
+    /// <br/>- <see cref="nearestPlayer"/>, 
+    /// <br/>- <see cref="targetWall"/>, or 
+    /// <br/>- <see cref="TilemapManager.statue"/>
+    /// </remarks>
     private void CheckCanAttack()
     {
         if (monsterStat.isAttackReady)
@@ -152,6 +316,13 @@ public abstract class Monster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sends a message to server through <see cref="NetworkClient"/> 
+    /// that this <see cref="Monster"/> attacks <paramref name="nearestObj"/>. 
+    /// <br/>(<see cref="NetworkClient.isMaster"/> only)
+    /// <br/><br/>The receiving end will only call <see cref="PlayAttackAnimation"/>
+    /// </summary>
+    /// <param name="nearestObj"></param>
     private void SendAttackMessage(Component nearestObj)
     {
         monsterStat.StartCooldown();
@@ -159,10 +330,26 @@ public abstract class Monster : MonoBehaviour
         Attack(nearestObj);
     }
 
+    /// <summary>
+    /// Must be overridden. Specify how this <see cref="Monster"/> would attack. 
+    /// <br/>(<see cref="NetworkClient.isMaster"/> only)
+    /// </summary>
+    /// <param name="nearestObj">The object to attack</param>
     protected abstract void Attack(Component nearestObj);
+    #endregion
 
+    #region Utilities
+    /// <returns>
+    /// Distance from this <see cref="Monster"/> to <paramref name="obj"/>
+    /// </returns>
     private float DistanceTo(Component obj) => Vector3.Distance(obj.transform.position, transform.position);
 
+    /// <summary>
+    /// Returns the nearest <see cref="Component"/> from <paramref name="components"/>. 
+    /// <br/>This uses the naive approach
+    /// </summary>
+    /// <param name="components"></param>
+    /// <returns>The first <see cref="Component"/> by default. Else the nearest</returns>
     private Component PickNearest(params Component[] components)
     {
         float temp = float.MaxValue;
@@ -180,20 +367,30 @@ public abstract class Monster : MonoBehaviour
         else return components[0];
     }
 
-    private void HpZeroEventHandler()
+    protected virtual List<Player> GetPlayersInRadius()
     {
-        Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
-        _animator.SetBool(IsDeadBool, true);
-        OnMonsterDeath?.Invoke(id);
-        SpawnManager.instance.ClearIdIndex(id);
-        UnitManager.Instance.DeleteMonsterFromList(id);
-        Destroy(gameObject);
+        return UnitManager.Instance.GetObjectsInRadius<Player>(transform.position, setting.attackRange, _playerLayerMask);
     }
+    #endregion
 
+    #region Stat Modifications
+    /// <summary>
+    /// Adds <see cref="MonsterStat.hitPoint"/> by <paramref name="amount"/>, rounded. 
+    /// </summary>
+    /// <param name="amount"></param>
     public void ModifyHitPoint(float amount) => monsterStat.hitPoint += Mathf.RoundToInt(amount);
 
+    /// <summary>
+    /// Adds <paramref name="statusEffect"/> to <see cref="_activeStatusEffects"/>
+    /// </summary>
+    /// <param name="statusEffect"></param>
     public void AddStatusEffect(StatusEffectBase statusEffect) => _activeStatusEffects.Add(statusEffect);
 
+    /// <summary>
+    /// Applies <see cref="_activeStatusEffects"/> list to <see cref="rawStat"/>. 
+    /// <br/>Results in <see cref="_currentStat"/>. 
+    /// </summary>
+    /// <remarks>Also removes expired <see cref="StatusEffectBase"/>s from list</remarks>
     private void ApplyStatusEffects()
     {
         Stat temp = rawStat;
@@ -206,27 +403,41 @@ public abstract class Monster : MonoBehaviour
 
         _currentStat = temp;
     }
+    #endregion
 
-    protected virtual List<Player> GetTargetPlayers()
+    #region Animation
+    private const string AttackTrigger = "attack";
+    private const string IsDeadBool = "isDead";
+    private const string IsMovingBool = "isMoving";
+
+    /// <summary>
+    /// All animation logic goes here
+    /// </summary>
+    private void SetAnimation()
     {
-        return UnitManager.Instance.GetObjectsInRadius<Player>(transform.position, setting.attackRange, _playerLayerMask);
+        // Moving
+        _animator.SetBool(IsMovingBool, _monsterMovement.velocity != Vector3.zero);
+        // Attack
+
+        // Dead
     }
+
+
 
     public void PlayAttackAnimation()
     {
         //_animator.SetTrigger(AttackTrigger);
-    }
+    } 
+    #endregion
+
+    #region Event Handlers
+
+    public static event Action<int> OnMonsterDeath;
 
     private void OnEnable()
     {
         TilemapManager.BroadcastWallFallen += WallFallenEventHandler;
         TilemapManager.BroadcastWallRebuilt += SetTargetWallToPrevious;
-    }
-
-    private void SetTargetWallToPrevious(Origin obj)
-    {
-        if (origin != obj) return;
-        targetWall = _previousTargetWall;
     }
 
     private void OnDisable()
@@ -235,9 +446,28 @@ public abstract class Monster : MonoBehaviour
         TilemapManager.BroadcastWallRebuilt -= SetTargetWallToPrevious;
     }
 
+    private void SetTargetWallToPrevious(Origin obj)
+    {
+        if (origin != obj) return;
+        targetWall = _previousTargetWall;
+    }
+
+    /// <summary>
+    /// Handles monster death
+    /// </summary>
+    private void HpZeroEventHandler()
+    {
+        Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
+        _animator.SetBool(IsDeadBool, true);
+        OnMonsterDeath?.Invoke(id);
+        SpawnManager.instance.ClearIdIndex(id);
+        UnitManager.Instance.DeleteMonsterFromList(id);
+        Destroy(gameObject);
+    }
+
     private void WallFallenEventHandler(Wall obj)
     {
-        
+
     }
 
     private void OnDestroy()
@@ -245,18 +475,7 @@ public abstract class Monster : MonoBehaviour
         monsterStat.OnHpZero -= HpZeroEventHandler;
     }
 
-    public void SetTargetWall(Wall wall)
-    {
-        if (origin != wall.origin) return;
-        if (targetWall)
-        {
-            _previousTargetWall = targetWall;
-        }
-        targetWall = wall;
-        _targetWallCellPos = wall.cellPos;
-        //_monsterMovement.SetTarget(wall.transform);
-        currentTarget = Target.Wall;
-    }
+    #endregion
 
     [ContextMenu(nameof(DamageMonsterBy10))]
     private void DamageMonsterBy10()

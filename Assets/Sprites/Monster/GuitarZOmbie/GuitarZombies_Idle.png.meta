@@ -1,0 +1,368 @@
+fileFormatVersion: 2
+guid: de18e525fbff999429e133433a3530fa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6669991599751582574
+    second: GuitarZombies_Idle_0
+  - first:
+      213: 5192385536837776165
+    second: GuitarZombies_Idle_1
+  - first:
+      213: 6613946589475695273
+    second: GuitarZombies_Idle_2
+  - first:
+      213: -5902890395866960877
+    second: GuitarZombies_Idle_3
+  - first:
+      213: -4979582498443173569
+    second: GuitarZombies_Idle_4
+  - first:
+      213: 2334680965690669894
+    second: GuitarZombies_Idle_5
+  - first:
+      213: 9110854363493890331
+    second: GuitarZombies_Idle_6
+  - first:
+      213: 7561773707918740268
+    second: GuitarZombies_Idle_7
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29ca7f9aafd6f63a0800000000000000
+      internalID: -6669991599751582574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_1
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5237714a22f0f0840800000000000000
+      internalID: 5192385536837776165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_2
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9aaea15816579cb50800000000000000
+      internalID: 6613946589475695273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_3
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31ce846b578b41ea0800000000000000
+      internalID: -5902890395866960877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_4
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f31ea82c918f4eab0800000000000000
+      internalID: -4979582498443173569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_5
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64bbbd7f7f3766020800000000000000
+      internalID: 2334680965690669894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_6
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: b19fe50b5c1407e70800000000000000
+      internalID: 9110854363493890331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GuitarZombies_Idle_7
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 0
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16.5, y: -23.5}
+        - {x: -21.5, y: -9.5}
+        - {x: -20.5, y: 13.5}
+        - {x: -10.5, y: 21.5}
+        - {x: 1.5, y: 17.5}
+        - {x: 14.5, y: 4.5}
+        - {x: 25.5, y: -24.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2b82649f11d0f860800000000000000
+      internalID: 7561773707918740268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

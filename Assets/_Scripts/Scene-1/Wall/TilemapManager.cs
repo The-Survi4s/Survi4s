@@ -9,6 +9,9 @@ using UnityEngine.AI;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// The direction of which something comes from
+/// </summary>
 public enum Origin { Right, Top, Left, Bottom }
 
 public class TilemapManager : MonoBehaviour

@@ -8,12 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
-    private LayerMask _playerLayer;
-    private LayerMask _monsterLayer;
-    private LayerMask _monsterBulletLayer;
-    private LayerMask _playerBulletLayer;
-    private LayerMask _groundLayer;
-    private LayerMask _wallLayer;
+    private int _playerLayer;
+    private int _monsterLayer;
+    private int _monsterBulletLayer;
+    private int _playerBulletLayer;
+    private int _groundLayer;
+    private int _wallLayer;
     public float preparationDoneTime { get; private set; }
 
     [Serializable]
@@ -46,12 +46,12 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
 
-        _playerLayer = LayerMask.NameToLayer("Player");
-        _monsterLayer = LayerMask.NameToLayer("Enemy");
-        _monsterBulletLayer = LayerMask.NameToLayer("EnemyBullet");
-        _playerBulletLayer = LayerMask.NameToLayer("PlayerBullet");
-        _groundLayer = LayerMask.NameToLayer("Ground");
-        _wallLayer = LayerMask.NameToLayer("Wall");
+        _playerLayer = LayerMask.GetMask("Player");
+        _monsterLayer = LayerMask.GetMask("Enemy");
+        _monsterBulletLayer = LayerMask.GetMask("EnemyBullet");
+        _playerBulletLayer = LayerMask.GetMask("PlayerBullet");
+        _groundLayer = LayerMask.GetMask("Ground");
+        _wallLayer = LayerMask.GetMask("Wall");
     }
 
     private void Update()
@@ -158,12 +158,12 @@ public class GameManager : MonoBehaviour
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
-        Physics2D.IgnoreLayerCollision(_playerLayer, _monsterLayer); //Player no collision with monster
-        Physics2D.IgnoreLayerCollision(_groundLayer, _monsterLayer); //No collision with ground
-        Physics2D.IgnoreLayerCollision(_groundLayer, _playerBulletLayer); //No collision with ground
-        Physics2D.IgnoreLayerCollision(_playerLayer, _playerBulletLayer); //Player no collision with playerbullet
-        Physics2D.IgnoreLayerCollision(_monsterLayer, _monsterBulletLayer); //Enemy no collision with enemyBullet 
-        Physics2D.IgnoreLayerCollision(_playerBulletLayer, _wallLayer); //Enemy no collision with enemyBullet 
+        Physics2D.IgnoreLayerCollision(Log2(_playerLayer), Log2(_monsterLayer)); //Player no collision with monster
+        Physics2D.IgnoreLayerCollision(Log2(_groundLayer), Log2(_monsterLayer)); //No collision with ground
+        Physics2D.IgnoreLayerCollision(Log2(_groundLayer), Log2(_playerBulletLayer)); //No collision with ground
+        Physics2D.IgnoreLayerCollision(Log2(_playerLayer), Log2(_playerBulletLayer)); //Player no collision with playerbullet
+        Physics2D.IgnoreLayerCollision(Log2(_monsterLayer), Log2(_monsterBulletLayer)); //Enemy no collision with enemyBullet 
+        Physics2D.IgnoreLayerCollision(Log2(_playerBulletLayer), Log2(_wallLayer)); //Enemy no collision with enemyBullet 
         ChangeState(GameState.WavePreparation); 
     }
 
@@ -179,4 +179,6 @@ public class GameManager : MonoBehaviour
         if(_gameState != GameState.WavePreparation) return;
         await SpawnManager.instance.StartWave();
     }
+
+    private int Log2(int a) => (int)Mathf.Log(a, 2);
 }
