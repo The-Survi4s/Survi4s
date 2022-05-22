@@ -24,7 +24,12 @@ public abstract class WeaponBase : MonoBehaviour
     // Cached components --------------------
     protected Player ownerPlayer;
 
-
+    // Upgrade Weapon -----------------------------------
+    // Serializefiel just for debugging in inspector
+    [SerializeField] private int _upgradeCost = 4;
+    [SerializeField] private int _weaponLevel = 1;
+    [SerializeField] private int _weaponExp = 0;
+    
     // -------------------
     protected virtual void Init()
     {
@@ -94,5 +99,39 @@ public abstract class WeaponBase : MonoBehaviour
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
         ownerPlayer = null;
+    }
+
+    // Upgrade Weapon
+    // Upgrade Level -----------------------------------------------------------
+    public void UpgradeWeaponLevel(int exp)
+    {
+        _weaponExp += exp;
+
+        while (_weaponExp >= _upgradeCost)
+        {
+            NetworkClient.Instance.UpgradeWeapon(this.name);
+            _weaponExp -= _upgradeCost;
+        }
+    }
+    public void WeaponLevelUp()
+    {
+        // Increase stats
+        if (_weaponLevel % 3 == 0)
+        {
+            critRate += (critRate / 10.0f);
+        }
+        else if (_weaponLevel % 3 == 1)
+        {
+            cooldownTime -= (cooldownTime / 10.0f);
+        }
+        else if (_weaponLevel % 3 == 2)
+        {
+            baseAttack += (baseAttack / 20.0f);
+        }
+
+        // Increase cost to upgrade
+        _upgradeCost += (4 / 100 * _upgradeCost) + 4;
+        // Increase weapon level
+        _weaponLevel++;
     }
 }

@@ -45,8 +45,7 @@ public class WeaponRange : WeaponBase
             }
             else
             {
-                var distanceToStatue = Vector2.Distance(transform.position,TilemapManager.instance.statue.transform.position);
-                if(distanceToStatue < 3)
+                if(ownerPlayer.IsNearStatue)
                 {
                     ReloadAmmo();
                 }

@@ -322,7 +322,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.UpWpn:
                 {
-                    UnitManager.Instance.OnUpgradeWeapon();
+                    UnitManager.Instance.FindAndUpgradeWeapon(info[2]);
                     break;
                 }
             }
@@ -525,9 +525,10 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void UpgradeWeapon()
+    public void UpgradeWeapon(string weaponName)
     {
-        SendMessageClient("1", Header.UpWpn.ToString());
+        string[] msg = { Header.UpWpn.ToString(), weaponName };
+        SendMessageClient("1", msg);
     }
 
     #endregion

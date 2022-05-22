@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterStats),typeof(PlayerWeaponManager))]
+[RequireComponent(typeof(PlayerStats),typeof(PlayerWeaponManager))]
 public class Player : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     public bool isFacingLeft { get; private set; }
 
     // Character Stats -----------------------------------------------------------------
-    public CharacterStats stats { get; private set; }
+    public PlayerStats stats { get; private set; }
     public PlayerWeaponManager weaponManager { get; private set; }
 
     public event Action<string> OnPlayerDead;
@@ -30,10 +30,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float _mousePosSendRate = 0.2f;
     private float _mousePosSendCoolDown, _mousePosNextTime;
 
+    // Check for near statue
+    private Transform _statuePos;
+    [SerializeField] private float _minStatueDist = 3.0f;
+    [SerializeField] private bool _isNearStatue;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        stats = GetComponent<CharacterStats>();
+        stats = GetComponent<PlayerStats>();
         weaponManager = GetComponent<PlayerWeaponManager>();
     }
     
@@ -56,6 +61,8 @@ public class Player : MonoBehaviour
         _mousePosNextTime = 0;
 
         stats.OnPlayerDead += HandlePlayerDead;
+
+        _statuePos = UnitManager.Instance.StatuePos;
     }
 
     private void Update()
@@ -76,6 +83,23 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 weaponManager.Attack();
+            }
+
+            // Temporary upgrade weapon
+            if(Input.GetKeyDown(KeyCode.T) && _isNearStatue)
+            {
+                weaponManager.UpgradeEquipedWeapon();
+            }
+
+            // Check statue Pos
+            var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
+            if (distanceToStatue < _minStatueDist)
+            {
+                _isNearStatue = true;
+            }
+            else
+            {
+                _isNearStatue = false;
             }
         }
     }
@@ -252,5 +276,11 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         stats.OnPlayerDead -= HandlePlayerDead;
+    }
+
+    public bool IsNearStatue
+    {
+        get { return _isNearStatue; }
+        private set { _isNearStatue = value; }
     }
 }

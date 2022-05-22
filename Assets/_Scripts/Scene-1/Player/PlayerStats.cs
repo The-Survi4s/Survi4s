@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterStats : MonoBehaviour
+public class PlayerStats : MonoBehaviour
 {
     [SerializeField] private int _maxHitPoint;
     [SerializeField] private float _defaultMoveSpeed;

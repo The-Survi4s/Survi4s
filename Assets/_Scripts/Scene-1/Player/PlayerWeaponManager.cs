@@ -10,6 +10,10 @@ public class PlayerWeaponManager : MonoBehaviour
 
     [SerializeField] private Transform attackPoint;
 
+    // Upgrade 
+    [SerializeField] private int _playerWeaponExp;
+    [SerializeField] private GameObject _upgradeButton;
+
     private void Update()
     {
         // Check Weapon in range
@@ -102,5 +106,15 @@ public class PlayerWeaponManager : MonoBehaviour
         }
 
         weaponIsInRange = false;
+    }
+
+    // Upgrade equiped weapon
+    public void UpgradeEquipedWeapon()
+    {
+        if(weapon != null)
+        {
+            weapon.UpgradeWeaponLevel(_playerWeaponExp);
+            _playerWeaponExp = 0;
+        }
     }
 }
