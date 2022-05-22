@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7277819247295546479}
   - component: {fileID: 944057942931845034}
   - component: {fileID: 5230290426496590228}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletEsSegar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,9 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 10
-  maxTravelRange: 10
+  maxTravelRange: 5
   _maxTriggerTimes: 1
-  particleToSpawn: {fileID: 0}
+  particleToSpawn: {fileID: 253480534997718629, guid: abe8b64a66181a641889e40d419ed61b, type: 3}
   particleSpawnRate: 0.2
   criticalMultiplier: 1.5
   _splashRad: 5

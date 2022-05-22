@@ -13,13 +13,15 @@ public class MonsterMovement : MonoBehaviour
     private Vector3 _currentTargetPreviousPos;
     private float _previousDistance;
     public float stationaryTime;
-    public float maxStationaryTime = 5;
+    [SerializeField] private float _maxStationaryTime;
     private Vector3 _statuePos;
     private Vector3 _targetPlayerPos;
     private Vector3 _targetWallPos;
     public Vector3 velocity => _agent.velocity;
-    [SerializeField] private float Tolerance = 0.5f;
-    [SerializeField] private float MaxOffset = 1;
+    [SerializeField] private float minMoveDistance = 0.5f;
+    [SerializeField] private float maxDistanceDifference = 1;
+    private Vector3 _targetOffset;
+    private float _distanceToTarget;
 
     void Start()
     {
@@ -47,17 +49,18 @@ public class MonsterMovement : MonoBehaviour
 
     private void RecalculatePath()
     {
-        if (Vector3.Distance(_currentTargetPreviousPos, _currentTargetPos) > MaxOffset)
+        var targetPos = _currentTargetPos + _targetOffset;
+        if (Vector3.Distance(_currentTargetPreviousPos, targetPos) > maxDistanceDifference)
         {
-            _agent.SetDestination(_currentTargetPos);
-            _currentTargetPreviousPos = _currentTargetPos;
+            _agent.SetDestination(targetPos);
+            _currentTargetPreviousPos = targetPos;
         }
     }
 
     private void UpdateStationaryTime()
     {
-        if (_agent.remainingDistance < _previousDistance + Tolerance &&
-            _agent.remainingDistance > _previousDistance - Tolerance)
+        if (_agent.remainingDistance < _previousDistance + minMoveDistance &&
+            _agent.remainingDistance > _previousDistance - minMoveDistance)
         {
             stationaryTime += Time.deltaTime;
         }
@@ -70,8 +73,16 @@ public class MonsterMovement : MonoBehaviour
 
     private void DecideTarget()
     {
+        SetInitialCurrentTarget();
+        SetAlternativeTarget();
+        WhenDistracted();
+        DoEvasion();
+    }
+
+    private void SetInitialCurrentTarget()
+    {
         _currentTarget = _owner.setting.priority;
-        switch (_owner.setting.priority)
+        switch (_currentTarget)
         {
             case Monster.Target.Wall:
                 _currentTargetPos = _targetWallPos;
@@ -87,7 +98,10 @@ public class MonsterMovement : MonoBehaviour
                 _currentTarget = Monster.Target.Statue;
                 break;
         }
+    }
 
+    private void SetAlternativeTarget()
+    {
         switch (_agent.pathStatus)
         {
             case NavMeshPathStatus.PathComplete:
@@ -103,8 +117,11 @@ public class MonsterMovement : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
 
-        if (Vector3.Distance(_targetPlayerPos, transform.position) < _owner.setting.detectionRange)
+    private void WhenDistracted()
+    {
+        if (Vector2.Distance(_targetPlayerPos, transform.position) < _owner.setting.detectionRange)
         {
             if (_owner.setting.MethodOf(Monster.Target.Player) != Monster.TargetMethod.DontAttack)
             {
@@ -114,15 +131,28 @@ public class MonsterMovement : MonoBehaviour
         }
     }
 
+    private void DoEvasion()
+    {
+        _distanceToTarget = Vector2.Distance(transform.position, _currentTargetPos);
+        if (_distanceToTarget < _owner.setting.minRange && _owner.setting.doEvasion)
+        {
+            var oppositeDir = transform.position - _currentTargetPos;
+            _currentTargetPos -= 2 * oppositeDir;
+        }
+    }
+
     private void TargetWallInstead()
     {
         if (_owner.setting.MethodOf(Monster.Target.Wall) != Monster.TargetMethod.DontAttack)
         {
-            if (!_owner.targetWall) _owner.RequestNewTargetWall();
-            _targetWallPos = _owner.targetWall.transform.position;
             _currentTargetPos = _targetWallPos;
             _currentTarget = Monster.Target.Wall;
         }
+    }
+
+    public void SetOffset(Vector3 offset, float zRotation)
+    {
+        _targetOffset = Quaternion.Euler(new Vector3(0, 0, zRotation)) * offset;
     }
 
     private void SetStat()
@@ -131,6 +161,9 @@ public class MonsterMovement : MonoBehaviour
         _agent.acceleration = _owner.currentStat.acceleration;
         _agent.stoppingDistance = _owner.setting.minRange;
         _agent.angularSpeed = _owner.currentStat.rotSpd;
+
+        if (!_owner.targetWall) _owner.RequestNewTargetWall();
+        _targetWallPos = _owner.targetWall.transform.position;
 
         if (!_owner.nearestPlayer.isDead) _targetPlayerPos = _owner.nearestPlayer.transform.position;
         else _targetPlayerPos = _statuePos;

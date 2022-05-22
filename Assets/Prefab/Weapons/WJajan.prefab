@@ -51,7 +51,7 @@ MonoBehaviour:
   defaultAttackRad: 3
   targetMask:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 8
 --- !u!212 &4706880217891444722
 SpriteRenderer:
   m_ObjectHideFlags: 0

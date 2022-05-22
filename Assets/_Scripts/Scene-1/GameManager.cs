@@ -8,19 +8,24 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
-
-    [SerializeField] private float _preparationTime = 0f;
+    private LayerMask _playerLayer;
+    private LayerMask _monsterLayer;
+    private LayerMask _monsterBulletLayer;
+    private LayerMask _playerBulletLayer;
+    private LayerMask _groundLayer;
+    private LayerMask _wallLayer;
+    public float preparationDoneTime { get; private set; }
 
     [Serializable]
     public struct GameSettings
     {
-        public int maxPlayer;
+        public float preparationTime;
         public int initialStatueHp;
         public int maxWave;
 
-        public GameSettings(int maxPlayer = 4, int initialStatueHp = 20, int maxWave = 100)
+        public GameSettings(float preparationTime, int initialStatueHp, int maxWave)
         {
-            this.maxPlayer = maxPlayer;
+            this.preparationTime = preparationTime;
             this.initialStatueHp = initialStatueHp;
             this.maxWave = maxWave;
         }
@@ -40,6 +45,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        _playerLayer = LayerMask.NameToLayer("Player");
+        _monsterLayer = LayerMask.NameToLayer("Enemy");
+        _monsterBulletLayer = LayerMask.NameToLayer("EnemyBullet");
+        _playerBulletLayer = LayerMask.NameToLayer("PlayerBullet");
+        _groundLayer = LayerMask.NameToLayer("Ground");
+        _wallLayer = LayerMask.NameToLayer("Wall");
     }
 
     private void Update()
@@ -49,7 +61,10 @@ public class GameManager : MonoBehaviour
 
     private void CheckGameOver()
     {
-        if (_gameState == GameState.StartGame || _gameState == GameState.GameOver) return;
+        if (_gameState == GameState.StartGame || 
+            _gameState == GameState.GameOver || 
+            _gameState == GameState.WavePreparation || 
+            UnitManager.Instance.playerCount <= 0) return;
         if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
         {
             TilemapManager.instance.statue.PlayDestroyedAnimation();
@@ -85,6 +100,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
+        // disable player movement
         // Show game over screen with score and disconnect button
         // Ke scene 0
     }
@@ -96,7 +112,10 @@ public class GameManager : MonoBehaviour
         {
             await Task.Yield();
         }
-        ChangeState(GameState.WavePreparation);
+
+        ChangeState(SpawnManager.instance.currentWave < gameSetting.maxWave
+            ? GameState.WavePreparation
+            : GameState.GameOver);
     }
 
     private async void HandleWaveSpawn()
@@ -108,15 +127,15 @@ public class GameManager : MonoBehaviour
     private async void HandleWavePreparation()
     {
         // Start countdown timer
-        await CountDown(_preparationTime);
+        await CountDown(gameSetting.preparationTime);
         // On countdown done, or on some button pressed, wave spawn
         ChangeState(GameState.WaveSpawn);
     }
 
     private async Task CountDown(float time)
     {
-        var end = Time.time + time;
-        while (Time.time < end)
+        preparationDoneTime = Time.time + time;
+        while (Time.time < preparationDoneTime)
         {
             DoStuffWhileCountDown();
             await Task.Yield();
@@ -131,8 +150,6 @@ public class GameManager : MonoBehaviour
 
     private void HandleStartGame()
     {
-        //Lakukan sesuatu
-
         // Display statue HP dan UI lain
 
         // Spawn Player ---------------------------------------------------------------------
@@ -141,14 +158,25 @@ public class GameManager : MonoBehaviour
         // Deactivate Panels ----------------------------------------------------------------
         GameMenuManager.Instance.SetActivePreparationPanel(false);
 
-        Physics2D.IgnoreLayerCollision(3, 6); //Supaya player tidak collision dengan monster
+        Physics2D.IgnoreLayerCollision(_playerLayer, _monsterLayer); //Player no collision with monster
+        Physics2D.IgnoreLayerCollision(_groundLayer, _monsterLayer); //No collision with ground
+        Physics2D.IgnoreLayerCollision(_groundLayer, _playerBulletLayer); //No collision with ground
+        Physics2D.IgnoreLayerCollision(_playerLayer, _playerBulletLayer); //Player no collision with playerbullet
+        Physics2D.IgnoreLayerCollision(_monsterLayer, _monsterBulletLayer); //Enemy no collision with enemyBullet 
+        Physics2D.IgnoreLayerCollision(_playerBulletLayer, _wallLayer); //Enemy no collision with enemyBullet 
         ChangeState(GameState.WavePreparation); 
     }
 
-    // For starting games -------------------------------------------------------------------
+    // Button hooks -------------------------------------------------------------------
     public void StartGame()
     {
         NetworkClient.Instance.StartGame();
         NetworkClient.Instance.LockTheRoom();
+    }
+
+    public async void ForceStartNextWave()
+    {
+        if(_gameState != GameState.WavePreparation) return;
+        await SpawnManager.instance.StartWave();
     }
 }

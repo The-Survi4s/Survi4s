@@ -113,3 +113,53 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+--- !u!1 &1767941296274044509 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+  m_PrefabInstance: {fileID: 4068332656211028605}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-4620904845644135582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767941296274044509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cffccec154116ea4bb2ef4a7b521f494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentStat:
+    hp: 0
+    atk: 0
+    atkCd: 0
+    movSpd: 0
+    rotSpd: 0
+    acceleration: 0
+  <setting>k__BackingField:
+    type: 7
+    detectionRange: 10
+    attackRange: 4
+    minRange: 1
+    priority: 1
+    attackMethods:
+    - target: 0
+      method: 1
+    - target: 1
+      method: 1
+    - target: 2
+      method: 0
+    defaultStat:
+      hp: 10
+      atk: 1
+      atkCd: 1
+      movSpd: 10
+      rotSpd: 20
+      acceleration: 0.1
+    doEvasion: 0
+  <targetWall>k__BackingField: {fileID: 0}
+  <nearestPlayer>k__BackingField: {fileID: 0}
+  <currentTarget>k__BackingField: 0
+  _chaseOffset: {x: 5, y: 0, z: 0}
+  _chaseOffsetAngle: 90

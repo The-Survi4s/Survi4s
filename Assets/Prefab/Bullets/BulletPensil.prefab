@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 605899225614135215}
   - component: {fileID: 6949445219279553642}
   - component: {fileID: 4594289766084295441}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletPensil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3545429094865367775}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.24078, y: -4.1800613, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -48,11 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 20
-  maxTravelRange: 20
+  maxTravelRange: 5
   _maxTriggerTimes: 3
-  particleToSpawn: {fileID: 0}
+  particleToSpawn: {fileID: 8000028858983223329, guid: e4325f5f1ed73da4f99e95022260993b, type: 3}
   particleSpawnRate: 0.2
   criticalMultiplier: 1.5
+  FX: {fileID: 8000028858983223329, guid: e4325f5f1ed73da4f99e95022260993b, type: 3}
 --- !u!212 &4315547821722523670
 SpriteRenderer:
   m_ObjectHideFlags: 0

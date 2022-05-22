@@ -24,9 +24,10 @@ public class UnitManager : MonoBehaviour
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
-    public int playerAliveCount => _playerKdTree.Count(player => !player.isDead);
+    public int playerAliveCount => _playerAliveKdTree.Count();
     public int playerCount => _playerKdTree.Count;
     public int monsterAliveCount => _monsterKdTree.Count;
+    public int bulletCount => _bullets.Count;
 
     private void Awake()
     {
@@ -69,7 +70,7 @@ public class UnitManager : MonoBehaviour
 
     public void AddMonster(Monster monster)
     {
-        monster.SetTargetWall(TilemapManager.instance.GetRandomNonDestroyedWallOn(monster.origin));
+        monster.SetTargetWall(TilemapManager.instance.GetWall(monster.origin));
         _monsterKdTree.Add(monster);
         _monsters.Add(monster.id, monster);
     }
@@ -85,98 +86,106 @@ public class UnitManager : MonoBehaviour
     private void HandlePlayerDead(string idAndName)
     {
         if(!_players.ContainsKey(idAndName)) return;
-        var player = _players[idAndName];
-        var index = SearchPlayerIndex(player, true);
+        var index = SearchPlayerIndex(_players[idAndName], true);
         if(index >= 0) _playerAliveKdTree.RemoveAt(index);
-
-        index = SearchPlayerIndex(player);
-        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void HandlePlayerDisconnect(string idAndName)
     {
         Debug.Log(idAndName + " disconnected");
         HandlePlayerDead(idAndName);
+        if (!_players.ContainsKey(idAndName)) return;
+
+        var index = SearchPlayerIndex(_players[idAndName]);
+        if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
     public void DeleteMonsterFromList(int id)
     {
+        if (!_monsters.ContainsKey(id)) return;
         var index = SearchMonsterIndex(_monsters[id]);
         if(index >= 0) _monsterKdTree.RemoveAt(index);
+    }
+
+    public void RemoveBullet(int id)
+    {
+        _bullets.Remove(id);
     }
 
     // Send command to units
     // Monster
     public void ModifyMonsterHp(int id, float amount)
     {
+        if (!_monsters.ContainsKey(id)) return;
         _monsters[id].ModifyHitPoint(amount);
     }
 
     // Player
     public void SyncMousePos(string playerName, float x, float y)
     {
-        var player = _players[playerName];
-        if (player) player.SyncMousePos(x, y);
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].SyncMousePos(x, y);
     }
 
     public void SetButton(string playerName, Player.Button button, bool isDown)
     {
-        var player = _players[playerName];
-        if (player) player.SetButton(button, isDown);
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].SetButton(button, isDown);
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
     {
-        var player = _players[playerName];
-        if (player) player.weaponManager.OnEquipWeapon(weaponName);
+        if (!_players.ContainsKey(playerName)) return; 
+        _players[playerName].weaponManager.OnEquipWeapon(weaponName);
     }
 
     public void PlayAttackAnimation(string playerName)
     {
-        var player = _players[playerName];
-        if (player) player.weaponManager.ReceiveAttackMessage();
+        if (!_players.ContainsKey(playerName)) return; 
+        _players[playerName].weaponManager.ReceiveAttackMessage();
     }
 
     public void SpawnBullet(string playerName, Vector2 spawnPos, Vector2 mousePos)
     {
-        var player = _players[playerName];
-        if (player) player.weaponManager.SpawnBullet(spawnPos, mousePos);
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].weaponManager.SpawnBullet(spawnPos, mousePos);
     }
 
     public void SpawnBullet(int monsterId, Vector2 spawnPos, Vector2 targetPos)
     {
-        var monster = _monsters[monsterId];
-        if(monster is RangedMonsterBase rangedMonster) rangedMonster.SpawnBullet(spawnPos, targetPos);
+        if (!_monsters.ContainsKey(monsterId)) return;
+        if(_monsters[monsterId] is RangedMonsterBase rangedMonster) rangedMonster.SpawnBullet(spawnPos, targetPos);
     }
 
     public void DestroyBullet(int id)
     {
+        if(!_bullets.ContainsKey(id)) return;
         Destroy(_bullets[id]);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
+        if (!_players.ContainsKey(playerName)) return;
         Debug.Log(playerName + " " + amount);
-        var player = _players[playerName];
-        if (player) player.stats.hitPoint += amount;
+        _players[playerName].stats.hitPoint += amount;
     }
 
     public void CorrectDeadPosition(string playerName, Vector2 pos)
     {
-        var player = _players[playerName];
-        if (player) player.stats.CorrectDeadPosition(pos);
+        if (!_players.ContainsKey(playerName)) return; 
+        _players[playerName].stats.CorrectDeadPosition(pos);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, float duration, int strength)
     {
-        var monster = _monsters[targetId];
-        if(monster) monster.AddStatusEffect(StatusEffectFactory.CreateNew(monster, statusEffect, duration, strength));
+        if (!_monsters.ContainsKey(targetId)) return; 
+        _monsters[targetId].AddStatusEffect(StatusEffectFactory.CreateNew(_monsters[targetId], statusEffect, duration, strength));
     }
 
     public void PlayMonsterAttackAnimation(int monsterId)
     {
-        var monster = _monsters[monsterId];
-        monster.PlayAttackAnimation();
+        if (!_monsters.ContainsKey(monsterId)) return;
+        _monsters[monsterId].PlayAttackAnimation();
     }
 
     // Utilities ----------------------
@@ -249,6 +258,42 @@ public class UnitManager : MonoBehaviour
     public Monster GetNearestMonster(Vector3 pos)
     {
         return _monsterKdTree.FindClosest(pos);
+    }
+
+    public BulletBase GetNearestBullet(Vector3 pos)
+    {
+        var dist = float.MaxValue;
+        var nearest = _bullets[0];
+        foreach (var bullet in _bullets)
+        {
+            var dist2 = Vector2.Distance(bullet.Value.transform.position, pos);
+            if (dist2 < dist)
+            {
+                nearest = bullet.Value;
+                dist = dist2;
+            }
+        }
+
+        return nearest;
+    }
+
+    public BulletBase GetNearestBullet(Vector3 pos, bool isPlayerOwned)
+    {
+        var dist = float.MaxValue;
+        BulletBase nearest = null;
+        foreach (var bullet in _bullets)
+        {
+            if(!bullet.Value) continue;
+            if (!isPlayerOwned || !(bullet.Value is PlayerBulletBase)) continue;
+            var dist2 = Vector2.Distance(bullet.Value.transform.position, pos);
+            if (dist2 < dist)
+            {
+                nearest = bullet.Value;
+                dist = dist2;
+            }
+        }
+
+        return nearest;
     }
 
     public Player GetPlayer(string id)

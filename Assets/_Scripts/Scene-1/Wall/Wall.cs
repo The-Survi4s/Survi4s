@@ -3,41 +3,40 @@ using UnityEngine.AI;
 
 public class Wall : DestroyableTile
 {
-    [field: SerializeField] public int id { get; private set; }
+    public int id { get; private set; }
     public override int maxHp { get; protected set; }
     private bool _isInitialized = false;
-
-    private NavMeshModifier _navMesh;
-    private Collider2D _collider;
-    [field: SerializeField] public Monster.Origin origin { get; private set; } // Di set di inspector
+    
+    [field: SerializeField] public Origin origin { get; private set; } // Di set di inspector
 
     private void Start()
     {
-        _isInitialized = false;
-        _navMesh = GetComponent<NavMeshModifier>();
-        _collider = GetComponent<Collider2D>();
         EnableWall(true);
         Init(TilemapManager.instance.GetNewWallId(), 
-            TilemapManager.instance.GetOriginFromWorldPos(transform.position),
-            TilemapManager.instance.GetCellPosition(transform.position));
+            TilemapManager.instance.GetOrigin(transform.position),
+            TilemapManager.instance.ToCellPosition(transform.position));
         TilemapManager.instance.AddWall(this); // Auto add
     }
 
-    public void Init(int id, Monster.Origin wallOrigin, Vector3Int cellPosition)
+    /// <summary>
+    /// Initialize <see cref="Wall"/>'s fields. Valid only once. 
+    /// </summary>
+    /// <param name="id"><see cref="Wall"/>'s id</param>
+    /// <param name="wallOrigin">The <see cref="Origin"/> of this <see cref="Wall"/></param>
+    /// <param name="cellPosition">The cell position of this <see cref="Wall"/>. Not a world position</param>
+    /// <param name="initialHp">0 is <see cref="maxHp"/>. Set initial <see cref="Wall"/> hp here</param>
+    /// <returns></returns>
+    public bool Init(int id, Origin wallOrigin, Vector3Int cellPosition, int initialHp = 0)
     {
-        if (_isInitialized) return;
+        if (_isInitialized) return false;
         this.id = id;
         origin = wallOrigin;
         maxHp = TilemapManager.instance.maxWallHp;
-        hp = maxHp;
+        hp = initialHp == 0 ? maxHp : initialHp;
         cellPos = cellPosition;
         _isInitialized = true;
         isDestroyed = false;
-    }
-
-    protected override void AfterModifyHp()
-    {
-        TilemapManager.instance.UpdateWallTilemap(this);
+        return true;
     }
 
     protected override void InvokeRebuiltEvent()
@@ -59,25 +58,11 @@ public class Wall : DestroyableTile
 
     private void EnableWall(bool wallEnabled)
     {
-        _collider.enabled = wallEnabled;
-        _navMesh.ignoreFromBuild = !wallEnabled;
         isDestroyed = !wallEnabled;
     }
 
     private void OnDestroy()
     {
         TilemapManager.instance.RemoveWall(this);
-    }
-
-    // ----------- cheats
-    [ContextMenu(nameof(DamageWallBy10))]
-    private void DamageWallBy10()
-    {
-        ModifyHp(-10);
-    }
-    [ContextMenu(nameof(HealWallBy10))]
-    private void HealWallBy10()
-    {
-        ModifyHp(10);
     }
 }

@@ -14,7 +14,7 @@ public class GameMenuManager : MonoBehaviour
     [SerializeField] private GameObject startButton;
 
     // Text -----------------------------------------------------------------------
-    [SerializeField] private Text playersInRoom;
+    [SerializeField] private Text[] playersName;
 
     // Eazy Access ---------------------------------------------------------------
     public static GameMenuManager Instance { get; private set; }
@@ -39,7 +39,8 @@ public class GameMenuManager : MonoBehaviour
 
         startButton.SetActive(false);
 
-        playersInRoom.text = NetworkClient.Instance.playersCount.ToString();
+        string[] defaultName = { NetworkClient.Instance.myName };
+        UpdatePlayersInRoom(defaultName);
 
         StartCoroutine(CountDownStartButton());
     }
@@ -61,9 +62,19 @@ public class GameMenuManager : MonoBehaviour
         preparationPanel.SetActive(isTrue);
     } 
     // Update Players in room -----------------------------------------------------
-    public void UpdatePlayersInRoom(int player)
+    public void UpdatePlayersInRoom(string[] names)
     {
-        playersInRoom.text = player.ToString();
+        for(int i = 0; i < playersName.Length; i++)
+        {
+            if(i < names.Length)
+            {
+                playersName[i].text = names[i];
+            }
+            else
+            {
+                playersName[i].text = "";
+            }
+        }
     }
 
     // Exit Room ------------------------------------------------------------------

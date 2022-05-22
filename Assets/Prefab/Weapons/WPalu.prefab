@@ -51,7 +51,7 @@ MonoBehaviour:
   defaultAttackRad: 2
   targetMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   wallMask:
     serializedVersion: 2
     m_Bits: 128

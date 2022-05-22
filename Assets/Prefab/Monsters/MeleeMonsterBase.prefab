@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2377165867587476518}
-  - component: {fileID: 7661575844114794892}
   - component: {fileID: 1226200368138906639}
   - component: {fileID: 5297857289526348701}
   - component: {fileID: 8199000041367107212}
@@ -37,57 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7661575844114794892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2377165867587476512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f59cf63a50cf1524abe3dc3ca43f71df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <id>k__BackingField: 0
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  wallLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  monsterLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _currentStat:
-    hp: 0
-    atk: 0
-    atkCd: 0
-    movSpd: 0
-    rotSpd: 0
-    acceleration: 0
-  <type>k__BackingField: 0
-  <setting>k__BackingField:
-    detectionRange: 3
-    attackRange: 2
-    minRange: 0
-    priority: 0
-    attackMethods:
-    - target: 0
-      method: 1
-    - target: 1
-      method: 1
-    - target: 2
-      method: 1
-    defaultStat:
-      hp: 30
-      atk: 5
-      atkCd: 3
-      movSpd: 1
-      rotSpd: 60
-      acceleration: 10
-  <targetWall>k__BackingField: {fileID: 0}
-  <currentTarget>k__BackingField: 0
 --- !u!114 &1226200368138906639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,9 +51,9 @@ MonoBehaviour:
   _currentTarget: 0
   _currentTargetPos: {x: 0, y: 0, z: 0}
   stationaryTime: 0
-  maxStationaryTime: 5
-  Tolerance: 0.5
-  MaxOffset: 1
+  _maxStationaryTime: 5
+  minMoveDistance: 0.5
+  maxDistanceDifference: 1
 --- !u!61 &5297857289526348701
 BoxCollider2D:
   m_ObjectHideFlags: 0

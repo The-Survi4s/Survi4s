@@ -15,9 +15,9 @@ TagManager:
   - UI
   - Enemy
   - Wall
-  - 
-  - 
-  - 
+  - Ground
+  - PlayerBullet
+  - EnemyBullet
   - 
   - 
   - 

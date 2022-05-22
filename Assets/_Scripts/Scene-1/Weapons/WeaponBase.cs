@@ -18,18 +18,7 @@ public abstract class WeaponBase : MonoBehaviour
 
     public int upgradeLevel { get; private set; }
 
-    // Animation Variables
     [SerializeField] protected Vector3 offset;
-    [SerializeField]
-    protected struct SwingTo
-    {
-        public float degree;
-        public float t;
-    }
-    [SerializeField] private List<SwingTo> swingQueues = new List<SwingTo>();
-    protected float swingDegree;
-    private double animationEndDegree = 5f;
-    protected int animationStep;
 
     // Particles -----------------------------------------
     
@@ -45,6 +34,7 @@ public abstract class WeaponBase : MonoBehaviour
         critRate = defaultCritRate;
         cooldownTime = maxCooldownTime;
         ownerPlayer = owner?.GetComponent<Player>();
+        upgradeLevel = 1;
     }
 
     private void Awake() => Init();
@@ -55,13 +45,6 @@ public abstract class WeaponBase : MonoBehaviour
         // Follow owner
         transform.position = owner.transform.position +
                              (ownerPlayer.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
-        // Swing animation
-        if (animationStep < swingQueues.Count)
-        {
-            LerpAnimation();
-            if (Mathf.Abs(swingDegree - Mathf.LerpAngle(swingDegree, swingQueues[animationStep].degree,
-                    swingQueues[animationStep].t)) < animationEndDegree) animationStep++;
-        }
         // Rotate weapon based on owner mouse pos
         RotateWeapon(isLocal
             ? ownerPlayer.localMousePos
@@ -81,16 +64,14 @@ public abstract class WeaponBase : MonoBehaviour
     public bool isLocal => ownerPlayer.isLocal;
 
     // Animation methods ---------------------------------------
-    protected virtual void PlayAnimation() => animationStep = 0;
-    protected void LerpAnimation() =>
-        swingDegree = Mathf.LerpAngle(swingDegree, swingQueues[animationStep].degree, swingQueues[animationStep].t);
+    protected virtual void PlayAnimation()
+    {
+    }
     protected virtual void SpawnParticle() { }
     private void RotateWeapon(Vector3 target)
     {
-        var angleRad = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x);
-        var angleDeg = (180 / Mathf.PI) * angleRad +
-                       swingDegree * (ownerPlayer.isFacingLeft ? -1 : 1);
-        transform.rotation = Quaternion.Euler(0, 0, angleDeg);
+        var angle = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     // Attack methods --------------------------------------------
@@ -124,5 +105,6 @@ public abstract class WeaponBase : MonoBehaviour
         baseAttack *= 1.05f;
         critRate *= 1.05f;
         maxCooldownTime *= 0.9f;
+        upgradeLevel++;
     }
 }
