@@ -21,6 +21,9 @@ public class UnitManager : MonoBehaviour
 
     private int _bulletIdCount = 0;
 
+    private int _upgradeCost = 4;
+    private int _weaponLevel = 1;
+
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
@@ -80,6 +83,42 @@ public class UnitManager : MonoBehaviour
         _bulletIdCount++;
         _bullets.Add(_bulletIdCount, bullet);
         return _bulletIdCount;
+    }
+
+    // Upgrade Level -----------------------------------------------------------
+    public void UpgradeWeaponLevel(int value)
+    {
+        if(value > _upgradeCost)
+        {
+            NetworkClient.Instance.UpgradeWeapon();
+            _upgradeCost += (4 / 100 * _upgradeCost) + 4;
+            // Reset value to 0
+        }
+    }
+    public void OnUpgradeWeapon()
+    {
+        if (_weaponLevel % 3 == 0)
+        {
+            foreach(WeaponBase wpn in weapons)
+            {
+                wpn.critRate += (wpn.critRate / 10.0f);
+            }
+        }
+        else if (_weaponLevel % 3 == 1)
+        {
+            foreach (WeaponBase wpn in weapons)
+            {
+                if(wpn.cooldownTime <= .2f)
+                    wpn.cooldownTime -= (wpn.cooldownTime / 10.0f);
+            }
+        }
+        else if (_weaponLevel % 3 == 2)
+        {
+            foreach (WeaponBase wpn in weapons)
+            {
+                wpn.baseAttack += (wpn.baseAttack / 20.0f);
+            }
+        }
     }
 
     // Deletion

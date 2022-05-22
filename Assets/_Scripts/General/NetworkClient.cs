@@ -174,7 +174,8 @@ public class NetworkClient : MonoBehaviour
         MdSt,
         LRm,
         DBl,
-        RbWl
+        RbWl,
+        UpWpn
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -317,6 +318,11 @@ public class NetworkClient : MonoBehaviour
                 case Header.RbWl:
                 {
                     TilemapManager.instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
+                    break;
+                }
+                case Header.UpWpn:
+                {
+                    UnitManager.Instance.OnUpgradeWeapon();
                     break;
                 }
             }
@@ -517,6 +523,11 @@ public class NetworkClient : MonoBehaviour
     {
         string[] msg = { Header.RbWl.ToString(), brokenWallId.ToString(), amount.ToString() };
         SendMessageClient("1", msg);
+    }
+
+    public void UpgradeWeapon()
+    {
+        SendMessageClient("1", Header.UpWpn.ToString());
     }
 
     #endregion

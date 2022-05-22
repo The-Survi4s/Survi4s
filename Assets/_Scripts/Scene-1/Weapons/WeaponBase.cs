@@ -9,19 +9,17 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
 
-    public float baseAttack { get; protected set; }
-    public float critRate { get; protected set; }
-    public float cooldownTime { get; protected set; }
+    public float baseAttack { get; set; }
+    public float critRate { get; set; }
+    public float cooldownTime { get; set; }
     protected float nextAttackTime;
     public GameObject owner { get; private set; }
     public bool IsUsed() => owner != null;
 
-    public int upgradeLevel { get; private set; }
-
     [SerializeField] protected Vector3 offset;
 
     // Particles -----------------------------------------
-    
+
 
     // Cached components --------------------
     protected Player ownerPlayer;
@@ -34,7 +32,6 @@ public abstract class WeaponBase : MonoBehaviour
         critRate = defaultCritRate;
         cooldownTime = maxCooldownTime;
         ownerPlayer = owner?.GetComponent<Player>();
-        upgradeLevel = 1;
     }
 
     private void Awake() => Init();
@@ -44,13 +41,13 @@ public abstract class WeaponBase : MonoBehaviour
         if (owner == null) return;
         // Follow owner
         transform.position = owner.transform.position +
-                             (ownerPlayer.isFacingLeft ? new Vector3 (-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
+                             (ownerPlayer.isFacingLeft ? new Vector3(-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
         // Rotate weapon based on owner mouse pos
         RotateWeapon(isLocal
             ? ownerPlayer.localMousePos
             : ownerPlayer.syncMousePos);
     }
-    
+
     // Network methods -----------------------------------
     public void SendAttackMessage()
     {
@@ -75,10 +72,10 @@ public abstract class WeaponBase : MonoBehaviour
     }
 
     // Attack methods --------------------------------------------
-    public bool IsCritical() => Random.Range(0f, 100f) < critRate; 
-    public Vector2 GetOwnerAttackPoint() => 
-        owner == null 
-        ? Vector2.zero 
+    public bool IsCritical() => Random.Range(0f, 100f) < critRate;
+    public Vector2 GetOwnerAttackPoint() =>
+        owner == null
+        ? Vector2.zero
         : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
@@ -97,14 +94,5 @@ public abstract class WeaponBase : MonoBehaviour
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
         ownerPlayer = null;
-    }
-
-    // Upgrade weapon, dipanggil dari statue
-    public void UpgradeWeapon()
-    {
-        baseAttack *= 1.05f;
-        critRate *= 1.05f;
-        maxCooldownTime *= 0.9f;
-        upgradeLevel++;
     }
 }
