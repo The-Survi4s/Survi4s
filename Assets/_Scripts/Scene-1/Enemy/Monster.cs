@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// Base class of all Monsters
@@ -378,8 +375,13 @@ public abstract class Monster : MonoBehaviour
     /// Adds <see cref="MonsterStat.hitPoint"/> by <paramref name="amount"/>, rounded. 
     /// </summary>
     /// <param name="amount"></param>
-    public void ModifyHitPoint(float amount) => monsterStat.hitPoint += Mathf.RoundToInt(amount);
-
+    private string _lastPlayerHit;
+    public void ModifyHitPoint(float amount, string playerName)
+    {
+        monsterStat.hitPoint += Mathf.RoundToInt(amount);
+        if(playerName != null)
+            _lastPlayerHit = playerName;
+    }
     /// <summary>
     /// Adds <paramref name="statusEffect"/> to <see cref="_activeStatusEffects"/>
     /// </summary>
@@ -457,6 +459,8 @@ public abstract class Monster : MonoBehaviour
     /// </summary>
     private void HpZeroEventHandler()
     {
+        UnitManager.Instance.Players[_lastPlayerHit].AddKillCount();
+
         Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
         _animator.SetBool(IsDeadBool, true);
         OnMonsterDeath?.Invoke(id);

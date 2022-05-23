@@ -48,9 +48,13 @@ MonoBehaviour:
   defaultCritRate: 30
   maxCooldownTime: 2
   offset: {x: 0.2, y: -3, z: -1}
+  _upgradeCost: 4
+  _weaponLevel: 1
+  _weaponExp: 0
   _maxAmmo: 5
   _bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
   <inAccuracy>k__BackingField: 1.5
+  _ammo: 0
 --- !u!212 &536319729483946899
 SpriteRenderer:
   m_ObjectHideFlags: 0

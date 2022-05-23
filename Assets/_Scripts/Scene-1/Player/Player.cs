@@ -37,6 +37,13 @@ public class Player : MonoBehaviour
 
     private WeaponRange _weaponRange;
 
+    [SerializeField] private int _killCount;
+    public int KillCount
+    {
+        get => _killCount;
+        private set => _killCount = value;
+    }
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -300,5 +307,10 @@ public class Player : MonoBehaviour
     public void SetWeaponRange()
     {
         _weaponRange = weaponManager.weapon as WeaponRange;
+    }
+
+    public void AddKillCount()
+    {
+        KillCount++;
     }
 }

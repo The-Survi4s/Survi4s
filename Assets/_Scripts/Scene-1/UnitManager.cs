@@ -24,6 +24,11 @@ public class UnitManager : MonoBehaviour
     // Statue Pos
     [SerializeField] private Transform _statuePos;
 
+    public Dictionary<string, Player> Players
+    {
+        get => _players;
+    }
+
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
@@ -117,10 +122,10 @@ public class UnitManager : MonoBehaviour
 
     // Send command to units
     // Monster
-    public void ModifyMonsterHp(int id, float amount)
+    public void ModifyMonsterHp(int id, float amount, string playerName)
     {
         if (!_monsters.ContainsKey(id)) return;
-        _monsters[id].ModifyHitPoint(amount);
+        _monsters[id].ModifyHitPoint(amount, playerName);
     }
 
     // Player

@@ -13,7 +13,7 @@ public class BleedEffect : StatusEffectBase
 
     protected override async void ApplyEffect()
     {
-        owner.ModifyHitPoint(-strength);
+        owner.ModifyHitPoint(-strength, null);
         await Task.Delay(1000);
     }
 }

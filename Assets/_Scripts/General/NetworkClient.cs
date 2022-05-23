@@ -175,7 +175,8 @@ public class NetworkClient : MonoBehaviour
         LRm,
         DBl,
         RbWl,
-        UpWpn
+        UpWpn,
+        KlCo
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -275,7 +276,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdMo:
                 {
-                    UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]), float.Parse(info[3]));
+                    UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]), float.Parse(info[3]), info[0]);
                     break;
                 }
                 case Header.MoEf:
@@ -323,6 +324,11 @@ public class NetworkClient : MonoBehaviour
                 case Header.UpWpn:
                 {
                     UnitManager.Instance.FindAndUpgradeWeapon(info[2]);
+                    break;
+                }
+                case Header.KlCo:
+                {
+                    // Player Kill Count
                     break;
                 }
             }
