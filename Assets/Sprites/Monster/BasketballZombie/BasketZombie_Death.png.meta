@@ -1,7 +1,31 @@
 fileFormatVersion: 2
 guid: b6a0827931cfd5a4eb011bc26a0257b5
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 2238135017224430637
+    second: BasketZombie_Death_0
+  - first:
+      213: -804360921403913288
+    second: BasketZombie_Death_1
+  - first:
+      213: 8223174644470362646
+    second: BasketZombie_Death_2
+  - first:
+      213: -4746562178223034704
+    second: BasketZombie_Death_3
+  - first:
+      213: -4835902927307863920
+    second: BasketZombie_Death_4
+  - first:
+      213: 4454797760679187755
+    second: BasketZombie_Death_5
+  - first:
+      213: 7907109724274835145
+    second: BasketZombie_Death_6
+  - first:
+      213: -8850109218197577111
+    second: BasketZombie_Death_7
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -101,7 +125,231 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: BasketZombie_Death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d246605a0f37f0f10800000000000000
+      internalID: 2238135017224430637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_1
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bb8380f00656d4f0800000000000000
+      internalID: -804360921403913288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_2
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 612b7a955c59e1270800000000000000
+      internalID: 8223174644470362646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_3
+      rect:
+        serializedVersion: 2
+        x: 186
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0be26b6e8d2d02eb0800000000000000
+      internalID: -4746562178223034704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_4
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0980b89c8eb63ecb0800000000000000
+      internalID: -4835902927307863920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_5
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: b251d77f5fe92dd30800000000000000
+      internalID: 4454797760679187755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_6
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ce307b8662bbbd60800000000000000
+      internalID: 7907109724274835145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasketZombie_Death_7
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 0
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: 16}
+        - {x: -28, y: 0}
+        - {x: -31, y: -7}
+        - {x: -25, y: -14}
+        - {x: 10, y: -12}
+        - {x: 18, y: 0}
+        - {x: 17, y: 14}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9626ce15e881e2580800000000000000
+      internalID: -8850109218197577111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
