@@ -7,22 +7,22 @@ TextureImporter:
     second: Objects 2x1_0_couch_h
   - first:
       213: -7381226750730021648
-    second: Objects 2x1_1
+    second: Objects 2x1_1_Shelf_top
   - first:
       213: -8151987077415591355
-    second: Objects 2x1_2
+    second: Objects 2x1_2_Shelf_middle
   - first:
       213: -1537532061723775955
-    second: Objects 2x1_3
+    second: Objects 2x1_3_Shelf_bottom
   - first:
       213: 2246600002539815754
-    second: Objects 2x1_4
+    second: Objects 2x1_4_shelf2_top
   - first:
       213: 7077174414562517047
     second: Objects 2x1_5
   - first:
       213: 5873600597678267811
-    second: Objects 2x1_6
+    second: Objects 2x1_6_shelf2_middle_bottom
   - first:
       213: -531695051723791091
     second: Objects 2x1_7_canteenChair_v_top
@@ -182,7 +182,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Objects 2x1_1
+      name: Objects 2x1_1_Shelf_top
       rect:
         serializedVersion: 2
         x: 0
@@ -207,7 +207,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Objects 2x1_2
+      name: Objects 2x1_2_Shelf_middle
       rect:
         serializedVersion: 2
         x: 0
@@ -232,7 +232,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Objects 2x1_3
+      name: Objects 2x1_3_Shelf_bottom
       rect:
         serializedVersion: 2
         x: 0
@@ -257,7 +257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Objects 2x1_4
+      name: Objects 2x1_4_shelf2_top
       rect:
         serializedVersion: 2
         x: 0
@@ -282,32 +282,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Objects 2x1_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 192
-        width: 32
-        height: 16
-      alignment: 9
-      pivot: {x: 0.25, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -16, y: 8}
-        - {x: -16, y: -8}
-        - {x: 16, y: -8}
-        - {x: 16, y: 8}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7306b7132ac273260800000000000000
-      internalID: 7077174414562517047
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Objects 2x1_6
+      name: Objects 2x1_6_shelf2_middle_bottom
       rect:
         serializedVersion: 2
         x: 0
