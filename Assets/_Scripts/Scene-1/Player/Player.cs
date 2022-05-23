@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _minStatueDist = 3.0f;
     [SerializeField] private bool _isNearStatue;
 
+    private WeaponRange _weaponRange;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -90,16 +92,27 @@ public class Player : MonoBehaviour
             {
                 weaponManager.UpgradeEquipedWeapon();
             }
+        }
 
-            // Check statue Pos
-            var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
-            if (distanceToStatue < _minStatueDist)
+        // Global Process --------------------------------------------------
+
+        // Check statue Pos
+        var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
+        if (distanceToStatue < _minStatueDist)
+        {
+            _isNearStatue = true;
+        }
+        else
+        {
+            _isNearStatue = false;
+        }
+
+        // Auto Reload
+        if (_isNearStatue)
+        {
+            if(_weaponRange.Ammo != _weaponRange.MaxAmmo)
             {
-                _isNearStatue = true;
-            }
-            else
-            {
-                _isNearStatue = false;
+                _weaponRange.ReloadAmmo();
             }
         }
     }
@@ -282,5 +295,10 @@ public class Player : MonoBehaviour
     {
         get { return _isNearStatue; }
         private set { _isNearStatue = value; }
+    }
+
+    public void SetWeaponRange()
+    {
+        _weaponRange = weaponManager.weapon as WeaponRange;
     }
 }

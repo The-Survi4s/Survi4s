@@ -5,11 +5,16 @@ public class WeaponRange : WeaponBase
     [SerializeField] private int _maxAmmo;
     [SerializeField] private GameObject _bullet;
     [field: SerializeField] public float inAccuracy { get; private set; }
-    private int _ammo;
-    public int ammo
+    [SerializeField] private int _ammo;
+    public int Ammo
     {
         get => _ammo;
         set => _ammo = Mathf.Clamp(value, 0, _maxAmmo);
+    }
+    public int MaxAmmo
+    {
+        get => _maxAmmo;
+        private set => _maxAmmo = value;
     }
 
     private void Start()
@@ -27,7 +32,7 @@ public class WeaponRange : WeaponBase
         return ownerPlayer.syncMousePos;
     }
 
-    public void ReloadAmmo() => ammo = _maxAmmo;
+    public void ReloadAmmo() => Ammo = _maxAmmo;
 
     public override void ReceiveAttackMessage()
     {
@@ -36,19 +41,12 @@ public class WeaponRange : WeaponBase
         // Only do this if local
         if (isLocal)
         {
-            if(ammo > 0)
+            if(Ammo > 0)
             {
                 // Send message to spawn bullet
                 Vector2 attackPoint = GetOwnerAttackPoint();
                 Vector2 mousePos = GetOwnerMousePos();
                 NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
-            }
-            else
-            {
-                if(ownerPlayer.IsNearStatue)
-                {
-                    ReloadAmmo();
-                }
             }
         }
     }
@@ -61,5 +59,8 @@ public class WeaponRange : WeaponBase
 
         // init bullet
         bulTemp.Init(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
+
+        // Reduce ammo
+        Ammo--;
     }
 }

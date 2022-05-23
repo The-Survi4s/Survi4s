@@ -43,6 +43,8 @@ public class PlayerWeaponManager : MonoBehaviour
                 // Equip new weapon
                 x.EquipWeapon(this);
                 weapon = x;
+
+                GetComponent<Player>().SetWeaponRange();
             }
         }
     }
