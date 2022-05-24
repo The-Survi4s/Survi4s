@@ -8,8 +8,17 @@ public abstract class WeaponMelee : WeaponBase
 
     private void Awake()
     {
+        //GetComponent<Animator>().enabled = false;
         attackRad = defaultAttackRad;
     }
+
+    /*private void LateUpdate()
+    {
+        if (GetComponent<Animator>().enabled == true)
+            transform.localEulerAngles = new Vector3(0, 0, currentZRot + transform.localEulerAngles.z);
+        else
+            transform.localEulerAngles = transform.localEulerAngles;
+    }*/
 
     public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
     {
@@ -30,11 +39,17 @@ public abstract class WeaponMelee : WeaponBase
     protected virtual void OnNormalAttack(Collider2D[] targets)
     {
         ModifyAllMonsterHp(targets, -baseAttack);
+
+        PlayAnimation();
+        //currentZRot = transform.localEulerAngles.z;
     }
 
     protected virtual void OnCritical(Collider2D[] targets)
     {
         ModifyAllMonsterHp(targets, -baseAttack * 2);
+
+        PlayAnimation();
+        //currentZRot = transform.localEulerAngles.z;
     }
 
     protected void ModifyAllPlayerHp(Collider2D[] targets, float amount)
@@ -66,4 +81,26 @@ public abstract class WeaponMelee : WeaponBase
         Vector2 attackPoint = owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
         Gizmos.DrawSphere(attackPoint, attackRad);
     }
+
+    protected override void PlayAnimation()
+    {
+        base.PlayAnimation();
+
+        GetComponent<Animator>().Play("BaseBall_Attack");
+    }
+
+    /*protected override void PlayAnimation()
+    {
+        base.PlayAnimation();
+
+        //GetComponent<Animator>().speed = 1f;
+        GetComponent<Animator>().enabled = true;
+        GetComponent<Animator>().Play("Swing_Melee");
+    }
+
+    void StopAnimation()
+    {
+        GetComponent<Animator>().enabled = false;
+        Debug.Log("STOP");
+    }*/
 }

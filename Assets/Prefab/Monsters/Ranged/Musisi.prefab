@@ -48,21 +48,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -6669991599751582574, guid: de18e525fbff999429e133433a3530fa, type: 3}
+    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Color.b
-      value: 0.4582608
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Color.g
-      value: 0.14929691
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Color.r
-      value: 0.5754717
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 540803284662950770, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Name
       value: Musisi
       objectReference: {fileID: 0}
+    - target: {fileID: 5464984151315559400, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a61e4e53fad336248ac1ceddb68aa6b2, type: 2}
     - target: {fileID: 6219795559681374532, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -106,6 +114,22 @@ PrefabInstance:
     - target: {fileID: 6219795559681374532, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 3.4375
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 3.1875
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
@@ -153,6 +177,8 @@ MonoBehaviour:
       movSpd: 2
       rotSpd: 60
       acceleration: 10
+    doEvasion: 0
   <targetWall>k__BackingField: {fileID: 0}
+  <nearestPlayer>k__BackingField: {fileID: 0}
   <currentTarget>k__BackingField: 0
   _bulletPrefab: {fileID: 3082794662705287549, guid: 4c19149c04a1d5543aeb05eb28685219, type: 3}
