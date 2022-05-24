@@ -45,7 +45,7 @@ public class WeaponRange : WeaponBase
             }
             else
             {
-                if(ownerPlayer.IsNearStatue)
+                if(ownerPlayer.isNearStatue)
                 {
                     ReloadAmmo();
                 }

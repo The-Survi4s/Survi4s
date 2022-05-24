@@ -166,7 +166,7 @@ public class TilemapManager : MonoBehaviour
             bw.OnRebuilt -= OnRebuilt;
             Destroy(bw);
 
-            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTileStage(_wallTileStages.getTileStages.Length - 1));
+            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTile(_wallTileStages.getTileStages.Count - 1));
             var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
             wall.Init(GetNewWallId(), GetOrigin(wall.transform.position), cellPos, 10);
             wall.ModifyHp(0);
@@ -288,7 +288,9 @@ public class TilemapManager : MonoBehaviour
     /// </summary>
     /// <param name="worldPos">The position in world space</param>
     /// <returns></returns>
-    public Vector3Int ToCellPosition(Vector3 worldPos) => _wallTilemap.WorldToCell(worldPos);
+    public Vector3Int WorldToCell(Vector3 worldPos) => _wallTilemap.WorldToCell(worldPos);
+
+    public Vector3 CellToWorld(Vector3Int cellPos) => _wallTilemap.CellToWorld(cellPos);
 
     #endregion
 
@@ -357,7 +359,7 @@ public class TilemapManager : MonoBehaviour
         if(!tileStages) return;
 
         // Calculate variant id
-        var variantCount = tileStages.getTileStages.Length - 1;
+        var variantCount = tileStages.getTileStages.Count - 1;
         var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp * 1.0f / variantCount));
         if (tile.spriteVariantId == variantId) return;
         
@@ -368,8 +370,40 @@ public class TilemapManager : MonoBehaviour
         if (tile.hp <= 0 && tile is Wall wall) SpawnBrokenWall(wall);
 
         // Set tile, then update Tilemap and NavMesh
-        _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTileStage(variantId));
+        _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTile(variantId));
         _wallTilemap.RefreshTile(cellPos);
         NavMeshController.UpdateNavMesh();
+    }
+
+    [SerializeField] private Tilemap[] _obstacleTilemaps;
+
+    public Vector3 Jump(Vector3 worldPosFrom, Vector3 direction)
+    {
+        var dir = WorldToCell(direction);
+        dir.Clamp(-Vector3Int.one, Vector3Int.one);
+        var from = WorldToCell(worldPosFrom);
+        var wallInFront = GetWall(from + dir);
+        if (wallInFront && IsJumpPossible(from, dir))
+        {
+            return CellToWorld(from + dir * 2);
+        }
+        else return worldPosFrom;
+    }
+
+    private bool IsJumpPossible(Vector3Int cellPos, Vector3Int dir)
+    {
+        int wallLayer = (int)Mathf.Log(LayerMask.GetMask("Wall"), 2);
+
+        Vector2Int pos = new Vector2Int(cellPos.x, cellPos.y);
+        Vector2Int d = new Vector2Int(dir.x, dir.y);
+        d.Clamp(-Vector2Int.one, Vector2Int.one);
+        foreach (var tilemap in _obstacleTilemaps)
+        {
+            var tileCollider1 = Physics2D.OverlapPoint(pos, wallLayer);
+            var tileCollider2 = Physics2D.OverlapPoint(pos + d * 2, wallLayer);
+            //If collider found, jump not possible
+            if (tileCollider1 || tileCollider2) return false;
+        }
+        return true;
     }
 }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4365153069563283076}
   - component: {fileID: 7969651355060788098}
   m_Layer: 10
-  m_Name: MonsterBullet
+  m_Name: BasketBallBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,9 +49,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 10
   maxTravelRange: 100
-  _maxTriggerTimes: 1
+  _maxTriggerTimes: 3
   particleToSpawn: {fileID: 0}
   particleSpawnRate: 0.2
+  _rotationRandomAddMax: 0
 --- !u!212 &-3427419256100365185
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -92,7 +93,7 @@ SpriteRenderer:
   m_SortingLayerID: -916554939
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: -237609813968200833, guid: 94496a233add49949ad178bff928914f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

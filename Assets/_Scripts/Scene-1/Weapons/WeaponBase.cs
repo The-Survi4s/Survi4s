@@ -9,9 +9,9 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
 
-    public float baseAttack { get; set; }
-    public float critRate { get; set; }
-    public float cooldownTime { get; set; }
+    public float baseAttack { get; protected set; }
+    public float critRate { get; protected set; }
+    public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
     public GameObject owner { get; private set; }
     public bool IsUsed() => owner != null;
