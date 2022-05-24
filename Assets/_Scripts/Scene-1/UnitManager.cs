@@ -307,12 +307,19 @@ public class UnitManager : MonoBehaviour
         return nearest;
     }
 
-    public Player GetPlayer(string id)
+    public Player GetPlayer(int id) => _playerKdTree.FirstOrDefault(player => player.id == id);
+
+    public Player GetPlayer(string idAndName)
     {
-        return _playerKdTree.FirstOrDefault(player => player.id == id);
+        if (!_players.ContainsKey(idAndName)) return default;
+        return _players[idAndName];
     }
 
-    public Player GetLocalPlayer() => _playerKdTree.FirstOrDefault(player => player.isLocal == true);
+    /// <summary>
+    /// Gets the local Player
+    /// </summary>
+    /// <returns></returns>
+    public Player GetPlayer() => _playerKdTree.FirstOrDefault(player => player.isLocal == true);
 
     public List<T> GetObjectsInRadius<T>(Vector2 point, float r, LayerMask layerMask)
     {

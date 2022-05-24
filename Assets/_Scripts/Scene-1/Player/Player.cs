@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 
 [RequireComponent(typeof(PlayerStats),typeof(PlayerWeaponManager))]
 public class Player : MonoBehaviour
@@ -7,7 +8,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rigidbody;
     [field: SerializeField] public bool isLocal { get; private set; }
     [SerializeField] private Animator _animator;
-    public string id { get; set; }
+    public int id { get; set; }
 
     // For player movement -------------------------------------------------------------
     public enum Axis { none, all, x, y }
@@ -34,7 +35,13 @@ public class Player : MonoBehaviour
     [SerializeField] public bool isNearStatue { get; private set; }
 
     // Store last direction
+    /// <summary>
+    /// Player's current move direction. Clamps to (-1, -1) and (1, 1). 
+    /// </summary>
     private Vector2 _moveDir;
+    /// <summary>
+    /// Player's last move direction. Will never become <see cref="Vector2.zero"/> except at the start. 
+    /// </summary>
     private Vector2 _lastMoveDir;
 
     private void Awake()
@@ -107,16 +114,24 @@ public class Player : MonoBehaviour
             // Jump wall
             if (Input.GetKeyDown(KeyCode.Space))
             {
-
+                NetworkClient.Instance.Jump();
             }
         }
+    }
+
+    public async void Jump()
+    {
+        //Play animasi jump
+        await Task.Delay(1);
+        //teleport
+        transform.position = TilemapManager.instance.GetJumpPos(transform.position, _lastMoveDir);
     }
 
     public bool isDead => stats.isDead;
 
     private void HandlePlayerDead()
     {
-        OnPlayerDead?.Invoke(id);
+        OnPlayerDead?.Invoke(name);
     }
 
     private void FixedUpdate()

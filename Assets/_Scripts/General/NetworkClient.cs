@@ -175,7 +175,8 @@ public class NetworkClient : MonoBehaviour
         DBl,
         RbWl,
         UpWpn,
-        PlVl
+        PlVl,
+        PJmp
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -327,6 +328,11 @@ public class NetworkClient : MonoBehaviour
                         EnumParse<Player.Axis>(info[4]));
                     break;
                 }
+                case Header.PJmp:
+                {
+                    UnitManager.Instance.GetPlayer(info[0]).Jump();
+                    break;
+                }
             }
         }
     }
@@ -461,6 +467,12 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
+    public void Jump()
+    {
+        string[] msg = { Header.PJmp.ToString() };
+        SendMessageClient("1", msg);
+    }
+
     public void StartMonsterAttackAnimation(int targetId) 
     {
         //Debug.Log("Monster Attack Animation");
@@ -542,9 +554,9 @@ public class NetworkClient : MonoBehaviour
         return (T) Enum.Parse(typeof(T), stringToEnum, true);
     }
 
-    private static string ExtractId(string idAndName)
+    private static int ExtractId(string idAndName)
     {
-        return idAndName.Substring(0, IdLength);
+        return int.Parse(idAndName.Substring(0, IdLength));
     }
 
     #endregion

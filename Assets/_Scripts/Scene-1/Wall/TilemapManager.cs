@@ -375,35 +375,52 @@ public class TilemapManager : MonoBehaviour
         NavMeshController.UpdateNavMesh();
     }
 
-    [SerializeField] private Tilemap[] _obstacleTilemaps;
-
-    public Vector3 Jump(Vector3 worldPosFrom, Vector3 direction)
+    /// <summary>
+    /// Gets a new position <paramref name="jumpDistance"/> away in <paramref name="direction"/> 
+    /// from <paramref name="worldPosFrom"/>. 
+    /// </summary>
+    /// <param name="worldPosFrom"></param>
+    /// <param name="direction"></param>
+    /// <param name="jumpDistance"></param>
+    /// <returns>
+    /// The new position. <br/>
+    /// If a collider is found at the new position, 
+    /// returns <paramref name="worldPosFrom"/>
+    /// </returns>
+    public Vector3 GetJumpPos(Vector3 worldPosFrom, Vector3 direction, int jumpDistance = 2)
     {
         var dir = WorldToCell(direction);
         dir.Clamp(-Vector3Int.one, Vector3Int.one);
         var from = WorldToCell(worldPosFrom);
         var wallInFront = GetWall(from + dir);
-        if (wallInFront && IsJumpPossible(from, dir))
+        if (wallInFront && IsJumpPossible(from, dir, jumpDistance))
         {
-            return CellToWorld(from + dir * 2);
+            return CellToWorld(from + dir * jumpDistance);
         }
         else return worldPosFrom;
     }
 
-    private bool IsJumpPossible(Vector3Int cellPos, Vector3Int dir)
+    /// <summary>
+    /// Checks if there's no collider in 2 locations: <br/>
+    /// <paramref name="cellPos"/>, 
+    /// and a location <paramref name="jumpDistance"/> away
+    /// in <paramref name="direction"/> from <paramref name="cellPos"/>
+    /// </summary>
+    /// <param name="cellPos"></param>
+    /// <param name="direction"></param>
+    /// <param name="jumpDistance"></param>
+    /// <returns></returns>
+    private bool IsJumpPossible(Vector3Int cellPos, Vector3Int direction, int jumpDistance)
     {
         int wallLayer = (int)Mathf.Log(LayerMask.GetMask("Wall"), 2);
 
         Vector2Int pos = new Vector2Int(cellPos.x, cellPos.y);
-        Vector2Int d = new Vector2Int(dir.x, dir.y);
-        d.Clamp(-Vector2Int.one, Vector2Int.one);
-        foreach (var tilemap in _obstacleTilemaps)
-        {
-            var tileCollider1 = Physics2D.OverlapPoint(pos, wallLayer);
-            var tileCollider2 = Physics2D.OverlapPoint(pos + d * 2, wallLayer);
-            //If collider found, jump not possible
-            if (tileCollider1 || tileCollider2) return false;
-        }
+        Vector2Int dir = new Vector2Int(direction.x, direction.y);
+        dir.Clamp(-Vector2Int.one, Vector2Int.one);
+        var tileCollider1 = Physics2D.OverlapPoint(pos, wallLayer);
+        var tileCollider2 = Physics2D.OverlapPoint(pos + dir * jumpDistance, wallLayer);
+        //If collider found, jump not possible
+        if (tileCollider1 || tileCollider2) return false;
         return true;
     }
 }
