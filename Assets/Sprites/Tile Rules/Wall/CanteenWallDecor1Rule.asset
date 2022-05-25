@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575ffe6325e94cc45bb60022a1cbe61d, type: 3}
   m_Name: CanteenWallRule (Override)
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: -7972351792130655080, guid: 76518badb168b9a478f878351c1eee89, type: 3}
+  m_DefaultSprite: {fileID: -9075615923524728600, guid: 76518badb168b9a478f878351c1eee89, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
@@ -272,12 +272,8 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     m_RuleTransform: 0
   alwaysConnect: 1
-  tilesToConnect:
-  - {fileID: 11400000, guid: aa9c188dbb5a4834bb09fe27b9b649d5, type: 2}
-  - {fileID: 11400000, guid: 81debd5989f262147b239cbde96cec19, type: 2}
-  - {fileID: 11400000, guid: 764dfcbd426d08846887bcfca3a6f2b8, type: 2}
-  - {fileID: 11400000}
-  - {fileID: 11400000, guid: 9e836d8b6cfa1734e877def5fb62fbce, type: 2}
+  tileStagesToConnect:
+  - {fileID: 11400000, guid: cfdc24ab81e230547a912608224fca85, type: 2}
   checkSelf: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -295,7 +291,7 @@ MonoBehaviour:
   m_Sprites: []
   m_GameObjects: []
   m_InstanceTile: {fileID: -7963759660176130682}
-  m_DefaultSprite: {fileID: -7972351792130655080, guid: 76518badb168b9a478f878351c1eee89, type: 3}
+  m_DefaultSprite: {fileID: -9075615923524728600, guid: 76518badb168b9a478f878351c1eee89, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_OverrideTilingRules:

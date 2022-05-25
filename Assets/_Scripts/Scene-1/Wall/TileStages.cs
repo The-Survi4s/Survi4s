@@ -6,19 +6,19 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu]
 public class TileStages : ScriptableObject
 {
-    [SerializeField] private List<TileBase> _tileStages;
-    public List<TileBase> getTileStages => _tileStages;
-    public TileBase GetTile(int stage) => _tileStages[stage];
+    [SerializeField] private List<TileBase> _tiles;
+    public List<TileBase> getTileStages => _tiles;
+    public TileBase GetTile(int stage) => _tiles[stage];
     public int GetIndex(TileBase tile)
     {
-        if (_tileStages.Contains(tile))
+        if (_tiles.Contains(tile))
         {
-            for (int index = 0; index < _tileStages.Count; index++)
+            for (int index = 0; index < _tiles.Count; index++)
             {
-                if (_tileStages[index] == tile) return index;
+                if (_tiles[index] == tile) return index;
             }
         }
         return -1;
     }
-    public bool Contains(TileBase tile) => _tileStages.Contains(tile);
+    public bool Contains(TileBase tile) => _tiles.Contains(tile);
 }
