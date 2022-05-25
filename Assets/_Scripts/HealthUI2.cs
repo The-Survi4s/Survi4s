@@ -5,9 +5,9 @@ using UnityEngine.UI;
 public class HealthUI2 : MonoBehaviour
 {
     Text text;
-    [SerializeField] public CharacterStats Stats;
+    [SerializeField] public PlayerStats Stats;
     [SerializeField] public float hp_sem, jumlah;
-    TriggerHp trik;
+    //TriggerHp trik;
     //UnitManager unit;
     // Start is called before the first frame update
     public void Start()
@@ -28,7 +28,7 @@ public class HealthUI2 : MonoBehaviour
         //Debug.Log("Stats:" + Stats._hitPoint);
          //hp_sem = Stats._hitPoint;
         // jumlah = hp_sem - Stats.speed;
-                text.text = Stats._hitPoint.ToString();
+                text.text = Stats.hitPoint.ToString();
         
         //hp_sem = Stats.hitPoint.set('1');
         //      text.text = Stats.hitPoint.ToString();
@@ -55,7 +55,7 @@ public class HealthUI2 : MonoBehaviour
             Debug.Log("Local player null");
             yield return new WaitForSeconds(0.2f);
         }
-        Stats = LocalPlayer().gameObject.GetComponent<CharacterStats>();
+        Stats = LocalPlayer().gameObject.GetComponent<PlayerStats>();
 
 }
 }

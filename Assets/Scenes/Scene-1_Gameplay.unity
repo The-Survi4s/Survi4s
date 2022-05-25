@@ -293,7 +293,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &174664671
 GameObject:
@@ -518,7 +518,7 @@ Transform:
   - {fileID: 82476655}
   - {fileID: 231279849}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &320356889
 GameObject:
@@ -825,7 +825,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &708962333
 GameObject:
@@ -1146,7 +1146,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &982420786
 GameObject:
@@ -2413,7 +2413,7 @@ Transform:
   m_Children:
   - {fileID: 1255635991}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1797441189
 GameObject:
@@ -2803,11 +2803,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2077438216}
   m_CullTransparentMesh: 1
---- !u!1839735485 &2125633944 stripped
-Tilemap:
-  m_CorrespondingSourceObject: {fileID: 6953115217216796226, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
-  m_PrefabInstance: {fileID: 6953115215699603418}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4125814744812284331
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2853,7 +2848,7 @@ PrefabInstance:
       objectReference: {fileID: 6108645726365500224, guid: 73e8f9d77a58f4642a1e3705a32e0344, type: 3}
     - target: {fileID: 4125814745421116770, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4125814745421116770, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2902,7 +2897,7 @@ PrefabInstance:
     - target: {fileID: 4125814745674863460, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: _wallTilemap
       value: 
-      objectReference: {fileID: 2125633944}
+      objectReference: {fileID: 0}
     - target: {fileID: 4125814745862421290, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: mainPanel
       value: 
@@ -2952,6 +2947,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1087970441314043649, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+      propertyPath: m_TileSpriteArray.Array.data[14].m_Data
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087970441314043649, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+      propertyPath: m_TileSpriteArray.Array.data[16].m_Data
+      value: 
+      objectReference: {fileID: 5449506063439451688, guid: 713938bddf8a6d945adff8a4b29c7ff0, type: 3}
+    - target: {fileID: 1087970441314043649, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+      propertyPath: m_TileSpriteArray.Array.data[14].m_RefCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087970441314043649, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+      propertyPath: m_TileSpriteArray.Array.data[16].m_RefCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087970441314043649, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+      propertyPath: m_Tiles.Array.data[60].second.m_TileSpriteIndex
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 6953115215537912524, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
       propertyPath: m_RootOrder
       value: 6

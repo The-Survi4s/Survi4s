@@ -461,7 +461,7 @@ public abstract class Monster : MonoBehaviour
     /// </summary>
     private void HpZeroEventHandler()
     {
-        UnitManager.Instance.Players[_lastPlayerHit].AddKillCount();
+        UnitManager.Instance.GetPlayer(_lastPlayerHit).AddKillCount();
 
         Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
         _animator.SetBool(IsDeadBool, true);
