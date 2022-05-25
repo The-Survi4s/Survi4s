@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1318660083
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 6639379536695320643, guid: e165a158721c60b4db3952569afb2dfe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -106,7 +106,6 @@ MonoBehaviour:
   _animator: {fileID: 8987012856656221205}
   _mousePosSendRate: 10
   _minStatueDist: 2
-  _isNearStatue: 0
 --- !u!114 &3734245638782618344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRadarRange: 1.2
   attackPoint: {fileID: 4569821827003623592}
-  weaponXp: 0
+  _playerWeaponExp: 0
+  _upgradeButton: {fileID: 0}
 --- !u!50 &6815912341295409886
 Rigidbody2D:
   serializedVersion: 4

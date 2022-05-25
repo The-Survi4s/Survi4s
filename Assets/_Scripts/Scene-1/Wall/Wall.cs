@@ -14,7 +14,7 @@ public class Wall : DestroyableTile
         EnableWall(true);
         Init(TilemapManager.instance.GetNewWallId(), 
             TilemapManager.instance.GetOrigin(transform.position),
-            TilemapManager.instance.ToCellPosition(transform.position));
+            TilemapManager.instance.WorldToCell(transform.position));
         TilemapManager.instance.AddWall(this); // Auto add
     }
 

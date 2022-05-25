@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 
 [RequireComponent(typeof(PlayerStats),typeof(PlayerWeaponManager))]
 public class Player : MonoBehaviour
@@ -7,11 +8,10 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rigidbody;
     [field: SerializeField] public bool isLocal { get; private set; }
     [SerializeField] private Animator _animator;
-    public string id { get; set; }
+    public int id { get; set; }
 
     // For player movement -------------------------------------------------------------
-    private bool w_IsDown, a_IsDown, s_IsDown, d_IsDown;
-    public enum Button { w, a, s, d }
+    public enum Axis { none, all, x, y }
 
     // For player facing ---------------------------------------------------------------
     private Camera _mainCamera;
@@ -31,9 +31,18 @@ public class Player : MonoBehaviour
     private float _mousePosSendCoolDown, _mousePosNextTime;
 
     // Check for near statue
-    private Transform _statuePos;
     [SerializeField] private float _minStatueDist = 3.0f;
-    [SerializeField] private bool _isNearStatue;
+    [SerializeField] public bool isNearStatue { get; private set; }
+
+    // Store last direction
+    /// <summary>
+    /// Player's current move direction. Clamps to (-1, -1) and (1, 1). 
+    /// </summary>
+    private Vector2 _moveDir;
+    /// <summary>
+    /// Player's last move direction. Will never become <see cref="Vector2.zero"/> except at the start. 
+    /// </summary>
+    private Vector2 _lastMoveDir;
 
     private WeaponRange _weaponRange;
 
@@ -65,13 +74,13 @@ public class Player : MonoBehaviour
         _historyMousePos = Vector3.zero;
         localMousePos = Vector3.zero;
         syncMousePos = Vector3.zero;
+        _moveDir = Vector2.zero;
+        _lastMoveDir = Vector2.zero;
 
         _mousePosSendCoolDown = 1 / _mousePosSendRate;
         _mousePosNextTime = 0;
 
         stats.OnPlayerDead += HandlePlayerDead;
-
-        _statuePos = UnitManager.Instance.StatuePos;
     }
 
     private void Update()
@@ -95,7 +104,7 @@ public class Player : MonoBehaviour
             }
 
             // Temporary upgrade weapon
-            if(Input.GetKeyDown(KeyCode.T) && _isNearStatue)
+            if(Input.GetKeyDown(KeyCode.T) && isNearStatue)
             {
                 weaponManager.UpgradeEquipedWeapon();
             }
@@ -107,37 +116,51 @@ public class Player : MonoBehaviour
         var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
         if (distanceToStatue < _minStatueDist)
         {
-            _isNearStatue = true;
+            isNearStatue = true;
         }
         else
         {
-            _isNearStatue = false;
+            isNearStatue = false;
         }
 
         // Auto Reload
-        if (_isNearStatue)
+        if (isNearStatue)
         {
             if(_weaponRange.Ammo != _weaponRange.MaxAmmo)
             {
                 _weaponRange.ReloadAmmo();
-            }
-        }
+			}
+		}
+
+		// Jump wall
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			NetworkClient.Instance.Jump();
+		}
+    }
+
+    public async void Jump()
+    {
+        //Play animasi jump
+        await Task.Delay(1);
+        //teleport
+        transform.position = TilemapManager.instance.GetJumpPos(transform.position, _lastMoveDir);
     }
 
     public bool isDead => stats.isDead;
 
     private void HandlePlayerDead()
     {
-        OnPlayerDead?.Invoke(id);
+        OnPlayerDead?.Invoke(name);
     }
 
     private void FixedUpdate()
     {
         // Move character based on what button is down ---------------------------------------------
-        if(!isDead) MoveCharacter();
+        if(!isDead) _rigidbody.velocity = _moveDir * stats.moveSpeed;
 
         // Flip character based on mouse position --------------------------------------------------
-        if(syncMousePos.x < transform.position.x && !isFacingLeft)
+        if (syncMousePos.x < transform.position.x && !isFacingLeft)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
             isFacingLeft = true;
@@ -156,43 +179,19 @@ public class Player : MonoBehaviour
     }
 
     // For detecting input keyboard ------------------------------------------------------
-    private static void DetectMovementKeyboard()
+    private void DetectMovementKeyboard()
     {
-        // Detect Keyboard Down -----------------------------------------------------------
-        if (Input.GetKeyDown(KeyCode.W))
+        Axis axis = Axis.none;
+        var horizontalInput = Input.GetAxisRaw("Horizontal");
+        var verticalInput = Input.GetAxisRaw("Vertical");
+        if (horizontalInput != _moveDir.x) axis = Axis.x;
+        if (verticalInput != _moveDir.y) axis = Axis.y;
+        if (horizontalInput != _moveDir.x && verticalInput != _moveDir.y)
         {
-            NetworkClient.Instance.SetMovementButton(Button.w, true);
+            axis = Axis.all;
         }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.a, true);
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.s, true);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.d, true);
-        }
-
-        // Detect Keyboard Up -------------------------------------------------------------
-        if (Input.GetKeyUp(KeyCode.W))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.w, false);
-        }
-        else if (Input.GetKeyUp(KeyCode.A))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.a, false);
-        }
-        else if (Input.GetKeyUp(KeyCode.S))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.s, false);
-        }
-        else if (Input.GetKeyUp(KeyCode.D))
-        {
-            NetworkClient.Instance.SetMovementButton(Button.d, false);
-        }
+        if (axis == Axis.none) return;
+        NetworkClient.Instance.SetPlayerVelocity(new Vector2(horizontalInput, verticalInput), axis);
     }
 
     // For detecting input mouse ---------------------------------------------------------
@@ -204,53 +203,32 @@ public class Player : MonoBehaviour
     }
 
     // For moving character ------------------------------------------------------------------
-    private void MoveCharacter()
-    {
-        if (w_IsDown || a_IsDown || s_IsDown || d_IsDown)
-        {
-            _animator.SetBool("isWalk", true);
-        }
-        else
-        {
-            _animator.SetBool("isWalk", false);
-        }
 
-        float baseSpeed = stats.moveSpeed;
-        if (w_IsDown && a_IsDown)
+    public void SetVelocity(Vector2 velocity, Axis axis)
+    {
+        var curVelocity = _rigidbody.velocity;
+        switch (axis)
         {
-            _rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / 2);
+            case Axis.all:
+                {
+                    curVelocity = velocity;
+                    break;
+                }
+            case Axis.x:
+                {
+                    curVelocity.x = velocity.x;
+                    break;
+                }
+            case Axis.y:
+                {
+                    curVelocity.y = velocity.y;
+                    break;
+                }
         }
-        else if (w_IsDown && d_IsDown)
+        _moveDir = new Vector2(Mathf.Clamp(curVelocity.x, -1, 1), Mathf.Clamp(curVelocity.y, -1, 1));
+        if (curVelocity != Vector2.zero)
         {
-            _rigidbody.velocity = new Vector2(baseSpeed / 2, baseSpeed / 2);
-        }
-        else if (s_IsDown && a_IsDown)
-        {
-            _rigidbody.velocity = new Vector2(baseSpeed / -2, baseSpeed / -2);
-        }
-        else if (s_IsDown && d_IsDown)
-        {
-            _rigidbody.velocity = new Vector2(baseSpeed / 2, baseSpeed / -2);
-        }
-        else if (w_IsDown)
-        {
-            _rigidbody.velocity = new Vector2(0, baseSpeed);
-        }
-        else if (a_IsDown)
-        {
-            _rigidbody.velocity = new Vector2(-baseSpeed, 0);
-        }
-        else if (s_IsDown)
-        {
-            _rigidbody.velocity = new Vector2(0, -baseSpeed);
-        }
-        else if (d_IsDown)
-        {
-            _rigidbody.velocity = new Vector2(baseSpeed, 0);
-        }
-        else
-        {
-            _rigidbody.velocity = new Vector2(0, 0);
+            _lastMoveDir = _moveDir;
         }
     }
 
@@ -273,35 +251,15 @@ public class Player : MonoBehaviour
         syncMousePos = new Vector3(x, y, 0);
     }
 
-    // Set Button up/down --------------------------------------------------------------------
-    public void SetButton(Button button, bool isDown)
-    {
-        switch (button)
-        {
-            case Button.w:
-                w_IsDown = isDown;
-                break;
-            case Button.a:
-                a_IsDown = isDown;
-                break;
-            case Button.s:
-                s_IsDown = isDown;
-                break;
-            case Button.d:
-                d_IsDown = isDown;
-                break;
-        }
-    }
-
     private void OnDestroy()
     {
         stats.OnPlayerDead -= HandlePlayerDead;
     }
-
+	
     public bool IsNearStatue
     {
-        get { return _isNearStatue; }
-        private set { _isNearStatue = value; }
+        get { return isNearStatue; }
+        private set { isNearStatue = value; }
     }
 
     public void SetWeaponRange()

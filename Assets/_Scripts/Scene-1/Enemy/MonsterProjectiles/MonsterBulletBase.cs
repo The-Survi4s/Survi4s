@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class MonsterBulletBase : BulletBase
 {
     protected Monster owner;
-    protected override void OnHit(Collider2D col)
+    protected override sealed void OnHit(Collider2D col)
     {
         Player player = col.GetComponent<Player>();
         Wall wall = col.GetComponent<Wall>();

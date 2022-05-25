@@ -52,6 +52,11 @@ public class MonsterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_owner.isDead)
+        {
+            _agent.isStopped = true;
+            return;
+        }
         SetStat();
         DecideTarget();
         UpdateStationaryTime();
@@ -98,6 +103,7 @@ public class MonsterMovement : MonoBehaviour
 
     private void SetInitialCurrentTarget()
     {
+        if (_agent.pathStatus == NavMeshPathStatus.PathComplete) return;
         _currentTarget = _owner.setting.priority;
         switch (_currentTarget)
         {

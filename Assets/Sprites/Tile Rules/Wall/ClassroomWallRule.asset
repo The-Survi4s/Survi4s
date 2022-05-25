@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575ffe6325e94cc45bb60022a1cbe61d, type: 3}
   m_Name: RoomWallRule (Override)
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 7525997656333620664, guid: 713938bddf8a6d945adff8a4b29c7ff0, type: 3}
+  m_DefaultSprite: {fileID: 5463796283292055637, guid: 713938bddf8a6d945adff8a4b29c7ff0, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
@@ -272,12 +272,8 @@ MonoBehaviour:
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
   alwaysConnect: 1
-  tilesToConnect:
-  - {fileID: 11400000, guid: aa9c188dbb5a4834bb09fe27b9b649d5, type: 2}
-  - {fileID: 11400000, guid: 81debd5989f262147b239cbde96cec19, type: 2}
-  - {fileID: 11400000, guid: 764dfcbd426d08846887bcfca3a6f2b8, type: 2}
-  - {fileID: 11400000, guid: bc4ce892a25c20a409b7c4052242dea1, type: 2}
-  - {fileID: 11400000}
+  tileStagesToConnect:
+  - {fileID: 11400000, guid: cfdc24ab81e230547a912608224fca85, type: 2}
   checkSelf: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -295,7 +291,7 @@ MonoBehaviour:
   m_Sprites: []
   m_GameObjects: []
   m_InstanceTile: {fileID: -1332755741031916919}
-  m_DefaultSprite: {fileID: 7525997656333620664, guid: 713938bddf8a6d945adff8a4b29c7ff0, type: 3}
+  m_DefaultSprite: {fileID: 5463796283292055637, guid: 713938bddf8a6d945adff8a4b29c7ff0, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_OverrideTilingRules:

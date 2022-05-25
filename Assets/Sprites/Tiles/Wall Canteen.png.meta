@@ -74,6 +74,45 @@ TextureImporter:
   - first:
       213: -9075615923524728600
     second: Wall Canteen_23
+  - first:
+      213: -4219736101976700295
+    second: Wall Canteen_24
+  - first:
+      213: -1146313676118771878
+    second: Wall Canteen_25
+  - first:
+      213: -1378726206844167532
+    second: Wall Canteen_26
+  - first:
+      213: -6131397463339389097
+    second: Wall Canteen_27
+  - first:
+      213: 3111258829187698551
+    second: Wall Canteen_28
+  - first:
+      213: -1756123792535598414
+    second: Wall Canteen_29
+  - first:
+      213: -4996493664097933527
+    second: Wall Canteen_30
+  - first:
+      213: -756697651139706882
+    second: Wall Canteen_31
+  - first:
+      213: -1076631595862390934
+    second: Wall Canteen_32
+  - first:
+      213: -5372159442011508371
+    second: Wall Canteen_33
+  - first:
+      213: -5879139570489875147
+    second: Wall Canteen_34
+  - first:
+      213: -8889829885161932973
+    second: Wall Canteen_35
+  - first:
+      213: -6298195505260412251
+    second: Wall Canteen_36
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -770,6 +809,331 @@ TextureImporter:
       bones: []
       spriteID: 8e80e68f66fec0280800000000000000
       internalID: -9075615923524728600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97a89c35f5c7075c0800000000000000
+      internalID: -4219736101976700295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_25
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a57b4c5f8c97710f0800000000000000
+      internalID: -1146313676118771878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_26
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49a1886d1d7cddce0800000000000000
+      internalID: -1378726206844167532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_27
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75facec1e76e8eaa0800000000000000
+      internalID: -6131397463339389097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_28
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77fc706cb696d2b20800000000000000
+      internalID: 3111258829187698551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_29
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2bacd4c07bef0a7e0800000000000000
+      internalID: -1756123792535598414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_30
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 927e3fc2c73e8aab0800000000000000
+      internalID: -4996493664097933527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_31
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: efff175de7baf75f0800000000000000
+      internalID: -756697651139706882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_32
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 144
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6709ae84490f01f0800000000000000
+      internalID: -1076631595862390934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_33
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d61b42e43714275b0800000000000000
+      internalID: -5372159442011508371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_34
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 535220ca5b9196ea0800000000000000
+      internalID: -5879139570489875147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_35
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 357754dd1daf0a480800000000000000
+      internalID: -8889829885161932973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall Canteen_36
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -9}
+        - {x: -8, y: -24}
+        - {x: 8, y: -24}
+        - {x: 8, y: -9}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a2cdf6ae805898a0800000000000000
+      internalID: -6298195505260412251
       vertices: []
       indices: 
       edges: []

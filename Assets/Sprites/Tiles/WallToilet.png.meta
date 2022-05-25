@@ -1,0 +1,540 @@
+fileFormatVersion: 2
+guid: 6a3e34b626f8f8649a14481c5481add9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2171363103638239658
+    second: WallToilet_0
+  - first:
+      213: -7971352672980034252
+    second: WallToilet_1
+  - first:
+      213: -3336155265133585170
+    second: WallToilet_2
+  - first:
+      213: 8162667337191159428
+    second: WallToilet_3
+  - first:
+      213: -5841012457897856824
+    second: WallToilet_4
+  - first:
+      213: -5965965271084851511
+    second: WallToilet_5
+  - first:
+      213: -3914466803269496056
+    second: WallToilet_6
+  - first:
+      213: -2338737573379913679
+    second: WallToilet_7
+  - first:
+      213: 7939246893189396444
+    second: WallToilet_8
+  - first:
+      213: 3631206336078306292
+    second: WallToilet_9
+  - first:
+      213: 6594215747522148784
+    second: WallToilet_10
+  - first:
+      213: -900906611689900897
+    second: WallToilet_11
+  - first:
+      213: -6754972005407818660
+    second: WallToilet_12
+  - first:
+      213: -3396412409649487468
+    second: WallToilet_13
+  - first:
+      213: -6837381365969945376
+    second: WallToilet_14
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WallToilet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 656c049f2c4cdd1e0800000000000000
+      internalID: -2171363103638239658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43d1aab5af0106190800000000000000
+      internalID: -7971352672980034252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: eecd92a467893b1d0800000000000000
+      internalID: -3336155265133585170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48676fc02be974170800000000000000
+      internalID: 8162667337191159428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_4
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c0fd56dd1e80fea0800000000000000
+      internalID: -5841012457897856824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_5
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ce9baae132a43da0800000000000000
+      internalID: -5965965271084851511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8031012ae250da9c0800000000000000
+      internalID: -3914466803269496056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_7
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 138c4d371922b8fd0800000000000000
+      internalID: -2338737573379913679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_8
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd77da44cfedd2e60800000000000000
+      internalID: 7939246893189396444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_9
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fb58187ce2a46230800000000000000
+      internalID: 3631206336078306292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_10
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 48
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b93853e84c538b50800000000000000
+      internalID: 6594215747522148784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f943c6ab5365f73f0800000000000000
+      internalID: -900906611689900897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_12
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5c75fd10c48142a0800000000000000
+      internalID: -6754972005407818660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_13
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4912d1c88e48dd0d0800000000000000
+      internalID: -3396412409649487468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallToilet_14
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -8, y: -24}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: -24}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ec7c77afddbc11a0800000000000000
+      internalID: -6837381365969945376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -119,6 +119,8 @@ public abstract class Monster : MonoBehaviour
     /// </summary>
     [SerializeField] private Stat _currentStat;
 
+    public bool isDead => _currentStat.hp <= 0;
+
     /// <summary>
     /// List of all currently active status effects
     /// </summary>

@@ -66,11 +66,8 @@ MonoBehaviour:
     - {x: 0, y: 1, z: 0}
     m_RuleTransform: 0
   alwaysConnect: 1
-  tilesToConnect:
-  - {fileID: 11400000, guid: dddc01ae30e539a419a943cf0543e2c7, type: 2}
-  - {fileID: 11400000, guid: b2e0f6b4bbcc2e246b04e76d3e27a827, type: 2}
-  - {fileID: 11400000}
-  - {fileID: 11400000, guid: 530063e5f1789b740847b686592402e9, type: 2}
+  tileStagesToConnect:
+  - {fileID: 11400000, guid: 87900bb4f82e9a84b8e82929fd060c32, type: 2}
   checkSelf: 1
 --- !u!114 &11400000
 MonoBehaviour:

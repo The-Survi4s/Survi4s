@@ -72,7 +72,11 @@ public abstract class BulletBase : MonoBehaviour
         {
             _triggerCount++;
         }
-        else if (NetworkClient.Instance.isMaster) NetworkClient.Instance.DestroyBullet(id);
+        else if (NetworkClient.Instance.isMaster)
+        {
+            SpawnParticle();
+            NetworkClient.Instance.DestroyBullet(id);
+        }
     }
 
     protected void RotateTowards(Vector2 target)
@@ -102,9 +106,6 @@ public abstract class BulletBase : MonoBehaviour
 
     private void OnDestroy()
     {
-        SpawnParticle();
-        //Instantiate(particleToSpawn, gameObject.transform.position, gameObject.transform.rotation);
-
         UnitManager.Instance.RemoveBullet(id);
         Destroy(gameObject);
     }

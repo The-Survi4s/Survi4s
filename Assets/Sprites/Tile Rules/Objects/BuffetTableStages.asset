@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef74442d6b529f74b89bc2737923b0ed, type: 3}
+  m_Name: BuffetTableStages
+  m_EditorClassIdentifier: 
+  _tiles:
+  - {fileID: 11400000, guid: dddc01ae30e539a419a943cf0543e2c7, type: 2}
+  - {fileID: 11400000, guid: b2e0f6b4bbcc2e246b04e76d3e27a827, type: 2}
+  - {fileID: 11400000, guid: bb1dce53106d0c443b8f69927029e3f2, type: 2}
+  - {fileID: 11400000, guid: 530063e5f1789b740847b686592402e9, type: 2}
