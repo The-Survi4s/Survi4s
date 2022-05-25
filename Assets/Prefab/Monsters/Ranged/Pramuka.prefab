@@ -52,21 +52,29 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 5244867366122201236, guid: 33980905fe9c86e458256b4bf7b40d6e, type: 3}
+    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Color.b
-      value: 0.08156817
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Color.g
-      value: 0.25069883
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Color.r
-      value: 0.3679245
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 540803284662950770, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Name
       value: Pramuka
       objectReference: {fileID: 0}
+    - target: {fileID: 5464984151315559400, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e4846d80d06ab0644ace4e56ea462acb, type: 2}
     - target: {fileID: 6219795559681374532, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -110,6 +118,22 @@ PrefabInstance:
     - target: {fileID: 6219795559681374532, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 3.5625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 3.125
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198f2cda1aed49e4783044c55f724052, type: 3}

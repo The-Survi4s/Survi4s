@@ -245,7 +245,7 @@ public abstract class Monster : MonoBehaviour
         
         if(NetworkClient.Instance.isMaster) CheckCanAttack();
         
-        //SetAnimation();
+        SetAnimation();
     }
 
     //--------------------------------------
@@ -428,7 +428,7 @@ public abstract class Monster : MonoBehaviour
 
     public void PlayAttackAnimation()
     {
-        //_animator.SetTrigger(AttackTrigger);
+        _animator.SetTrigger(AttackTrigger);
     } 
     #endregion
 
@@ -466,7 +466,7 @@ public abstract class Monster : MonoBehaviour
         OnMonsterDeath?.Invoke(id);
         SpawnManager.instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);
-        Destroy(gameObject);
+        Destroy(gameObject, 5);
     }
 
     private void WallFallenEventHandler(Wall obj)
