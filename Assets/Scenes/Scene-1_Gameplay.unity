@@ -1496,7 +1496,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bce506bcf07dfde4192e68c00d738e9a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 978e5e639dd284840a07f8a0977ecac1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2631,7 +2631,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8c5f2df37ac8ef54d8761987b14c2c33, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aa3f7d31125883443b4473bfa334755f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2706,7 +2706,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 750bee40f81ef4f449a8bed787940f28, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a73e16d963f1c944093ca57e6fecea81, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2897,7 +2897,7 @@ PrefabInstance:
     - target: {fileID: 4125814745674863460, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: _wallTilemap
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6953115215699603419}
     - target: {fileID: 4125814745862421290, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: mainPanel
       value: 
@@ -3017,3 +3017,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+--- !u!1839735485 &6953115215699603419 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 1087970441314043649, guid: 61f6579f6e107354ab6512e8fa3258b1, type: 3}
+  m_PrefabInstance: {fileID: 6953115215699603418}
+  m_PrefabAsset: {fileID: 0}
