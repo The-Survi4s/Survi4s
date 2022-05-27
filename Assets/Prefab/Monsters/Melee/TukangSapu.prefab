@@ -8,17 +8,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2006160176045573665, guid: dce09b18ef0661e4587737b90c079ce6, type: 3}
+    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Color.b
-      value: 0.388339
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Color.g
-      value: 0.7169812
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Color.r
-      value: 0.19953722
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2181690104653784389, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 83bf07e59385fb846a8337024028391a, type: 2}
     - target: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Name
       value: TukangSapu
@@ -86,6 +94,22 @@ PrefabInstance:
     - target: {fileID: 3572499312576821587, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Color.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297857289526348701, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297857289526348701, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297857289526348701, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297857289526348701, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 3.0625
       objectReference: {fileID: 0}
     - target: {fileID: 7661575844114794892, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: <type>k__BackingField
@@ -233,5 +257,7 @@ MonoBehaviour:
       movSpd: 1
       rotSpd: 60
       acceleration: 1
+    doEvasion: 0
   <targetWall>k__BackingField: {fileID: 0}
+  <nearestPlayer>k__BackingField: {fileID: 0}
   <currentTarget>k__BackingField: 0

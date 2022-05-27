@@ -9,7 +9,7 @@ public class AdvancedRuleTile : RuleTile<AdvancedRuleTile.Neighbor>
     [Tooltip("If enabled, the tile will connect to these tiles too when the mode is set to \"This\"")]
     public bool alwaysConnect;
     [Tooltip("Tiles to connect to")]
-    public TileBase[] tilesToConnect;
+    public TileStages[] tileStagesToConnect;
     [Space]
     [Tooltip("Check itseft when the mode is set to \"any\"")]
     public bool checkSelf = true;
@@ -42,7 +42,7 @@ public class AdvancedRuleTile : RuleTile<AdvancedRuleTile.Neighbor>
     bool Check_This(TileBase tile)
     {
         if (!alwaysConnect) return tile == this;
-        else return tilesToConnect.Contains(tile) || tile == this;
+        else return Contains(tile) || tile == this;
 
         //.Contains requires "using System.Linq;"
     }
@@ -55,7 +55,7 @@ public class AdvancedRuleTile : RuleTile<AdvancedRuleTile.Neighbor>
     bool Check_NotThis(TileBase tile)
     {
         if (!alwaysConnect) return tile != this;
-        else return !tilesToConnect.Contains(tile) && tile != this;
+        else return !Contains(tile) && tile != this;
 
         //.Contains requires "using System.Linq;"
     }
@@ -78,7 +78,7 @@ public class AdvancedRuleTile : RuleTile<AdvancedRuleTile.Neighbor>
     /// <returns></returns>
     bool Check_Specified(TileBase tile)
     {
-        return tilesToConnect.Contains(tile);
+        return Contains(tile);
 
         //.Contains requires "using System.Linq;"
     }
@@ -92,5 +92,15 @@ public class AdvancedRuleTile : RuleTile<AdvancedRuleTile.Neighbor>
     bool Check_Nothing(TileBase tile)
     {
         return tile == null;
+    }
+
+    protected bool Contains(TileBase tile)
+    {
+        bool res = false;
+        foreach (var item in tileStagesToConnect)
+        {
+            res = item.Contains(tile);
+        }
+        return res;
     }
 }

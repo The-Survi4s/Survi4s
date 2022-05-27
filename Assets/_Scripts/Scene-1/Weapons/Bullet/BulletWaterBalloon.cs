@@ -23,6 +23,7 @@ public class BulletWaterBalloon : PlayerBulletBase
         var monsters = UnitManager.Instance.GetObjectsInRadius<Monster>(hitMonsterPos, _splashRad, _layerMask);
         foreach (var monster in monsters)
         {
+            Debug.Log("Splash damage " + monster);
             doSomethingWithTheMonster?.Invoke(monster);
         }
     }

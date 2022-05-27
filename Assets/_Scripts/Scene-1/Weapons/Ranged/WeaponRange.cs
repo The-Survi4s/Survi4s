@@ -48,6 +48,10 @@ public class WeaponRange : WeaponBase
                 Vector2 mousePos = GetOwnerMousePos();
                 NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
             }
+            else if(ownerPlayer.isNearStatue)
+            {
+                ReloadAmmo();
+            }
         }
     }
 

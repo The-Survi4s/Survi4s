@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6425351186635166818}
   - component: {fileID: 5894215051549350909}
   - component: {fileID: 7196554710628310991}
+  - component: {fileID: -3228313462315356833}
   m_Layer: 0
   m_Name: WPentungan
   m_TagString: Weapon
@@ -48,6 +49,9 @@ MonoBehaviour:
   defaultCritRate: 5
   maxCooldownTime: 1
   offset: {x: 0.3, y: -0.2, z: -1}
+  _upgradeCost: 4
+  _weaponLevel: 1
+  _weaponExp: 0
   defaultAttackRad: 3
   targetMask:
     serializedVersion: 2
@@ -103,3 +107,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &-3228313462315356833
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329370933919719307}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c5841e4aa7d3f6d4684ea6095d654dfb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

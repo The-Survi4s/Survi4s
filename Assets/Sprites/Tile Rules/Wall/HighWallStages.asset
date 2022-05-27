@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef74442d6b529f74b89bc2737923b0ed, type: 3}
+  m_Name: HighWallStages
+  m_EditorClassIdentifier: 
+  _tiles:
+  - {fileID: 11400000, guid: aa9c188dbb5a4834bb09fe27b9b649d5, type: 2}
+  - {fileID: 11400000, guid: 9e836d8b6cfa1734e877def5fb62fbce, type: 2}
+  - {fileID: 11400000, guid: 81debd5989f262147b239cbde96cec19, type: 2}
+  - {fileID: 11400000, guid: 764dfcbd426d08846887bcfca3a6f2b8, type: 2}
+  - {fileID: 11400000, guid: bc4ce892a25c20a409b7c4052242dea1, type: 2}
+  - {fileID: 11400000, guid: 64527ffed7fb01049b4b38c6475f2eaf, type: 2}
+  - {fileID: 11400000, guid: 537403d9517147d42a8bbfa035552d0f, type: 2}
+  - {fileID: 11400000, guid: f481d4a1adc1fb84fac25d5104801fdc, type: 2}
+  - {fileID: 11400000, guid: 5e3756a30aa82664f9a2297bfbb9a0a2, type: 2}

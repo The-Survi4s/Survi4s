@@ -21,14 +21,6 @@ public class UnitManager : MonoBehaviour
 
     private int _bulletIdCount = 0;
 
-    // Statue Pos
-    [SerializeField] private Transform _statuePos;
-
-    public Dictionary<string, Player> Players
-    {
-        get => _players;
-    }
-
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
@@ -135,12 +127,6 @@ public class UnitManager : MonoBehaviour
         _players[playerName].SyncMousePos(x, y);
     }
 
-    public void SetButton(string playerName, Player.Button button, bool isDown)
-    {
-        if (!_players.ContainsKey(playerName)) return;
-        _players[playerName].SetButton(button, isDown);
-    }
-
     public void OnEquipWeapon(string playerName, string weaponName)
     {
         if (!_players.ContainsKey(playerName)) return; 
@@ -194,6 +180,23 @@ public class UnitManager : MonoBehaviour
     {
         if (!_monsters.ContainsKey(monsterId)) return;
         _monsters[monsterId].PlayAttackAnimation();
+    }
+
+    public void FindAndUpgradeWeapon(string weaponName)
+    {
+        foreach (WeaponBase wpn in weapons)
+        {
+            if (wpn.name == weaponName)
+            {
+                wpn.WeaponLevelUp();
+            }
+        }
+    }
+
+    public void SetPlayerVelocity(string playerName, Vector2 velocity, Player.Axis axis)
+    {
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].SetVelocity(velocity, axis);
     }
 
     // Utilities ----------------------
@@ -304,12 +307,19 @@ public class UnitManager : MonoBehaviour
         return nearest;
     }
 
-    public Player GetPlayer(string id)
+    public Player GetPlayer(int id) => _playerKdTree.FirstOrDefault(player => player.id == id);
+
+    public Player GetPlayer(string idAndName)
     {
-        return _playerKdTree.FirstOrDefault(player => player.id == id);
+        if (!_players.ContainsKey(idAndName)) return default;
+        return _players[idAndName];
     }
 
-    public Player GetLocalPlayer() => _playerKdTree.FirstOrDefault(player => player.isLocal == true);
+    /// <summary>
+    /// Gets the local Player
+    /// </summary>
+    /// <returns></returns>
+    public Player GetPlayer() => _playerKdTree.FirstOrDefault(player => player.isLocal == true);
 
     public List<T> GetObjectsInRadius<T>(Vector2 point, float r, LayerMask layerMask)
     {
@@ -325,22 +335,5 @@ public class UnitManager : MonoBehaviour
         }
 
         return temp;
-    }
-
-    public Transform StatuePos
-    {
-        get { return _statuePos; }
-        private set { _statuePos = value; }
-    }
-
-    public void FindAndUpgradeWeapon(string weaponName)
-    {
-        foreach(WeaponBase wpn in weapons)
-        {
-            if(wpn.name == weaponName)
-            {
-                wpn.WeaponLevelUp();
-            }
-        }
     }
 }

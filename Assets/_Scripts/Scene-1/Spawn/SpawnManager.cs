@@ -114,7 +114,7 @@ public class SpawnManager : MonoBehaviour
     /// <param name="id">the id of the player</param>
     /// <param name="pos">the position the <see cref="Player"/> will spawn in</param>
     /// <param name="skin">Which sprite will the <see cref="Player"/> use</param>
-    public void ReceiveSpawnPlayer(string idAndName, string id, Vector2 pos, int skin)
+    public void ReceiveSpawnPlayer(string idAndName, int id, Vector2 pos, int skin)
     {
         if (_playerPrefab[skin].TryGetComponent(out Player player))
         {

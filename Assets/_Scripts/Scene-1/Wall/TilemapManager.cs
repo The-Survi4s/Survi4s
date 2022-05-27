@@ -166,7 +166,7 @@ public class TilemapManager : MonoBehaviour
             bw.OnRebuilt -= OnRebuilt;
             Destroy(bw);
 
-            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTileStage(_wallTileStages.getTileStages.Length - 1));
+            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTile(_wallTileStages.getTileStages.Count - 1));
             var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
             wall.Init(GetNewWallId(), GetOrigin(wall.transform.position), cellPos, 10);
             wall.ModifyHp(0);
@@ -288,7 +288,9 @@ public class TilemapManager : MonoBehaviour
     /// </summary>
     /// <param name="worldPos">The position in world space</param>
     /// <returns></returns>
-    public Vector3Int ToCellPosition(Vector3 worldPos) => _wallTilemap.WorldToCell(worldPos);
+    public Vector3Int WorldToCell(Vector3 worldPos) => _wallTilemap.WorldToCell(worldPos);
+
+    public Vector3 CellToWorld(Vector3Int cellPos) => _wallTilemap.CellToWorld(cellPos);
 
     #endregion
 
@@ -357,7 +359,7 @@ public class TilemapManager : MonoBehaviour
         if(!tileStages) return;
 
         // Calculate variant id
-        var variantCount = tileStages.getTileStages.Length - 1;
+        var variantCount = tileStages.getTileStages.Count - 1;
         var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp * 1.0f / variantCount));
         if (tile.spriteVariantId == variantId) return;
         
@@ -368,8 +370,57 @@ public class TilemapManager : MonoBehaviour
         if (tile.hp <= 0 && tile is Wall wall) SpawnBrokenWall(wall);
 
         // Set tile, then update Tilemap and NavMesh
-        _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTileStage(variantId));
+        _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTile(variantId));
         _wallTilemap.RefreshTile(cellPos);
         NavMeshController.UpdateNavMesh();
+    }
+
+    /// <summary>
+    /// Gets a new position <paramref name="jumpDistance"/> away in <paramref name="direction"/> 
+    /// from <paramref name="worldPosFrom"/>. 
+    /// </summary>
+    /// <param name="worldPosFrom"></param>
+    /// <param name="direction"></param>
+    /// <param name="jumpDistance"></param>
+    /// <returns>
+    /// The new position. <br/>
+    /// If a collider is found at the new position, 
+    /// returns <paramref name="worldPosFrom"/>
+    /// </returns>
+    public Vector3 GetJumpPos(Vector3 worldPosFrom, Vector3 direction, int jumpDistance = 2)
+    {
+        var dir = WorldToCell(direction);
+        dir.Clamp(-Vector3Int.one, Vector3Int.one);
+        var from = WorldToCell(worldPosFrom);
+        var wallInFront = GetWall(from + dir);
+        if (wallInFront && IsJumpPossible(from, dir, jumpDistance))
+        {
+            return CellToWorld(from + dir * jumpDistance);
+        }
+        else return worldPosFrom;
+    }
+
+    /// <summary>
+    /// Checks if there's no collider in 2 locations: <br/>
+    /// <paramref name="cellPos"/>, 
+    /// and a location <paramref name="jumpDistance"/> away
+    /// in <paramref name="direction"/> from <paramref name="cellPos"/>
+    /// </summary>
+    /// <param name="cellPos"></param>
+    /// <param name="direction"></param>
+    /// <param name="jumpDistance"></param>
+    /// <returns></returns>
+    private bool IsJumpPossible(Vector3Int cellPos, Vector3Int direction, int jumpDistance)
+    {
+        int wallLayer = (int)Mathf.Log(LayerMask.GetMask("Wall"), 2);
+
+        Vector2Int pos = new Vector2Int(cellPos.x, cellPos.y);
+        Vector2Int dir = new Vector2Int(direction.x, direction.y);
+        dir.Clamp(-Vector2Int.one, Vector2Int.one);
+        var tileCollider1 = Physics2D.OverlapPoint(pos, wallLayer);
+        var tileCollider2 = Physics2D.OverlapPoint(pos + dir * jumpDistance, wallLayer);
+        //If collider found, jump not possible
+        if (tileCollider1 || tileCollider2) return false;
+        return true;
     }
 }

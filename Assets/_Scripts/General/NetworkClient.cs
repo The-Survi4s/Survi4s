@@ -157,10 +157,9 @@ public class NetworkClient : MonoBehaviour
         RsF,    // Room is full
         REx,    // Room exit
         MPos,   // Sync Mouse Pos
-        BtDw,   // Button Down
         PlCt,   // Player Count
         StGm,   // Start game
-        SwPy,
+        SpwP,
         EqWp,
         PAtk,
         SwBl,
@@ -176,7 +175,9 @@ public class NetworkClient : MonoBehaviour
         DBl,
         RbWl,
         UpWpn,
-        KlCo
+        KlCo,
+        PlVl,
+        PJmp
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -221,12 +222,6 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.SyncMousePos(info[0], float.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case Header.BtDw:
-                {
-                    UnitManager.Instance.SetButton(info[0], EnumParse<Player.Button>(info[2]),
-                        bool.Parse(info[3]));
-                    break;
-                }
                 case Header.PlCt:
                     Debug.Log(info[2]);
                     playersCount = int.Parse(info[2]);
@@ -240,7 +235,7 @@ public class NetworkClient : MonoBehaviour
                 case Header.StGm:
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
-                case Header.SwPy:
+                case Header.SpwP:
                     SpawnManager.instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
@@ -329,6 +324,19 @@ public class NetworkClient : MonoBehaviour
                 case Header.KlCo:
                 {
                     // Player Kill Count
+					 break;
+				}
+                case Header.PlVl:
+                {
+                    UnitManager.Instance.SetPlayerVelocity(
+                        info[0], 
+                        new Vector2(float.Parse(info[2]), float.Parse(info[3])), 
+                        EnumParse<Player.Axis>(info[4]));
+                    break;
+                }
+                case Header.PJmp:
+                {
+                    UnitManager.Instance.GetPlayer(info[0]).Jump();
                     break;
                 }
             }
@@ -431,7 +439,7 @@ public class NetworkClient : MonoBehaviour
 
     public void SpawnPlayer(Vector2 spawnPos, int skin)
     {
-        string[] msg = {Header.SwPy.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), skin.ToString()};
+        string[] msg = {Header.SpwP.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), skin.ToString()};
         SendMessageClient("1", msg);
     }
 
@@ -441,9 +449,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SetMovementButton(Player.Button button, bool isDown)
+    public void SetPlayerVelocity(Vector2 velocity, Player.Axis axis)
     {
-        string[] msg = {Header.BtDw.ToString(), button.ToString(), isDown.ToString()};
+        string[] msg = { Header.PlVl.ToString(), velocity.x.ToString("f2"), velocity.y.ToString("f2"), axis.ToString() };
         SendMessageClient("1", msg);
     }
 
@@ -462,6 +470,12 @@ public class NetworkClient : MonoBehaviour
     public void StartAttackAnimation() 
     {
         string[] msg = {Header.PAtk.ToString()};
+        SendMessageClient("1", msg);
+    }
+
+    public void Jump()
+    {
+        string[] msg = { Header.PJmp.ToString() };
         SendMessageClient("1", msg);
     }
 
@@ -546,9 +560,9 @@ public class NetworkClient : MonoBehaviour
         return (T) Enum.Parse(typeof(T), stringToEnum, true);
     }
 
-    private static string ExtractId(string idAndName)
+    private static int ExtractId(string idAndName)
     {
-        return idAndName.Substring(0, IdLength);
+        return int.Parse(idAndName.Substring(0, IdLength));
     }
 
     #endregion
