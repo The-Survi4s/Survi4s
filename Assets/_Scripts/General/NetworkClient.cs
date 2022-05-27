@@ -15,6 +15,7 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private int port;
     [SerializeField] private string IpAddress;
     private IPAddress ipAd;
+    [SerializeField, Min(0)] private int _maximumRetries = 1;
 
     // Encryption ---------------------------------------------------------------------
     private RsaEncryption rsaEncryption;
@@ -95,6 +96,7 @@ public class NetworkClient : MonoBehaviour
             catch (Exception e)
             {
                 Debug.Log("Try connecting-" + count + " error : " + e.Message);
+                if (count > _maximumRetries) break;
             }
         }
     }
@@ -445,6 +447,7 @@ public class NetworkClient : MonoBehaviour
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
+        Debug.Log($"Send spawn monster: id {id}, type {type}");
         string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
         SendMessageClient("1", msg);
     }

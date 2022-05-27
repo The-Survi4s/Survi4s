@@ -13,6 +13,7 @@ public abstract class WeaponBase : MonoBehaviour
     public float critRate { get; protected set; }
     public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
+    public bool isReady => Time.time >= nextAttackTime;
     public GameObject owner { get; private set; }
     public bool IsUsed() => owner != null;
 
@@ -23,6 +24,8 @@ public abstract class WeaponBase : MonoBehaviour
 
     // Cached components --------------------
     protected Player ownerPlayer;
+
+    public bool isLocal => ownerPlayer.isLocal;
 
     // Upgrade Weapon -----------------------------------
     // Serializefiel just for debugging in inspector
@@ -57,13 +60,16 @@ public abstract class WeaponBase : MonoBehaviour
     public void SendAttackMessage()
     {
         // Check cooldown
-        if (!(Time.time >= nextAttackTime)) return;
+        if (!isReady) return;
         // Send attack message
         NetworkClient.Instance.StartAttackAnimation();
-        // Cooldown
+        StartCooldown();
+    }
+    public void StartCooldown()
+    {
         nextAttackTime = Time.time + cooldownTime;
     }
-    public bool isLocal => ownerPlayer.isLocal;
+    
 
     // Animation methods ---------------------------------------
     protected virtual void PlayAnimation()

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
+    private Player _player;
     public WeaponBase weapon { get; private set; }
     [SerializeField] private float weaponRadarRange;
     public bool weaponIsInRange { get; private set; }
@@ -13,6 +14,11 @@ public class PlayerWeaponManager : MonoBehaviour
     // Upgrade 
     [SerializeField] private int _playerWeaponExp;
     [SerializeField] private GameObject _upgradeButton;
+
+    private void Start()
+    {
+        _player = GetComponent<Player>();
+    }
 
     private void Update()
     {
@@ -43,8 +49,6 @@ public class PlayerWeaponManager : MonoBehaviour
                 // Equip new weapon
                 x.EquipWeapon(this);
                 weapon = x;
-
-                GetComponent<Player>().SetWeaponRange();
             }
         }
     }
@@ -56,10 +60,7 @@ public class PlayerWeaponManager : MonoBehaviour
     // SendAttackMessage --------------------------------------------------------------------------------
     public void Attack()
     {
-        if(weapon != null)
-        {
-            weapon.SendAttackMessage();
-        }
+        if(weapon) weapon.SendAttackMessage();
     }
     public void ReceiveAttackMessage()
     {
