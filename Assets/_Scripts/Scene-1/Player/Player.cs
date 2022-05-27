@@ -53,6 +53,15 @@ public class Player : MonoBehaviour
         private set => _killCount = value;
     }
 
+    private WeaponRange _weaponRange;
+
+    [SerializeField] private int _killCount;
+    public int KillCount
+    {
+        get => _killCount;
+        private set => _killCount = value;
+    }
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -108,7 +117,7 @@ public class Player : MonoBehaviour
             {
                 weaponManager.UpgradeEquipedWeapon();
             }
-        }
+        
 
         // Global Process --------------------------------------------------
 
@@ -116,11 +125,11 @@ public class Player : MonoBehaviour
         var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
         if (distanceToStatue < _minStatueDist)
         {
-            isNearStatue = true;
+            _isNearStatue = true;
         }
         else
         {
-            isNearStatue = false;
+            _isNearStatue = false;
         }
 
         // Auto Reload
@@ -129,14 +138,15 @@ public class Player : MonoBehaviour
             if(_weaponRange.Ammo != _weaponRange.MaxAmmo)
             {
                 _weaponRange.ReloadAmmo();
-			}
-		}
+            }
+			  }
 
 		// Jump wall
 		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			NetworkClient.Instance.Jump();
-		}
+		    {
+			    NetworkClient.Instance.Jump();
+		    }
+        }
     }
 
     public async void Jump()
@@ -271,4 +281,3 @@ public class Player : MonoBehaviour
     {
         KillCount++;
     }
-}

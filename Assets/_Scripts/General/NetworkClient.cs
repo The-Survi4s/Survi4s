@@ -324,7 +324,7 @@ public class NetworkClient : MonoBehaviour
                 case Header.KlCo:
                 {
                     // Player Kill Count
-					break;
+					 break;
 				}
                 case Header.PlVl:
                 {
