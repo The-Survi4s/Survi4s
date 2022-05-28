@@ -34,6 +34,8 @@ public class MonsterMovement : MonoBehaviour
     private Vector3 _targetOffset;
     private float _distanceToTarget;
 
+    [SerializeField] private bool isStopedMoving = false;
+
     void Start()
     {
         _owner = GetComponent<Monster>();
@@ -54,7 +56,8 @@ public class MonsterMovement : MonoBehaviour
     {
         if (_owner.isDead)
         {
-            _agent.isStopped = true;
+            _agent.speed = 0;
+            isStopedMoving = true;
             return;
         }
         SetStat();

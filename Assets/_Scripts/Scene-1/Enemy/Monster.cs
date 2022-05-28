@@ -207,7 +207,7 @@ public abstract class Monster : MonoBehaviour
     {
         _activeStatusEffects = new List<StatusEffectBase>();
         id = -1;
-        //_animator.SetBool(IsDeadBool, false);
+        _animator.SetBool(IsDeadBool, false);
         _playerLayerMask = LayerMask.GetMask("Player");
         _wallLayerMask = LayerMask.GetMask("Wall");
         _monsterLayerMask = LayerMask.GetMask("Enemy");

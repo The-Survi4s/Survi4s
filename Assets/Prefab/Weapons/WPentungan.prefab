@@ -48,7 +48,7 @@ MonoBehaviour:
   defaultBaseAttack: 3
   defaultCritRate: 5
   maxCooldownTime: 1
-  offset: {x: 0.3, y: -0.2, z: -1}
+  offset: {x: 0.3, y: 0.6, z: -1}
   _upgradeCost: 4
   _weaponLevel: 1
   _weaponExp: 0

@@ -23,16 +23,25 @@ public class SelectNamePanel : MonoBehaviour
 
     public void SelectName()
     {
+        string nameTemp, IdTemp;
         // Set new Player name --------------------------------------------------------------
         PlayerDataLoader.Instance.TheData.UserName = inputName.text;
+        nameTemp = inputName.text;
+        inputName.text = "";
         // Change Name Id -------------------------------------------------------------------
         PlayerDataLoader.Instance.TheData.UserId = NetworkClient.Instance.GeneratePlayerId();
+        IdTemp = PlayerDataLoader.Instance.TheData.UserId;
+
+        // Save new name and id
+        PlayerDataLoader.Instance.SavePlayerData();
 
         // Change name UI -------------------------------------------------------------------
+        MainMenuManager.Instance.nameText.text = nameTemp;
 
         // Tell Server ----------------------------------------------------------------------
         if (NetworkClient.Instance.IsConnected())
         {
+            NetworkClient.Instance.ChangeName(IdTemp, nameTemp);
 
         }
         else

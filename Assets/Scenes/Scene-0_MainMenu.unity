@@ -1305,7 +1305,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1655625486}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: Matchmaking
+        m_MethodName: SelectName
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4956,6 +4956,7 @@ MonoBehaviour:
   waitingPanel: {fileID: 381239729}
   selectNamePanel: {fileID: 1013172626}
   connectPanel: {fileID: 1307273001}
+  nameText: {fileID: 1717945224}
 --- !u!1 &1676219010
 GameObject:
   m_ObjectHideFlags: 0

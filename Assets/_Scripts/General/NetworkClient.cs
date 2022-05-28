@@ -179,7 +179,8 @@ public class NetworkClient : MonoBehaviour
         UpWpn,
         KlCo,
         PlVl,
-        PJmp
+        PJmp,
+        ChNm
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -211,6 +212,12 @@ public class NetworkClient : MonoBehaviour
                 case Header.LRm:
                 {
                     UnitManager.Instance.HandlePlayerDisconnect(info[1]);
+                    break;
+                }
+                case Header.ChNm:
+                {
+                    myId = info[2];
+                    myName = info[3];
                     break;
                 }
             }
@@ -409,6 +416,11 @@ public class NetworkClient : MonoBehaviour
     }
 
     // Public method that can be called to send message to server -------------------
+    public void ChangeName(string newId, string newName)
+    {
+        string[] msg = { "ChNm", newId, newName };
+        SendMessageClient("2", msg);
+    }
     public void StartMatchmaking()
     {
         SendMessageClient("2", "StMtc");

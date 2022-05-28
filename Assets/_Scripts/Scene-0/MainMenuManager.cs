@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject waitingPanel;
     [SerializeField] private GameObject selectNamePanel;
     [SerializeField] private GameObject connectPanel;
+
+    public Text nameText;
 
     // Eazy Access -------------------------------------------------------------------
     public static MainMenuManager Instance { get; private set; }
@@ -50,6 +53,8 @@ public class MainMenuManager : MonoBehaviour
             selectNamePanel.SetActive(false);
             connectPanel.SetActive(false);
         }
+
+        nameText.text = PlayerDataLoader.Instance.TheData.UserName;
     }
 
     // Quick Match Button ------------------------------------------------------
@@ -57,6 +62,12 @@ public class MainMenuManager : MonoBehaviour
     {
         waitingPanel.SetActive(true);
         NetworkClient.Instance.StartMatchmaking();
+    }
+
+    // Select Name -------------------------------------------------------------
+    public void SelectName()
+    {
+        selectNamePanel.SetActive(true);
     }
 
     // Setting Panels -----------------------------------------------------------
