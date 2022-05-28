@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-public class HealthUI2 : MonoBehaviour
+
+public class UIGameOver : MonoBehaviour
 {
-    Text text;
     [SerializeField] public PlayerStats Stats;
     [SerializeField] public float hp_sem, jumlah;
     //TriggerHp trik;
@@ -13,7 +12,7 @@ public class HealthUI2 : MonoBehaviour
     public GameObject gameOver;
     public void Start()
     {
-        text = GetComponent<Text>();
+     //   text = GetComponent<Text>();
         //Stats = GameObject.FindObjectOfType(typeof(CharacterStats)) as CharacterStats;
         //Stats.hitPoint();
 
@@ -27,9 +26,9 @@ public class HealthUI2 : MonoBehaviour
         if (Stats == null)
             return;
         //Debug.Log("Stats:" + Stats._hitPoint);
-         //hp_sem = Stats._hitPoint;
+        //hp_sem = Stats._hitPoint;
         // jumlah = hp_sem - Stats.speed;
-                text.text = Stats.hitPoint.ToString();
+        //text.text = Stats.hitPoint.ToString();
 
         //hp_sem = Stats.hitPoint.set('1');
         //      text.text = Stats.hitPoint.ToString();
@@ -54,7 +53,7 @@ public class HealthUI2 : MonoBehaviour
         return null;
     }
     IEnumerator OnFindLocalPlayer()
-        {
+    {
         while (LocalPlayer() == null)
         {
             Debug.Log("Local player null");
@@ -62,5 +61,5 @@ public class HealthUI2 : MonoBehaviour
         }
         Stats = UnitManager.Instance.GetLocalPlayer().stats;
 
-}
+    }
 }
