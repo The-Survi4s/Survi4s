@@ -429,11 +429,12 @@ public abstract class Monster : MonoBehaviour
     public void PlayAttackAnimation()
     {
         //_animator.SetTrigger(AttackTrigger);
-    } 
+    }
     #endregion
 
     #region Event Handlers
 
+    [SerializeField] private GameObject _itemDrop;
     public static event Action<int> OnMonsterDeath;
 
     private void OnEnable()
@@ -466,6 +467,10 @@ public abstract class Monster : MonoBehaviour
         OnMonsterDeath?.Invoke(id);
         SpawnManager.instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);
+
+        // Drop Item
+        Instantiate(_itemDrop, transform.position, transform.rotation);
+
         Destroy(gameObject);
     }
 

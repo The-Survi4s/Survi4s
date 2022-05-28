@@ -161,4 +161,5 @@ MonoBehaviour:
   <targetWall>k__BackingField: {fileID: 0}
   <nearestPlayer>k__BackingField: {fileID: 0}
   <currentTarget>k__BackingField: 0
+  _itemDrop: {fileID: 5893421471575226741, guid: c996fd74d11ab1148b3013da1f87214f, type: 3}
   _bulletPrefab: {fileID: 3082794662705287549, guid: 4c19149c04a1d5543aeb05eb28685219, type: 3}
