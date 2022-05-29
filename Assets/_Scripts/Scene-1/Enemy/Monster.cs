@@ -17,7 +17,8 @@ public abstract class Monster : MonoBehaviour
 
     #region Components
     protected MonsterMovement _monsterMovement;
-    private Animator _animator; 
+    private Animator _animator;
+    private SpriteRenderer _renderer;
     #endregion
 
     #region Data and Containers Definition
@@ -197,6 +198,7 @@ public abstract class Monster : MonoBehaviour
         // Gets the attached Components
         _monsterMovement = GetComponent<MonsterMovement>();
         _animator = GetComponent<Animator>();
+        _renderer = GetComponent<SpriteRenderer>();
 
         FirstSetup();
         CheckConflictingPriorities();
@@ -421,9 +423,7 @@ public abstract class Monster : MonoBehaviour
     {
         // Moving
         _animator.SetBool(IsMovingBool, _monsterMovement.velocity != Vector3.zero);
-        // Attack
-
-        // Dead
+        _renderer.flipX = _monsterMovement.velocity.x < 0;
     }
 
 

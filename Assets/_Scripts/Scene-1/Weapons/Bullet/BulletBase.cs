@@ -54,6 +54,7 @@ public abstract class BulletBase : MonoBehaviour
 
     protected virtual void SpawnParticle()
     {
+        if (!particleToSpawn) return;
         //Spawn gameobject particle... atau pelajari ParticleSystem dulu lah
         GameObject particleClone;
 
