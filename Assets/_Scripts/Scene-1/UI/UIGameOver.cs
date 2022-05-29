@@ -59,7 +59,7 @@ public class UIGameOver : MonoBehaviour
             Debug.Log("Local player null");
             yield return new WaitForSeconds(0.2f);
         }
-        Stats = UnitManager.Instance.GetLocalPlayer().stats;
+        Stats = UnitManager.Instance.GetPlayer().stats;
 
     }
 }
