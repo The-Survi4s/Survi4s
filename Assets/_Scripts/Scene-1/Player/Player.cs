@@ -106,6 +106,12 @@ public class Player : MonoBehaviour
             {
                 weaponManager.UpgradeEquipedWeapon();
             }
+
+            // Jump wall
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                NetworkClient.Instance.Jump();
+            }
         }
 
         // Global Process --------------------------------------------------
@@ -119,12 +125,6 @@ public class Player : MonoBehaviour
         else
         {
             isNearStatue = false;
-        }
-
-        // Jump wall
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NetworkClient.Instance.Jump();
         }
     }
 
@@ -243,12 +243,6 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         stats.OnPlayerDead -= HandlePlayerDead;
-    }
-
-    public bool IsNearStatue
-    {
-        get { return isNearStatue; }
-        private set { isNearStatue = value; }
     }
 
     public void AddKillCount()

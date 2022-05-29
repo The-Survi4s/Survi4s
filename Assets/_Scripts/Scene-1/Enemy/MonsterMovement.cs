@@ -34,15 +34,12 @@ public class MonsterMovement : MonoBehaviour
     private Vector3 _targetOffset;
     private float _distanceToTarget;
 
-    [SerializeField] private bool isStopedMoving = false;
-
     void Start()
     {
         _owner = GetComponent<Monster>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.updateUpAxis = false;
         _agent.updateRotation = false;
-        _agent.isStopped = false;
 
         _currentTargetPreviousPos = Vector3.zero;
         _statuePos = TilemapManager.instance.statue.transform.position;
@@ -57,7 +54,6 @@ public class MonsterMovement : MonoBehaviour
         if (_owner.isDead)
         {
             _agent.speed = 0;
-            isStopedMoving = true;
             return;
         }
         SetStat();
