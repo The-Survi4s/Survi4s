@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
-    private Player _player;
     public WeaponBase weapon { get; private set; }
     [SerializeField] private float weaponRadarRange;
     public bool weaponIsInRange { get; private set; }
@@ -14,11 +13,6 @@ public class PlayerWeaponManager : MonoBehaviour
     // Upgrade 
     [SerializeField] private int _playerWeaponExp;
     [SerializeField] private GameObject _upgradeButton;
-
-    private void Start()
-    {
-        _player = GetComponent<Player>();
-    }
 
     private void Update()
     {

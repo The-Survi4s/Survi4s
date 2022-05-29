@@ -177,7 +177,6 @@ public class NetworkClient : MonoBehaviour
         DBl,
         RbWl,
         UpWpn,
-        KlCo,
         PlVl,
         PJmp,
         ChNm
@@ -330,11 +329,6 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.FindAndUpgradeWeapon(info[2]);
                     break;
                 }
-                case Header.KlCo:
-                {
-                    // Player Kill Count
-					 break;
-				}
                 case Header.PlVl:
                 {
                     UnitManager.Instance.SetPlayerVelocity(
