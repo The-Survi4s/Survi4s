@@ -51,7 +51,7 @@ MonoBehaviour:
   _upgradeCost: 4
   _weaponLevel: 1
   _weaponExp: 0
-  _maxAmmo: 5
+  <MaxAmmo>k__BackingField: 3
   _bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
   <inAccuracy>k__BackingField: 1.5
   _ammo: 0
