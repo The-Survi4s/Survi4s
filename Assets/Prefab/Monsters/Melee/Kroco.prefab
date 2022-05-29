@@ -110,7 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7445bba85ccf9b4e9dc8389e3f9faf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <id>k__BackingField: 0
   _currentStat:
     hp: 0
     atk: 0
@@ -118,8 +117,8 @@ MonoBehaviour:
     movSpd: 0
     rotSpd: 0
     acceleration: 0
-  <type>k__BackingField: 0
   <setting>k__BackingField:
+    type: 0
     detectionRange: 4
     attackRange: 2.5
     minRange: 0
@@ -138,5 +137,8 @@ MonoBehaviour:
       movSpd: 5
       rotSpd: 60
       acceleration: 10
+    doEvasion: 0
   <targetWall>k__BackingField: {fileID: 0}
+  <nearestPlayer>k__BackingField: {fileID: 0}
   <currentTarget>k__BackingField: 0
+  _itemDrop: {fileID: 5893421471575226741, guid: c996fd74d11ab1148b3013da1f87214f, type: 3}

@@ -120,4 +120,10 @@ public class PlayerWeaponManager : MonoBehaviour
             _playerWeaponExp = 0;
         }
     }
+
+    public int PlayerWeaponXp
+    {
+        get => _playerWeaponExp;
+        set => _playerWeaponExp = value;
+    }
 }
