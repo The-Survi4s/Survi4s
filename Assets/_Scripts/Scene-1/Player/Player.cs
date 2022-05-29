@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 
-[RequireComponent(typeof(PlayerStats),typeof(PlayerWeaponManager))]
+[RequireComponent(typeof(PlayerStats), typeof(PlayerWeaponManager))]
 public class Player : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
@@ -53,26 +53,17 @@ public class Player : MonoBehaviour
         private set => _killCount = value;
     }
 
-    private WeaponRange _weaponRange;
-
-    [SerializeField] private int _killCount;
-    public int KillCount
-    {
-        get => _killCount;
-        private set => _killCount = value;
-    }
-
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
         weaponManager = GetComponent<PlayerWeaponManager>();
     }
-    
+
     private void Start()
     {
         // Tell camera to follow this object --------------------------------------------
-        if(name == NetworkClient.Instance.myId + NetworkClient.Instance.myName)
+        if (name == NetworkClient.Instance.myId + NetworkClient.Instance.myName)
         {
             // Set the camera ----------------------------------------------------------
             _mainCamera = Camera.main;
@@ -101,7 +92,7 @@ public class Player : MonoBehaviour
             DetectMovementMouse();
 
             // For equip weapon ----------------------------------------------------
-            if(Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 weaponManager.EquipWeapon();
             }
@@ -113,39 +104,39 @@ public class Player : MonoBehaviour
             }
 
             // Temporary upgrade weapon
-            if(Input.GetKeyDown(KeyCode.T) && isNearStatue)
+            if (Input.GetKeyDown(KeyCode.T) && isNearStatue)
             {
                 weaponManager.UpgradeEquipedWeapon();
             }
-        
 
-        // Global Process --------------------------------------------------
 
-        // Check statue Pos
-        var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
-        if (distanceToStatue < _minStatueDist)
-        {
-            _isNearStatue = true;
-        }
-        else
-        {
-            _isNearStatue = false;
-        }
+            // Global Process --------------------------------------------------
 
-        // Auto Reload
-        if (isNearStatue)
-        {
-            if(_weaponRange.Ammo != _weaponRange.MaxAmmo)
+            // Check statue Pos
+            var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
+            if (distanceToStatue < _minStatueDist)
             {
-                _weaponRange.ReloadAmmo();
+                isNearStatue = true;
             }
-			  }
+            else
+            {
+                isNearStatue = false;
+            }
 
-		// Jump wall
-		if (Input.GetKeyDown(KeyCode.Space))
-		    {
-			    NetworkClient.Instance.Jump();
-		    }
+            // Auto Reload
+            if (isNearStatue)
+            {
+                if (_weaponRange.Ammo != _weaponRange.MaxAmmo)
+                {
+                    _weaponRange.ReloadAmmo();
+                }
+            }
+
+            // Jump wall
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                NetworkClient.Instance.Jump();
+            }
         }
     }
 
@@ -167,7 +158,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         // Move character based on what button is down ---------------------------------------------
-        if(!isDead) _rigidbody.velocity = _moveDir * stats.moveSpeed;
+        if (!isDead) _rigidbody.velocity = _moveDir * stats.moveSpeed;
 
         // Flip character based on mouse position --------------------------------------------------
         if (syncMousePos.x < transform.position.x && !isFacingLeft)
@@ -265,7 +256,7 @@ public class Player : MonoBehaviour
     {
         stats.OnPlayerDead -= HandlePlayerDead;
     }
-	
+
     public bool IsNearStatue
     {
         get { return isNearStatue; }
@@ -281,3 +272,4 @@ public class Player : MonoBehaviour
     {
         KillCount++;
     }
+}
