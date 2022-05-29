@@ -1216,7 +1216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   port: 3002
   IpAddress: 127.0.0.1
-  _maximumRetries: 1
+  _maximumRetries: 5
   ServerPublicKey: <?xml version="1.0" encoding="utf-16"?> <RSAParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">   <Exponent>AQAB</Exponent>   <Modulus>m/ufbYGnudVzx+ekRjb2G94vKft8yPxYfwA1HvmTxdAipbcgT2BlGevufClzwvTKIYdAKRTxeRx5T73kT0EJFEYjb5iKSFbCkRASfPc3Tl0EOqR2IPrsmaGWovZn6sfsWbBkmLHs9/KkBwqXLyCLMe27AW6Jhg0+1x92fFPtqfMVkp7lEzj+w91B2dJpw4PCpGFe2s1NQagd5t4ft1CPIlw2gwDv8B+F8HcxKxybQ/eAQHgV+cmCFEIeg9SdMqM+jcm2owaYjEjg78Tz8/EUkK12A3nXXkkFLUoee//s4B6Os+bVXiiRcz05EXZpVG0VAYx1X2EemwtKy/n3s6oHrQ==</Modulus>
     </RSAParameters>
@@ -5220,15 +5220,15 @@ RectTransform:
   m_GameObject: {fileID: 1717945222}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.064, y: 0.064, z: 1}
   m_Children: []
   m_Father: {fileID: 545910332}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 1.166661, y: -33.83333}
-  m_SizeDelta: {x: 334.56, y: 169.6577}
+  m_AnchoredPosition: {x: 0.7321005, y: -32.00814}
+  m_SizeDelta: {x: 701.2266, y: 297.31195}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1717945224
 MonoBehaviour:
@@ -5252,16 +5252,16 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 41ed698d57798c34f95fee9972f905d2, type: 3}
-    m_FontSize: 8
+    m_FontSize: 120
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 67
+    m_MaxSize: 150
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: AMOS
 --- !u!222 &1717945225

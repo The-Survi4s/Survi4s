@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
+    public GameState currentState => _gameState;
     private int _playerLayer;
     private int _monsterLayer;
     private int _monsterBulletLayer;
@@ -15,15 +16,19 @@ public class GameManager : MonoBehaviour
     private int _groundLayer;
     private int _wallLayer;
     public float preparationDoneTime { get; private set; }
+    public float RoomWaitTime => _roomWaitTime;
+    [SerializeField] private float _roomWaitTime = 2;
+
+    public static event Action GameOver;
 
     [Serializable]
-    public struct GameSettings
+    public struct GameSetting
     {
         public float preparationTime;
         public int initialStatueHp;
         public int maxWave;
 
-        public GameSettings(float preparationTime, int initialStatueHp, int maxWave)
+        public GameSetting(float preparationTime, int initialStatueHp, int maxWave)
         {
             this.preparationTime = preparationTime;
             this.initialStatueHp = initialStatueHp;
@@ -31,7 +36,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [field: SerializeField] public GameSettings gameSetting { get; private set; }
+    [field: SerializeField] public GameSetting GameSettings { get; private set; }
 
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }
@@ -74,6 +79,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeState(GameState newState)
     {
+        if (_gameState == newState) return;
         Debug.Log(newState);
         _gameState = newState;
         switch (newState)
@@ -100,7 +106,8 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
-        // disable player movement
+        // Broadcast game over
+        GameOver?.Invoke();
         // Show game over screen with score and disconnect button
         // Ke scene 0
     }
@@ -113,7 +120,7 @@ public class GameManager : MonoBehaviour
             await Task.Yield();
         }
 
-        ChangeState(SpawnManager.instance.currentWave < gameSetting.maxWave
+        ChangeState(SpawnManager.instance.currentWave < GameSettings.maxWave
             ? GameState.WavePreparation
             : GameState.GameOver);
     }
@@ -127,7 +134,7 @@ public class GameManager : MonoBehaviour
     private async void HandleWavePreparation()
     {
         // Start countdown timer
-        await CountDown(gameSetting.preparationTime);
+        await CountDown(GameSettings.preparationTime);
         // On countdown done, or on some button pressed, wave spawn
         ChangeState(GameState.WaveSpawn);
     }

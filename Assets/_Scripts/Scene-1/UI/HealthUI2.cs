@@ -4,23 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 public class HealthUI2 : MonoBehaviour
 {
-    Text text;
-    [SerializeField] public PlayerStats Stats;
-    [SerializeField] public float hp_sem, jumlah;
-    private Player localPlayer;
-
-    public void Start()
-    {
-        text = GetComponent<Text>();
-    }
+    [SerializeField] private Text text;
+    private PlayerStat _stat;
+    private Player _localPlayer;
 
     void Update()
     {
-        if (Stats == null)
+        if (!_stat)
         {
-            Stats = UnitManager.Instance.GetPlayer()?.stats;
+            if (_localPlayer)
+            {
+                _stat = _localPlayer.stats;
+            }
+            else
+            {
+                _localPlayer = UnitManager.Instance.GetPlayer();
+            }
             return;
         }
-        text.text = Stats.hitPoint.ToString();
+        text.text = _stat.hitPoint.ToString();
     }
 }

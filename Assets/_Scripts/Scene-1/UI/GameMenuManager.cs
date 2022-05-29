@@ -48,7 +48,7 @@ public class GameMenuManager : MonoBehaviour
     // Count down for start button to appear -------------------------------------
     private IEnumerator CountDownStartButton()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(GameManager.Instance.RoomWaitTime);
 
         if (NetworkClient.Instance.isMaster)
         {

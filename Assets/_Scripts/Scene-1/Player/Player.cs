@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 
-[RequireComponent(typeof(PlayerStats), typeof(PlayerWeaponManager))]
+[RequireComponent(typeof(PlayerStat), typeof(PlayerWeaponManager))]
 public class Player : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     public bool isFacingLeft { get; private set; }
 
     // Character Stats -----------------------------------------------------------------
-    public PlayerStats stats { get; private set; }
+    public PlayerStat stats { get; private set; }
     public PlayerWeaponManager weaponManager { get; private set; }
 
     public event Action<string> OnPlayerDead;
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        stats = GetComponent<PlayerStats>();
+        stats = GetComponent<PlayerStat>();
         weaponManager = GetComponent<PlayerWeaponManager>();
     }
 

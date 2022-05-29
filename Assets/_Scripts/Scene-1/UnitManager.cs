@@ -24,8 +24,9 @@ public class UnitManager : MonoBehaviour
     // Eazy Access --------------------------------------------------------------------
     public static UnitManager Instance { get; private set; }
 
-    public int playerAliveCount => _playerAliveKdTree.Count();
-    public int playerCount => _playerKdTree.Count;
+    public int playerAliveCount => _playerAliveKdTree.Count;
+    public int playerCount => _players.Count;
+    public List<Player> players => _players.Values.ToList();
     public int monsterAliveCount => _monsterKdTree.Count;
     public int bulletCount => _bullets.Count;
 
@@ -63,7 +64,7 @@ public class UnitManager : MonoBehaviour
         p.OnPlayerDead += HandlePlayerDead;
         _playerKdTree.Add(p);
         _playerAliveKdTree.Add(p);
-        _players.Add(p.name.Trim(), p);
+        _players.Add(p.name, p);
 
         //Get player username text object from child
     }
@@ -105,6 +106,7 @@ public class UnitManager : MonoBehaviour
         if (!_monsters.ContainsKey(id)) return;
         var index = SearchMonsterIndex(_monsters[id]);
         if(index >= 0) _monsterKdTree.RemoveAt(index);
+        _monsters.Remove(id);
     }
 
     public void RemoveBullet(int id)

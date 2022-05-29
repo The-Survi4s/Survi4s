@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class WeaponRange : WeaponBase
 {
-    [SerializeField] private int _maxAmmo;
+    [field: SerializeField] public int MaxAmmo { get; private set; }
     [SerializeField] private GameObject _bullet;
     [field: SerializeField] public float inAccuracy { get; private set; }
     [SerializeField] private int _ammo;
     public int Ammo
     {
         get => _ammo;
-        set => _ammo = Mathf.Clamp(value, 0, _maxAmmo);
+        private set => _ammo = Mathf.Clamp(value, 0, MaxAmmo);
     }
 
     private void Start()
@@ -27,7 +27,7 @@ public class WeaponRange : WeaponBase
         return ownerPlayer.syncMousePos;
     }
 
-    public void ReloadAmmo() => Ammo = _maxAmmo;
+    public void ReloadAmmo() => Ammo = MaxAmmo;
 
     public override void ReceiveAttackMessage()
     {

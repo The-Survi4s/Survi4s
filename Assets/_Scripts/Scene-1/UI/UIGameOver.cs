@@ -1,65 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIGameOver : MonoBehaviour
 {
-    [SerializeField] public PlayerStats Stats;
-    [SerializeField] public float hp_sem, jumlah;
-    //TriggerHp trik;
-    //UnitManager unit;
-    // Start is called before the first frame update
-    public GameObject gameOver;
+    [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private Text _nameTextbox;
+    [SerializeField] private Text _killCountTextbox;
+
     public void Start()
     {
-     //   text = GetComponent<Text>();
-        //Stats = GameObject.FindObjectOfType(typeof(CharacterStats)) as CharacterStats;
-        //Stats.hitPoint();
-
-        StartCoroutine(OnFindLocalPlayer());
-        gameOver.gameObject.SetActive(false);
+        GameManager.GameOver += GameOverEventHandler;
+        _gameOverPanel.gameObject.SetActive(false);
+        _nameTextbox.text = "";
+        _killCountTextbox.text = "";
     }
 
-    // Update is called once per frame
-    void Update()
+    private void GameOverEventHandler()
     {
-        if (Stats == null)
-            return;
-        //Debug.Log("Stats:" + Stats._hitPoint);
-        //hp_sem = Stats._hitPoint;
-        // jumlah = hp_sem - Stats.speed;
-        //text.text = Stats.hitPoint.ToString();
+        _gameOverPanel.gameObject.SetActive(true);
 
-        //hp_sem = Stats.hitPoint.set('1');
-        //      text.text = Stats.hitPoint.ToString();
-        //Debug.Log("hp " + hp_sem + "stats: "+ Stats._hitPoint);
-        //      Debug.Log("Unit " + unit.playerAliveCount);
-        if (Stats.hitPoint == 0)
+        // Tampilkan nama semua player dan score masing2 player
+        foreach (var player in UnitManager.Instance.players)
         {
-            gameOver.gameObject.SetActive(true);
+            _nameTextbox.text += player.name + "\n";
+            _killCountTextbox.text += player.KillCount.ToString() + "\n";
         }
-
-    }
-    public Player LocalPlayer()
-    {
-        var players = FindObjectsOfType<Player>();
-
-        foreach (Player p in players)
-        {
-            Debug.Log(p.gameObject.name);
-            if (p.isLocal)
-                return p;
-        }
-        return null;
-    }
-    IEnumerator OnFindLocalPlayer()
-    {
-        while (LocalPlayer() == null)
-        {
-            Debug.Log("Local player null");
-            yield return new WaitForSeconds(0.2f);
-        }
-        Stats = UnitManager.Instance.GetPlayer().stats;
-
     }
 }

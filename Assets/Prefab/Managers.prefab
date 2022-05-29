@@ -259,6 +259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4125814745862421291}
   - component: {fileID: 4125814745862421290}
+  - component: {fileID: 4254067023806975844}
   m_Layer: 0
   m_Name: Game Menu Manager
   m_TagString: Untagged
@@ -297,6 +298,21 @@ MonoBehaviour:
   mainPanel: {fileID: 0}
   startButton: {fileID: 0}
   playersName: []
+--- !u!114 &4254067023806975844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4125814745862421460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e1ca1a2b5077014f88c29d2bd556166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameOverPanel: {fileID: 0}
+  _nameTextbox: {fileID: 0}
+  _killCountTextbox: {fileID: 0}
 --- !u!1 &4125814745988642889
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +831,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b9219a06e8bbf84a9114a95c2c93059, type: 3}
+--- !u!4 &2716904215212454697 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1869404774347472606, guid: 0b9219a06e8bbf84a9114a95c2c93059, type: 3}
+  m_PrefabInstance: {fileID: 4342899689102347767}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6154536379978067439 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7578531758591057944, guid: 0b9219a06e8bbf84a9114a95c2c93059, type: 3}
@@ -826,11 +847,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &2716904215212454697 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1869404774347472606, guid: 0b9219a06e8bbf84a9114a95c2c93059, type: 3}
-  m_PrefabInstance: {fileID: 4342899689102347767}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5193798385771665880
 PrefabInstance:
   m_ObjectHideFlags: 0
