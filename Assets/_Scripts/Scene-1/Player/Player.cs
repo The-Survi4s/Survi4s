@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
 
     // Check for near statue
     [SerializeField] private float _minStatueDist = 3.0f;
-    [SerializeField] public bool isNearStatue { get; private set; }
+    [field: SerializeField] public bool isNearStatue { get; private set; }
 
     // Store last direction
     /// <summary>
@@ -43,9 +43,7 @@ public class Player : MonoBehaviour
     /// Player's last move direction. Will never become <see cref="Vector2.zero"/> except at the start. 
     /// </summary>
     private Vector2 _lastMoveDir;
-
-    private WeaponRange _weaponRange;
-
+	
     [SerializeField] private int _killCount;
     public int KillCount
     {
@@ -109,35 +107,17 @@ public class Player : MonoBehaviour
                 weaponManager.UpgradeEquipedWeapon();
             }
 
-
-            // Global Process --------------------------------------------------
-
-            // Check statue Pos
-            var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
-            if (distanceToStatue < _minStatueDist)
-            {
-                isNearStatue = true;
-            }
-            else
-            {
-                isNearStatue = false;
-            }
-
-            // Auto Reload
-            if (isNearStatue)
-            {
-                if (_weaponRange.Ammo != _weaponRange.MaxAmmo)
-                {
-                    _weaponRange.ReloadAmmo();
-                }
-            }
-
             // Jump wall
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 NetworkClient.Instance.Jump();
             }
         }
+
+        // Check statue Pos
+        var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
+        if (distanceToStatue < _minStatueDist) isNearStatue = true;
+        else isNearStatue = false;
     }
 
     public async void Jump()
@@ -255,17 +235,6 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         stats.OnPlayerDead -= HandlePlayerDead;
-    }
-
-    public bool IsNearStatue
-    {
-        get { return isNearStatue; }
-        private set { isNearStatue = value; }
-    }
-
-    public void SetWeaponRange()
-    {
-        _weaponRange = weaponManager.weapon as WeaponRange;
     }
 
     public void AddKillCount()

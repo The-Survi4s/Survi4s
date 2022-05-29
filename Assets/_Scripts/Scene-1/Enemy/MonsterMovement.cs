@@ -40,7 +40,6 @@ public class MonsterMovement : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _agent.updateUpAxis = false;
         _agent.updateRotation = false;
-        _agent.isStopped = false;
 
         _currentTargetPreviousPos = Vector3.zero;
         _statuePos = TilemapManager.instance.statue.transform.position;
@@ -54,7 +53,7 @@ public class MonsterMovement : MonoBehaviour
     {
         if (_owner.isDead)
         {
-            _agent.isStopped = true;
+            _agent.speed = 0;
             return;
         }
         SetStat();

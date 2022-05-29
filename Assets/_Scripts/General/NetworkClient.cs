@@ -15,6 +15,7 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private int port;
     [SerializeField] private string IpAddress;
     private IPAddress ipAd;
+    [SerializeField, Min(0)] private int _maximumRetries = 1;
 
     // Encryption ---------------------------------------------------------------------
     private RsaEncryption rsaEncryption;
@@ -95,6 +96,7 @@ public class NetworkClient : MonoBehaviour
             catch (Exception e)
             {
                 Debug.Log("Try connecting-" + count + " error : " + e.Message);
+                if (count > _maximumRetries) break;
             }
         }
     }
@@ -175,9 +177,9 @@ public class NetworkClient : MonoBehaviour
         DBl,
         RbWl,
         UpWpn,
-        KlCo,
         PlVl,
-        PJmp
+        PJmp,
+        ChNm
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -209,6 +211,12 @@ public class NetworkClient : MonoBehaviour
                 case Header.LRm:
                 {
                     UnitManager.Instance.HandlePlayerDisconnect(info[1]);
+                    break;
+                }
+                case Header.ChNm:
+                {
+                    myId = info[2];
+                    myName = info[3];
                     break;
                 }
             }
@@ -321,11 +329,6 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.FindAndUpgradeWeapon(info[2]);
                     break;
                 }
-                case Header.KlCo:
-                {
-                    // Player Kill Count
-					 break;
-				}
                 case Header.PlVl:
                 {
                     UnitManager.Instance.SetPlayerVelocity(
@@ -407,6 +410,11 @@ public class NetworkClient : MonoBehaviour
     }
 
     // Public method that can be called to send message to server -------------------
+    public void ChangeName(string newId, string newName)
+    {
+        string[] msg = { "ChNm", newId, newName };
+        SendMessageClient("2", msg);
+    }
     public void StartMatchmaking()
     {
         SendMessageClient("2", "StMtc");
@@ -445,6 +453,7 @@ public class NetworkClient : MonoBehaviour
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
+        Debug.Log($"Send spawn monster: id {id}, type {type}");
         string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
         SendMessageClient("1", msg);
     }

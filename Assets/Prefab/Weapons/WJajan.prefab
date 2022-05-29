@@ -47,7 +47,10 @@ MonoBehaviour:
   defaultBaseAttack: 10
   defaultCritRate: 5
   maxCooldownTime: 10
-  offset: {x: 0.2, y: -0.3, z: -1}
+  offset: {x: 0.2, y: 0.5, z: -1}
+  _upgradeCost: 4
+  _weaponLevel: 1
+  _weaponExp: 0
   defaultAttackRad: 3
   targetMask:
     serializedVersion: 2

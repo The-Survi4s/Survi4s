@@ -17,7 +17,8 @@ public abstract class Monster : MonoBehaviour
 
     #region Components
     protected MonsterMovement _monsterMovement;
-    private Animator _animator; 
+    private Animator _animator;
+    private SpriteRenderer _renderer;
     #endregion
 
     #region Data and Containers Definition
@@ -197,6 +198,7 @@ public abstract class Monster : MonoBehaviour
         // Gets the attached Components
         _monsterMovement = GetComponent<MonsterMovement>();
         _animator = GetComponent<Animator>();
+        _renderer = GetComponent<SpriteRenderer>();
 
         FirstSetup();
         CheckConflictingPriorities();
@@ -207,7 +209,7 @@ public abstract class Monster : MonoBehaviour
     {
         _activeStatusEffects = new List<StatusEffectBase>();
         id = -1;
-        //_animator.SetBool(IsDeadBool, false);
+        _animator.SetBool(IsDeadBool, false);
         _playerLayerMask = LayerMask.GetMask("Player");
         _wallLayerMask = LayerMask.GetMask("Wall");
         _monsterLayerMask = LayerMask.GetMask("Enemy");
@@ -421,9 +423,7 @@ public abstract class Monster : MonoBehaviour
     {
         // Moving
         _animator.SetBool(IsMovingBool, _monsterMovement.velocity != Vector3.zero);
-        // Attack
-
-        // Dead
+        _renderer.flipX = _monsterMovement.velocity.x < 0;
     }
 
 
@@ -431,11 +431,12 @@ public abstract class Monster : MonoBehaviour
     public void PlayAttackAnimation()
     {
         _animator.SetTrigger(AttackTrigger);
-    } 
+    }
     #endregion
 
     #region Event Handlers
 
+    [SerializeField] private GameObject _itemDrop;
     public static event Action<int> OnMonsterDeath;
 
     private void OnEnable()
@@ -468,6 +469,10 @@ public abstract class Monster : MonoBehaviour
         OnMonsterDeath?.Invoke(id);
         SpawnManager.instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);
+
+        // Drop Item
+        Instantiate(_itemDrop, transform.position, transform.rotation);
+
         Destroy(gameObject, 5);
     }
 

@@ -11,11 +11,6 @@ public class WeaponRange : WeaponBase
         get => _ammo;
         set => _ammo = Mathf.Clamp(value, 0, _maxAmmo);
     }
-    public int MaxAmmo
-    {
-        get => _maxAmmo;
-        private set => _maxAmmo = value;
-    }
 
     private void Start()
     {
@@ -37,7 +32,6 @@ public class WeaponRange : WeaponBase
     public override void ReceiveAttackMessage()
     {
         base.ReceiveAttackMessage();
-        //Debug.Log(ammo);
         // Only do this if local
         if (isLocal)
         {

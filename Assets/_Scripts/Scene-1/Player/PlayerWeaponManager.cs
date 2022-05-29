@@ -43,8 +43,6 @@ public class PlayerWeaponManager : MonoBehaviour
                 // Equip new weapon
                 x.EquipWeapon(this);
                 weapon = x;
-
-                GetComponent<Player>().SetWeaponRange();
             }
         }
     }
@@ -56,10 +54,7 @@ public class PlayerWeaponManager : MonoBehaviour
     // SendAttackMessage --------------------------------------------------------------------------------
     public void Attack()
     {
-        if(weapon != null)
-        {
-            weapon.SendAttackMessage();
-        }
+        if(weapon) weapon.SendAttackMessage();
     }
     public void ReceiveAttackMessage()
     {
@@ -118,5 +113,11 @@ public class PlayerWeaponManager : MonoBehaviour
             weapon.UpgradeWeaponLevel(_playerWeaponExp);
             _playerWeaponExp = 0;
         }
+    }
+
+    public int PlayerWeaponXp
+    {
+        get => _playerWeaponExp;
+        set => _playerWeaponExp = value;
     }
 }
