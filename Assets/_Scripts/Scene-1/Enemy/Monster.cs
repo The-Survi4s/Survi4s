@@ -343,7 +343,11 @@ public abstract class Monster : MonoBehaviour
     /// <returns>
     /// Distance from this <see cref="Monster"/> to <paramref name="obj"/>
     /// </returns>
-    private float DistanceTo(Component obj) => Vector3.Distance(obj.transform.position, transform.position);
+    private float DistanceTo(Component obj) 
+    {
+        if (obj) return Vector3.Distance(obj.transform.position, transform.position);
+        else return 0;
+    }
 
     /// <summary>
     /// Returns the nearest <see cref="Component"/> from <paramref name="components"/>. 

@@ -75,6 +75,7 @@ public class UnitManager : MonoBehaviour
 
     public void AddMonster(Monster monster)
     {
+        //Debug.Log("Monster id: " + monster.id + " added");
         monster.SetTargetWall(TilemapManager.instance.GetWall(monster.origin));
         _monsterKdTree.Add(monster);
         _monsters.Add(monster.id, monster);

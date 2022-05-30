@@ -369,10 +369,15 @@ public class TilemapManager : MonoBehaviour
         // If wall is destroyed variant, spawn brokenWall
         if (tile.hp <= 0 && tile is Wall wall) SpawnBrokenWall(wall);
 
+        // Store does this location has a navmesh
+        var hasNavMesh = NavMesh.SamplePosition(CellToWorld(cellPos), out _, 0.1f, NavMesh.AllAreas);
+
         // Set tile, then update Tilemap and NavMesh
-        _wallTilemap.SetTile(tile.cellPos, variantId == variantCount ? null : tileStages.GetTile(variantId));
+        TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
+        _wallTilemap.SetTile(tile.cellPos, newTile);
         _wallTilemap.RefreshTile(cellPos);
-        NavMeshController.UpdateNavMesh();
+        if(hasNavMesh && !newTile) NavMeshController.UpdateNavMesh();
+        else if(!hasNavMesh && newTile) NavMeshController.UpdateNavMesh();
     }
 
     /// <summary>

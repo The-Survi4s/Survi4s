@@ -5,15 +5,16 @@ using UnityEngine.AI;
 
 public class NavMeshController : MonoBehaviour
 {
-    private static NavMeshSurface2d _surface2d;
+    private static NavMeshSurface _surface;
     private void Awake()
     {
-        _surface2d = GetComponent<NavMeshSurface2d>();
+        _surface = GetComponent<NavMeshSurface>();
+        _surface.hideEditorLogs = true;
         UpdateNavMesh();
     }
 
     public static void UpdateNavMesh()
     {
-        _surface2d.BuildNavMesh();
+        _surface.BuildNavMesh();
     }
 }

@@ -31,8 +31,6 @@ public class NetworkClient : MonoBehaviour
     [SerializeField, Min(0.1f)] private float CheckTime = 0.8f;
     private float _checkTime;
 
-    private bool started = false;
-
     // Connection status --------------------------------------------------------------
     private bool isVerified;
 
@@ -62,8 +60,6 @@ public class NetworkClient : MonoBehaviour
         isMaster = false;
 
         _checkTime = CheckTime;
-        StartCoroutine(CheckConnection());
-        started = true;
     }
 
     // Try connecting to server ------------------------------------------------------
@@ -130,10 +126,10 @@ public class NetworkClient : MonoBehaviour
         MainMenuManager.Instance.SetActiveConnectingPanel(false);
     }
 
-    private IEnumerator CheckConnection()
+    private void Update()
     {
         // Check connection and verification status ---------------------------------
-        while (client.Connected && isVerified)
+        if (client.Connected && isVerified)
         {
             // If all ok, begin listening -------------------------------------------
             if (networkStream.DataAvailable)
@@ -149,15 +145,7 @@ public class NetworkClient : MonoBehaviour
             {
                 SendMessageClient("2", "A");
             }
-
-            yield return new WaitForSeconds(0.05f);
         }
-    }
-
-    private void OnEnable()
-    {
-        if (!started) return;
-        StartCoroutine(CheckConnection());
     }
 
     // Header enums
