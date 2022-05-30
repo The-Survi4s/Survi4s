@@ -139,7 +139,7 @@ public class SpawnManager : MonoBehaviour
     /// <param name="spawnOffset">The offset to spawn <see cref="Monster"/> from <see cref="Spawner"/>'s center</param>
     public void ReceiveSpawnMonster(int id, int index, Origin origin, float spawnOffset)
     {
-        Debug.Log("id:" + id + ", index:" + index + ", size:" + _monsterPrefabDuplicates.Count);
+        //Debug.Log("id:" + id + ", index:" + index + ", size:" + _monsterPrefabDuplicates.Count);
         foreach (var spawner in _spawners.Where(spawner => spawner.origin == origin))
         {
             spawner.SpawnMonster(_monsterPrefabDuplicates[index], id, spawnOffset, _currentWaveInfo);
@@ -173,10 +173,12 @@ public class SpawnManager : MonoBehaviour
             if (!_occupiedIDs[index])
             {
                 _occupiedIDs[index] = true;
+                //Debug.Log("Vacant id: " + index);
                 return index;
             }
         }
         _occupiedIDs.Add(true);
+        //Debug.Log("New id: " + (_occupiedIDs.Count - 1));
         return _occupiedIDs.Count - 1;
     }
 

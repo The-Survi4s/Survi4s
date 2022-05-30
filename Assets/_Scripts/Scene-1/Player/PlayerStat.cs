@@ -7,8 +7,9 @@ public class PlayerStat : MonoBehaviour
 {
     [SerializeField] private int _maxHitPoint;
     [SerializeField] private float _defaultMoveSpeed;
-    public event Action OnPlayerDead;
-    public event Action OnPlayerRevived;
+    public event Action<string> PlayerDead;
+    public event Action<string> PlayerRevived;
+    public bool isInitialized { get; private set; }
     private bool _actionInvoked = false;
 
     [SerializeField] private float _hitPoint;
@@ -21,14 +22,14 @@ public class PlayerStat : MonoBehaviour
 
             if (_hitPoint <= 0 && !_actionInvoked)
             {
-                OnPlayerDead?.Invoke();
+                PlayerDead?.Invoke(name);
                 _hitPoint = 0;
                 _actionInvoked = true;
             }
 
             if (_actionInvoked && _hitPoint > 0)
             {
-                OnPlayerRevived?.Invoke();
+                PlayerRevived?.Invoke(name);
                 _actionInvoked = false;
             }
 
@@ -45,6 +46,7 @@ public class PlayerStat : MonoBehaviour
     {
         hitPoint = _maxHitPoint;
         moveSpeed = _defaultMoveSpeed;
+        isInitialized = true;
     }
 
     public void CorrectDeadPosition(Vector2 pos)

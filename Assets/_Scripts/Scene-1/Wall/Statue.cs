@@ -6,6 +6,7 @@ using UnityEngine;
 public class Statue : DestroyableTile
 {
     public override int maxHp { get; protected set; }
+    public bool IsInitialized { get; private set; }
 
     [SerializeField] private Sprite[] _haloStageSprites;
 
@@ -15,6 +16,7 @@ public class Statue : DestroyableTile
         cellPos = TilemapManager.instance.WorldToCell(transform.position);
         hp = maxHp;
         TilemapManager.instance.SetStatue(this);
+        IsInitialized = true;
     }
 
     public void PlayDestroyedAnimation()

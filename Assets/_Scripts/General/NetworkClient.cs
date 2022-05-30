@@ -28,8 +28,10 @@ public class NetworkClient : MonoBehaviour
     public bool isMaster { get; private set; }
     public int playersCount { get; private set; }
 
-    private float DefaultCheckTime;
-    private float checkTime;
+    [SerializeField, Min(0.1f)] private float CheckTime = 0.8f;
+    private float _checkTime;
+
+    private bool started = false;
 
     // Connection status --------------------------------------------------------------
     private bool isVerified;
@@ -59,8 +61,9 @@ public class NetworkClient : MonoBehaviour
         isVerified = false;
         isMaster = false;
 
-        DefaultCheckTime = .8f;
-        checkTime = DefaultCheckTime;
+        _checkTime = CheckTime;
+        StartCoroutine(CheckConnection());
+        started = true;
     }
 
     // Try connecting to server ------------------------------------------------------
@@ -127,10 +130,10 @@ public class NetworkClient : MonoBehaviour
         MainMenuManager.Instance.SetActiveConnectingPanel(false);
     }
 
-    private void Update()
+    private IEnumerator CheckConnection()
     {
         // Check connection and verification status ---------------------------------
-        if(client.Connected && isVerified)
+        while (client.Connected && isVerified)
         {
             // If all ok, begin listening -------------------------------------------
             if (networkStream.DataAvailable)
@@ -141,12 +144,20 @@ public class NetworkClient : MonoBehaviour
 
             // Always send message to server to tell server that we
             // Still online 
-            checkTime -= Time.deltaTime;
-            if(checkTime <= 0)
+            _checkTime -= Time.deltaTime;
+            if (_checkTime <= 0)
             {
                 SendMessageClient("2", "A");
             }
+
+            yield return new WaitForSeconds(0.05f);
         }
+    }
+
+    private void OnEnable()
+    {
+        if (!started) return;
+        StartCoroutine(CheckConnection());
     }
 
     // Header enums
@@ -366,7 +377,7 @@ public class NetworkClient : MonoBehaviour
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(networkStream, data);
 
-        checkTime = DefaultCheckTime;
+        _checkTime = CheckTime;
     }
 
     // If want to check connection status -------------------------------------------
@@ -453,7 +464,7 @@ public class NetworkClient : MonoBehaviour
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
-        Debug.Log($"Send spawn monster: id {id}, type {type}");
+        //Debug.Log($"Send spawn monster: id {id}, type {type}");
         string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
         SendMessageClient("1", msg);
     }

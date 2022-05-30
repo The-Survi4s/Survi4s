@@ -348,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &159081195
 RectTransform:
   m_ObjectHideFlags: 0
@@ -449,7 +449,6 @@ GameObject:
   - component: {fileID: 174664672}
   - component: {fileID: 174664674}
   - component: {fileID: 174664673}
-  - component: {fileID: 174664675}
   m_Layer: 0
   m_Name: Health
   m_TagString: Untagged
@@ -518,19 +517,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 174664671}
   m_CullTransparentMesh: 1
---- !u!114 &174664675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 174664671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acc9f5503c704e642bf46536b74617b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 0}
 --- !u!1 &231279846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,11 +1206,11 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
+    m_Bits: 384
+  m_UseGeometry: 1
   m_OverrideByGrid: 1
   m_UseMeshPrefab: {fileID: 0}
-  m_CompressBounds: 0
+  m_CompressBounds: 1
   m_OverrideVector: {x: 1, y: 1, z: 1}
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -2448,7 +2434,6 @@ GameObject:
   - component: {fileID: 1723519478}
   - component: {fileID: 1723519480}
   - component: {fileID: 1723519479}
-  - component: {fileID: 1723519481}
   m_Layer: 0
   m_Name: Current Ammo
   m_TagString: Untagged
@@ -2517,20 +2502,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723519477}
   m_CullTransparentMesh: 1
---- !u!114 &1723519481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1723519477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fee04171ee7356a4e9cf064b8c426c83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentAmmoText: {fileID: 0}
-  maxAmmoText: {fileID: 0}
 --- !u!1 &1725976591
 GameObject:
   m_ObjectHideFlags: 0

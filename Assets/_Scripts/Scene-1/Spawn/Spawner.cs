@@ -33,6 +33,7 @@ public class Spawner : MonoBehaviour
 
     public void SpawnMonster(GameObject monsterPrefab, int monsterId, float spawnOffset, WaveInfo waveInfo)
     {
+        //Debug.Log("Id " + monsterId + " exists? " + UnitManager.Instance.MonsterIdExist(monsterId));
         this._spawnOffset = spawnOffset;
         GameObject temp = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         Monster monster = temp.GetComponent<Monster>();

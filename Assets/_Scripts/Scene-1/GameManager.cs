@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState {StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
+    public enum GameState {InLobby, StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
     public GameState currentState => _gameState;
     private int _playerLayer;
@@ -66,21 +66,28 @@ public class GameManager : MonoBehaviour
 
     private void CheckGameOver()
     {
-        if (_gameState == GameState.StartGame || 
-            _gameState == GameState.GameOver || 
-            _gameState == GameState.WavePreparation || 
-            UnitManager.Instance.playerCount <= 0) return;
+        //If uninitialized return
+        if (!Ready() || 
+            _gameState != GameState.WaveSpawn ||
+            _gameState != GameState.WaveOver) return;
         if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
         {
-            TilemapManager.instance.statue.PlayDestroyedAnimation();
             ChangeState(GameState.GameOver);
         }
     }
 
+    private bool Ready()
+    {
+        return (
+            UnitManager.Instance.PlayerInitializedCount == UnitManager.Instance.playerCount &&
+            UnitManager.Instance.playerCount > 0 &&
+            TilemapManager.instance.statue.IsInitialized);
+    }
+
     public void ChangeState(GameState newState)
     {
+        Debug.Log(_gameState + " -> " + newState);
         if (_gameState == newState) return;
-        Debug.Log(newState);
         _gameState = newState;
         switch (newState)
         {
@@ -106,6 +113,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
+        TilemapManager.instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
         // Show game over screen with score and disconnect button

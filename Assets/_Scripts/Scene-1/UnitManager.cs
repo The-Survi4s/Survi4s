@@ -61,12 +61,16 @@ public class UnitManager : MonoBehaviour
     // Spawn ------------------------------------------------------------------
     public void AddPlayer(Player p)
     {
-        p.OnPlayerDead += HandlePlayerDead;
+        p.stats.PlayerDead += PlayerDeadEventHandler;
+        p.stats.PlayerRevived += PlayerRevivedEventHandler;
         _playerKdTree.Add(p);
         _playerAliveKdTree.Add(p);
         _players.Add(p.name, p);
+    }
 
-        //Get player username text object from child
+    private void PlayerRevivedEventHandler(string idAndName)
+    {
+        
     }
 
     public void AddMonster(Monster monster)
@@ -84,7 +88,7 @@ public class UnitManager : MonoBehaviour
     }
 
     // Deletion
-    private void HandlePlayerDead(string idAndName)
+    private void PlayerDeadEventHandler(string idAndName)
     {
         if(!_players.ContainsKey(idAndName)) return;
         var index = SearchPlayerIndex(_players[idAndName], true);
@@ -94,7 +98,7 @@ public class UnitManager : MonoBehaviour
     public void HandlePlayerDisconnect(string idAndName)
     {
         Debug.Log(idAndName + " disconnected");
-        HandlePlayerDead(idAndName);
+        PlayerDeadEventHandler(idAndName);
         if (!_players.ContainsKey(idAndName)) return;
 
         var index = SearchPlayerIndex(_players[idAndName]);
@@ -337,5 +341,19 @@ public class UnitManager : MonoBehaviour
         }
 
         return temp;
+    }
+
+    public bool MonsterIdExist(int id) => _monsters.ContainsKey(id);
+
+    public int PlayerInitializedCount => _players.Where(player => player.Value.stats.isInitialized == true).Count();
+
+    // ----------------------------------------
+    private void OnDestroy()
+    {
+        foreach (var player in _players.Values)
+        {
+            player.stats.PlayerDead -= PlayerDeadEventHandler;
+            player.stats.PlayerRevived -= PlayerRevivedEventHandler;
+        }
     }
 }

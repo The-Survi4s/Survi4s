@@ -24,8 +24,6 @@ public class Player : MonoBehaviour
     public PlayerStat stats { get; private set; }
     public PlayerWeaponManager weaponManager { get; private set; }
 
-    public event Action<string> OnPlayerDead;
-
     // Frame rate sending mouse pos
     [SerializeField] private float _mousePosSendRate = 0.2f;
     private float _mousePosSendCoolDown, _mousePosNextTime;
@@ -77,8 +75,6 @@ public class Player : MonoBehaviour
 
         _mousePosSendCoolDown = 1 / _mousePosSendRate;
         _mousePosNextTime = 0;
-
-        stats.OnPlayerDead += HandlePlayerDead;
     }
 
     private void Update()
@@ -129,11 +125,6 @@ public class Player : MonoBehaviour
     }
 
     public bool isDead => stats.isDead;
-
-    private void HandlePlayerDead()
-    {
-        OnPlayerDead?.Invoke(name);
-    }
 
     private void FixedUpdate()
     {
@@ -230,11 +221,6 @@ public class Player : MonoBehaviour
     public void SyncMousePos(float x, float y)
     {
         syncMousePos = new Vector3(x, y, 0);
-    }
-
-    private void OnDestroy()
-    {
-        stats.OnPlayerDead -= HandlePlayerDead;
     }
 
     public void AddKillCount()
