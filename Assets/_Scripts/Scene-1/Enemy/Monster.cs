@@ -326,6 +326,7 @@ public abstract class Monster : MonoBehaviour
     /// <param name="nearestObj"></param>
     private void SendAttackMessage(Component nearestObj)
     {
+        if (!nearestObj) return;
         monsterStat.StartCooldown();
         NetworkClient.Instance.StartMonsterAttackAnimation(id);
         Attack(nearestObj);
@@ -341,12 +342,13 @@ public abstract class Monster : MonoBehaviour
 
     #region Utilities
     /// <returns>
-    /// Distance from this <see cref="Monster"/> to <paramref name="obj"/>
+    /// Distance from this <see cref="Monster"/> to <paramref name="obj"/>. 
+    /// <br/>Or <see cref="float.MaxValue"/> if obj is null
     /// </returns>
     private float DistanceTo(Component obj) 
     {
         if (obj) return Vector3.Distance(obj.transform.position, transform.position);
-        else return 0;
+        else return float.MaxValue;
     }
 
     /// <summary>

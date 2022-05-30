@@ -15,7 +15,7 @@ public abstract class BulletBase : MonoBehaviour
     [SerializeField] private int _maxTriggerTimes;
 
     [SerializeField] protected GameObject particleToSpawn; //Note: Ada ParticleSystem. Coba cari2 tahu tentang itu
-    [SerializeField] protected float particleSpawnRate = 0.2f;
+    [SerializeField] protected float particleLifetime = 1f;
 
     public int id { get; private set; }
 
@@ -30,6 +30,7 @@ public abstract class BulletBase : MonoBehaviour
     {
         if (_rotationIsSet)
         {
+            BulletUpdate();
             // Move bullet
             transform.position += moveSpeed * transform.right * Time.deltaTime;
 
@@ -39,6 +40,8 @@ public abstract class BulletBase : MonoBehaviour
             }
         }
     }
+
+    protected virtual void BulletUpdate() { }
 
     protected void OnTriggerEnter2D(Collider2D col)
     {
@@ -61,7 +64,7 @@ public abstract class BulletBase : MonoBehaviour
         particleClone = Instantiate(particleToSpawn, gameObject.transform.position, gameObject.transform.rotation);
 
         //Debug.Log(particleClone.name);
-        Destroy(particleClone, 1.0f);
+        Destroy(particleClone, particleLifetime);
     }
 
     protected abstract void OnHit(Collider2D col);
