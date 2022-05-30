@@ -8,7 +8,7 @@ public abstract class WeaponMelee : WeaponBase
 
     private void Awake()
     {
-        //GetComponent<Animator>().enabled = false;
+        _animator = GetComponent<Animator>();
         attackRad = defaultAttackRad;
     }
 
@@ -85,8 +85,9 @@ public abstract class WeaponMelee : WeaponBase
     protected override void PlayAnimation()
     {
         base.PlayAnimation();
-
-        GetComponent<Animator>().Play("BaseBall_Attack");
+        
+        if(_animator != null)
+            _animator.Play("BaseBall_Attack");
     }
 
     /*protected override void PlayAnimation()

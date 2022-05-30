@@ -19,6 +19,11 @@ public abstract class WeaponBase : MonoBehaviour
 
     [SerializeField] protected Vector3 offset;
 
+    [SerializeField] private bool isFacingRight;
+    [SerializeField] private float rotValZ;
+
+    protected Animator _animator;
+
     // Particles -----------------------------------------
 
 
@@ -54,6 +59,30 @@ public abstract class WeaponBase : MonoBehaviour
         RotateWeapon(isLocal
             ? ownerPlayer.localMousePos
             : ownerPlayer.syncMousePos);
+
+        // Flip
+        rotValZ = transform.eulerAngles.z;
+        if (rotValZ > 90.0f && rotValZ < 270.0f && isFacingRight)
+        {
+            isFacingRight = false;
+            transform.localScale -= new Vector3(0, 2, 0);
+        }
+        else if ((rotValZ < 90.0f || rotValZ > 270.0f) && !isFacingRight)
+        {
+            isFacingRight = true;
+            transform.localScale += new Vector3(0, 2, 0);
+        }
+        // Savety
+        if(transform.localScale.y < -1)
+        {
+            float gap = transform.localScale.y + 1.0f;
+            transform.localScale -= new Vector3(0, gap, 0);
+        }
+        else if (transform.localScale.y > 1)
+        {
+            float gap = transform.localScale.y + 1.0f;
+            transform.localScale -= new Vector3(0, gap, 0);
+        }
     }
 
     // Network methods -----------------------------------
@@ -105,6 +134,11 @@ public abstract class WeaponBase : MonoBehaviour
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
         ownerPlayer = null;
+
+        if(transform.localScale.y < 1)
+        {
+            transform.localScale -= new Vector3(0, transform.localScale.y * 2, 0);
+        }
     }
 
     // Upgrade Weapon
