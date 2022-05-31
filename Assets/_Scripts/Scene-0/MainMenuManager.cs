@@ -13,6 +13,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject waitingPanel;
     [SerializeField] private GameObject selectNamePanel;
     [SerializeField] private GameObject connectPanel;
+    [SerializeField] private GameObject exitPanel;
 
     public Text nameText;
 
@@ -37,6 +38,7 @@ public class MainMenuManager : MonoBehaviour
         waitingPanel.SetActive(false);
         createRoomPanel.SetActive(false);
         joinRoomPanel.SetActive(false);
+        exitPanel.SetActive(false);
         if(PlayerDataLoader.Instance.TheData.UserName == "")
         {
             selectNamePanel.SetActive(true);
@@ -55,6 +57,18 @@ public class MainMenuManager : MonoBehaviour
         }
 
         nameText.text = PlayerDataLoader.Instance.TheData.UserName;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(!createRoomPanel.activeSelf && !joinRoomPanel.activeSelf && 
+                !waitingPanel.activeSelf && !selectNamePanel.activeSelf)
+            {
+                exitPanel.SetActive(true);
+            }
+        }
     }
 
     // Quick Match Button ------------------------------------------------------
@@ -78,5 +92,10 @@ public class MainMenuManager : MonoBehaviour
     public void SetActiveConnectingPanel(bool isTrue)
     {
         connectPanel.SetActive(isTrue);
+    }
+
+    public void ExitGames()
+    {
+        Application.Quit();
     }
 }
