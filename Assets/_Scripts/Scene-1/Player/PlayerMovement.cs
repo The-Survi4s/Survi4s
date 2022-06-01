@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 public class PlayerMovement : MonoBehaviour
 {
     //Otw refactor Player
-    private Player p;
+    private Player player;
     private Rigidbody2D _rigidbody;
     // For player movement -------------------------------------------------------------
     public enum Axis { none, all, x, y }
@@ -15,10 +15,9 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 localMousePos { get; private set; }
     private Vector3 _historyMousePos;
     public Vector3 syncMousePos { get; private set; }
-    public bool isFacingLeft { get; private set; }
 
     // Frame rate sending mouse pos
-    [SerializeField] private float _mousePosSendRate = 0.2f;
+    [SerializeField] private float _mousePosSendRate = 10;
     private float _mousePosSendCoolDown, _mousePosNextTime;
 
     // Check for near statue
@@ -37,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        p = GetComponent<Player>();
+        player = GetComponent<Player>();
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -55,8 +54,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (p.isLocal && !p.isDead)
+        if (player.isLocal && !player.isDead)
         {
+            if (!_mainCamera) _mainCamera = Camera.main;
+
             // For Movement --------------------------------------------------------
             DetectMovementKeyboard();
             DetectMovementMouse();
@@ -85,23 +86,11 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Move character based on what button is down ---------------------------------------------
-        if (!p.isDead) _rigidbody.velocity = _moveDir * p.stats.moveSpeed;
+        if (!player.isDead) _rigidbody.velocity = _moveDir * player.stats.moveSpeed;
         else _rigidbody.velocity = _moveDir * 0;
 
-        // Flip character based on mouse position --------------------------------------------------
-        if (syncMousePos.x < transform.position.x && !isFacingLeft)
-        {
-            transform.rotation = Quaternion.Euler(0, 180, 0);
-            isFacingLeft = true;
-        }
-        else if (syncMousePos.x > transform.position.x && isFacingLeft)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-            isFacingLeft = false;
-        }
-
         // Send Mouse Position ---------------------------------------------------------------------
-        if (p.isLocal)
+        if (player.isLocal)
         {
             SendMousePos();
         }

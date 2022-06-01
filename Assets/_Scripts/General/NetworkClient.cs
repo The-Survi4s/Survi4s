@@ -334,12 +334,12 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.SetPlayerVelocity(
                         info[0], 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])), 
-                        EnumParse<Player.Axis>(info[4]));
+                        EnumParse<PlayerMovement.Axis>(info[4]));
                     break;
                 }
                 case Header.PJmp:
                 {
-                    UnitManager.Instance.GetPlayer(info[0]).Jump();
+                    UnitManager.Instance.GetPlayer(info[0]).movement.Jump();
                     break;
                 }
             }
@@ -458,7 +458,7 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SetPlayerVelocity(Vector2 velocity, Player.Axis axis)
+    public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)
     {
         string[] msg = { Header.PlVl.ToString(), velocity.x.ToString("f2"), velocity.y.ToString("f2"), axis.ToString() };
         SendMessageClient("1", msg);

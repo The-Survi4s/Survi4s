@@ -24,7 +24,7 @@ public class WeaponRange : WeaponBase
             return new Vector2(0, 0);
         }
 
-        return ownerPlayer.syncMousePos;
+        return ownerPlayer.movement.syncMousePos;
     }
 
     public void ReloadAmmo() => Ammo = MaxAmmo;
@@ -42,7 +42,7 @@ public class WeaponRange : WeaponBase
                 Vector2 mousePos = GetOwnerMousePos();
                 NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
             }
-            else if(ownerPlayer.isNearStatue)
+            else if(ownerPlayer.movement.isNearStatue)
             {
                 ReloadAmmo();
             }

@@ -131,7 +131,7 @@ public class UnitManager : MonoBehaviour
     public void SyncMousePos(string playerName, float x, float y)
     {
         if (!_players.ContainsKey(playerName)) return;
-        _players[playerName].SyncMousePos(x, y);
+        _players[playerName].movement.SyncMousePos(x, y);
     }
 
     public void OnEquipWeapon(string playerName, string weaponName)
@@ -200,10 +200,10 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SetPlayerVelocity(string playerName, Vector2 velocity, Player.Axis axis)
+    public void SetPlayerVelocity(string playerName, Vector2 velocity, PlayerMovement.Axis axis)
     {
         if (!_players.ContainsKey(playerName)) return;
-        _players[playerName].SetVelocity(velocity, axis);
+        _players[playerName].movement.SetVelocity(velocity, axis);
     }
 
     // Utilities ----------------------

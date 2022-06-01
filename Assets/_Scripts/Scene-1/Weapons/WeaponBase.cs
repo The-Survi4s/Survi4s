@@ -54,11 +54,13 @@ public abstract class WeaponBase : MonoBehaviour
         if (owner == null) return;
         // Follow owner
         transform.position = owner.transform.position +
-                             (ownerPlayer.isFacingLeft ? new Vector3(-offset.x, offset.y, offset.z) : new Vector3(offset.x, offset.y, offset.z));
+                             (ownerPlayer.isFacingLeft ? 
+                             new Vector3(-offset.x, offset.y, offset.z) : 
+                             new Vector3(offset.x, offset.y, offset.z));
         // Rotate weapon based on owner mouse pos
         RotateWeapon(isLocal
-            ? ownerPlayer.localMousePos
-            : ownerPlayer.syncMousePos);
+            ? ownerPlayer.movement.localMousePos
+            : ownerPlayer.movement.syncMousePos);
 
         // Flip
         rotValZ = transform.eulerAngles.z;

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1801512274828443493}
   - component: {fileID: 3734245638782618344}
   - component: {fileID: 2055355670349757396}
+  - component: {fileID: 4376973578895588140}
   - component: {fileID: 6815912341295409886}
   - component: {fileID: -7709159900960695899}
   - component: {fileID: 8987012856656221205}
@@ -103,9 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <isLocal>k__BackingField: 0
-  _animator: {fileID: 8987012856656221205}
-  _mousePosSendRate: 10
-  _minStatueDist: 2
+  _killCount: 0
 --- !u!114 &3734245638782618344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,6 +136,21 @@ MonoBehaviour:
   attackPoint: {fileID: 4569821827003623592}
   _playerWeaponExp: 0
   _upgradeButton: {fileID: 0}
+--- !u!114 &4376973578895588140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123738617261133931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec46e67c7c7d58243b61d1aad1c77073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mousePosSendRate: 10
+  _minStatueDist: 3
+  <isNearStatue>k__BackingField: 0
 --- !u!50 &6815912341295409886
 Rigidbody2D:
   serializedVersion: 4
