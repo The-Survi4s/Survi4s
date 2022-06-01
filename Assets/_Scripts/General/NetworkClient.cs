@@ -65,9 +65,10 @@ public class NetworkClient : MonoBehaviour
     // Try connecting to server ------------------------------------------------------
     public void BeginConnecting() 
     {
+        MainMenuManager.Instance.SetActiveConnectingPanel(true);
+
         // Get Player Name -----------------------------------------------------------
         myName = PlayerDataLoader.Instance.TheData.UserName;
-        //myId = PlayerDataLoader.Instance.TheData.UserId;
         myId = GeneratePlayerId();
 
         // Start try to connect again and again -------------------------------------

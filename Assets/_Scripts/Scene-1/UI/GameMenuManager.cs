@@ -15,6 +15,7 @@ public class GameMenuManager : MonoBehaviour
 
     // Text -----------------------------------------------------------------------
     [SerializeField] private Text[] playersName;
+    [SerializeField] private Text[] playersStatus;
 
     // Eazy Access ---------------------------------------------------------------
     public static GameMenuManager Instance { get; private set; }
@@ -69,10 +70,12 @@ public class GameMenuManager : MonoBehaviour
             if(i < names.Length)
             {
                 playersName[i].text = names[i];
+                playersStatus[i].text = "Ready";
             }
             else
             {
                 playersName[i].text = "";
+                playersStatus[i].text = "";
             }
         }
     }

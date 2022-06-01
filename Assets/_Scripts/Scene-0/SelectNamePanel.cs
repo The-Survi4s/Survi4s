@@ -42,7 +42,6 @@ public class SelectNamePanel : MonoBehaviour
         if (NetworkClient.Instance.IsConnected())
         {
             NetworkClient.Instance.ChangeName(IdTemp, nameTemp);
-
         }
         else
         {
