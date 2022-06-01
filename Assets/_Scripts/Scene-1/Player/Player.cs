@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     // Character Stats -----------------------------------------------------------------
     public PlayerStat stats { get; private set; }
     public PlayerWeaponManager weaponManager { get; private set; }
-
+    public PlayerMovement movement { get; private set; }
     // Frame rate sending mouse pos
     [SerializeField] private float _mousePosSendRate = 0.2f;
     private float _mousePosSendCoolDown, _mousePosNextTime;
@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStat>();
         weaponManager = GetComponent<PlayerWeaponManager>();
+        movement = GetComponent<PlayerMovement>();
     }
 
     private void Start()
@@ -130,6 +131,7 @@ public class Player : MonoBehaviour
     {
         // Move character based on what button is down ---------------------------------------------
         if (!isDead) _rigidbody.velocity = _moveDir * stats.moveSpeed;
+        else _rigidbody.velocity = _moveDir * 0;
 
         // Flip character based on mouse position --------------------------------------------------
         if (syncMousePos.x < transform.position.x && !isFacingLeft)

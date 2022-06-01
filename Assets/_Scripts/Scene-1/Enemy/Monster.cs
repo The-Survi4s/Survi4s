@@ -378,6 +378,14 @@ public abstract class Monster : MonoBehaviour
     {
         return UnitManager.Instance.GetObjectsInRadius<Player>(transform.position, setting.attackRange, _playerLayerMask);
     }
+    private async void SetTemporaryColor(Color color, int milisecondDuration)
+    {
+        Color originalColor = _renderer.color;
+        _renderer.color = color;
+        await System.Threading.Tasks.Task.Delay(milisecondDuration);
+        _renderer.color = originalColor;
+    }
+
     #endregion
 
     #region Stat Modifications
@@ -389,9 +397,13 @@ public abstract class Monster : MonoBehaviour
     public void ModifyHitPoint(float amount, string playerName)
     {
         monsterStat.hitPoint += Mathf.RoundToInt(amount);
-        if(playerName != null)
-            _lastPlayerHit = playerName;
+        if (playerName != null && amount < 0) 
+        {
+            SetTemporaryColor(Color.red, 400);
+            _lastPlayerHit = playerName; 
+        }
     }
+
     /// <summary>
     /// Adds <paramref name="statusEffect"/> to <see cref="_activeStatusEffects"/>
     /// </summary>
