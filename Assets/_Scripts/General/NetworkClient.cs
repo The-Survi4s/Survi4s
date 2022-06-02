@@ -238,7 +238,7 @@ public class NetworkClient : MonoBehaviour
                     {
                         temp[i] = info[i + 3];
                     }
-                    GameMenuManager.Instance.UpdatePlayersInRoom(temp);
+                    LobbyMenuManager.Instance.UpdatePlayersInRoom(temp);
                     break;
                 case Header.StGm:
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);

@@ -74,11 +74,11 @@ public abstract class WeaponMelee : WeaponBase
     // Visually attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()
     {
-        if(owner == null)
+        if(!ownerPlayer)
         {
             return;
         }
-        Vector2 attackPoint = owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
+        Vector2 attackPoint = ownerPlayer.weaponManager.GetAttackPoint().position;
         Gizmos.DrawSphere(attackPoint, attackRad);
     }
 

@@ -6,9 +6,9 @@ public class MonsterDropItem : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.gameObject.TryGetComponent(out PlayerWeaponManager playerWeaponManager))
         {
-            collision.GetComponent<PlayerWeaponManager>().PlayerWeaponXp += Random.Range(4, 20);
+            playerWeaponManager.AddExp(Random.Range(4, 20));
             Destroy(gameObject);
         }
     }

@@ -259,7 +259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4125814745862421291}
   - component: {fileID: 4125814745862421290}
-  - component: {fileID: 4254067023806975844}
+  - component: {fileID: 4383016252207253135}
   m_Layer: 0
   m_Name: Game Menu Manager
   m_TagString: Untagged
@@ -298,7 +298,8 @@ MonoBehaviour:
   mainPanel: {fileID: 0}
   startButton: {fileID: 0}
   playersName: []
---- !u!114 &4254067023806975844
+  playersStatus: []
+--- !u!114 &4383016252207253135
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -307,12 +308,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 4125814745862421460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e1ca1a2b5077014f88c29d2bd556166, type: 3}
+  m_Script: {fileID: 11500000, guid: acc9f5503c704e642bf46536b74617b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHpText: {fileID: 0}
+  _maxHpText: {fileID: 0}
+  _currentAmmoText: {fileID: 0}
+  _maxAmmoText: {fileID: 0}
+  _currentXpText: {fileID: 0}
+  _killCountText: {fileID: 0}
+  _countdownPanel: {fileID: 0}
+  _countdownText: {fileID: 0}
+  _inactiveDelay: 0
+  _color1: {r: 0, g: 0, b: 0, a: 0}
+  _color2: {r: 0, g: 0, b: 0, a: 0}
   _gameOverPanel: {fileID: 0}
   _nameTextbox: {fileID: 0}
   _killCountTextbox: {fileID: 0}
+  _UWPanel: {fileID: 0}
+  _statTexts:
+    first:
+      levelText: {fileID: 0}
+      atkText: {fileID: 0}
+      critText: {fileID: 0}
+      cooldownText: {fileID: 0}
+    second:
+      levelText: {fileID: 0}
+      atkText: {fileID: 0}
+      critText: {fileID: 0}
+      cooldownText: {fileID: 0}
 --- !u!1 &4125814745988642889
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,10 +381,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89115cc99c2c9b34fb50cd9b35c663bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <gameSetting>k__BackingField:
+  _roomWaitTime: 2
+  <Settings>k__BackingField:
     preparationTime: 0
-    initialStatueHp: 100
-    maxWave: 100
+    initialStatueHp: 0
+    maxWave: 0
 --- !u!114 &4125814745988642894
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [field: SerializeField] public GameSetting GameSettings { get; private set; }
+    [field: SerializeField] public GameSetting Settings { get; private set; }
 
     // Eazy access --------------------------------------------------------------------------
     public static GameManager Instance { get; private set; }
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
             await Task.Yield();
         }
 
-        ChangeState(SpawnManager.instance.currentWave < GameSettings.maxWave
+        ChangeState(SpawnManager.instance.currentWave < Settings.maxWave
             ? GameState.WavePreparation
             : GameState.GameOver);
     }
@@ -142,14 +142,15 @@ public class GameManager : MonoBehaviour
     private async void HandleWavePreparation()
     {
         // Start countdown timer
-        await CountDown(GameSettings.preparationTime);
+        await CountDown(Settings.preparationTime);
         // On countdown done, or on some button pressed, wave spawn
         ChangeState(GameState.WaveSpawn);
     }
 
-    private async Task CountDown(float time)
+    private async Task CountDown(float duration)
     {
-        preparationDoneTime = Time.time + time;
+        preparationDoneTime = Time.time + duration;
+        GameUIManager.Instance.StartWaveCountdown(duration);
         while (Time.time < preparationDoneTime)
         {
             DoStuffWhileCountDown();
@@ -171,7 +172,7 @@ public class GameManager : MonoBehaviour
         SpawnManager.instance.SendSpawnPlayer();
 
         // Deactivate Panels ----------------------------------------------------------------
-        GameMenuManager.Instance.SetActivePreparationPanel(false);
+        LobbyMenuManager.Instance.SetActivePreparationPanel(false);
 
         Physics2D.IgnoreLayerCollision(Log2(_playerLayer), Log2(_monsterLayer)); //Player no collision with monster
         Physics2D.IgnoreLayerCollision(Log2(_groundLayer), Log2(_monsterLayer)); //No collision with ground

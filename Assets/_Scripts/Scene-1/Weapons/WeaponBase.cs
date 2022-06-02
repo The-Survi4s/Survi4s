@@ -14,8 +14,8 @@ public abstract class WeaponBase : MonoBehaviour
     public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
     public bool isReady => Time.time >= nextAttackTime;
-    public GameObject owner { get; private set; }
-    public bool IsUsed() => owner != null;
+    protected Player ownerPlayer;
+    public bool IsUsed() => ownerPlayer;
 
     [SerializeField] protected Vector3 offset;
 
@@ -24,19 +24,15 @@ public abstract class WeaponBase : MonoBehaviour
 
     protected Animator _animator;
 
-    // Particles -----------------------------------------
-
-
-    // Cached components --------------------
-    protected Player ownerPlayer;
+    [SerializeField] public Sprite uiSprite;
 
     public bool isLocal => ownerPlayer.isLocal;
 
     // Upgrade Weapon -----------------------------------
-    // Serializefiel just for debugging in inspector
-    [SerializeField] private int _upgradeCost = 4;
-    [SerializeField] private int _weaponLevel = 1;
-    [SerializeField] private int _weaponExp = 0;
+    // Serializefield just for debugging in inspector
+    [field: SerializeField] public int UpgradeCost { get; private set; }
+    [field: SerializeField] public int Level { get; private set; }
+    [field: SerializeField] public int Exp { get; private set; }
     
     // -------------------
     protected virtual void Init()
@@ -44,16 +40,16 @@ public abstract class WeaponBase : MonoBehaviour
         baseAttack = defaultBaseAttack;
         critRate = defaultCritRate;
         cooldownTime = maxCooldownTime;
-        ownerPlayer = owner?.GetComponent<Player>();
+        Level = 1;
     }
 
     private void Awake() => Init();
     private void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
-        if (owner == null) return;
+        if (ownerPlayer == null) return;
         // Follow owner
-        transform.position = owner.transform.position +
+        transform.position = ownerPlayer.transform.position +
                              (ownerPlayer.isFacingLeft ? 
                              new Vector3(-offset.x, offset.y, offset.z) : 
                              new Vector3(offset.x, offset.y, offset.z));
@@ -116,23 +112,20 @@ public abstract class WeaponBase : MonoBehaviour
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
     public Vector2 GetOwnerAttackPoint() =>
-        owner == null
+        !ownerPlayer
         ? Vector2.zero
-        : (Vector2)owner.GetComponent<PlayerWeaponManager>().GetAttackPoint().position;
+        : (Vector2)ownerPlayer.weaponManager.GetAttackPoint().position;
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 
     // Equip / UnEquip -------------------------------------------------
     public void EquipWeapon(PlayerWeaponManager player)
     {
-        if (owner != null) return;
-        owner = player.gameObject;
-        ownerPlayer = owner.GetComponent<Player>();
+        if (!ownerPlayer) ownerPlayer = player.GetComponent<Player>();
     }
     public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {
-        if (player.name != owner.name) return;
-        owner = null;
+        if (player.name != ownerPlayer.name) return;
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
         ownerPlayer = null;
@@ -145,35 +138,45 @@ public abstract class WeaponBase : MonoBehaviour
 
     // Upgrade Weapon
     // Upgrade Level -----------------------------------------------------------
-    public void UpgradeWeaponLevel(int exp)
+    public int UpgradeWeaponLevel(int incomingXp)
     {
-        _weaponExp += exp;
-
-        while (_weaponExp >= _upgradeCost)
+        var totalXp = incomingXp + Exp;
+        if (totalXp < UpgradeCost) return incomingXp;
+        else
         {
-            NetworkClient.Instance.UpgradeWeapon(this.name);
-            _weaponExp -= _upgradeCost;
+            if (totalXp >= UpgradeCost)
+            {
+                NetworkClient.Instance.UpgradeWeapon(name);
+                totalXp -= UpgradeCost;
+            }
+            Exp = totalXp;
+            return 0;
         }
     }
+
     public void WeaponLevelUp()
     {
         // Increase stats
-        if (_weaponLevel % 3 == 0)
+        if (Level % 3 == 0)
         {
             critRate += (critRate / 10.0f);
         }
-        else if (_weaponLevel % 3 == 1)
+        else if (Level % 3 == 1)
         {
             cooldownTime -= (cooldownTime / 10.0f);
         }
-        else if (_weaponLevel % 3 == 2)
+        else if (Level % 3 == 2)
         {
             baseAttack += (baseAttack / 20.0f);
         }
 
         // Increase cost to upgrade
-        _upgradeCost += (4 / 100 * _upgradeCost) + 4;
+        UpgradeCost += (4 / 100 * UpgradeCost) + 4;
         // Increase weapon level
-        _weaponLevel++;
+        Level++;
     }
+
+    public float LevelUpPreview_Atk => (Level % 3 == 2) ? baseAttack * 1.05f : baseAttack;
+    public float LevelUpPreview_Crit => (Level % 3 == 0) ? critRate * 1.1f : critRate;
+    public float LevelUpPreview_Cooldown => (Level % 3 == 1) ? cooldownTime * 0.9f : cooldownTime;
 }

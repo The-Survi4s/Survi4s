@@ -19,7 +19,7 @@ public class WeaponRange : WeaponBase
 
     public Vector2 GetOwnerMousePos()
     {
-        if (owner == null)
+        if (ownerPlayer == null)
         {
             return new Vector2(0, 0);
         }
