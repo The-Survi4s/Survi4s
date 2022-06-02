@@ -290,7 +290,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdPl:
                 {
-                    Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
+                    //Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
                     UnitManager.Instance.ModifyPlayerHp(info[2], float.Parse(info[3]));
                     break;
                 }
@@ -525,7 +525,7 @@ public class NetworkClient : MonoBehaviour
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
-        Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
+        //Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
         string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
         SendMessageClient("1", msg);
     }

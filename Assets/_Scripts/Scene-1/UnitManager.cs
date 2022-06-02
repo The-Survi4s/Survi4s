@@ -167,7 +167,7 @@ public class UnitManager : MonoBehaviour
     public void ModifyPlayerHp(string playerName, float amount)
     {
         if (!_players.ContainsKey(playerName)) return;
-        Debug.Log(playerName + " " + amount);
+        //Debug.Log(playerName + " " + amount);
         _players[playerName].stats.hitPoint += amount;
     }
 

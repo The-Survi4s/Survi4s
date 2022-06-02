@@ -21,11 +21,14 @@ public class PlayerStat : MonoBehaviour
             if (value < _hitPoint) GameUIManager.Instance.ShowDamageOverlay(100);
             _hitPoint = value;
 
-            if (_hitPoint <= 0 && !_actionInvoked)
+            if (_hitPoint <= 0)
             {
-                PlayerDead?.Invoke(name);
                 _hitPoint = 0;
-                _actionInvoked = true;
+                if (!_actionInvoked)
+                {
+                    PlayerDead?.Invoke(name);
+                    _actionInvoked = true;
+                }
             }
 
             if (_actionInvoked && _hitPoint > 0)

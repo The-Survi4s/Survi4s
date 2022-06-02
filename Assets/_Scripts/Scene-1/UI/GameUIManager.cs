@@ -109,13 +109,13 @@ public class GameUIManager : MonoBehaviour
     {
         if (_countdownPanel.activeInHierarchy)
         {
-            Debug.Log("CooldownPanel is in hierarchy");
-            var secondsLeft = Mathf.Min(_doneTime - Time.time, 0);
+            var secondsLeft = Mathf.Max(_doneTime - Time.time, 0);
             var hours = TimeSpan.FromSeconds(secondsLeft).Hours;
             var minutes = TimeSpan.FromSeconds(secondsLeft).Minutes;
             var seconds = TimeSpan.FromSeconds(secondsLeft).Seconds;
             _countdownText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
             _countdownText.color = Color.Lerp(_color2, _color1, secondsLeft / _countdownDuration);
+            //Debug.Log($"secondsLeft {secondsLeft}, h:{hours}, m:{minutes}, s:{seconds}");
         }
         if (_doneTime + _inactiveDelay < Time.time) _countdownPanel.SetActive(false);
     }
@@ -124,7 +124,6 @@ public class GameUIManager : MonoBehaviour
     {
         _countdownDuration = duration;
         _doneTime = _countdownDuration + Time.time;
-        _countdownText.text = "Waiting for command";
         _countdownPanel.SetActive(true);
     }
 
