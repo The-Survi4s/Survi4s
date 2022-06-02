@@ -24,8 +24,6 @@ public class PlayerStat : MonoBehaviour
 
             if (_hitPoint <= 0)
             {
-                
-
                 _hitPoint = 0;
                 if (!_actionInvoked)
                 {
