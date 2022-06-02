@@ -56,7 +56,7 @@ public class WeaponRange : WeaponBase
         PlayerBulletBase bulTemp = temp.GetComponent<PlayerBulletBase>();
 
         // init bullet
-        bulTemp.Init(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
+        bulTemp.Initialize(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
 
         // Reduce ammo
         Ammo--;

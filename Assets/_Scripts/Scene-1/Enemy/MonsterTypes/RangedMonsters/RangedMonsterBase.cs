@@ -23,6 +23,6 @@ public abstract class RangedMonsterBase : Monster
         MonsterBulletBase bulTemp = temp.GetComponent<MonsterBulletBase>();
 
         // init bullet
-        bulTemp.Init(this, targetPos, UnitManager.Instance.GetIdThenAddBullet(bulTemp));
+        bulTemp.Initialize(this, targetPos, UnitManager.Instance.GetIdThenAddBullet(bulTemp));
     }
 }

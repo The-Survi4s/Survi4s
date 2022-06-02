@@ -6,6 +6,6 @@ public class BulletPartitur : MonsterBulletBase
 {
     protected override void BulletUpdate()
     {
-        moveSpeed -= moveSpeed / 100;
+        moveSpeed -= moveSpeed / (maxTravelRange * 100);
     }
 }

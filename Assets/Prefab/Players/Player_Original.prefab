@@ -134,7 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRadarRange: 1.2
   attackPoint: {fileID: 4569821827003623592}
-  _playerWeaponExp: 0
+  <PlayerWeaponExp>k__BackingField: 0
   _upgradeButton: {fileID: 0}
 --- !u!114 &4376973578895588140
 MonoBehaviour:

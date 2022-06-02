@@ -43,6 +43,8 @@ public abstract class BulletBase : MonoBehaviour
 
     protected virtual void BulletUpdate() { }
 
+    protected virtual void BulletStart() { }
+
     protected void OnTriggerEnter2D(Collider2D col)
     {
         if (_triggerCount >= _maxTriggerTimes) return;
@@ -106,6 +108,7 @@ public abstract class BulletBase : MonoBehaviour
         id = newBulletId;
         moveSpeed = defaultMoveSpeed;
         _startPos = transform.position;
+        BulletStart();
     }
 
     private void OnDestroy()

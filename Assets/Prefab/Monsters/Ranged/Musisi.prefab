@@ -173,7 +173,7 @@ MonoBehaviour:
     defaultStat:
       hp: 20
       atk: 1
-      atkCd: 0.5
+      atkCd: 0.75
       movSpd: 2
       rotSpd: 60
       acceleration: 10

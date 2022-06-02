@@ -39,7 +39,7 @@ public abstract class PlayerBulletBase : BulletBase
         NetworkClient.Instance.ModifyMonsterHp(monster.id, -weapon.baseAttack * criticalMultiplier);
     }
 
-    public void Init(WeaponBase weaponOrigin, Vector2 mousePos, int bulletId, bool isLocal = false)
+    public void Initialize(WeaponBase weaponOrigin, Vector2 mousePos, int bulletId, bool isLocal = false)
     {
         float inAccuracy = 0;
         if (weaponOrigin is WeaponRange wr) inAccuracy = wr.inAccuracy;

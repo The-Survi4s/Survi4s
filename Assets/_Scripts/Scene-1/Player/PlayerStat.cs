@@ -18,6 +18,7 @@ public class PlayerStat : MonoBehaviour
         get => _hitPoint;
         set
         {
+            if (value < _hitPoint) GameUIManager.Instance.ShowDamageOverlay(100);
             _hitPoint = value;
 
             if (_hitPoint <= 0 && !_actionInvoked)

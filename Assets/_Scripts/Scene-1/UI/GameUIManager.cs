@@ -103,25 +103,28 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Color _color1;
     [SerializeField] private Color _color2;
     private float _countdownDuration;
+    private float _doneTime;
 
     private void UpdateCountdownUI()
     {
-        var doneTime = _countdownDuration + Time.time;
         if (_countdownPanel.activeInHierarchy)
         {
-            var secondsLeft = Mathf.Min(doneTime - Time.time, 0);
+            Debug.Log("CooldownPanel is in hierarchy");
+            var secondsLeft = Mathf.Min(_doneTime - Time.time, 0);
             var hours = TimeSpan.FromSeconds(secondsLeft).Hours;
             var minutes = TimeSpan.FromSeconds(secondsLeft).Minutes;
             var seconds = TimeSpan.FromSeconds(secondsLeft).Seconds;
             _countdownText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
             _countdownText.color = Color.Lerp(_color2, _color1, secondsLeft / _countdownDuration);
         }
-        if (doneTime + _inactiveDelay < Time.time) _countdownPanel.SetActive(false);
+        if (_doneTime + _inactiveDelay < Time.time) _countdownPanel.SetActive(false);
     }
 
     public void StartWaveCountdown(float duration)
     {
         _countdownDuration = duration;
+        _doneTime = _countdownDuration + Time.time;
+        _countdownText.text = "Waiting for command";
         _countdownPanel.SetActive(true);
     }
 
@@ -154,7 +157,6 @@ public class GameUIManager : MonoBehaviour
     [Serializable]
     private struct StatText
     {
-        public Text levelText;
         public Text atkText;
         public Text critText;
         public Text cooldownText;
@@ -200,10 +202,10 @@ public class GameUIManager : MonoBehaviour
     [Header("Damage Overlay")]
     [SerializeField] private GameObject _damageOverlay;
 
-    public async void ShowDamageOverlay(float duration)
+    public async void ShowDamageOverlay(int milisecondDuration)
     {
         _damageOverlay.SetActive(true);
-        await System.Threading.Tasks.Task.Delay(500);
+        await System.Threading.Tasks.Task.Delay(milisecondDuration);
         _damageOverlay.SetActive(false);
     }
 
