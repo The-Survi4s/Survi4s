@@ -66,7 +66,7 @@ public abstract class WeaponMelee : WeaponBase
         foreach (Collider2D target in targets)
         {
             Monster monster = target.GetComponent<Monster>();
-            Debug.Log($"Monster {monster} get");
+            //Debug.Log($"Monster {monster} get");
             if (monster) NetworkClient.Instance.ModifyMonsterHp(monster.id, amount);
         }
     }

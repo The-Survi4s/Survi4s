@@ -32,7 +32,6 @@ public abstract class WeaponBase : MonoBehaviour
     // Serializefield just for debugging in inspector
     [field: SerializeField] public int UpgradeCost { get; private set; }
     [field: SerializeField] public int Level { get; private set; }
-    [field: SerializeField] public int Exp { get; private set; }
     
     // -------------------
     protected virtual void Init()
@@ -140,18 +139,16 @@ public abstract class WeaponBase : MonoBehaviour
     // Upgrade Level -----------------------------------------------------------
     public int UpgradeWeaponLevel(int incomingXp)
     {
-        var totalXp = incomingXp + Exp;
-        if (totalXp < UpgradeCost) return incomingXp;
+        if (incomingXp < UpgradeCost) { }
         else
         {
-            if (totalXp >= UpgradeCost)
+            if (incomingXp >= UpgradeCost)
             {
                 NetworkClient.Instance.UpgradeWeapon(name);
-                totalXp -= UpgradeCost;
+                incomingXp -= UpgradeCost;
             }
-            Exp = totalXp;
-            return 0;
         }
+        return incomingXp;
     }
 
     public void WeaponLevelUp()

@@ -68,8 +68,7 @@ public class GameManager : MonoBehaviour
     {
         //If uninitialized return
         if (!Ready() || 
-            _gameState != GameState.WaveSpawn ||
-            _gameState != GameState.WaveOver) return;
+            !(_gameState == GameState.WaveSpawn || _gameState == GameState.WaveOver)) return;
         if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
         {
             ChangeState(GameState.GameOver);
