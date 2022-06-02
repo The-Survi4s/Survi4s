@@ -49,9 +49,12 @@ MonoBehaviour:
   defaultCritRate: 5
   maxCooldownTime: 1
   offset: {x: 0.3, y: 0.6, z: -1}
-  _upgradeCost: 4
-  _weaponLevel: 1
-  _weaponExp: 0
+  isFacingRight: 0
+  rotValZ: 0
+  uiSprite: {fileID: 21300000, guid: 05e0fe60bf010ed41b40474cd8c2dcd2, type: 3}
+  <UpgradeCost>k__BackingField: 4
+  <Level>k__BackingField: 1
+  <Exp>k__BackingField: 0
   defaultAttackRad: 3
   targetMask:
     serializedVersion: 2

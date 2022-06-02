@@ -48,12 +48,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 20
-  maxTravelRange: 5
+  maxTravelRange: 30
   _maxTriggerTimes: 3
   particleToSpawn: {fileID: 8000028858983223329, guid: e4325f5f1ed73da4f99e95022260993b, type: 3}
-  particleSpawnRate: 0.2
+  particleLifetime: 0.2
   criticalMultiplier: 1.5
-  FX: {fileID: 8000028858983223329, guid: e4325f5f1ed73da4f99e95022260993b, type: 3}
 --- !u!212 &4315547821722523670
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -48,10 +48,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 15
-  maxTravelRange: 8
+  maxTravelRange: 15
   _maxTriggerTimes: 1
   particleToSpawn: {fileID: 251422940560775811, guid: 92381b9e474db1946afd5864da82ebbe, type: 3}
-  particleSpawnRate: 0.2
+  particleLifetime: 0.2
   criticalMultiplier: 2
 --- !u!212 &5884052807918234493
 SpriteRenderer:

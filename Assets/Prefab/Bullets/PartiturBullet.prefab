@@ -47,11 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4234021eebb0bda40866941ba87d28bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMoveSpeed: 0
-  maxTravelRange: 0
+  defaultMoveSpeed: 5
+  maxTravelRange: 10
   _maxTriggerTimes: 3
   particleToSpawn: {fileID: 0}
-  particleSpawnRate: 0.2
+  particleLifetime: 0.2
 --- !u!58 &5784453585803778513
 CircleCollider2D:
   m_ObjectHideFlags: 0
