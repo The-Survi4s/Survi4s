@@ -70,20 +70,18 @@ public class GameUIManager : MonoBehaviour
 
     private void UpdateAmmoUI()
     {
-        if (!_weaponRange)
+        var weapon = _localPlayer.weaponManager.weapon;
+        if (weapon is WeaponRange wr)
         {
-            var weapon = _localPlayer.weaponManager.weapon;
-            if (weapon is WeaponRange wr) _weaponRange = wr;
-            else
-            {
-                _currentAmmoText.text = "-";
-                _maxAmmoText.text = "-";
-            }
-            return;
+            _weaponRange = wr;
+            _currentAmmoText.text = _weaponRange.Ammo.ToString();
+            _maxAmmoText.text = _weaponRange.MaxAmmo.ToString();
         }
-
-        _currentAmmoText.text = _weaponRange.Ammo.ToString();
-        _maxAmmoText.text = _weaponRange.MaxAmmo.ToString();
+        else
+        {
+            _currentAmmoText.text = "-";
+            _maxAmmoText.text = "-";
+        }
     }
 
     [Header("Counter UI")]

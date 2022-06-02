@@ -121,6 +121,7 @@ public abstract class WeaponBase : MonoBehaviour
     public void EquipWeapon(PlayerWeaponManager player)
     {
         if (!ownerPlayer) ownerPlayer = player.GetComponent<Player>();
+        GameUIManager.Instance.ChangeWeaponImage(uiSprite);
     }
     public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {
@@ -128,7 +129,7 @@ public abstract class WeaponBase : MonoBehaviour
         transform.position = dropPos;
         transform.rotation = Quaternion.Euler(0, 0, zRotation);
         ownerPlayer = null;
-
+        GameUIManager.Instance.ChangeWeaponImage(null);
         if(transform.localScale.y < 1)
         {
             transform.localScale -= new Vector3(0, transform.localScale.y * 2, 0);
@@ -139,14 +140,10 @@ public abstract class WeaponBase : MonoBehaviour
     // Upgrade Level -----------------------------------------------------------
     public int UpgradeWeaponLevel(int incomingXp)
     {
-        if (incomingXp < UpgradeCost) { }
-        else
+        if (incomingXp >= UpgradeCost)
         {
-            if (incomingXp >= UpgradeCost)
-            {
-                NetworkClient.Instance.UpgradeWeapon(name);
-                incomingXp -= UpgradeCost;
-            }
+            NetworkClient.Instance.UpgradeWeapon(name);
+            incomingXp -= UpgradeCost;
         }
         return incomingXp;
     }
