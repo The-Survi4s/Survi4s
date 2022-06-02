@@ -24,6 +24,11 @@ public class GameUIManager : MonoBehaviour
     private void Start()
     {
         SetupGameOver();
+        _countdownPanel.SetActive(false);
+        _gameOverPanel.SetActive(false);
+        _UWPanel.SetActive(false);
+        _damageOverlay.SetActive(false);
+        _weaponSelectPanel.SetActive(true);
     }
 
     private void Update()
@@ -40,7 +45,6 @@ public class GameUIManager : MonoBehaviour
         UpdateHealthUI();
         UpdateAmmoUI();
         UpdateCounterUI();
-        UpdateUpgradeUI();
     }
 
     [Header("Health UI")]
@@ -56,6 +60,7 @@ public class GameUIManager : MonoBehaviour
             return;
         }
         _currentHpText.text = _stat.hitPoint.ToString();
+        _maxHpText.text = _stat.MaxHitPoint.ToString();
     }
 
     [Header("Ammo UI")]
@@ -69,6 +74,11 @@ public class GameUIManager : MonoBehaviour
         {
             var weapon = _localPlayer.weaponManager.weapon;
             if (weapon is WeaponRange wr) _weaponRange = wr;
+            else
+            {
+                _currentAmmoText.text = "-";
+                _maxAmmoText.text = "-";
+            }
             return;
         }
 
@@ -92,11 +102,11 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private float _inactiveDelay;
     [SerializeField] private Color _color1;
     [SerializeField] private Color _color2;
-    private float countdownDuration;
+    private float _countdownDuration;
 
     private void UpdateCountdownUI()
     {
-        var doneTime = countdownDuration + Time.time;
+        var doneTime = _countdownDuration + Time.time;
         if (_countdownPanel.activeInHierarchy)
         {
             var secondsLeft = Mathf.Min(doneTime - Time.time, 0);
@@ -104,39 +114,38 @@ public class GameUIManager : MonoBehaviour
             var minutes = TimeSpan.FromSeconds(secondsLeft).Minutes;
             var seconds = TimeSpan.FromSeconds(secondsLeft).Seconds;
             _countdownText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-            _countdownText.color = Color.Lerp(_color2, _color1, secondsLeft / countdownDuration);
+            _countdownText.color = Color.Lerp(_color2, _color1, secondsLeft / _countdownDuration);
         }
         if (doneTime + _inactiveDelay < Time.time) _countdownPanel.SetActive(false);
     }
 
     public void StartWaveCountdown(float duration)
     {
-        countdownDuration = duration;
+        _countdownDuration = duration;
         _countdownPanel.SetActive(true);
     }
 
     [Header("Game Over UI")]
     [SerializeField] private GameObject _gameOverPanel;
-    [SerializeField] private Text _nameTextbox;
-    [SerializeField] private Text _killCountTextbox;
+    [SerializeField] private Text _nameResultText;
+    [SerializeField] private Text _killCountResultText;
 
     private void SetupGameOver()
     {
         GameManager.GameOver += GameOverEventHandler;
-        _gameOverPanel.gameObject.SetActive(false);
-        _nameTextbox.text = "";
-        _killCountTextbox.text = "";
+        _nameResultText.text = "";
+        _killCountResultText.text = "";
     }
 
     private void GameOverEventHandler()
     {
-        _gameOverPanel.gameObject.SetActive(true);
+        _gameOverPanel.SetActive(true);
 
         // Tampilkan nama semua player dan score masing2 player
         foreach (var player in UnitManager.Instance.players)
         {
-            _nameTextbox.text += player.name + "\n";
-            _killCountTextbox.text += player.KillCount.ToString() + "\n";
+            _nameResultText.text += player.name + "\n";
+            _killCountResultText.text += player.KillCount.ToString() + "\n";
         }
     }
 
@@ -157,6 +166,7 @@ public class GameUIManager : MonoBehaviour
         public StatText second;
     }
     [SerializeField] private DoubleStatText _statTexts;
+    [SerializeField] private Text _costText;
     [SerializeField] private GameObject _weaponSelectPanel;
 
     private void UpdateUpgradeUI()
@@ -167,16 +177,24 @@ public class GameUIManager : MonoBehaviour
             _statTexts.first.atkText.text = weapon.baseAttack.ToString();
             _statTexts.first.critText.text = weapon.critRate.ToString();
             _statTexts.first.cooldownText.text = weapon.cooldownTime.ToString();
-            _statTexts.second.atkText.text = weapon.LevelUpPreview_Atk.ToString();
-            _statTexts.second.critText.text = weapon.LevelUpPreview_Crit.ToString();
-            _statTexts.second.cooldownText.text = weapon.LevelUpPreview_Cooldown.ToString();
+            _statTexts.second.atkText.text = "+" + (weapon.LevelUpPreview_Atk - weapon.baseAttack).ToString();
+            _statTexts.second.critText.text = "+" + (weapon.LevelUpPreview_Crit - weapon.critRate).ToString();
+            _statTexts.second.cooldownText.text = "+" + (weapon.LevelUpPreview_Cooldown - weapon.cooldownTime).ToString();
+            _costText.text = weapon.UpgradeCost.ToString();
         }
     }
 
-    public void SetUpgradePanelActive(bool isActive)
+    public void ShowUpgradePanel(bool isActive)
     {
         _UWPanel.SetActive(isActive);
         _weaponSelectPanel.SetActive(!isActive);
+        if(isActive) UpdateUpgradeUI();
+    }
+
+    public void OnClickUpgradeButton()
+    {
+        _localPlayer.weaponManager.UpgradeEquipedWeapon();
+        ShowUpgradePanel(false);
     }
 
     [Header("Damage Overlay")]

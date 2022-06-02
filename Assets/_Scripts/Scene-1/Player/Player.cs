@@ -59,8 +59,9 @@ public class Player : MonoBehaviour
             // Temporary upgrade weapon
             if (Input.GetKeyDown(KeyCode.T) && movement.isNearStatue)
             {
-                weaponManager.UpgradeEquipedWeapon();
+                GameUIManager.Instance.ShowUpgradePanel(true);
             }
+            if(!movement.isNearStatue) GameUIManager.Instance.ShowUpgradePanel(false);
 
             _renderer.flipX = movement.syncMousePos.x < transform.position.x;
         }

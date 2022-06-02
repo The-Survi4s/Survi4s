@@ -54,4 +54,5 @@ public class PlayerStat : MonoBehaviour
         transform.position = pos;
     }
     public bool isDead => _hitPoint <= 0;
+    public int MaxHitPoint => _maxHitPoint;
 }
