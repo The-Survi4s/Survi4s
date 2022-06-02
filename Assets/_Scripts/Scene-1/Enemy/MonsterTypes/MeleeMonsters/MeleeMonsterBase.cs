@@ -32,8 +32,8 @@ public abstract class MeleeMonsterBase : Monster
 
     protected virtual void OnAttackPlayer(Player player)
     {
-        Debug.Log(name + " attack " + player.name);
-        var players = GetPlayersInRadius(); Debug.Log("Player count : " + players.Count);
+        //Debug.Log(name + " attack " + player.name);
+        var players = GetPlayersInRadius(); //Debug.Log("Player count : " + players.Count);
         foreach (var p in players)
         {
             NetworkClient.Instance.ModifyPlayerHp(p.name, -currentStat.atk);

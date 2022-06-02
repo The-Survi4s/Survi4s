@@ -47,11 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5f8d01d4bca1c40bf4926f3e00beb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMoveSpeed: 8
+  defaultMoveSpeed: 6
   maxTravelRange: 10
   _maxTriggerTimes: 1
   particleToSpawn: {fileID: 0}
-  particleSpawnRate: 0.2
+  particleLifetime: 0.2
   criticalMultiplier: 1.5
 --- !u!212 &6408391587937443035
 SpriteRenderer:

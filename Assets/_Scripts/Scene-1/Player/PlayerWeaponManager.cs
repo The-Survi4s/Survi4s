@@ -11,7 +11,7 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] private Transform attackPoint;
 
     // Upgrade 
-    [SerializeField] private int _playerWeaponExp;
+    [field: SerializeField] public int PlayerWeaponExp { get; private set; }
     [SerializeField] private GameObject _upgradeButton;
 
     private void Update()
@@ -108,16 +108,11 @@ public class PlayerWeaponManager : MonoBehaviour
     // Upgrade equiped weapon
     public void UpgradeEquipedWeapon()
     {
-        if(weapon != null)
-        {
-            weapon.UpgradeWeaponLevel(_playerWeaponExp);
-            _playerWeaponExp = 0;
-        }
+        if (weapon) PlayerWeaponExp = weapon.UpgradeWeaponLevel(PlayerWeaponExp);
     }
 
-    public int PlayerWeaponXp
+    public void AddExp(int amount)
     {
-        get => _playerWeaponExp;
-        set => _playerWeaponExp = value;
+        PlayerWeaponExp += amount;
     }
 }

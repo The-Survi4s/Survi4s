@@ -25,7 +25,7 @@ public abstract class MonsterBulletBase : BulletBase
         switch (component)
         {
             case Player obj:
-                Debug.Log(name + " attack " + obj.name);
+                //Debug.Log(name + " attack " + obj.name);
                 NetworkClient.Instance.ModifyPlayerHp(obj.name, -owner.currentStat.atk);
                 break;
             case Wall obj:
@@ -37,7 +37,7 @@ public abstract class MonsterBulletBase : BulletBase
         }
     }
 
-    public void Init(Monster owner, Vector2 targetPos, int bulletId)
+    public void Initialize(Monster owner, Vector2 targetPos, int bulletId)
     {
         //Debug.Log($"monster bullet {bulletId}: from {transform.position} to {targetPos}");
         this.owner = owner;

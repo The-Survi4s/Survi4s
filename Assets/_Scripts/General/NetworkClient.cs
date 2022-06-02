@@ -238,7 +238,7 @@ public class NetworkClient : MonoBehaviour
                     {
                         temp[i] = info[i + 3];
                     }
-                    GameMenuManager.Instance.UpdatePlayersInRoom(temp);
+                    LobbyMenuManager.Instance.UpdatePlayersInRoom(temp);
                     break;
                 case Header.StGm:
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
@@ -290,7 +290,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdPl:
                 {
-                    Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
+                    //Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
                     UnitManager.Instance.ModifyPlayerHp(info[2], float.Parse(info[3]));
                     break;
                 }
@@ -334,12 +334,12 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.SetPlayerVelocity(
                         info[0], 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])), 
-                        EnumParse<Player.Axis>(info[4]));
+                        EnumParse<PlayerMovement.Axis>(info[4]));
                     break;
                 }
                 case Header.PJmp:
                 {
-                    UnitManager.Instance.GetPlayer(info[0]).Jump();
+                    UnitManager.Instance.GetPlayer(info[0]).movement.Jump();
                     break;
                 }
             }
@@ -458,7 +458,7 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient("1", msg);
     }
 
-    public void SetPlayerVelocity(Vector2 velocity, Player.Axis axis)
+    public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)
     {
         string[] msg = { Header.PlVl.ToString(), velocity.x.ToString("f2"), velocity.y.ToString("f2"), axis.ToString() };
         SendMessageClient("1", msg);
@@ -525,7 +525,7 @@ public class NetworkClient : MonoBehaviour
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
-        Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
+        //Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
         string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
         SendMessageClient("1", msg);
     }

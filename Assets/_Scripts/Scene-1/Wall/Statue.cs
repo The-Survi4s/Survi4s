@@ -12,7 +12,7 @@ public class Statue : DestroyableTile
 
     void Start()
     {
-        maxHp = GameManager.Instance.GameSettings.initialStatueHp;
+        maxHp = GameManager.Instance.Settings.initialStatueHp;
         cellPos = TilemapManager.instance.WorldToCell(transform.position);
         hp = maxHp;
         TilemapManager.instance.SetStatue(this);

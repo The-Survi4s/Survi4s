@@ -36,7 +36,7 @@ public class SelectNamePanel : MonoBehaviour
         PlayerDataLoader.Instance.SavePlayerData();
 
         // Change name UI -------------------------------------------------------------------
-        MainMenuManager.Instance.nameText.text = nameTemp;
+        MainMenuManager.Instance.UpdateName(nameTemp);
 
         // Tell Server ----------------------------------------------------------------------
         if (NetworkClient.Instance.IsConnected())

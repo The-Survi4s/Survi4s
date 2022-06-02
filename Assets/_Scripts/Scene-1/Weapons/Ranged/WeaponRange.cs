@@ -19,12 +19,12 @@ public class WeaponRange : WeaponBase
 
     public Vector2 GetOwnerMousePos()
     {
-        if (owner == null)
+        if (ownerPlayer == null)
         {
             return new Vector2(0, 0);
         }
 
-        return ownerPlayer.syncMousePos;
+        return ownerPlayer.movement.syncMousePos;
     }
 
     public void ReloadAmmo() => Ammo = MaxAmmo;
@@ -42,7 +42,7 @@ public class WeaponRange : WeaponBase
                 Vector2 mousePos = GetOwnerMousePos();
                 NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
             }
-            else if(ownerPlayer.isNearStatue)
+            else if(ownerPlayer.movement.isNearStatue)
             {
                 ReloadAmmo();
             }
@@ -56,7 +56,7 @@ public class WeaponRange : WeaponBase
         PlayerBulletBase bulTemp = temp.GetComponent<PlayerBulletBase>();
 
         // init bullet
-        bulTemp.Init(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
+        bulTemp.Initialize(this, mousePos, UnitManager.Instance.GetIdThenAddBullet(bulTemp), isLocal);
 
         // Reduce ammo
         Ammo--;
