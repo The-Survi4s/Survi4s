@@ -14,8 +14,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject selectNamePanel;
     [SerializeField] private GameObject connectPanel;
     [SerializeField] private GameObject exitPanel;
-
-    public Text nameText;
+    [SerializeField] private Text nameText;
 
     // Eazy Access -------------------------------------------------------------------
     public static MainMenuManager Instance { get; private set; }
@@ -56,7 +55,7 @@ public class MainMenuManager : MonoBehaviour
             connectPanel.SetActive(false);
         }
 
-        nameText.text = PlayerDataLoader.Instance.TheData.UserName;
+        UpdateName(PlayerDataLoader.Instance.TheData.UserName);
     }
 
     private void Update()
@@ -82,6 +81,12 @@ public class MainMenuManager : MonoBehaviour
     public void SelectName()
     {
         selectNamePanel.SetActive(true);
+    }
+
+    public void UpdateName(string newName)
+    {
+        nameText.text = newName;
+        nameText.fontSize = Mathf.FloorToInt((10 - nameText.text.Length) / 10.0f * 200 + 75);
     }
 
     // Setting Panels -----------------------------------------------------------

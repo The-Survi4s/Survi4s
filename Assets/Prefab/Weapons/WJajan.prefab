@@ -50,10 +50,9 @@ MonoBehaviour:
   offset: {x: 0.2, y: 0.5, z: -1}
   isFacingRight: 0
   rotValZ: 0
-  uiSprite: {fileID: 21300000, guid: 46c692f624d09d14bab29627b2892017, type: 3}
+  uiSprite: {fileID: -7795066270765709585, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  <Exp>k__BackingField: 0
   defaultAttackRad: 3
   targetMask:
     serializedVersion: 2

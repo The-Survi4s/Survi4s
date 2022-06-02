@@ -50,7 +50,7 @@ MonoBehaviour:
   offset: {x: 0.2, y: -3, z: -1}
   isFacingRight: 0
   rotValZ: 0
-  uiSprite: {fileID: 21300000, guid: 300839c94c443b843a8bcf4e97af1e60, type: 3}
+  uiSprite: {fileID: 7262624404844637675, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
   <MaxAmmo>k__BackingField: 5

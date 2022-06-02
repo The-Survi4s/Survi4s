@@ -50,10 +50,9 @@ MonoBehaviour:
   offset: {x: 0.2, y: -3, z: -1}
   isFacingRight: 0
   rotValZ: 0
-  uiSprite: {fileID: 21300000, guid: c31055e4e5c65114b89b72ff57a4f84a, type: 3}
+  uiSprite: {fileID: 7206148852463083692, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  <Exp>k__BackingField: 0
   <MaxAmmo>k__BackingField: 3
   _bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
   <inAccuracy>k__BackingField: 1.5
