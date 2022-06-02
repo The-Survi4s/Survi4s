@@ -87,7 +87,7 @@ public abstract class WeaponMelee : WeaponBase
         base.PlayAnimation();
         
         if(_animator != null)
-            _animator.Play("BaseBall_Attack");
+            _animator.Play("Attack");
     }
 
     /*protected override void PlayAnimation()

@@ -81,6 +81,10 @@ public class PlayerMovement : MonoBehaviour
         await Task.Delay(1);
         //teleport
         transform.position = TilemapManager.instance.GetJumpPos(transform.position, _lastMoveDir);
+
+        player.animator.SetTrigger("Jump");
+
+        Debug.Log("JUMP JUMP");
     }
 
     private void FixedUpdate()
@@ -93,6 +97,15 @@ public class PlayerMovement : MonoBehaviour
         if (player.isLocal)
         {
             SendMousePos();
+        }
+
+        if(_rigidbody.velocity == Vector2.zero)
+        {
+            player.animator.SetBool("isWalk", false);
+        }
+        else
+        {
+            player.animator.SetBool("isWalk", true);
         }
     }
 

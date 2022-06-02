@@ -7,6 +7,7 @@ public class PlayerStat : MonoBehaviour
 {
     [SerializeField] private int _maxHitPoint;
     [SerializeField] private float _defaultMoveSpeed;
+
     public event Action<string> PlayerDead;
     public event Action<string> PlayerRevived;
     public bool isInitialized { get; private set; }
@@ -23,6 +24,8 @@ public class PlayerStat : MonoBehaviour
 
             if (_hitPoint <= 0)
             {
+                
+
                 _hitPoint = 0;
                 if (!_actionInvoked)
                 {

@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     // Character Stats -----------------------------------------------------------------
     public PlayerStat stats { get; private set; }
     public PlayerWeaponManager weaponManager { get; private set; }
+    [HideInInspector] public Animator animator;
     public PlayerMovement movement { get; private set; }
     private SpriteRenderer _renderer;
     public bool isFacingLeft { get => _renderer.flipX; }
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
         weaponManager = GetComponent<PlayerWeaponManager>();
         movement = GetComponent<PlayerMovement>();
         _renderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -64,6 +66,11 @@ public class Player : MonoBehaviour
             if(!movement.isNearStatue) GameUIManager.Instance.ShowUpgradePanel(false);
 
             _renderer.flipX = movement.syncMousePos.x < transform.position.x;
+        }
+
+        if (isDead)
+        {
+            animator.SetBool("isDead", true);
         }
     }
 
