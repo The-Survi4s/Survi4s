@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMoveSpeed: 5
-  maxTravelRange: 10
+  maxTravelRange: 15
   _maxTriggerTimes: 3
   particleToSpawn: {fileID: 0}
   particleLifetime: 0.2

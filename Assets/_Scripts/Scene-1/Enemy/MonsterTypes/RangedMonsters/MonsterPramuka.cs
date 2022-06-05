@@ -5,23 +5,9 @@ using UnityEngine;
 
 public class MonsterPramuka : RangedMonsterBase
 {
-    private Wall _targetWall2;
-    private float _evadeDistance = 2;
-    private float _evadeCooldown = 2;
+    [SerializeField] private float _evadeDistance = 2;
+    [SerializeField] private float _evadeCooldown = 2;
     private float _evadeCooldownEndTime;
-
-    protected override void Start()
-    {
-        var newOrigin = origin switch
-        {
-            Origin.Right => Origin.Left,
-            Origin.Top => Origin.Bottom,
-            Origin.Left => Origin.Right,
-            Origin.Bottom => Origin.Top,
-            _ => origin
-        };
-        _targetWall2 = TilemapManager.instance.GetWall(newOrigin);
-    }
 
     protected override void Update()
     {
@@ -44,6 +30,7 @@ public class MonsterPramuka : RangedMonsterBase
         //Pinginnya ke dodge samping tapi aku males jadi teleport ke spawner aja
         Debug.Log("EVADE!");
         transform.SetPositionAndRotation(SpawnManager.instance.GetSpawnerPos(origin), transform.rotation);
+        RequestNewTargetWall();
         _evadeCooldownEndTime = Time.time + _evadeCooldown;
     }
 }

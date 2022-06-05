@@ -8,6 +8,7 @@ public class BrokenWall : DestroyableTile
     {
         hp = 0;
         isDestroyed = true;
+        NavMeshController.UpdateNavMesh();
     }
 
     public int id { get; private set; }
@@ -25,12 +26,13 @@ public class BrokenWall : DestroyableTile
 
     private void OnDestroy()
     {
+        NavMeshController.UpdateNavMesh();
         Destroy(gameObject);
     }
 
     public void RemoveFromMap()
     {
-        Debug.Log($"Broken wall {this} ini akan ter usir");
+        //Debug.Log($"Broken wall {this} ini akan ter usir");
         TilemapManager.instance.RemoveBrokenWall(cellPos);
         Destroy(gameObject);
         Destroy(this);

@@ -2,14 +2,13 @@ using UnityEngine;
 
 public abstract class WeaponMelee : WeaponBase
 {
-    [SerializeField] private float defaultAttackRad;
-    public LayerMask targetMask;
-    public float attackRad { get; private set; }
+    [SerializeField] private LayerMask _targetMask;
+    [SerializeField] protected float attackRad = 2;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _animator = GetComponent<Animator>();
-        attackRad = defaultAttackRad;
     }
 
     /*private void LateUpdate()
@@ -31,7 +30,7 @@ public abstract class WeaponMelee : WeaponBase
         base.ReceiveAttackMessage();
         if (!isLocal) return;
         // Detect enemies on range
-        Collider2D[] hitObjects = GetHitObjectInRange(GetOwnerAttackPoint(), attackRad, targetMask);
+        Collider2D[] hitObjects = GetHitObjectInRange(GetAttackPoint(), attackRad, _targetMask);
         if (IsCritical()) OnCritical(hitObjects);
         else OnNormalAttack(hitObjects);
     }
@@ -74,20 +73,15 @@ public abstract class WeaponMelee : WeaponBase
     // Visually attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()
     {
-        if(!ownerPlayer)
-        {
-            return;
-        }
-        Vector2 attackPoint = ownerPlayer.weaponManager.GetAttackPoint().position;
-        Gizmos.DrawSphere(attackPoint, attackRad);
+        
+        Gizmos.DrawWireSphere(GetAttackPoint(), attackRad);
     }
 
     protected override void PlayAnimation()
     {
         base.PlayAnimation();
         
-        if(_animator != null)
-            _animator.Play("Attack");
+        if(_animator) _animator.Play("Attack");
     }
 
     /*protected override void PlayAnimation()

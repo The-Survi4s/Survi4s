@@ -48,16 +48,17 @@ MonoBehaviour:
   defaultBaseAttack: 3
   defaultCritRate: 5
   maxCooldownTime: 1
+  _attackDistance: 1.5
   offset: {x: 0.3, y: 0.6, z: -1}
-  isFacingRight: 0
-  rotValZ: 0
+  _particleToSpawn: {fileID: 0}
+  _particleLifetime: 2
   uiSprite: {fileID: -2169596162989422850, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  defaultAttackRad: 3
-  targetMask:
+  _targetMask:
     serializedVersion: 2
     m_Bits: 64
+  attackRad: 1.5
 --- !u!212 &7196554710628310991
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -95,9 +96,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -916554939
-  m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingLayerID: -1318660083
+  m_SortingLayer: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 57ae5209c09739d49960b89718f8c55e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

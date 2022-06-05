@@ -172,14 +172,21 @@ public class GameManager : MonoBehaviour
 
         // Deactivate Panels ----------------------------------------------------------------
         LobbyMenuManager.Instance.SetActivePreparationPanel(false);
+        
+        SetIgnoreCollisions();
 
+        GameUIManager.Instance.ChangeWeaponImage(null);
+        ChangeState(GameState.WavePreparation);
+    }
+
+    private void SetIgnoreCollisions()
+    {
         Physics2D.IgnoreLayerCollision(Log2(_playerLayer), Log2(_monsterLayer)); //Player no collision with monster
         Physics2D.IgnoreLayerCollision(Log2(_groundLayer), Log2(_monsterLayer)); //No collision with ground
         Physics2D.IgnoreLayerCollision(Log2(_groundLayer), Log2(_playerBulletLayer)); //No collision with ground
         Physics2D.IgnoreLayerCollision(Log2(_playerLayer), Log2(_playerBulletLayer)); //Player no collision with playerbullet
         Physics2D.IgnoreLayerCollision(Log2(_monsterLayer), Log2(_monsterBulletLayer)); //Enemy no collision with enemyBullet 
         Physics2D.IgnoreLayerCollision(Log2(_playerBulletLayer), Log2(_wallLayer)); //Enemy no collision with enemyBullet 
-        ChangeState(GameState.WavePreparation); 
     }
 
     // Button hooks -------------------------------------------------------------------

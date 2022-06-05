@@ -72,6 +72,7 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("isDead", true);
         }
+        else animator.SetBool("isDead", false);
     }
 
     public bool isDead => stats.isDead;

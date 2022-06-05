@@ -33,6 +33,13 @@ public class NetworkClient : MonoBehaviour
 
     // Connection status --------------------------------------------------------------
     private bool isVerified;
+    
+    [Header("Debug")]
+    [SerializeField] private int _sendTimes;
+    [SerializeField] private float _sendTimesPerSecond;
+    [SerializeField] private int _receiveTimes;
+    [SerializeField] private float _receiveTimesPerSecond;
+    [SerializeField] private float _runTime;
 
     // Eazy access ----------------------------------------------------------------------
     public static NetworkClient Instance { get; private set; }
@@ -147,6 +154,7 @@ public class NetworkClient : MonoBehaviour
                 SendMessageClient("2", "A");
             }
         }
+        _runTime += Time.deltaTime;
     }
 
     // Header enums
@@ -185,6 +193,8 @@ public class NetworkClient : MonoBehaviour
     // Receive and Process incoming message here ----------------------------------
     private void ReceiveMessage(string message)
     {
+        _receiveTimes++;
+        _receiveTimesPerSecond = _receiveTimes / _runTime;
         // Message format : sender|header|data|data|data... 
         // Svr|RCrd|...
         // ID+NameClient|MPos|...
@@ -367,6 +377,8 @@ public class NetworkClient : MonoBehaviour
         formatter.Serialize(networkStream, data);
 
         _checkTime = CheckTime;
+        _sendTimes++;
+        _sendTimesPerSecond = _sendTimes / _runTime;
     }
 
     // If want to check connection status -------------------------------------------

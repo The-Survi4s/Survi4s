@@ -160,19 +160,19 @@ public class TilemapManager : MonoBehaviour
     {
         if (_brokenWalls.ContainsKey(cellPos))
         {
-            Debug.Log("BW found");
             var bw = _brokenWalls[cellPos];
             _brokenWalls.Remove(cellPos);
             bw.OnRebuilt -= OnRebuilt;
             Destroy(bw);
 
             _wallTilemap.SetTile(cellPos, _wallTileStages.GetTile(_wallTileStages.getTileStages.Count - 1));
+            //Debug.Log("tile placed:" + _wallTilemap.GetTile(cellPos));
             var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
+            //Debug.Log("wall:" + wall);
             wall.Init(GetNewWallId(), GetOrigin(wall.transform.position), cellPos, 10);
-            wall.ModifyHp(0);
             _wallTilemap.RefreshTile(cellPos);
-            NavMeshController.UpdateNavMesh();
         }
+        else Debug.LogWarning($"BrokenWall at {cellPos} not found");
     }
 
     // Methods used by Network Client class
@@ -318,7 +318,6 @@ public class TilemapManager : MonoBehaviour
         switch (obj)
         {
             case Wall wall:
-                NavMeshController.UpdateNavMesh();
                 BroadcastWallFallen?.Invoke(wall);
                 break;
             case Statue s:
@@ -331,7 +330,6 @@ public class TilemapManager : MonoBehaviour
     private static void OnRebuilt(DestroyableTile obj)
     {
         if (!(obj is BrokenWall brokenWall)) return;
-        NavMeshController.UpdateNavMesh();
         BroadcastWallRebuilt?.Invoke(brokenWall.origin);
         brokenWall.RemoveFromMap();
     }
@@ -359,25 +357,32 @@ public class TilemapManager : MonoBehaviour
         if(!tileStages) return;
 
         // Calculate variant id
-        var variantCount = tileStages.getTileStages.Count - 1;
-        var variantId = variantCount - Mathf.FloorToInt(tile.hp / (tile.maxHp * 1.0f / variantCount));
+        var variantCount = tileStages.getTileStages.Count;
+        var variantId = variantCount - Mathf.FloorToInt((tile.hp + 10) / (tile.maxHp * 1.0f) * variantCount);
         if (tile.spriteVariantId == variantId) return;
-        
+
+        //Debug.Log($"varCount:{variantCount}, varId:{variantId}, tileHp:{tile.hp}, tileMHp:{tile.maxHp}");
+
         tile.spriteVariantId = variantId;
         var cellPos = tile.cellPos;
 
+        //var isDestroyed = false;
         // If wall is destroyed variant, spawn brokenWall
-        if (tile.hp <= 0 && tile is Wall wall) SpawnBrokenWall(wall);
+        if (variantId == variantCount && tile is Wall wall)
+        {
+            SpawnBrokenWall(wall);
+            //isDestroyed = true;
+        }
 
         // Store does this location has a navmesh
-        var hasNavMesh = NavMesh.SamplePosition(CellToWorld(cellPos), out _, 0.1f, NavMesh.AllAreas);
+        //var hasNavMesh = NavMesh.SamplePosition(CellToWorld(cellPos), out _, 0.1f, NavMesh.AllAreas);
 
         // Set tile, then update Tilemap and NavMesh
         TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
-        _wallTilemap.SetTile(tile.cellPos, newTile);
+        _wallTilemap.SetTile(cellPos, newTile);
         _wallTilemap.RefreshTile(cellPos);
-        if(hasNavMesh && !newTile) NavMeshController.UpdateNavMesh();
-        else if(!hasNavMesh && newTile) NavMeshController.UpdateNavMesh();
+
+        //Debug.Log($"tile {tile} at {cellPos} isDestroyed? {isDestroyed}, newTile:{newTile}. varId:{variantId}/{variantCount}");
     }
 
     /// <summary>

@@ -11,7 +11,8 @@ public class WeaponPentungan : WeaponMelee
 
     protected override void OnCritical(Collider2D[] targets)
     {
-        base.OnCritical(targets);
         critRate = defaultCritRate;
+        base.OnCritical(targets);
+        baseAttack = defaultBaseAttack;
     }
 }

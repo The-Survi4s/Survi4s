@@ -254,17 +254,16 @@ public class SpawnManager : MonoBehaviour
     public void ClearIdIndex(int index) => _occupiedIDs[index] = false;
 
     /// <summary>
-    /// Gets the <see cref="Vector3"/> position
+    /// Gets the <see cref="Vector3"/> position of spawner on <paramref name="origin"/>. <br/>
+    /// If there's more than 1, pick random. If none, ignores <paramref name="origin"/>. 
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
     public Vector3 GetSpawnerPos(Origin origin)
     {
-        foreach (var spawner in _spawners.Where(spawner => spawner.origin == origin))
-        {
-            return spawner.transform.position;
-        }
-
-        return new Vector3();
+        var spawnersOnOrigin = _spawners.Where(spawner => spawner.origin == origin).ToArray();
+        if (spawnersOnOrigin.Length == 0) spawnersOnOrigin = _spawners.ToArray();
+        int index = Random.Range(0, spawnersOnOrigin.Length);
+        return spawnersOnOrigin[index].transform.position;
     }
 }

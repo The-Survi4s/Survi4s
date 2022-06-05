@@ -8,8 +8,9 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float defaultBaseAttack;
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
+    [SerializeField] protected float _attackDistance = 2;
 
-    public float baseAttack { get; protected set; }
+    [field: SerializeField] public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
     public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
@@ -19,10 +20,13 @@ public abstract class WeaponBase : MonoBehaviour
 
     [SerializeField] protected Vector3 offset;
 
-    [SerializeField] private bool isFacingRight;
-    [SerializeField] private float rotValZ;
+    private bool isFacingRight;
+    private float rotValZ;
 
     protected Animator _animator;
+
+    [SerializeField] protected GameObject _particleToSpawn;
+    [SerializeField] protected float _particleLifetime = 2;
 
     [SerializeField] public Sprite uiSprite;
 
@@ -42,7 +46,7 @@ public abstract class WeaponBase : MonoBehaviour
         Level = 1;
     }
 
-    private void Awake() => Init();
+    protected virtual void Awake() => Init();
     private void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
@@ -101,7 +105,16 @@ public abstract class WeaponBase : MonoBehaviour
     protected virtual void PlayAnimation()
     {
     }
-    protected virtual void SpawnParticle() { }
+
+    protected virtual void SpawnParticle() 
+    {
+        if (_particleToSpawn)
+        {
+            var go = Instantiate(_particleToSpawn, transform.position, Quaternion.identity);
+            Destroy(go, _particleLifetime);
+        }
+    }
+
     private void RotateWeapon(Vector3 target)
     {
         var angle = Mathf.Atan2(target.y - transform.position.y, target.x - transform.position.x) * Mathf.Rad2Deg;
@@ -110,10 +123,11 @@ public abstract class WeaponBase : MonoBehaviour
 
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
-    public Vector2 GetOwnerAttackPoint() =>
-        !ownerPlayer
-        ? Vector2.zero
-        : (Vector2)ownerPlayer.weaponManager.GetAttackPoint().position;
+
+    protected Vector2 GetAttackPoint()
+    {
+        return transform.position + transform.right * _attackDistance;
+    }
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 
