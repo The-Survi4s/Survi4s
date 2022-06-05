@@ -227,14 +227,6 @@ public abstract class Monster : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// An empty <see langword="virtual"/> Start(). Do not delete
-    /// </summary>
-    protected virtual void Start()
-    {
-
-    } 
-
     #endregion
 
     protected virtual void Update()
@@ -282,7 +274,7 @@ public abstract class Monster : MonoBehaviour
     /// <br/>in case it gets destroyed because of <see cref="TilemapManager.UpdateWallTilemap(DestroyableTile)"/>
     /// </summary>
     /// <param name="cellPos">enter <see cref="_targetWallCellPos"/>'s here</param>
-    public void ReRequestWall(Vector3Int cellPos)
+    protected void ReRequestWall(Vector3Int cellPos)
     {
         targetWall = TilemapManager.instance.GetWall(cellPos);
         if (!targetWall)

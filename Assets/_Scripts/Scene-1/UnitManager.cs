@@ -318,7 +318,7 @@ public class UnitManager : MonoBehaviour
 
     public Player GetPlayer(string idAndName)
     {
-        if (!_players.ContainsKey(idAndName)) return default;
+        if (!_players.ContainsKey(idAndName)) return null;
         return _players[idAndName];
     }
 

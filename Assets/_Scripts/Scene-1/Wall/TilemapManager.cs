@@ -374,8 +374,10 @@ public class TilemapManager : MonoBehaviour
 
         // Set tile, then update Tilemap and NavMesh
         TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
-        _wallTilemap.SetTile(tile.cellPos, newTile);
+        _wallTilemap.SetTile(cellPos, newTile);
         _wallTilemap.RefreshTile(cellPos);
+
+        Debug.Log($"tile at {cellPos} hasNavMesh:{hasNavMesh}, newTile:{newTile}.");
         if(hasNavMesh && !newTile) NavMeshController.UpdateNavMesh();
         else if(!hasNavMesh && newTile) NavMeshController.UpdateNavMesh();
     }
