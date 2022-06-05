@@ -120,12 +120,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Size.x
+      value: 3.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Size.y
+      value: 2.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_Offset.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
+      propertyPath: m_EdgeRadius
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7154413559571422011, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
@@ -187,3 +207,5 @@ MonoBehaviour:
   <currentTarget>k__BackingField: 0
   _itemDrop: {fileID: 5893421471575226741, guid: c996fd74d11ab1148b3013da1f87214f, type: 3}
   _bulletPrefab: {fileID: 6801487832824559719, guid: 4bdc55f2d70244246bef2d0ec160a1dd, type: 3}
+  _evadeDistance: 2
+  _evadeCooldown: 2
