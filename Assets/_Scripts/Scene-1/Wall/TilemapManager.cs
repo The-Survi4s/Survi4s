@@ -377,9 +377,8 @@ public class TilemapManager : MonoBehaviour
         _wallTilemap.SetTile(cellPos, newTile);
         _wallTilemap.RefreshTile(cellPos);
 
-        Debug.Log($"tile at {cellPos} hasNavMesh:{hasNavMesh}, newTile:{newTile}.");
-        if(hasNavMesh && !newTile) NavMeshController.UpdateNavMesh();
-        else if(!hasNavMesh && newTile) NavMeshController.UpdateNavMesh();
+        Debug.Log($"tile {tile} at {cellPos} hasNavMesh:{hasNavMesh}, newTile:{newTile}. null? {newTile == null}");
+        if((hasNavMesh && !newTile) || (!hasNavMesh && newTile)) NavMeshController.UpdateNavMesh();
     }
 
     /// <summary>

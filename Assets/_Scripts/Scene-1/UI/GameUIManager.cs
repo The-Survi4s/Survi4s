@@ -209,5 +209,10 @@ public class GameUIManager : MonoBehaviour
     [Header("Weapon UI")]
     [SerializeField] private Image _selectedWeapon;
 
-    public void ChangeWeaponImage(Sprite newSprite) => _selectedWeapon.sprite = newSprite;
+    public void ChangeWeaponImage(Sprite newSprite)
+    {
+        _selectedWeapon.sprite = newSprite;
+        if (!newSprite) _selectedWeapon.color = new Color(0, 0, 0, 0);
+        else _selectedWeapon.color = new Color(255, 255, 255, 255);
+    }
 }
