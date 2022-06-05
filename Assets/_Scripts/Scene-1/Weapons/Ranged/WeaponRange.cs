@@ -38,7 +38,7 @@ public class WeaponRange : WeaponBase
             if(Ammo > 0)
             {
                 // Send message to spawn bullet
-                Vector2 attackPoint = GetOwnerAttackPoint();
+                Vector2 attackPoint = GetAttackPoint();
                 Vector2 mousePos = GetOwnerMousePos();
                 NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
             }

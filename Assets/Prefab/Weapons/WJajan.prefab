@@ -47,16 +47,17 @@ MonoBehaviour:
   defaultBaseAttack: 10
   defaultCritRate: 5
   maxCooldownTime: 10
+  _attackDistance: 2
   offset: {x: 0.2, y: 0.5, z: -1}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
   uiSprite: {fileID: -7795066270765709585, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  defaultAttackRad: 3
-  targetMask:
+  _targetMask:
     serializedVersion: 2
     m_Bits: 8
+  attackRad: 2
 --- !u!212 &4706880217891444722
 SpriteRenderer:
   m_ObjectHideFlags: 0

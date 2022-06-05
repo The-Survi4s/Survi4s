@@ -8,8 +8,9 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float defaultBaseAttack;
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
+    [SerializeField] protected float _attackDistance = 2;
 
-    public float baseAttack { get; protected set; }
+    [field: SerializeField] public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
     public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
@@ -45,7 +46,7 @@ public abstract class WeaponBase : MonoBehaviour
         Level = 1;
     }
 
-    private void Awake() => Init();
+    protected virtual void Awake() => Init();
     private void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
@@ -122,10 +123,11 @@ public abstract class WeaponBase : MonoBehaviour
 
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
-    public Vector2 GetOwnerAttackPoint() =>
-        !ownerPlayer
-        ? Vector2.zero
-        : (Vector2)ownerPlayer.weaponManager.GetAttackPoint().position;
+
+    protected Vector2 GetAttackPoint()
+    {
+        return transform.position + transform.right * _attackDistance;
+    }
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 

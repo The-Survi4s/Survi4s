@@ -144,7 +144,7 @@ public class GameUIManager : MonoBehaviour
         // Tampilkan nama semua player dan score masing2 player
         foreach (var player in UnitManager.Instance.players)
         {
-            _nameResultText.text += player.name.Substring(5) + "\n";
+            _nameResultText.text += player.name.Substring(6) + "\n";
             _killCountResultText.text += player.KillCount.ToString() + "\n";
         }
     }
@@ -185,6 +185,7 @@ public class GameUIManager : MonoBehaviour
 
     public void ShowUpgradePanel(bool isActive)
     {
+        if (GameManager.Instance.currentState == GameManager.GameState.GameOver) return;
         _UWPanel.SetActive(isActive);
         _weaponSelectPanel.SetActive(!isActive);
         if(isActive) UpdateUpgradeUI();

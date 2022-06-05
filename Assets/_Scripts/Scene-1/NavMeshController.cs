@@ -13,8 +13,11 @@ public class NavMeshController : MonoBehaviour
         UpdateNavMesh();
     }
 
-    public static void UpdateNavMesh()
+    public static async void UpdateNavMesh()
     {
+        Debug.Log("Updating NavMesh...");
+        await System.Threading.Tasks.Task.Delay(200);
         _surface.BuildNavMesh();
+        Debug.Log("Build Completed");
     }
 }
