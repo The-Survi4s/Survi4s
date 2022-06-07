@@ -124,7 +124,11 @@ public class UnitManager : MonoBehaviour
     public void ModifyMonsterHp(int id, float amount, string playerName)
     {
         Debug.Log($"MdMo {id} by {amount}");
-        if (!_monsters.ContainsKey(id)) return;
+        if (!_monsters.ContainsKey(id))
+        {
+            Debug.Log($"Monster {id} not found!"); 
+            return;
+        }
         _monsters[id].ModifyHitPoint(amount, playerName);
     }
 
@@ -319,7 +323,11 @@ public class UnitManager : MonoBehaviour
 
     public Player GetPlayer(string idAndName)
     {
-        if (!_players.ContainsKey(idAndName)) return null;
+        if (!_players.ContainsKey(idAndName))
+        {
+            Debug.LogWarning($"Player [{idAndName}] not found!");
+            return null;
+        }
         return _players[idAndName];
     }
 

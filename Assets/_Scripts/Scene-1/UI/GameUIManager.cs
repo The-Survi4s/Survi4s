@@ -24,6 +24,8 @@ public class GameUIManager : MonoBehaviour
     private void Start()
     {
         SetupGameOver();
+        SetupLobby();
+        SetupHealthUI();
         _countdownPanel.SetActive(false);
         _gameOverPanel.SetActive(false);
         _UWPanel.SetActive(false);
@@ -35,6 +37,8 @@ public class GameUIManager : MonoBehaviour
     {
         // UI not dependent on LocalPlayer
         UpdateCountdownUI();
+        UpdateStatueUI();
+        UpdateWaveUI();
 
         // UI dependent on LocalPlayer
         if (!_localPlayer)
@@ -44,13 +48,19 @@ public class GameUIManager : MonoBehaviour
         }
         UpdateHealthUI();
         UpdateAmmoUI();
-        UpdateCounterUI();
+        UpdateExpUI();
+        
     }
 
     [Header("Health UI")]
-    [SerializeField] private Text _currentHpText;
-    [SerializeField] private Text _maxHpText;
+    [SerializeField] private RectTransform _healthBar;
+    private float _healthBarWidthMax;
     private PlayerStat _stat;
+
+    private void SetupHealthUI()
+    {
+        _healthBarWidthMax = _healthBar.sizeDelta.x;
+    }
 
     private void UpdateHealthUI()
     {
@@ -59,8 +69,7 @@ public class GameUIManager : MonoBehaviour
             _stat = _localPlayer.stats;
             return;
         }
-        _currentHpText.text = _stat.hitPoint.ToString();
-        _maxHpText.text = _stat.MaxHitPoint.ToString();
+        _healthBar.sizeDelta = new Vector2(_healthBarWidthMax * _stat.hitPoint / _stat.MaxHitPoint, _healthBar.sizeDelta.y);
     }
 
     [Header("Ammo UI")]
@@ -84,14 +93,38 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    [Header("Counter UI")]
+    [Header("XP Counter UI")]
     [SerializeField] private Text _currentXpText;
     [SerializeField] private Text _killCountText;
 
-    private void UpdateCounterUI()
+    private void UpdateExpUI()
     {
         _currentXpText.text = _localPlayer.weaponManager.PlayerWeaponExp.ToString();
         _killCountText.text = _localPlayer.KillCount.ToString();
+    }
+
+    [Header("Statue HP UI")]
+    [SerializeField] private Text _statueHpText;
+    [SerializeField] private Color _fullStatueHpColor;
+    [SerializeField] private Color _halfStatueHpColor;
+    [SerializeField] private Color _dangerStatueHpColor;
+
+    private void UpdateStatueUI()
+    {
+        var hp = TilemapManager.instance.statue.hp;
+        var maxHp = TilemapManager.instance.statue.maxHp;
+        _statueHpText.text = hp.ToString();
+        _statueHpText.color = 
+            hp > maxHp / 2.0f ? Color.Lerp(_fullStatueHpColor, _halfStatueHpColor, (hp - maxHp/2.0f) / (maxHp / 2.0f)) : 
+            hp > maxHp / 5.0f ? Color.Lerp(_halfStatueHpColor, _dangerStatueHpColor, (hp - maxHp / 5f * 4) / (maxHp / 5f * 4)) : _dangerStatueHpColor;
+    }
+
+    [Header("Wave Counter UI")]
+    [SerializeField] private Text _waveNumberText;
+
+    private void UpdateWaveUI()
+    {
+        _waveNumberText.text = SpawnManager.instance.currentWave.ToString();
     }
 
     [Header("Wave Countdown UI")]
@@ -139,6 +172,7 @@ public class GameUIManager : MonoBehaviour
 
     private void GameOverEventHandler()
     {
+        _inGameMenuPanel.SetActive(false);
         _gameOverPanel.SetActive(true);
 
         // Tampilkan nama semua player dan score masing2 player
@@ -173,12 +207,12 @@ public class GameUIManager : MonoBehaviour
         if (_UWPanel.activeInHierarchy)
         {
             var weapon = _localPlayer.weaponManager.weapon;
-            _statTexts.first.atkText.text = weapon.baseAttack.ToString();
-            _statTexts.first.critText.text = weapon.critRate.ToString();
-            _statTexts.first.cooldownText.text = weapon.cooldownTime.ToString();
-            _statTexts.second.atkText.text = "+" + (weapon.LevelUpPreview_Atk - weapon.baseAttack).ToString();
-            _statTexts.second.critText.text = "+" + (weapon.LevelUpPreview_Crit - weapon.critRate).ToString();
-            _statTexts.second.cooldownText.text = "+" + (weapon.LevelUpPreview_Cooldown - weapon.cooldownTime).ToString();
+            _statTexts.first.atkText.text = weapon.baseAttack.ToString("f2");
+            _statTexts.first.critText.text = weapon.critRate.ToString("f2");
+            _statTexts.first.cooldownText.text = weapon.cooldownTime.ToString("f2");
+            _statTexts.second.atkText.text = "+" + (weapon.LevelUpPreview_Atk - weapon.baseAttack).ToString("f2");
+            _statTexts.second.critText.text = "+" + (weapon.LevelUpPreview_Crit - weapon.critRate).ToString("f2");
+            _statTexts.second.cooldownText.text = (weapon.cooldownTime - weapon.LevelUpPreview_Cooldown).ToString("f2");
             _costText.text = weapon.UpgradeCost.ToString();
         }
     }
@@ -215,5 +249,69 @@ public class GameUIManager : MonoBehaviour
         _selectedWeapon.sprite = newSprite;
         if (!newSprite) _selectedWeapon.color = new Color(0, 0, 0, 0);
         else _selectedWeapon.color = new Color(255, 255, 255, 255);
+    }
+
+    [Header("In Game UI")]
+    [SerializeField] private GameObject _inGameMenuPanel;
+    [SerializeField] private GameObject _mainPanel;
+
+    public void ExitRoom()
+    {
+        NetworkClient.Instance.ExitRoom();
+    }
+
+    [Header("Lobby UI")]
+    [SerializeField] private GameObject _preparationPanel;
+    [SerializeField] private GameObject _startButton;
+    [SerializeField] private Text[] _playersName;
+    [SerializeField] private Text[] _playersStatus;
+
+    void SetupLobby()
+    {
+        // Setup Ui ---------------------------------------------------------------
+        _preparationPanel.SetActive(true);
+        _inGameMenuPanel.SetActive(false);
+        _mainPanel.SetActive(true);
+
+        _startButton.SetActive(false);
+
+        string[] defaultName = { NetworkClient.Instance.myName };
+        UpdatePlayersInRoom(defaultName);
+
+        StartCoroutine(CountDownStartButton());
+    }
+
+    // Count down for start button to appear -------------------------------------
+    private IEnumerator CountDownStartButton()
+    {
+        yield return new WaitForSeconds(GameManager.Instance.RoomWaitTime);
+
+        if (NetworkClient.Instance.isMaster)
+        {
+            _startButton.SetActive(true);
+        }
+    }
+
+    // Deactivate Panel -----------------------------------------------------------
+    public void SetActivePreparationPanel(bool isTrue)
+    {
+        _preparationPanel.SetActive(isTrue);
+    }
+    // Update Players in room -----------------------------------------------------
+    public void UpdatePlayersInRoom(string[] names)
+    {
+        for (int i = 0; i < _playersName.Length; i++)
+        {
+            if (i < names.Length)
+            {
+                _playersName[i].text = names[i];
+                _playersStatus[i].text = "Ready";
+            }
+            else
+            {
+                _playersName[i].text = "";
+                _playersStatus[i].text = "";
+            }
+        }
     }
 }
