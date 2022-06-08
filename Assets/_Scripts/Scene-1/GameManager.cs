@@ -115,8 +115,7 @@ public class GameManager : MonoBehaviour
         TilemapManager.instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
-        // Show game over screen with score and disconnect button
-        // Ke scene 0
+
     }
 
     private async void HandleWaveOver()
@@ -171,7 +170,7 @@ public class GameManager : MonoBehaviour
         SpawnManager.instance.SendSpawnPlayer();
 
         // Deactivate Panels ----------------------------------------------------------------
-        LobbyMenuManager.Instance.SetActivePreparationPanel(false);
+        GameUIManager.Instance.SetActivePreparationPanel(false);
         
         SetIgnoreCollisions();
 

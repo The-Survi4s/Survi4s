@@ -175,7 +175,8 @@ public abstract class WeaponBase : MonoBehaviour
         }
         else if (Level % 3 == 2)
         {
-            baseAttack += (baseAttack / 20.0f);
+            defaultBaseAttack += (defaultBaseAttack / 20.0f);
+            baseAttack = defaultBaseAttack;
         }
 
         // Increase cost to upgrade
@@ -184,7 +185,7 @@ public abstract class WeaponBase : MonoBehaviour
         Level++;
     }
 
-    public float LevelUpPreview_Atk => (Level % 3 == 2) ? baseAttack * 1.05f : baseAttack;
+    public float LevelUpPreview_Atk => (Level % 3 == 2) ? defaultBaseAttack * 1.05f : defaultBaseAttack;
     public float LevelUpPreview_Crit => (Level % 3 == 0) ? critRate * 1.1f : critRate;
     public float LevelUpPreview_Cooldown => (Level % 3 == 1) ? cooldownTime * 0.9f : cooldownTime;
 }
