@@ -50,7 +50,7 @@ public class GameUIManager : MonoBehaviour
         UpdateHealthUI();
         UpdateAmmoUI();
         UpdateExpUI();
-        
+        ShowUpgradePrompt();
     }
 
     [Header("Health UI")]
@@ -239,6 +239,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Color _costColorNotEnough;
     [SerializeField] private GameObject _weaponSelectPanel;
     [SerializeField] private GameObject _UWButton;
+    [SerializeField] private GameObject _UWPrompt;
 
     private void UpdateUpgradeUI()
     {
@@ -272,6 +273,11 @@ public class GameUIManager : MonoBehaviour
         _UWPanel.SetActive(isActive);
         _weaponSelectPanel.SetActive(!isActive);
         if(isActive) UpdateUpgradeUI();
+    }
+
+    public void ShowUpgradePrompt()
+    {
+        _UWPrompt.SetActive(_localPlayer.movement.isNearStatue);
     }
 
     public void OnClickUpgradeButton()
