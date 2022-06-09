@@ -19,7 +19,7 @@ public class MonsterMovement : MonoBehaviour
     /// The agent used to move things around
     /// </summary>
     private NavMeshAgent _agent;
-    [SerializeField] private Monster.Target _currentTarget;
+    [SerializeField] private Target _currentTarget;
     [SerializeField] private Vector3 _currentTargetPos;
     private Vector3 _currentTargetPreviousPos;
     private float _previousDistance;
@@ -106,18 +106,18 @@ public class MonsterMovement : MonoBehaviour
         _currentTarget = _owner.setting.priority;
         switch (_currentTarget)
         {
-            case Monster.Target.Wall:
+            case Target.Wall:
                 _currentTargetPos = _targetWallPos;
                 break;
-            case Monster.Target.Player:
+            case Target.Player:
                 _currentTargetPos = _targetPlayerPos;
                 break;
-            case Monster.Target.Statue:
+            case Target.Statue:
                 _currentTargetPos = _statuePos;
                 break;
             default:
                 _currentTargetPos = _statuePos;
-                _currentTarget = Monster.Target.Statue;
+                _currentTarget = Target.Statue;
                 break;
         }
     }
@@ -145,10 +145,10 @@ public class MonsterMovement : MonoBehaviour
     {
         if (Vector2.Distance(_targetPlayerPos, transform.position) < _owner.setting.detectionRange)
         {
-            if (_owner.setting.MethodOf(Monster.Target.Player) != Monster.TargetMethod.DontAttack)
+            if (_owner.setting.MethodOf(Target.Player) != Monster.TargetMethod.DontAttack)
             {
                 _currentTargetPos = _targetPlayerPos;
-                _currentTarget = Monster.Target.Player;
+                _currentTarget = Target.Player;
             }
         }
     }
@@ -165,10 +165,10 @@ public class MonsterMovement : MonoBehaviour
 
     private void TargetWallInstead()
     {
-        if (_owner.setting.MethodOf(Monster.Target.Wall) != Monster.TargetMethod.DontAttack)
+        if (_owner.setting.MethodOf(Target.Wall) != Monster.TargetMethod.DontAttack)
         {
             _currentTargetPos = _targetWallPos;
-            _currentTarget = Monster.Target.Wall;
+            _currentTarget = Target.Wall;
         }
     }
 

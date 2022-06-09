@@ -4,6 +4,11 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
+/// Enum of targets of which a something can attack
+/// </summary>
+public enum Target { Statue, Wall, Player, Monster }
+
+/// <summary>
 /// Base class of all Monsters
 /// </summary>
 [RequireComponent(typeof(MonsterMovement),typeof(Animator))]
@@ -23,11 +28,6 @@ public abstract class Monster : MonoBehaviour
 
     #region Data and Containers Definition
     public enum Type { Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal }
-
-    /// <summary>
-    /// Enum of targets of which a <see cref="Monster"/> can attack
-    /// </summary>
-    public enum Target { Statue, Wall, Player }
 
     /// <summary>
     /// Method enums on how to attack a <see cref="Target"/>

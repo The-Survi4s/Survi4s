@@ -1835,7 +1835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.909804, g: 0.8235295, b: 0.50980395, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1843,12 +1843,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 43
+    m_Font: {fileID: 12800000, guid: 86cf298a49c7f6f4b9073ee1c883b97c, type: 3}
+    m_FontSize: 55
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 53
+    m_MinSize: 5
+    m_MaxSize: 55
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2639,11 +2639,11 @@ RectTransform:
   m_Father: {fileID: 159081195}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -35.6, y: -69.328}
-  m_SizeDelta: {x: 278.9391, y: 81.076416}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 2, y: 2}
+  m_SizeDelta: {x: 143.4122, y: 70.3416}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &952047563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2713,7 +2713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6, g: 0.39607847, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5387,33 +5387,65 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4088946268335042470, guid: 8679136bfecff454eb27d020bdae0c0c, type: 3}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[0].prefab
-      value: 
-      objectReference: {fileID: 1767941296274044509, guid: a118513775d60374ba48d713aa103c71, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.size
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[1].prefab
+      propertyPath: _monsterPrefabWeights.Array.data[0].prefab
       value: 
       objectReference: {fileID: 3726680129834783858, guid: f6e54c9fa5f8e69498d23e63dafa39a6, type: 3}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[2].prefab
-      value: 
-      objectReference: {fileID: 311480910460885589, guid: 19a5eab45fc3b634dac436d756639aa9, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[0].weight
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[3].prefab
+      propertyPath: _monsterPrefabWeights.Array.data[1].prefab
       value: 
       objectReference: {fileID: 2750687198860834850, guid: 64c8de8d6dc15234688b3ea5c14135c4, type: 3}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[4].prefab
+      propertyPath: _monsterPrefabWeights.Array.data[1].weight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[2].prefab
       value: 
       objectReference: {fileID: 6108645726365500224, guid: 73e8f9d77a58f4642a1e3705a32e0344, type: 3}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[5].prefab
+      propertyPath: _monsterPrefabWeights.Array.data[2].weight
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[3].prefab
       value: 
       objectReference: {fileID: 5684624463149505320, guid: aab3dab3de9591744af74e6ed36115ca, type: 3}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
-      propertyPath: _monsterPrefabWeights.Array.data[6].prefab
+      propertyPath: _monsterPrefabWeights.Array.data[3].weight
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[4].prefab
       value: 
       objectReference: {fileID: 3072205260712185736, guid: efda25e327d7517478fc7ce6505f8457, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[4].weight
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[5].prefab
+      value: 
+      objectReference: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[5].weight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[6].prefab
+      value: 
+      objectReference: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
+    - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+      propertyPath: _monsterPrefabWeights.Array.data[6].weight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: _monsterPrefabWeights.Array.data[7].prefab
       value: 

@@ -19,9 +19,9 @@ public abstract class WeaponMelee : WeaponBase
             transform.localEulerAngles = transform.localEulerAngles;
     }*/
 
-    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad, LayerMask targetLayer)
+    public Collider2D[] GetHitObjectInRange(Vector2 attackPoint, float _attackRad)
     {
-        return Physics2D.OverlapCircleAll(attackPoint, _attackRad, targetLayer);
+        return Physics2D.OverlapCircleAll(attackPoint, _attackRad, _targetMask);
     }
 
     public override void ReceiveAttackMessage()
@@ -30,14 +30,14 @@ public abstract class WeaponMelee : WeaponBase
         base.ReceiveAttackMessage();
         if (!isLocal) return;
         // Detect enemies on range
-        Collider2D[] hitObjects = GetHitObjectInRange(GetAttackPoint(), attackRad, _targetMask);
+        Collider2D[] hitObjects = GetHitObjectInRange(AttackPoint, attackRad);
         if (IsCritical()) OnCritical(hitObjects);
         else OnNormalAttack(hitObjects);
     }
 
     protected virtual void OnNormalAttack(Collider2D[] targets)
     {
-        ModifyAllMonsterHp(targets, -baseAttack);
+        ModifyHpAll(targets, -baseAttack, Target.Monster);
 
         PlayAnimation();
         //currentZRot = transform.localEulerAngles.z;
@@ -45,28 +45,32 @@ public abstract class WeaponMelee : WeaponBase
 
     protected virtual void OnCritical(Collider2D[] targets)
     {
-        ModifyAllMonsterHp(targets, -baseAttack * 2);
+        ModifyHpAll(targets, -baseAttack * 2, Target.Monster);
 
         PlayAnimation();
         //currentZRot = transform.localEulerAngles.z;
     }
 
-    protected void ModifyAllPlayerHp(Collider2D[] targets, float amount)
+    protected void ModifyHpAll(Collider2D[] targets, float amount, Target type)
     {
-        foreach (Collider2D target in targets)
+        foreach (Collider2D col in targets)
         {
-            Player player = target.GetComponent<Player>();
-            if (player) NetworkClient.Instance.ModifyPlayerHp(player.name, amount);
-        }
-    }
-
-    protected void ModifyAllMonsterHp(Collider2D[] targets, float amount)
-    {
-        foreach (Collider2D target in targets)
-        {
-            Monster monster = target.GetComponent<Monster>();
-            //Debug.Log($"Monster {monster} get");
-            if (monster) NetworkClient.Instance.ModifyMonsterHp(monster.id, amount);
+            switch (type)
+            {
+                case Target.Player:
+                    if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyPlayerHp(player.name, amount);
+                    break;
+                case Target.Statue:
+                    break;
+                case Target.Wall:
+                    if (col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyWallHp(wall.id, amount);
+                    break;
+                case Target.Monster:
+                    //Debug.Log($"Monster {monster} get");
+                    if (col.TryGetComponent(out Monster monster)) NetworkClient.Instance.ModifyMonsterHp(monster.id, amount);
+                    break;
+            }
+            
         }
     }
 
@@ -74,7 +78,7 @@ public abstract class WeaponMelee : WeaponBase
     private void OnDrawGizmosSelected()
     {
         
-        Gizmos.DrawWireSphere(GetAttackPoint(), attackRad);
+        Gizmos.DrawWireSphere(AttackPoint, attackRad);
     }
 
     protected override void PlayAnimation()

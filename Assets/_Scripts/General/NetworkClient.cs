@@ -339,7 +339,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.UpWpn:
                 {
-                    UnitManager.Instance.FindAndUpgradeWeapon(info[2]);
+                    UnitManager.Instance.UpgradeWeapon(info[2]);
                     break;
                 }
                 case Header.PlVl:

@@ -6,13 +6,13 @@ public class WeaponJajan : WeaponMelee
     protected override void OnNormalAttack(Collider2D[] targets)
     {
         // Heal players
-        ModifyAllPlayerHp(targets, baseAttack);
+        ModifyHpAll(targets, baseAttack, Target.Player);
         SpawnParticle();
     }
 
     protected override void OnCritical(Collider2D[] targets)
     {
-        ModifyAllPlayerHp(targets, baseAttack * 3);
+        ModifyHpAll(targets, baseAttack * 3, Target.Player);
         SpawnParticle();
     }
 

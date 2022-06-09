@@ -76,6 +76,11 @@ public class UnitManager : MonoBehaviour
     public void AddMonster(Monster monster)
     {
         //Debug.Log("Monster id: " + monster.id + " added");
+        if(_monsters.ContainsKey(monster.id))
+        {
+            Debug.LogWarning($"Duplicate monster received. Destroying...");
+            Destroy(monster.gameObject);
+        }
         monster.SetTargetWall(TilemapManager.instance.GetWall(monster.origin));
         _monsterKdTree.Add(monster);
         _monsters.Add(monster.id, monster);
@@ -194,7 +199,7 @@ public class UnitManager : MonoBehaviour
         _monsters[monsterId].PlayAttackAnimation();
     }
 
-    public void FindAndUpgradeWeapon(string weaponName)
+    public void UpgradeWeapon(string weaponName)
     {
         foreach (WeaponBase wpn in weapons)
         {

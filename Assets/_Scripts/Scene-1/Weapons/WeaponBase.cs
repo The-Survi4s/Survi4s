@@ -24,6 +24,7 @@ public abstract class WeaponBase : MonoBehaviour
     private float rotValZ;
 
     protected Animator _animator;
+    protected SpriteRenderer _renderer;
 
     [SerializeField] protected GameObject _particleToSpawn;
     [SerializeField] protected float _particleLifetime = 2;
@@ -46,8 +47,13 @@ public abstract class WeaponBase : MonoBehaviour
         Level = 1;
     }
 
-    protected virtual void Awake() => Init();
-    private void Update()
+    protected virtual void Awake()
+    {
+        _renderer = GetComponent<SpriteRenderer>();
+        Init();
+    }
+
+    protected virtual void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
         if (ownerPlayer == null) return;
@@ -61,29 +67,31 @@ public abstract class WeaponBase : MonoBehaviour
             ? ownerPlayer.movement.localMousePos
             : ownerPlayer.movement.syncMousePos);
 
-        // Flip
+        // Flip y
         rotValZ = transform.eulerAngles.z;
+        /*
         if (rotValZ > 90.0f && rotValZ < 270.0f && isFacingRight)
         {
             isFacingRight = false;
-            transform.localScale -= new Vector3(0, 2, 0);
+            //transform.localScale -= new Vector3(0, 2, 0);
+            _renderer.flipY = true;
         }
         else if ((rotValZ < 90.0f || rotValZ > 270.0f) && !isFacingRight)
         {
             isFacingRight = true;
-            transform.localScale += new Vector3(0, 2, 0);
+            //transform.localScale += new Vector3(0, 2, 0);
+            _renderer.flipY = false;
         }
-        // Savety
-        if(transform.localScale.y < -1)
+        */
+        _renderer.flipY = rotValZ > 90.0f && rotValZ < 270.0f;
+        /*
+        // Safety
+        if(transform.localScale.y < -1 || transform.localScale.y > 1)
         {
             float gap = transform.localScale.y + 1.0f;
             transform.localScale -= new Vector3(0, gap, 0);
         }
-        else if (transform.localScale.y > 1)
-        {
-            float gap = transform.localScale.y + 1.0f;
-            transform.localScale -= new Vector3(0, gap, 0);
-        }
+        */
     }
 
     // Network methods -----------------------------------
@@ -124,10 +132,7 @@ public abstract class WeaponBase : MonoBehaviour
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
 
-    protected Vector2 GetAttackPoint()
-    {
-        return transform.position + transform.right * _attackDistance;
-    }
+    protected Vector2 AttackPoint => transform.position + transform.right * _attackDistance;
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 

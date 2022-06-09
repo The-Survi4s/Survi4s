@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4680329030722562987}
   - component: {fileID: -2644449142255802911}
+  - component: {fileID: -1456772219713030985}
+  - component: {fileID: 1620305344829899520}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
@@ -82,3 +84,49 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-1456772219713030985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5185828463792774867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4d22b409ad35c540b63d1c4a0e1cc9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultBaseAttack: 2
+  defaultCritRate: 5
+  maxCooldownTime: 3
+  _attackDistance: 1
+  <baseAttack>k__BackingField: 0
+  offset: {x: 0, y: 0, z: 0}
+  _particleToSpawn: {fileID: 0}
+  _particleLifetime: 2
+  uiSprite: {fileID: 21300000, guid: fd427f1aadb50674f82748709e9bcf58, type: 3}
+  <UpgradeCost>k__BackingField: 4
+  <Level>k__BackingField: 0
+  _targetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackRad: 3
+--- !u!95 &1620305344829899520
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5185828463792774867}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
