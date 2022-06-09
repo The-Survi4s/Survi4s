@@ -8,7 +8,6 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float defaultBaseAttack;
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
-    [SerializeField] protected float _attackDistance = 2;
 
     public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
@@ -133,7 +132,7 @@ public abstract class WeaponBase : MonoBehaviour
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
 
-    protected Vector2 AttackPoint => transform.position + attackPointOffset + transform.right * _attackDistance;
+    protected Vector2 AttackPoint => transform.position + transform.right * attackPointOffset.x + transform.up * attackPointOffset.y;
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 

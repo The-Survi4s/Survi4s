@@ -22,7 +22,7 @@ public abstract class MonsterBulletBase : BulletBase
 
     protected virtual void AttackSomething(Component component)
     {
-        NetworkClient.Instance.ModifyHp(component, -owner.currentStat.atk);
+        Debug.Log("Success? " + NetworkClient.Instance.ModifyHp(component, -owner.currentStat.atk));
         /*
         switch (component)
         {

@@ -49,7 +49,7 @@ MonoBehaviour:
   maxCooldownTime: 0.5
   _attackDistance: 2
   offset: {x: 0.2, y: 0.5, z: -1}
-  attackPointOffset: {x: -0.66, y: 0.24, z: 0}
+  attackPointOffset: {x: 1.26, y: 0.24, z: 0}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
   uiSprite: {fileID: -6225642005949883001, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}

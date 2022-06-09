@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1620305344829899520}
   m_Layer: 0
   m_Name: Shield
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5185828463792774867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -46,10 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultBaseAttack: 2
-  defaultCritRate: 5
+  defaultCritRate: 15
   maxCooldownTime: 3
-  _attackDistance: 1
   offset: {x: 0, y: 0, z: 0}
+  attackPointOffset: {x: 0.93, y: 0.1, z: 0}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
   uiSprite: {fileID: 21300000, guid: fd427f1aadb50674f82748709e9bcf58, type: 3}
@@ -57,8 +57,8 @@ MonoBehaviour:
   <Level>k__BackingField: 1
   _targetMask:
     serializedVersion: 2
-    m_Bits: 0
-  attackRad: 2
+    m_Bits: 1088
+  attackRad: 1
   _domeDiameneter: 5
   _domeDuration: 5
 --- !u!212 &-2644449142255802911

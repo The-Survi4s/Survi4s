@@ -324,6 +324,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
+                        Debug.Log("Statue hp modified");
                     TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
