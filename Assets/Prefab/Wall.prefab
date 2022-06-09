@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2565197147147888317}
   - component: {fileID: 1308128620185157725}
   - component: {fileID: -2108218349053613651}
+  - component: {fileID: 2580303252891834663}
   - component: {fileID: 2565197147147888315}
   m_Layer: 7
   m_Name: Wall
@@ -75,6 +76,26 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!114 &2580303252891834663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565197147147888314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Attacked
+    clip: {fileID: 8300000, guid: e0442ff554f88e34db78b31f8f7eb3bb, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
 --- !u!114 &2565197147147888315
 MonoBehaviour:
   m_ObjectHideFlags: 0

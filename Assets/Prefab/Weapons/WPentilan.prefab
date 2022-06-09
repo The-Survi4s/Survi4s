@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4433021215518527550}
   - component: {fileID: 5943900322292448313}
+  - component: {fileID: -5341379695442171674}
   - component: {fileID: 536319729483946899}
   m_Layer: 0
   m_Name: WPentilan
@@ -47,6 +48,8 @@ MonoBehaviour:
   defaultBaseAttack: 5
   defaultCritRate: 30
   maxCooldownTime: 2
+  _attackDistance: 2
+  <baseAttack>k__BackingField: 0
   offset: {x: 0.2, y: -3, z: -1}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
@@ -57,6 +60,26 @@ MonoBehaviour:
   _bullet: {fileID: 6591116743017005492, guid: 5fd3b845fbe1b94439aae228f2a9be76, type: 3}
   <inAccuracy>k__BackingField: 1.5
   _ammo: 0
+--- !u!114 &-5341379695442171674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79102828930210775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Hit
+    clip: {fileID: 8300000, guid: a450d2ada307a4945bfb9286c46d7776, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
 --- !u!212 &536319729483946899
 SpriteRenderer:
   m_ObjectHideFlags: 0

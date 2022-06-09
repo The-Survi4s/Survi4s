@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private AudioManager audioManager;
+
     public enum GameState {InLobby, StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
     public GameState currentState => _gameState;
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
         _playerBulletLayer = LayerMask.GetMask("PlayerBullet");
         _groundLayer = LayerMask.GetMask("Ground");
         _wallLayer = LayerMask.GetMask("Wall");
+
+        audioManager = GetComponent<AudioManager>();
     }
 
     private void Update()
@@ -112,11 +116,17 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
+        audioManager.Stop("Relax");
+        audioManager.Stop("Intense");
+        audioManager.Play("GameOver");
+
         TilemapManager.instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
         // Show game over screen with score and disconnect button
         // Ke scene 0
+
+        
     }
 
     private async void HandleWaveOver()
@@ -134,8 +144,13 @@ public class GameManager : MonoBehaviour
 
     private async void HandleWaveSpawn()
     {
+        audioManager.Play("Intense");
+        audioManager.Stop("Relax");
+
         await SpawnManager.instance.StartWave();
         ChangeState(GameState.WaveOver);
+
+        
     }
 
     private async void HandleWavePreparation()
@@ -144,6 +159,8 @@ public class GameManager : MonoBehaviour
         await CountDown(Settings.preparationTime);
         // On countdown done, or on some button pressed, wave spawn
         ChangeState(GameState.WaveSpawn);
+
+        
     }
 
     private async Task CountDown(float duration)
@@ -177,6 +194,8 @@ public class GameManager : MonoBehaviour
 
         GameUIManager.Instance.ChangeWeaponImage(null);
         ChangeState(GameState.WavePreparation);
+
+        audioManager.Play("Relax");
     }
 
     private void SetIgnoreCollisions()
@@ -194,6 +213,8 @@ public class GameManager : MonoBehaviour
     {
         NetworkClient.Instance.StartGame();
         NetworkClient.Instance.LockTheRoom();
+
+        
     }
 
     public async void ForceStartNextWave()
