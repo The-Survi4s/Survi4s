@@ -106,7 +106,7 @@ MonoBehaviour:
   _particleLifetime: 2
   uiSprite: {fileID: 21300000, guid: fd427f1aadb50674f82748709e9bcf58, type: 3}
   <UpgradeCost>k__BackingField: 4
-  <Level>k__BackingField: 0
+  <Level>k__BackingField: 1
   _targetMask:
     serializedVersion: 2
     m_Bits: 0

@@ -10,7 +10,7 @@ public class WeaponPalu : WeaponMelee
             {
                 if(!(wall.hp < wall.maxHp)) return;
                 //Debug.Log("It's a wall! Repair! " + x.name);
-                NetworkClient.Instance.ModifyWallHp(wall.id, 5);
+                NetworkClient.Instance.ModifyHp(Target.Wall, wall.id, 5);
             }
             else if (x.TryGetComponent(out BrokenWall brokenWall))
             {
@@ -20,7 +20,7 @@ public class WeaponPalu : WeaponMelee
             else if(x.TryGetComponent(out Monster monster))
             {
                 //Debug.Log("Palu damages " + monster + " by " + -baseAttack);
-                NetworkClient.Instance.ModifyMonsterHp(monster.id, -baseAttack);
+                NetworkClient.Instance.ModifyHp(Target.Monster, monster.id, -baseAttack);
             }
         }
     }
@@ -32,7 +32,7 @@ public class WeaponPalu : WeaponMelee
             if (x.TryGetComponent(out Wall wall))
             {
                 //Debug.Log("It's a wall! Repair! " + x.name);
-                NetworkClient.Instance.ModifyWallHp(wall.id, 20);
+                NetworkClient.Instance.ModifyHp(Target.Wall, wall.id, 20);
             }
             else if (x.TryGetComponent(out BrokenWall brokenWall))
             {
@@ -41,7 +41,7 @@ public class WeaponPalu : WeaponMelee
             }
             else if (x.TryGetComponent(out Monster monster))
             {
-                NetworkClient.Instance.ModifyMonsterHp(monster.id, -baseAttack * 2);
+                NetworkClient.Instance.ModifyHp(Target.Monster, monster.id, -baseAttack * 2);
                 NetworkClient.Instance.ApplyStatusEffectToMonster(monster.id, StatusEffect.Stun, 1, 1);
             }
         }

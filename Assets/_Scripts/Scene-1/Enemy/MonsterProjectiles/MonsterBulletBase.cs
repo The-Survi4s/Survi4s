@@ -26,13 +26,13 @@ public abstract class MonsterBulletBase : BulletBase
         {
             case Player obj:
                 //Debug.Log(name + " attack " + obj.name);
-                NetworkClient.Instance.ModifyPlayerHp(obj.name, -owner.currentStat.atk);
+                NetworkClient.Instance.ModifyHp(Target.Player, obj.name, -owner.currentStat.atk);
                 break;
             case Wall obj:
-                NetworkClient.Instance.ModifyWallHp(obj.id, -owner.currentStat.atk);
+                NetworkClient.Instance.ModifyHp(Target.Wall, obj.id, -owner.currentStat.atk);
                 break;
-            case Statue obj:
-                NetworkClient.Instance.ModifyStatueHp(-owner.currentStat.atk);
+            case Statue _:
+                NetworkClient.Instance.ModifyHp(Target.Statue, -owner.currentStat.atk);
                 break;
         }
     }

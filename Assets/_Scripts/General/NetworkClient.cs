@@ -581,6 +581,146 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
+    /// <summary>
+    /// Sends a message to server to modify hp of any object that has an hp. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Statue"/>
+    /// <br/>- <see cref="Player"/>
+    /// <br/>- <see cref="Wall"/>
+    /// <br/>- <see cref="Monster"/>
+    /// </summary>
+    /// <param name="obj">The object with hp</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public void ModifyHp(Component obj, float amount)
+    {
+        string[] msg = { };
+        switch (obj)
+        {
+            case Wall wall:
+                msg = new string[] { Header.MdWl.ToString(), wall.id.ToString(), amount.ToString("f2") };
+                break;
+            case Monster monster:
+                msg = new string[] { Header.MdMo.ToString(), monster.id.ToString(), amount.ToString("f2") };
+                break;
+            case Player player:
+                msg = new string[] { Header.MdPl.ToString(), player.name, amount.ToString("f2") };
+                break;
+            case Statue _:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+        }
+        if (msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of anything that has an id and hp. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Wall"/>
+    /// <br/>- <see cref="Monster"/>
+    /// </summary>
+    /// <remarks>
+    /// Will try to get a name from the object with <paramref name="id"/> when <paramref name="target"/> is set to
+    /// <see cref="Target.Player"/>. <br/>
+    /// Ignores <paramref name="id"/> when <paramref name="target"/> is set to <see cref="Target.Statue"/>
+    /// </remarks>
+    /// <param name="target">Which type is the target</param>
+    /// <param name="id">The id of the target</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public void ModifyHp(Target target, int id, float amount)
+    {
+        string[] msg = { };
+        switch (target)
+        {
+            case Target.Player:
+                Debug.LogError($"Must use string for Player name.");
+                var player = UnitManager.Instance.GetPlayer(id);
+                if (!player) break;
+                var name = player.name;
+                ModifyHp(target, name, amount);
+                break;
+            case Target.Statue:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Wall:
+                msg = new string[] { Header.MdWl.ToString(), id.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Monster:
+                msg = new string[] { Header.MdMo.ToString(), id.ToString(), amount.ToString("f2") };
+                break;
+        }
+        if(msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of anything that has a name and hp. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Player"/>
+    /// </summary>
+    /// <remarks>
+    /// Will try to extract id from <paramref name="name"/> when <paramref name="target"/> is set to
+    /// <see cref="Target.Wall"/> or <see cref="Target.Monster"/>. <br/>
+    /// Ignores <paramref name="name"/> when <paramref name="target"/> is set to <see cref="Target.Statue"/>
+    /// </remarks>
+    /// <param name="target">Which type is the target</param>
+    /// <param name="name">The name of the target</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public void ModifyHp(Target target, string name, float amount)
+    {
+        string[] msg = { };
+        int id;
+        switch (target)
+        {
+            case Target.Player:
+                msg = new string[] { Header.MdPl.ToString(), name, amount.ToString("f2") };
+                break;
+            case Target.Statue:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Wall:
+                id = IntParse(name);
+                if (id == int.MinValue) break;
+                ModifyHp(target, id, amount);
+                break;
+            case Target.Monster:
+                id = IntParse(name);
+                if (id == int.MinValue) break;
+                ModifyHp(target, id, amount);
+                break;
+        }
+        if (msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of any object that has an hp but without identifier. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Statue"/>
+    /// </summary>
+    /// <remarks>
+    /// Prints an error when the <paramref name="target"/> specified needs an identifier
+    /// </remarks>
+    /// <param name="target">Which type is the target</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public void ModifyHp(Target target, float amount)
+    {
+        string[] msg = { };
+        switch (target)
+        {
+            case Target.Player:
+                Debug.LogError("Player name not specified!");
+                break;
+            case Target.Statue:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Wall:
+                Debug.LogError("Id not specified!");
+                break;
+            case Target.Monster:
+                Debug.LogError("Id not specified!");
+                break;
+        }
+        if (msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+    }
+
     #endregion
 
     #region Utilities
@@ -601,5 +741,32 @@ public class NetworkClient : MonoBehaviour
         ReceiveMessage(data);
         return "3";
     }
+    
+    private int IntParse(string str)
+    {
+        var numericString = "";
+        int index = 0;
+        foreach (char c in str)
+        {
+            if (c == '-' && index == 0) numericString = string.Concat(numericString, c);
+            else if ((c >= '0' && c <= '9'))
+            {
+                numericString = string.Concat(numericString, c);
+            }
+            else
+            {
+                index++;
+                continue;
+            }
+            index++;
+        }
+
+        if (int.TryParse(numericString, out int j))
+        {
+            return j;
+        }
+        else return int.MinValue;
+    }
+
     #endregion
 }

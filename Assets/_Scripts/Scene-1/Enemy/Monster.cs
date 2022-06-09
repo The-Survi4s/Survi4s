@@ -502,6 +502,6 @@ public abstract class Monster : MonoBehaviour
     [ContextMenu(nameof(DamageMonsterBy10))]
     private void DamageMonsterBy10()
     {
-        NetworkClient.Instance.ModifyMonsterHp(id, -10);
+        NetworkClient.Instance.ModifyHp(Target.Monster, id, -10);
     }
 }

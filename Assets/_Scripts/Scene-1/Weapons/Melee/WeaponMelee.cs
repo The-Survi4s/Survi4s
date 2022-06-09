@@ -51,23 +51,24 @@ public abstract class WeaponMelee : WeaponBase
         //currentZRot = transform.localEulerAngles.z;
     }
 
-    protected void ModifyHpAll(Collider2D[] targets, float amount, Target type)
+    protected void ModifyHpAll(Collider2D[] targets, float amount, Target target)
     {
         foreach (Collider2D col in targets)
         {
-            switch (type)
+            switch (target)
             {
                 case Target.Player:
-                    if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyPlayerHp(player.name, amount);
+                    if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyHp(target, player.name, amount);
                     break;
                 case Target.Statue:
+                    if (col.TryGetComponent(out Statue _)) NetworkClient.Instance.ModifyHp(target, amount);
                     break;
                 case Target.Wall:
-                    if (col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyWallHp(wall.id, amount);
+                    if (col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyHp(target, wall.id, amount);
                     break;
                 case Target.Monster:
                     //Debug.Log($"Monster {monster} get");
-                    if (col.TryGetComponent(out Monster monster)) NetworkClient.Instance.ModifyMonsterHp(monster.id, amount);
+                    if (col.TryGetComponent(out Monster monster)) NetworkClient.Instance.ModifyHp(target, monster.id, amount);
                     break;
             }
             
