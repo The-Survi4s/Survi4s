@@ -10,7 +10,7 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float maxCooldownTime;
     [SerializeField] protected float _attackDistance = 2;
 
-    [field: SerializeField] public float baseAttack { get; protected set; }
+    public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
     public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
@@ -19,8 +19,9 @@ public abstract class WeaponBase : MonoBehaviour
     public bool IsUsed() => ownerPlayer;
 
     [SerializeField] protected Vector3 offset;
+    [SerializeField] protected Vector3 attackPointOffset;
 
-    private bool isFacingRight;
+    //private bool isFacingRight;
     private float rotValZ;
 
     protected Animator _animator;
@@ -132,7 +133,7 @@ public abstract class WeaponBase : MonoBehaviour
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
 
-    protected Vector2 AttackPoint => transform.position + transform.right * _attackDistance;
+    protected Vector2 AttackPoint => transform.position + attackPointOffset + transform.right * _attackDistance;
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 

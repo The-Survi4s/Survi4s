@@ -78,7 +78,7 @@ public abstract class WeaponMelee : WeaponBase
     // Visually attack ---------------------------------------------------------------
     private void OnDrawGizmosSelected()
     {
-        
+        Gizmos.color = Color.gray;
         Gizmos.DrawWireSphere(AttackPoint, attackRad);
     }
 

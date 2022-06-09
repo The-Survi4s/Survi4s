@@ -17,6 +17,12 @@ public class WeaponRange : WeaponBase
         ReloadAmmo();
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(AttackPoint, 0.2f);
+    }
+
     public Vector2 GetOwnerMousePos()
     {
         if (ownerPlayer == null)

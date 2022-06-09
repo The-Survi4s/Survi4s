@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6279950807822916172}
-  - component: {fileID: 2394179001248903137}
   - component: {fileID: 5487120756511008689}
+  - component: {fileID: 2394179001248903137}
   m_Layer: 0
   m_Name: WP3K
   m_TagString: Untagged
@@ -32,6 +32,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5487120756511008689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3018070467442141488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b99b5e3aaa29a4392c3352925b41da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultBaseAttack: 10
+  defaultCritRate: 5
+  maxCooldownTime: 20
+  _attackDistance: 0
+  offset: {x: 0, y: 0, z: 0}
+  attackPointOffset: {x: 0.58, y: 0.12, z: 0}
+  _particleToSpawn: {fileID: 0}
+  _particleLifetime: 2
+  uiSprite: {fileID: -3961512330218723458, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}
+  <UpgradeCost>k__BackingField: 4
+  <Level>k__BackingField: 1
+  _targetMask:
+    serializedVersion: 2
+    m_Bits: 8
+  attackRad: 1
 --- !u!212 &2394179001248903137
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -83,15 +110,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5487120756511008689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3018070467442141488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b99b5e3aaa29a4392c3352925b41da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
