@@ -81,7 +81,7 @@ public class UnitManager : MonoBehaviour
             Debug.LogWarning($"Duplicate monster received. Destroying...");
             Destroy(monster.gameObject);
         }
-        monster.SetTargetWall(TilemapManager.instance.GetWall(monster.origin));
+        monster.SetTargetWall(TilemapManager.Instance.GetWall(monster.origin));
         _monsterKdTree.Add(monster);
         _monsters.Add(monster.id, monster);
     }

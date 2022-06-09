@@ -58,17 +58,17 @@ public abstract class WeaponMelee : WeaponBase
             switch (target)
             {
                 case Target.Player:
-                    if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyHp(target, player.name, amount);
+                    if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyHp(player, amount);
                     break;
                 case Target.Statue:
                     if (col.TryGetComponent(out Statue _)) NetworkClient.Instance.ModifyHp(target, amount);
                     break;
                 case Target.Wall:
-                    if (col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyHp(target, wall.id, amount);
+                    if (col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyHp(wall, amount);
                     break;
                 case Target.Monster:
                     //Debug.Log($"Monster {monster} get");
-                    if (col.TryGetComponent(out Monster monster)) NetworkClient.Instance.ModifyHp(target, monster.id, amount);
+                    if (col.TryGetComponent(out Monster monster)) NetworkClient.Instance.ModifyHp(monster, amount);
                     break;
             }
             

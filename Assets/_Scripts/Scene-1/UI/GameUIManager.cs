@@ -143,8 +143,8 @@ public class GameUIManager : MonoBehaviour
 
     private void UpdateStatueUI()
     {
-        var hp = TilemapManager.instance.statue.hp;
-        var maxHp = TilemapManager.instance.statue.maxHp;
+        var hp = TilemapManager.Instance.statue.hp;
+        var maxHp = TilemapManager.Instance.statue.maxHp;
         _statueHpText.text = hp.ToString();
         _statueHpText.color = 
             hp > maxHp * 2 / 3.0f ? _fullStatueHpColor : 
@@ -157,7 +157,7 @@ public class GameUIManager : MonoBehaviour
 
     private void UpdateWaveUI()
     {
-        var waveNumber = SpawnManager.instance.currentWave - 1;
+        var waveNumber = SpawnManager.Instance.currentWave - 1;
         _waveNumberText.text = waveNumber > 0 ? waveNumber.ToString() : "";
     }
 

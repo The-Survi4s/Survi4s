@@ -33,7 +33,7 @@ public class BrokenWall : DestroyableTile
     public void RemoveFromMap()
     {
         //Debug.Log($"Broken wall {this} ini akan ter usir");
-        TilemapManager.instance.RemoveBrokenWall(cellPos);
+        TilemapManager.Instance.RemoveBrokenWall(cellPos);
         Destroy(gameObject);
         Destroy(this);
     }

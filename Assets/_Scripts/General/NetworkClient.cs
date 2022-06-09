@@ -257,12 +257,12 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SpwP:
-                    SpawnManager.instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
+                    SpawnManager.Instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
-                    SpawnManager.instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
+                    SpawnManager.Instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
                         EnumParse<Origin>(info[4]), float.Parse(info[5]));
                     break;
                 case Header.EqWp:
@@ -314,7 +314,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    TilemapManager.instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    TilemapManager.Instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
@@ -324,7 +324,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                    TilemapManager.instance.ModifyStatueHp(float.Parse(info[2]));
+                    TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
                 case Header.DBl:
@@ -334,7 +334,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.RbWl:
                 {
-                    TilemapManager.instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
+                    TilemapManager.Instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
                     break;
                 }
                 case Header.UpWpn:
@@ -591,7 +591,10 @@ public class NetworkClient : MonoBehaviour
     /// </summary>
     /// <param name="obj">The object with hp</param>
     /// <param name="amount">The amount to modify hp</param>
-    public void ModifyHp(Component obj, float amount)
+    /// <returns>
+    /// <see langword="true"/> on success. 
+    /// </returns>
+    public bool ModifyHp(Component obj, float amount)
     {
         string[] msg = { };
         switch (obj)
@@ -609,7 +612,13 @@ public class NetworkClient : MonoBehaviour
                 msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
                 break;
         }
-        if (msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {obj}");
+        return false;
     }
 
     /// <summary>
@@ -626,7 +635,7 @@ public class NetworkClient : MonoBehaviour
     /// <param name="target">Which type is the target</param>
     /// <param name="id">The id of the target</param>
     /// <param name="amount">The amount to modify hp</param>
-    public void ModifyHp(Target target, int id, float amount)
+    public bool ModifyHp(Target target, int id, float amount)
     {
         string[] msg = { };
         switch (target)
@@ -648,7 +657,13 @@ public class NetworkClient : MonoBehaviour
                 msg = new string[] { Header.MdMo.ToString(), id.ToString(), amount.ToString("f2") };
                 break;
         }
-        if(msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {target}({id})");
+        return false;
     }
 
     /// <summary>
@@ -664,7 +679,7 @@ public class NetworkClient : MonoBehaviour
     /// <param name="target">Which type is the target</param>
     /// <param name="name">The name of the target</param>
     /// <param name="amount">The amount to modify hp</param>
-    public void ModifyHp(Target target, string name, float amount)
+    public bool ModifyHp(Target target, string name, float amount)
     {
         string[] msg = { };
         int id;
@@ -687,7 +702,13 @@ public class NetworkClient : MonoBehaviour
                 ModifyHp(target, id, amount);
                 break;
         }
-        if (msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {target}({name})");
+        return false;
     }
 
     /// <summary>
@@ -700,7 +721,7 @@ public class NetworkClient : MonoBehaviour
     /// </remarks>
     /// <param name="target">Which type is the target</param>
     /// <param name="amount">The amount to modify hp</param>
-    public void ModifyHp(Target target, float amount)
+    public bool ModifyHp(Target target, float amount)
     {
         string[] msg = { };
         switch (target)
@@ -718,7 +739,13 @@ public class NetworkClient : MonoBehaviour
                 Debug.LogError("Id not specified!");
                 break;
         }
-        if (msg.Length > 0) SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {target}");
+        return false;
     }
 
     #endregion

@@ -42,7 +42,7 @@ public class MonsterMovement : MonoBehaviour
         _agent.updateRotation = false;
 
         _currentTargetPreviousPos = Vector3.zero;
-        _statuePos = TilemapManager.instance.statue.transform.position;
+        _statuePos = TilemapManager.Instance.statue.transform.position;
 
         stationaryTime = 0;
         _agent.SetDestination(_statuePos);

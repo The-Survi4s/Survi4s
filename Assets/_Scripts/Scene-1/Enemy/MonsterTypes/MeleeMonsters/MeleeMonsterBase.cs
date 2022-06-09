@@ -36,12 +36,12 @@ public abstract class MeleeMonsterBase : Monster
         var players = GetPlayersInRadius(); //Debug.Log("Player count : " + players.Count);
         foreach (var p in players)
         {
-            NetworkClient.Instance.ModifyHp(Target.Player, p.name, -currentStat.atk);
+            NetworkClient.Instance.ModifyHp(p, -currentStat.atk);
         }
     }
 
     protected virtual void OnAttackWall(Wall wall)
     {
-        NetworkClient.Instance.ModifyHp(Target.Wall, wall.id, -currentStat.atk);
+        NetworkClient.Instance.ModifyHp(wall, -currentStat.atk);
     }
 }

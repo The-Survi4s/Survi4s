@@ -22,6 +22,8 @@ public abstract class MonsterBulletBase : BulletBase
 
     protected virtual void AttackSomething(Component component)
     {
+        NetworkClient.Instance.ModifyHp(component, -owner.currentStat.atk);
+        /*
         switch (component)
         {
             case Player obj:
@@ -35,6 +37,7 @@ public abstract class MonsterBulletBase : BulletBase
                 NetworkClient.Instance.ModifyHp(Target.Statue, -owner.currentStat.atk);
                 break;
         }
+        */
     }
 
     public void Initialize(Monster owner, Vector2 targetPos, int bulletId)
