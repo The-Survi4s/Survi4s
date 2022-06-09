@@ -7,34 +7,35 @@ public abstract class MonsterBulletBase : BulletBase
     protected Monster owner;
     protected override sealed void OnHit(Collider2D col)
     {
-        Player player = col.GetComponent<Player>();
-        Wall wall = col.GetComponent<Wall>();
-        Statue statue = col.GetComponent<Statue>();
-        if (!player && !wall && !statue) return;
         if (owner && NetworkClient.Instance.isMaster)
         {
-            if(player) AttackSomething(player);
-            else if(wall) AttackSomething(wall);
-            else if(statue) AttackSomething(statue);
+            Debug.Log("Hit! " + col);
+            if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyHp(player, -owner.currentStat.atk);
+            else if(col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyHp(wall, -owner.currentStat.atk);
+            else if(col.TryGetComponent(out Statue statue)) NetworkClient.Instance.ModifyHp(statue, -owner.currentStat.atk);
         }
         OnEndOfTrigger();
     }
 
     protected virtual void AttackSomething(Component component)
     {
+        Debug.Log("Success? " + NetworkClient.Instance.ModifyHp(component, -owner.currentStat.atk) + 
+            "Tile:" + (component as DestroyableTile));
+        /*
         switch (component)
         {
             case Player obj:
                 //Debug.Log(name + " attack " + obj.name);
-                NetworkClient.Instance.ModifyPlayerHp(obj.name, -owner.currentStat.atk);
+                NetworkClient.Instance.ModifyHp(Target.Player, obj.name, -owner.currentStat.atk);
                 break;
             case Wall obj:
-                NetworkClient.Instance.ModifyWallHp(obj.id, -owner.currentStat.atk);
+                NetworkClient.Instance.ModifyHp(Target.Wall, obj.id, -owner.currentStat.atk);
                 break;
-            case Statue obj:
-                NetworkClient.Instance.ModifyStatueHp(-owner.currentStat.atk);
+            case Statue _:
+                NetworkClient.Instance.ModifyHp(Target.Statue, -owner.currentStat.atk);
                 break;
         }
+        */
     }
 
     public void Initialize(Monster owner, Vector2 targetPos, int bulletId)

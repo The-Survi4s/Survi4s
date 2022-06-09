@@ -5,6 +5,11 @@ using UnityEngine;
 public abstract class RangedMonsterBase : Monster
 {
     [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private Vector3 _bulletSpawnOffset;
+    private Vector3 _attackPoint => 
+        transform.position + 
+        transform.right * _bulletSpawnOffset.x * (_renderer.flipX ? -1 : 1 ) + 
+        transform.up * _bulletSpawnOffset.y;
 
     protected override void Attack(Component nearestObj)
     {
@@ -13,7 +18,7 @@ public abstract class RangedMonsterBase : Monster
 
     private void RangedAttack(Component nearestObj)
     {
-        NetworkClient.Instance.SpawnBullet(transform.position, nearestObj.transform.position, id);
+        NetworkClient.Instance.SpawnBullet(_attackPoint, nearestObj.transform.position, id);
     }
 
     public void SpawnBullet(Vector2 spawnPos, Vector2 targetPos)
@@ -24,5 +29,12 @@ public abstract class RangedMonsterBase : Monster
 
         // init bullet
         bulTemp.Initialize(this, targetPos, UnitManager.Instance.GetIdThenAddBullet(bulTemp));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!_renderer) _renderer = GetComponent<SpriteRenderer>();
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_attackPoint, 0.2f);
     }
 }

@@ -16,12 +16,12 @@ public enum Origin { Right, Top, Left, Bottom }
 
 public class TilemapManager : MonoBehaviour
 {
-    public static TilemapManager instance { get; private set; }
+    public static TilemapManager Instance { get; private set; }
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {

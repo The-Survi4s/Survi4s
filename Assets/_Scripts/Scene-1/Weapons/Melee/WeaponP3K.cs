@@ -1,15 +1,15 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponJajan : WeaponMelee
+public class WeaponP3K : WeaponMelee
 {
     protected override void OnNormalAttack(Collider2D[] targets)
     {
         List<Collider2D> filteredTargets = new List<Collider2D>();
         foreach (Collider2D col in targets)
         {
-            if (col.TryGetComponent(out Player player) && !player.isDead) filteredTargets.Add(col);
+            if (col.TryGetComponent(out Player player) && player.isDead) filteredTargets.Add(col);
         }
         // Heal players
         ModifyHpAll(filteredTargets.ToArray(), baseAttack, Target.Player);
@@ -21,15 +21,10 @@ public class WeaponJajan : WeaponMelee
         List<Collider2D> filteredTargets = new List<Collider2D>();
         foreach (Collider2D col in targets)
         {
-            if (col.TryGetComponent(out Player player) && !player.isDead) filteredTargets.Add(col);
+            if (col.TryGetComponent(out Player player) && player.isDead) filteredTargets.Add(col);
         }
         // Heal players
-        ModifyHpAll(filteredTargets.ToArray(), baseAttack * 3, Target.Player);
+        ModifyHpAll(filteredTargets.ToArray(), baseAttack * 2, Target.Player);
         SpawnParticle();
-    }
-
-    protected override void SpawnParticle()
-    {
-        //
     }
 }

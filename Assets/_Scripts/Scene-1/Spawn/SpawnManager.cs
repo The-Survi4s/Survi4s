@@ -60,13 +60,13 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Vector2 _playerSpawnPos = new Vector2(2, 2);
     [SerializeField] private List<GameObject> _playerPrefab;
 
-    public static SpawnManager instance { get; private set; }
+    public static SpawnManager Instance { get; private set; }
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {

@@ -12,10 +12,10 @@ public class Wall : DestroyableTile
     private void Start()
     {
         EnableWall(true);
-        Init(TilemapManager.instance.GetNewWallId(), 
-            TilemapManager.instance.GetOrigin(transform.position),
-            TilemapManager.instance.WorldToCell(transform.position));
-        TilemapManager.instance.AddWall(this); // Auto add
+        Init(TilemapManager.Instance.GetNewWallId(), 
+            TilemapManager.Instance.GetOrigin(transform.position),
+            TilemapManager.Instance.WorldToCell(transform.position));
+        TilemapManager.Instance.AddWall(this); // Auto add
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class Wall : DestroyableTile
         if (_isInitialized) return false;
         this.id = id;
         origin = wallOrigin;
-        maxHp = TilemapManager.instance.maxWallHp;
+        maxHp = TilemapManager.Instance.maxWallHp;
         hp = initialHp == 0 ? maxHp : initialHp;
         cellPos = cellPosition;
         _isInitialized = true;
@@ -63,6 +63,6 @@ public class Wall : DestroyableTile
 
     private void OnDestroy()
     {
-        TilemapManager.instance.RemoveWall(this);
+        TilemapManager.Instance.RemoveWall(this);
     }
 }

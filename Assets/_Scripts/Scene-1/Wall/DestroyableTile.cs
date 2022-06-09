@@ -41,7 +41,7 @@ public abstract class DestroyableTile : MonoBehaviour
 
     private void AfterModifyHp()
     {
-        TilemapManager.instance.UpdateWallTilemap(this);
+        TilemapManager.Instance.UpdateWallTilemap(this);
     }
 
     protected virtual void InvokeRebuiltEvent()

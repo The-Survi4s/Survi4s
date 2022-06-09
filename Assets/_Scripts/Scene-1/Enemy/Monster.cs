@@ -4,6 +4,11 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
+/// Enum of targets of which a something can attack
+/// </summary>
+public enum Target { Statue, Wall, Player, Monster }
+
+/// <summary>
 /// Base class of all Monsters
 /// </summary>
 [RequireComponent(typeof(MonsterMovement),typeof(Animator))]
@@ -18,16 +23,11 @@ public abstract class Monster : MonoBehaviour
     #region Components
     protected MonsterMovement _monsterMovement;
     private Animator _animator;
-    private SpriteRenderer _renderer;
+    protected SpriteRenderer _renderer;
     #endregion
 
     #region Data and Containers Definition
     public enum Type { Kroco, Paskibra, Pramuka, Basket, Satpam, Musisi, TukangSapu, Futsal }
-
-    /// <summary>
-    /// Enum of targets of which a <see cref="Monster"/> can attack
-    /// </summary>
-    public enum Target { Statue, Wall, Player }
 
     /// <summary>
     /// Method enums on how to attack a <see cref="Target"/>
@@ -267,7 +267,7 @@ public abstract class Monster : MonoBehaviour
     /// Requests a nearest target <see cref="Wall"/> as a candidate to attack or chase. 
     /// Stored in <see cref="targetWall"/>
     /// </summary>
-    public void RequestNewTargetWall() => targetWall = TilemapManager.instance.GetWall(transform.position);
+    public void RequestNewTargetWall() => targetWall = TilemapManager.Instance.GetWall(transform.position);
 
     /// <summary>
     /// Re-requests a target <see cref="Wall"/> on the same <paramref name="cellPos"/>
@@ -276,7 +276,7 @@ public abstract class Monster : MonoBehaviour
     /// <param name="cellPos">enter <see cref="_targetWallCellPos"/>'s here</param>
     protected void ReRequestWall(Vector3Int cellPos)
     {
-        targetWall = TilemapManager.instance.GetWall(cellPos);
+        targetWall = TilemapManager.Instance.GetWall(cellPos);
         if (!targetWall)
         {
             RequestNewTargetWall();
@@ -299,9 +299,9 @@ public abstract class Monster : MonoBehaviour
     /// </remarks>
     private void CheckCanAttack()
     {
-        if (monsterStat.isAttackReady)
+        if (monsterStat.isAttackReady && !isDead)
         {
-            var nearestObj = PickNearest(nearestPlayer, targetWall, TilemapManager.instance.statue);
+            var nearestObj = PickNearest(nearestPlayer, targetWall, TilemapManager.Instance.statue);
             if (DistanceTo(nearestObj) < setting.attackRange)
             {
                 SendAttackMessage(nearestObj);
@@ -478,7 +478,7 @@ public abstract class Monster : MonoBehaviour
         //Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
         _animator.SetBool(IsDeadBool, true);
         OnMonsterDeath?.Invoke(id);
-        SpawnManager.instance.ClearIdIndex(id);
+        SpawnManager.Instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);
 
         // Drop Item
@@ -502,6 +502,6 @@ public abstract class Monster : MonoBehaviour
     [ContextMenu(nameof(DamageMonsterBy10))]
     private void DamageMonsterBy10()
     {
-        NetworkClient.Instance.ModifyMonsterHp(id, -10);
+        NetworkClient.Instance.ModifyHp(this, -10);
     }
 }

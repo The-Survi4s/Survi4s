@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         //If uninitialized return
         if (!Ready() || 
             !(_gameState == GameState.WaveSpawn || _gameState == GameState.WaveOver)) return;
-        if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
+        if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.Instance.statue.hp <= 0)
         {
             ChangeState(GameState.GameOver);
         }
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         return (
             UnitManager.Instance.PlayerInitializedCount == UnitManager.Instance.playerCount &&
             UnitManager.Instance.playerCount > 0 &&
-            TilemapManager.instance.statue.IsInitialized);
+            TilemapManager.Instance.statue.IsInitialized);
     }
 
     public void ChangeState(GameState newState)
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
-        TilemapManager.instance.statue.PlayDestroyedAnimation();
+        TilemapManager.Instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
 
@@ -126,14 +126,14 @@ public class GameManager : MonoBehaviour
             await Task.Yield();
         }
 
-        ChangeState(SpawnManager.instance.currentWave < Settings.maxWave
+        ChangeState(SpawnManager.Instance.currentWave < Settings.maxWave
             ? GameState.WavePreparation
             : GameState.GameOver);
     }
 
     private async void HandleWaveSpawn()
     {
-        await SpawnManager.instance.StartWave();
+        await SpawnManager.Instance.StartWave();
         ChangeState(GameState.WaveOver);
     }
 
@@ -167,7 +167,7 @@ public class GameManager : MonoBehaviour
         // Display statue HP dan UI lain
 
         // Spawn Player ---------------------------------------------------------------------
-        SpawnManager.instance.SendSpawnPlayer();
+        SpawnManager.Instance.SendSpawnPlayer();
 
         // Deactivate Panels ----------------------------------------------------------------
         GameUIManager.Instance.SetActivePreparationPanel(false);
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour
     public async void ForceStartNextWave()
     {
         if(_gameState != GameState.WavePreparation) return;
-        await SpawnManager.instance.StartWave();
+        await SpawnManager.Instance.StartWave();
     }
 
     private int Log2(int a) => (int)Mathf.Log(a, 2);

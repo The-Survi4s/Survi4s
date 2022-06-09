@@ -48,9 +48,10 @@ MonoBehaviour:
   defaultCritRate: 5
   maxCooldownTime: 0.2
   offset: {x: 0.2, y: 0.5, z: -1}
+  attackPointOffset: {x: 1.65, y: 0.31, z: 0}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
-  uiSprite: {fileID: 4835665628432542215, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
+  uiSprite: {fileID: -2554669634938815330, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
   <MaxAmmo>k__BackingField: 5
