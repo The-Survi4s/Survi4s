@@ -47,7 +47,6 @@ MonoBehaviour:
   defaultBaseAttack: 2
   defaultCritRate: 5
   maxCooldownTime: 2
-  _attackDistance: 0
   offset: {x: 0.05, y: 0.56, z: -1}
   attackPointOffset: {x: 0.3, y: 0.09, z: 0}
   _particleToSpawn: {fileID: 0}
