@@ -23,7 +23,7 @@ public abstract class Monster : MonoBehaviour
     #region Components
     protected MonsterMovement _monsterMovement;
     private Animator _animator;
-    private SpriteRenderer _renderer;
+    protected SpriteRenderer _renderer;
     #endregion
 
     #region Data and Containers Definition
@@ -299,7 +299,7 @@ public abstract class Monster : MonoBehaviour
     /// </remarks>
     private void CheckCanAttack()
     {
-        if (monsterStat.isAttackReady)
+        if (monsterStat.isAttackReady && !isDead)
         {
             var nearestObj = PickNearest(nearestPlayer, targetWall, TilemapManager.Instance.statue);
             if (DistanceTo(nearestObj) < setting.attackRange)

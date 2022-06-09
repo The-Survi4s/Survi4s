@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 4972422398260719755}
   - component: {fileID: 4972422398260719752}
   - component: {fileID: 5430826882583810306}
+  - component: {fileID: 8771241613110260657}
   m_Layer: 7
   m_Name: StatueHalo
   m_TagString: Untagged
@@ -151,3 +152,19 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!58 &8771241613110260657
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4972422398260719754}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5

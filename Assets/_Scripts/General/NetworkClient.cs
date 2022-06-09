@@ -314,6 +314,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
+                    Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
                     TilemapManager.Instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
@@ -324,7 +325,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                        Debug.Log("Statue hp modified");
+                    Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
                     TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
@@ -615,6 +616,7 @@ public class NetworkClient : MonoBehaviour
         }
         if (msg.Length > 0)
         {
+            Debug.Log($"{msg[0]}, {msg[1]}, {amount}");
             SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
             return true;
         }

@@ -5366,7 +5366,7 @@ PrefabInstance:
       objectReference: {fileID: 3726680129834783858, guid: f6e54c9fa5f8e69498d23e63dafa39a6, type: 3}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: _monsterPrefabWeights.Array.data[0].weight
-      value: 9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4125814744708414797, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
       propertyPath: _monsterPrefabWeights.Array.data[1].prefab
