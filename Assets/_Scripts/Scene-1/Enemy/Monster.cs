@@ -139,6 +139,10 @@ public abstract class Monster : MonoBehaviour
     [field: SerializeField] public Setting setting { get; protected set; }
     public Stat defaultStat => setting.defaultStat;
 
+    /// <summary>
+    /// Miliseconds delay before Monster really attacks
+    /// </summary>
+    [SerializeField] private int _attackDelay;
     #endregion
 
     #region Target Variables
@@ -318,11 +322,12 @@ public abstract class Monster : MonoBehaviour
     /// <br/><br/>The receiving end will only call <see cref="PlayAttackAnimation"/>
     /// </summary>
     /// <param name="nearestObj"></param>
-    private void SendAttackMessage(Component nearestObj)
+    private async void SendAttackMessage(Component nearestObj)
     {
         if (!nearestObj) return;
         monsterStat.StartCooldown();
         NetworkClient.Instance.StartMonsterAttackAnimation(id);
+        await System.Threading.Tasks.Task.Delay(_attackDelay);
         Attack(nearestObj);
     }
 

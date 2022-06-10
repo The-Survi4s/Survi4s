@@ -6,6 +6,6 @@ public class BulletFlag : MonsterBulletBase
 {
     protected override void BulletUpdate()
     {
-        AddRotation(moveSpeed / 36);
+        moveSpeed += moveSpeed / 1000;
     }
 }

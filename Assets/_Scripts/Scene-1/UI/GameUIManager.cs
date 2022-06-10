@@ -412,14 +412,14 @@ public class GameUIManager : MonoBehaviour
     private void RotateDirectionArrow(KeyValuePair<int, GameObject> arrow, Vector3 monsterTarget, Vector3 interfaceWorldPos)
     {
         var angle = Mathf.Atan2(monsterTarget.y - interfaceWorldPos.y, monsterTarget.x - interfaceWorldPos.x) * Mathf.Rad2Deg;
-        arrow.Value.transform.rotation = Quaternion.Euler(0, 0, angle);
+        arrow.Value.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
     }
 
     private void UpdateArrowColor(KeyValuePair<int, GameObject> arrow, Vector3 monsterTarget, Vector3 interfaceWorldPos)
     {
         var arrowImage = arrow.Value.GetComponent<Image>();
         var distance = Vector3.Distance(interfaceWorldPos, monsterTarget);
-        arrowImage.color = Color.Lerp(_monsterFarColor, _monsterCloseColor, distance / _dirArrowMaxDistance);
+        arrowImage.color = Color.Lerp(_monsterCloseColor, _monsterFarColor, distance / _dirArrowMaxDistance);
     }
 
     public void ShowWarning()

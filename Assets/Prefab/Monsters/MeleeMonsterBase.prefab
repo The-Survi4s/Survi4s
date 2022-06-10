@@ -206,6 +206,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sounds: []
-  _minDistance: 0
-  _maxDistance: 0
+  _sounds:
+  - name: Attack_1
+    clip: {fileID: 8300000, guid: 11e6de9239deced4e836069aa878ee68, type: 3}
+    volume: 0.5
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  _minDistance: 5
+  _maxDistance: 25

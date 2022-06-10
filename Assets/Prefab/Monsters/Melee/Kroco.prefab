@@ -7,30 +7,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -2711137909390210990, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: _sounds.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2711137909390210990, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: _sounds.Array.data[0].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: c99428a56932b6a499794b5ced4abf12, type: 3}
-    - target: {fileID: -2711137909390210990, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: _sounds.Array.data[0].name
-      value: Attack_1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2711137909390210990, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: _sounds.Array.data[0].pitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2711137909390210990, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: _sounds.Array.data[0].volume
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: -2711137909390210990, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: _sounds.Array.data[0].priority
-      value: 128
-      objectReference: {fileID: 0}
     - target: {fileID: 2377165867587476512, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Name
       value: Kroco
@@ -178,6 +154,7 @@ MonoBehaviour:
       rotSpd: 60
       acceleration: 10
     doEvasion: 0
+  _attackDelay: 30
   <targetWall>k__BackingField: {fileID: 0}
   <nearestPlayer>k__BackingField: {fileID: 0}
   <currentTarget>k__BackingField: 0

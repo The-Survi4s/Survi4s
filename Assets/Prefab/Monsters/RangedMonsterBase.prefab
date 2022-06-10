@@ -207,5 +207,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sounds: []
-  _minDistance: 0
-  _maxDistance: 0
+  _minDistance: 5
+  _maxDistance: 25

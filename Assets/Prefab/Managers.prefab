@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monsterSpawnSetting:
-    count: 3
+    count: 5
     hpMultiplier: 1
     speedMultiplier: 1
     randomSpawnOffsetMax: 10
@@ -96,28 +96,24 @@ MonoBehaviour:
     spawnRate: 2
     spawnersUsedCount: 3
   _monsterPrefabWeights:
-  - prefab: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
-    weight: 2
-  - prefab: {fileID: 1767941296274044509, guid: a118513775d60374ba48d713aa103c71, type: 3}
-    weight: 2
   - prefab: {fileID: 3726680129834783858, guid: f6e54c9fa5f8e69498d23e63dafa39a6, type: 3}
-    weight: 9
+    weight: 1
   - prefab: {fileID: 2750687198860834850, guid: 64c8de8d6dc15234688b3ea5c14135c4, type: 3}
     weight: 1
   - prefab: {fileID: 6108645726365500224, guid: 73e8f9d77a58f4642a1e3705a32e0344, type: 3}
     weight: 4
-  - prefab: {fileID: 3072205260712185736, guid: efda25e327d7517478fc7ce6505f8457, type: 3}
-    weight: 3
   - prefab: {fileID: 5684624463149505320, guid: aab3dab3de9591744af74e6ed36115ca, type: 3}
     weight: 3
-  - prefab: {fileID: 311480910460885589, guid: 19a5eab45fc3b634dac436d756639aa9, type: 3}
+  - prefab: {fileID: 3072205260712185736, guid: efda25e327d7517478fc7ce6505f8457, type: 3}
+    weight: 3
+  - prefab: {fileID: 4892180597746843414, guid: 6d0f15e430d70674da9384d974f4e807, type: 3}
     weight: 1
   _playerSpawnPos: {x: 2, y: 2}
   _playerPrefab:
+  - {fileID: 123738617261133931, guid: 2e90f74633581604fbabca89e95df3e5, type: 3}
   - {fileID: 1097621510030408160, guid: a826f44463d0cac40acecb9ef7f3b917, type: 3}
   - {fileID: 4661522681333782113, guid: 54ab3b6881877bc4fbdb424a2235a62a, type: 3}
   - {fileID: 4088946268335042470, guid: 8679136bfecff454eb27d020bdae0c0c, type: 3}
-  - {fileID: 123738617261133931, guid: 2e90f74633581604fbabca89e95df3e5, type: 3}
 --- !u!114 &3875780336273240372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,29 +127,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sounds:
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-    pitch: 0
-    priority: 0
+  - name: Spawn_1
+    clip: {fileID: 8300000, guid: d8d8f999636cdf44eb274e73ba09fe85, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-    pitch: 0
-    priority: 0
+  - name: Spawn_2
+    clip: {fileID: 8300000, guid: d2bc0ebb785e3ab4fb126c7d4b7f3f18, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
     loop: 0
     source: {fileID: 0}
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-    pitch: 0
-    priority: 0
+  - name: Spawn_3
+    clip: {fileID: 8300000, guid: b8cbedf560428f145ad883e388179611, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
     loop: 0
     source: {fileID: 0}
-  _minDistance: 0
-  _maxDistance: 0
+  - name: Spawn_4
+    clip: {fileID: 8300000, guid: 97d25cf7c3bf38e48bfd2fad01a43905, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  - name: Spawn_5
+    clip: {fileID: 8300000, guid: b997456f7cff4e043a0b0a68681bffe1, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  - name: Spawn_6
+    clip: {fileID: 8300000, guid: a109d7967b0fe9e43b53e7a2b06a057c, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  _minDistance: 5
+  _maxDistance: 25
 --- !u!1 &4125814745277701114
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,9 +405,9 @@ MonoBehaviour:
   - {fileID: 0}
   _monsterDirectionPrefab: {fileID: 9163585613332811126, guid: 2b69c4aaa0896d549b7c0802fc1ec7f2, type: 3}
   _warningPanel: {fileID: 0}
-  _monsterFarColor: {r: 1, g: 1, b: 1, a: 0}
-  _monsterCloseColor: {r: 1, g: 0, b: 0, a: 1}
-  _dirArrowMaxDistance: 30
+  _monsterFarColor: {r: 0.086240634, g: 0.12140832, b: 0.9622642, a: 0.23529412}
+  _monsterCloseColor: {r: 0.6603774, g: 0.17811285, b: 0.109024554, a: 1}
+  _dirArrowMaxDistance: 50
 --- !u!114 &6121766743538725410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,9 +470,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roomWaitTime: 2
   <Settings>k__BackingField:
-    preparationTime: 0
+    preparationTime: 10
     initialStatueHp: 100
-    maxWave: 0
+    maxWave: 100
 --- !u!114 &4125814745988642894
 MonoBehaviour:
   m_ObjectHideFlags: 0

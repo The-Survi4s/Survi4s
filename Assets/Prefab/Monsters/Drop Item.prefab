@@ -108,7 +108,7 @@ MonoBehaviour:
     loop: 0
     source: {fileID: 0}
   _minDistance: 0
-  _maxDistance: 0
+  _maxDistance: 5
 --- !u!114 &8502427765676727096
 MonoBehaviour:
   m_ObjectHideFlags: 0
