@@ -100,11 +100,13 @@ public class PlayerMovement : MonoBehaviour
         if(_rigidbody.velocity == Vector2.zero)
         {
             player.animator.SetBool("isWalk", false);
+
             GetComponent<AudioManager>().Stop("Walk");
         }
         else
         {
             player.animator.SetBool("isWalk", true);
+
             GetComponent<AudioManager>().Play("Walk");            
         }
     }

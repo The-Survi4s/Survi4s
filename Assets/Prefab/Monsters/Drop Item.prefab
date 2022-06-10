@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds:
+  _sounds:
   - name: PickUp
     clip: {fileID: 8300000, guid: 6df91a1015a2d934b86575a7a891347d, type: 3}
     volume: 1
@@ -107,6 +107,8 @@ MonoBehaviour:
     priority: 128
     loop: 0
     source: {fileID: 0}
+  _minDistance: 0
+  _maxDistance: 0
 --- !u!114 &8502427765676727096
 MonoBehaviour:
   m_ObjectHideFlags: 0

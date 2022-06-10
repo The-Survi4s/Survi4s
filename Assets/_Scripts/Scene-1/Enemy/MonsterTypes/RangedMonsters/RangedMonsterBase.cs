@@ -19,6 +19,8 @@ public abstract class RangedMonsterBase : Monster
     private void RangedAttack(Component nearestObj)
     {
         NetworkClient.Instance.SpawnBullet(_attackPoint, nearestObj.transform.position, id);
+
+        audioManager.PlayRandom();
     }
 
     public void SpawnBullet(Vector2 spawnPos, Vector2 targetPos)

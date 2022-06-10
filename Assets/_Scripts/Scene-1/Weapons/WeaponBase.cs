@@ -111,6 +111,7 @@ public abstract class WeaponBase : MonoBehaviour
     public void StartCooldown()
     {
         nextAttackTime = Time.time + cooldownTime;
+
         audioManager.Play("Hit");
     }
     

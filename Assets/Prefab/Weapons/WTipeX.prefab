@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds:
+  _sounds:
   - name: Hit
     clip: {fileID: 8300000, guid: d7ec8de202ba6874c881643ac225e08d, type: 3}
     volume: 1
@@ -53,6 +53,8 @@ MonoBehaviour:
     priority: 128
     loop: 0
     source: {fileID: 0}
+  _minDistance: 0
+  _maxDistance: 0
 --- !u!114 &9106936058835306326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,8 +70,6 @@ MonoBehaviour:
   defaultBaseAttack: 1
   defaultCritRate: 5
   maxCooldownTime: 0.2
-  _attackDistance: 2
-  <baseAttack>k__BackingField: 0
   offset: {x: 0.2, y: 0.5, z: -1}
   attackPointOffset: {x: 1.65, y: 0.31, z: 0}
   _particleToSpawn: {fileID: 0}

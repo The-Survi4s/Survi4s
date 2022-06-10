@@ -11,6 +11,8 @@ public abstract class MeleeMonsterBase : Monster
 
     private void MeleeAttack(Component nearestObj)
     {
+        audioManager.PlayRandom();
+
         switch (nearestObj)
         {
             case Wall wall:

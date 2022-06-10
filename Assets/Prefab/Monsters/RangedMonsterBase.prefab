@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7154413559571422011}
   - component: {fileID: -2021839836439849659}
   - component: {fileID: 6314513733400163849}
+  - component: {fileID: 2545075169403598052}
   m_Layer: 6
   m_Name: RangedMonsterBase
   m_TagString: Enemy
@@ -193,3 +194,18 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2545075169403598052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540803284662950770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sounds: []
+  _minDistance: 0
+  _maxDistance: 0

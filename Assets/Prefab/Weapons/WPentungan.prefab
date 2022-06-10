@@ -46,12 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10be08f60cfc4334c9c36c7f658f90dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioManager: {fileID: 0}
   defaultBaseAttack: 3
   defaultCritRate: 5
   maxCooldownTime: 1
-  _attackDistance: 1.5
-  <baseAttack>k__BackingField: 0
   offset: {x: 0.3, y: 0.6, z: -1}
   attackPointOffset: {x: 1.4, y: 0.53, z: 0}
   _particleToSpawn: {fileID: 0}
@@ -126,14 +123,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds:
+  _sounds:
   - name: Hit
-    clip: {fileID: 8300000, guid: 69e160e3e659ee9469525bbbcb1c6add, type: 3}
+    clip: {fileID: 8300000, guid: f60d709d3771c6c478efa61dcf1ec0e9, type: 3}
     volume: 1
     pitch: 1
     priority: 128
     loop: 0
     source: {fileID: 0}
+  _minDistance: 0
+  _maxDistance: 0
 --- !u!95 &-3228313462315356833
 Animator:
   serializedVersion: 3

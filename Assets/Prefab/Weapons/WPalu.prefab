@@ -46,14 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds:
+  _sounds:
   - name: Hit
-    clip: {fileID: 8300000, guid: 69e160e3e659ee9469525bbbcb1c6add, type: 3}
+    clip: {fileID: 8300000, guid: f60d709d3771c6c478efa61dcf1ec0e9, type: 3}
     volume: 1
     pitch: 1
     priority: 128
     loop: 0
     source: {fileID: 0}
+  _minDistance: 0
+  _maxDistance: 0
 --- !u!114 &7596358253895837933
 MonoBehaviour:
   m_ObjectHideFlags: 0
