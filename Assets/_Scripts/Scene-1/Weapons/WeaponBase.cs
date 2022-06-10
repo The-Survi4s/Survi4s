@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour
 {
+    
+
     [SerializeField] protected float defaultBaseAttack;
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
@@ -24,6 +26,7 @@ public abstract class WeaponBase : MonoBehaviour
     private float rotValZ;
 
     protected Animator _animator;
+    protected AudioManager audioManager;
     protected SpriteRenderer _renderer;
 
     [SerializeField] protected GameObject _particleToSpawn;
@@ -45,6 +48,8 @@ public abstract class WeaponBase : MonoBehaviour
         critRate = defaultCritRate;
         cooldownTime = maxCooldownTime;
         Level = 1;
+
+        audioManager = GetComponent<AudioManager>();
     }
 
     protected virtual void Awake()
@@ -106,6 +111,7 @@ public abstract class WeaponBase : MonoBehaviour
     public void StartCooldown()
     {
         nextAttackTime = Time.time + cooldownTime;
+        audioManager.Play("Hit");
     }
     
 

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3844269211104939503}
   - component: {fileID: -6686394761228131036}
   - component: {fileID: 6614519458292583219}
+  - component: {fileID: -7954887570011872804}
   m_Layer: 7
   m_Name: BrokenWall
   m_TagString: Untagged
@@ -72,3 +73,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <hp>k__BackingField: 0
   spriteVariantId: 0
+--- !u!114 &-7954887570011872804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5697039316084575758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Attacked
+    clip: {fileID: 8300000, guid: e0442ff554f88e34db78b31f8f7eb3bb, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  - name: Destroyed
+    clip: {fileID: 8300000, guid: 525a242923e139e478a9fe9807ebde9a, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6425351186635166818}
   - component: {fileID: 5894215051549350909}
   - component: {fileID: 7196554710628310991}
+  - component: {fileID: 8890796319835486644}
   - component: {fileID: -3228313462315356833}
   m_Layer: 0
   m_Name: WPentungan
@@ -45,9 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10be08f60cfc4334c9c36c7f658f90dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioManager: {fileID: 0}
   defaultBaseAttack: 3
   defaultCritRate: 5
   maxCooldownTime: 1
+  _attackDistance: 1.5
+  <baseAttack>k__BackingField: 0
   offset: {x: 0.3, y: 0.6, z: -1}
   attackPointOffset: {x: 1.4, y: 0.53, z: 0}
   _particleToSpawn: {fileID: 0}
@@ -110,6 +114,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8890796319835486644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329370933919719307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Hit
+    clip: {fileID: 8300000, guid: 69e160e3e659ee9469525bbbcb1c6add, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
 --- !u!95 &-3228313462315356833
 Animator:
   serializedVersion: 3

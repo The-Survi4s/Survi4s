@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5347629818904414351}
+  - component: {fileID: -5048950217417760166}
   - component: {fileID: 9137849247755373613}
   - component: {fileID: 8125261469877633826}
   m_Layer: 0
@@ -32,6 +33,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-5048950217417760166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8550891108610605926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds: []
 --- !u!114 &9137849247755373613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,6 +61,8 @@ MonoBehaviour:
   defaultBaseAttack: 2
   defaultCritRate: 5
   maxCooldownTime: 2
+  _attackDistance: 2
+  <baseAttack>k__BackingField: 0
   offset: {x: 0.2, y: -3, z: -1}
   attackPointOffset: {x: 0.4, y: 0.26, z: 0}
   _particleToSpawn: {fileID: 0}

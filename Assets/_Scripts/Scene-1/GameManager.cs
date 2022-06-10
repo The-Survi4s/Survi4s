@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private AudioManager audioManager;
+
     public enum GameState {InLobby, StartGame, WavePreparation, WaveSpawn, WaveOver, GameOver}
     private GameState _gameState;
     public GameState currentState => _gameState;
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
         _playerBulletLayer = LayerMask.GetMask("PlayerBullet");
         _groundLayer = LayerMask.GetMask("Ground");
         _wallLayer = LayerMask.GetMask("Wall");
+
+        audioManager = GetComponent<AudioManager>();
     }
 
     private void Update()
@@ -112,10 +116,13 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
-        TilemapManager.Instance.statue.PlayDestroyedAnimation();
+        audioManager.Stop("Relax");
+        audioManager.Stop("Intense");
+        audioManager.Play("GameOver");
+
+        TilemapManager.instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
-
     }
 
     private async void HandleWaveOver()
@@ -133,7 +140,10 @@ public class GameManager : MonoBehaviour
 
     private async void HandleWaveSpawn()
     {
-        await SpawnManager.Instance.StartWave();
+        audioManager.Play("Intense");
+        audioManager.Stop("Relax");
+
+        await SpawnManager.instance.StartWave();
         ChangeState(GameState.WaveOver);
     }
 
@@ -176,6 +186,8 @@ public class GameManager : MonoBehaviour
 
         GameUIManager.Instance.ChangeWeaponImage(null);
         ChangeState(GameState.WavePreparation);
+
+        audioManager.Play("Relax");
     }
 
     private void SetIgnoreCollisions()
@@ -193,6 +205,8 @@ public class GameManager : MonoBehaviour
     {
         NetworkClient.Instance.StartGame();
         NetworkClient.Instance.LockTheRoom();
+
+        
     }
 
     public async void ForceStartNextWave()

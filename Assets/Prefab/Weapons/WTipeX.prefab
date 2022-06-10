@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1535391126129136169}
+  - component: {fileID: 6746199795356569051}
   - component: {fileID: 9106936058835306326}
   - component: {fileID: 3439321459017308548}
   m_Layer: 0
@@ -32,6 +33,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6746199795356569051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3013621511692704192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Hit
+    clip: {fileID: 8300000, guid: d7ec8de202ba6874c881643ac225e08d, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
 --- !u!114 &9106936058835306326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,6 +68,8 @@ MonoBehaviour:
   defaultBaseAttack: 1
   defaultCritRate: 5
   maxCooldownTime: 0.2
+  _attackDistance: 2
+  <baseAttack>k__BackingField: 0
   offset: {x: 0.2, y: 0.5, z: -1}
   attackPointOffset: {x: 1.65, y: 0.31, z: 0}
   _particleToSpawn: {fileID: 0}

@@ -83,8 +83,6 @@ public class PlayerMovement : MonoBehaviour
         transform.position = TilemapManager.Instance.GetJumpPos(transform.position, _lastMoveDir);
 
         player.animator.SetTrigger("Jump");
-
-        Debug.Log("JUMP JUMP");
     }
 
     private void FixedUpdate()
@@ -102,10 +100,12 @@ public class PlayerMovement : MonoBehaviour
         if(_rigidbody.velocity == Vector2.zero)
         {
             player.animator.SetBool("isWalk", false);
+            GetComponent<AudioManager>().Stop("Walk");
         }
         else
         {
             player.animator.SetBool("isWalk", true);
+            GetComponent<AudioManager>().Play("Walk");            
         }
     }
 

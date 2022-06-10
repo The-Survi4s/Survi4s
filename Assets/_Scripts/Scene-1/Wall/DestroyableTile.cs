@@ -13,18 +13,31 @@ public abstract class DestroyableTile : MonoBehaviour
     public event Action<DestroyableTile> OnRebuilt;
     public int spriteVariantId = 0;
 
+    protected AudioManager audioManager;
+
+    private void Awake()
+    {
+        audioManager = GetComponent<AudioManager>();
+    }
+
     public void ModifyHp(float amount, int silentLevel = 0)
     {
+        
+
         hp += Mathf.FloorToInt(amount);
         //Debug.Log($"amount modified {amount}, current hp {hp}");
         if (hp > 0)
         {
+            audioManager.Play("Attacked");
+
             if (hp > maxHp) hp = maxHp;
             if (silentLevel > 1) return;
             InvokeRebuiltEvent();
         }
         else if (hp <= 0)
         {
+            audioManager.Play("Destroyed");
+
             hp = 0;
             if (silentLevel > 1) return;
             InvokeDestroyedEvent();

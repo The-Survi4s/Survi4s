@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1869404774347472606}
   - component: {fileID: 7578531758591057944}
   - component: {fileID: 2523518832267130227}
+  - component: {fileID: -488853787909971078}
   m_Layer: 0
   m_Name: WPensil
   m_TagString: Weapon
@@ -47,6 +48,8 @@ MonoBehaviour:
   defaultBaseAttack: 3
   defaultCritRate: 5
   maxCooldownTime: 0.5
+  _attackDistance: 2
+  <baseAttack>k__BackingField: 0
   offset: {x: 0.2, y: 0.5, z: -1}
   attackPointOffset: {x: 1.26, y: 0.24, z: 0}
   _particleToSpawn: {fileID: 0}
@@ -109,3 +112,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-488853787909971078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2696868276851176759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Hit
+    clip: {fileID: 8300000, guid: 50048412b7cb5b7498c43fed423a4eb2, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}

@@ -3152,7 +3152,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4125814745988642895, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
   m_PrefabInstance: {fileID: 4125814744812284331}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4125814744812284336}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89115cc99c2c9b34fb50cd9b35c663bd, type: 3}
@@ -5914,3 +5914,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc9f5503c704e642bf46536b74617b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4125814744812284334 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4125814744708414799, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+  m_PrefabInstance: {fileID: 4125814744812284331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4125814744812284335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4125814744812284334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Spawn_Steam
+    clip: {fileID: 8300000, guid: 5d1b0a55454754c4baaef06fed066840, type: 3}
+    volume: 1
+    pitch: 0.25
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  - name: Spawn_Crack
+    clip: {fileID: 8300000, guid: 5d1b0a55454754c4baaef06fed066840, type: 3}
+    volume: 1
+    pitch: 2
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+  - name: Spawn_Roar
+    clip: {fileID: 8300000, guid: 5d1b0a55454754c4baaef06fed066840, type: 3}
+    volume: 1
+    pitch: 1
+    priority: 128
+    loop: 0
+    source: {fileID: 0}
+--- !u!1 &4125814744812284336 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4125814745988642889, guid: c12ab686fd6e7cc4d86cca6d9567e861, type: 3}
+  m_PrefabInstance: {fileID: 4125814744812284331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4125814744812284337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4125814744812284336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Relax
+    clip: {fileID: 8300000, guid: 060df14b752eb1f45a8dda2e3b4abce1, type: 3}
+    volume: 0.25
+    pitch: 1
+    priority: 128
+    loop: 1
+    source: {fileID: 0}
+  - name: GameOver
+    clip: {fileID: 8300000, guid: 8b32c705b92b1884b91cc5855a4d93ba, type: 3}
+    volume: 0.25
+    pitch: 1
+    priority: 128
+    loop: 1
+    source: {fileID: 0}
+  - name: Intense
+    clip: {fileID: 8300000, guid: 3ffc6c85e327c574d9f286f35c914f15, type: 3}
+    volume: 0.375
+    pitch: 1
+    priority: 128
+    loop: 1
+    source: {fileID: 0}

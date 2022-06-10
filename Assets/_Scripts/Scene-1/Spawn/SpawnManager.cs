@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
+    private AudioManager audioManager; 
+
     private readonly List<bool> _occupiedIDs = new List<bool>();
     private readonly List<Spawner> _spawners = new List<Spawner>();
     private readonly List<Spawner> _selectedSpawners = new List<Spawner>();
@@ -64,6 +66,8 @@ public class SpawnManager : MonoBehaviour
 
     private void Awake()
     {
+        audioManager = GetComponent<AudioManager>();
+
         if (Instance == null)
         {
             Instance = this;
@@ -142,6 +146,14 @@ public class SpawnManager : MonoBehaviour
         //Debug.Log("Receive spawn id:" + id + ", index:" + index + ", size:" + _monsterPrefabDuplicates.Count);
         var spawners = _spawners.Where(spawner => spawner.origin == origin).ToList();
         spawners[Random.Range(0, spawners.Count)].SpawnMonster(_monsterPrefabDuplicates[index], id, spawnOffset, _currentWaveInfo);
+
+        int rand = Random.Range(0, audioManager.sounds.Length + 1);
+        if (rand == 0)
+            audioManager.Play("Spawn_Steam");
+        else if (rand == 1)
+            audioManager.Play("Spawn_Crack");
+        else if (rand == 2)
+            audioManager.Play("Spawn_Roar");
     }
 
     /// <summary>
@@ -158,6 +170,8 @@ public class SpawnManager : MonoBehaviour
         {
             await Task.Yield();
         }
+
+
     }
 
     /// <summary>

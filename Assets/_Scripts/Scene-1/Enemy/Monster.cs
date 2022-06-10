@@ -22,6 +22,7 @@ public abstract class Monster : MonoBehaviour
 
     #region Components
     protected MonsterMovement _monsterMovement;
+    protected AudioManager audioManager;
     private Animator _animator;
     protected SpriteRenderer _renderer;
     #endregion
@@ -199,6 +200,7 @@ public abstract class Monster : MonoBehaviour
         _monsterMovement = GetComponent<MonsterMovement>();
         _animator = GetComponent<Animator>();
         _renderer = GetComponent<SpriteRenderer>();
+        audioManager = GetComponent<AudioManager>();
 
         FirstSetup();
         CheckConflictingPriorities();
