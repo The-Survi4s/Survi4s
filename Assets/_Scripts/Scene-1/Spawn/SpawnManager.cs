@@ -147,13 +147,7 @@ public class SpawnManager : MonoBehaviour
         var spawners = _spawners.Where(spawner => spawner.origin == origin).ToList();
         spawners[Random.Range(0, spawners.Count)].SpawnMonster(_monsterPrefabDuplicates[index], id, spawnOffset, _currentWaveInfo);
 
-        int rand = Random.Range(0, audioManager.sounds.Length + 1);
-        if (rand == 0)
-            audioManager.Play("Spawn_Steam");
-        else if (rand == 1)
-            audioManager.Play("Spawn_Crack");
-        else if (rand == 2)
-            audioManager.Play("Spawn_Roar");
+        audioManager.PlayRandom();
     }
 
     /// <summary>

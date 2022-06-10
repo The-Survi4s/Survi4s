@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
         audioManager.Stop("Intense");
         audioManager.Play("GameOver");
 
-        TilemapManager.instance.statue.PlayDestroyedAnimation();
+        TilemapManager.Instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
     }
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
         audioManager.Play("Intense");
         audioManager.Stop("Relax");
 
-        await SpawnManager.instance.StartWave();
+        await SpawnManager.Instance.StartWave();
         ChangeState(GameState.WaveOver);
     }
 

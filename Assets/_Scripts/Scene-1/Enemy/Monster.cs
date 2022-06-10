@@ -426,6 +426,7 @@ public abstract class Monster : MonoBehaviour
     #region Animation
     private const string AttackTrigger = "attack";
     private const string IsDeadBool = "isDead";
+    private const string DeadTrigger = "dead";
     private const string IsMovingBool = "isMoving";
 
     /// <summary>
@@ -437,8 +438,6 @@ public abstract class Monster : MonoBehaviour
         _animator.SetBool(IsMovingBool, _monsterMovement.velocity != Vector3.zero);
         _renderer.flipX = _monsterMovement.velocity.x < 0;
     }
-
-
 
     public void PlayAttackAnimation()
     {
@@ -478,7 +477,7 @@ public abstract class Monster : MonoBehaviour
         if(player) player.AddKillCount();
 
         //Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
-        _animator.SetBool(IsDeadBool, true);
+        _animator.SetTrigger(DeadTrigger);
         OnMonsterDeath?.Invoke(id);
         SpawnManager.Instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);

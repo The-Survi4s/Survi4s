@@ -11,18 +11,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 2006160176045573665, guid: dce09b18ef0661e4587737b90c079ce6, type: 3}
-    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 140070582472720918, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2181690104653784389, guid: 3fa494e05d1acd645b8a5bafe8fb1ed7, type: 3}
       propertyPath: m_Controller
       value: 
@@ -268,7 +256,7 @@ MonoBehaviour:
       method: 0
     defaultStat:
       hp: 30
-      atk: 50
+      atk: 25
       atkCd: 10
       movSpd: 1
       rotSpd: 60

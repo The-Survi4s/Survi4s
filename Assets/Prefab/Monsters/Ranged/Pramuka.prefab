@@ -55,18 +55,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 5244867366122201236, guid: 33980905fe9c86e458256b4bf7b40d6e, type: 3}
-    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 540803284662950770, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Name
       value: Pramuka
@@ -195,7 +183,7 @@ MonoBehaviour:
     - target: 2
       method: 1
     defaultStat:
-      hp: 20
+      hp: 10
       atk: 4
       atkCd: 3
       movSpd: 10

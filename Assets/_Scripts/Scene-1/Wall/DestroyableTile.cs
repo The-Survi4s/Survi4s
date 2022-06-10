@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioManager))]
 public abstract class DestroyableTile : MonoBehaviour
 {
     [field: SerializeField] public int hp { get; protected set; }

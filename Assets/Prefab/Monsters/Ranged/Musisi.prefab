@@ -51,18 +51,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -6669991599751582574, guid: de18e525fbff999429e133433a3530fa, type: 3}
-    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2021839836439849659, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 540803284662950770, guid: 198f2cda1aed49e4783044c55f724052, type: 3}
       propertyPath: m_Name
       value: Musisi
