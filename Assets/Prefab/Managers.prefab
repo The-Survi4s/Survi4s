@@ -335,22 +335,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _healthBar: {fileID: 0}
-  _ammoUIPrefab: {fileID: 0}
-  _ammoGap: 0
+  _ammoUIPrefab: {fileID: 6552638097850743740, guid: 0035106f1ece4c64cae2e633d8090b0a, type: 3}
+  _ammoGap: 4
   _ammoOffset: {x: -2, y: 2}
   _currentXpText: {fileID: 0}
   _killCountText: {fileID: 0}
   _monsterLeftText: {fileID: 0}
   _statueHpText: {fileID: 0}
-  _fullStatueHpColor: {r: 0, g: 0, b: 0, a: 0}
-  _halfStatueHpColor: {r: 0, g: 0, b: 0, a: 0}
-  _dangerStatueHpColor: {r: 0, g: 0, b: 0, a: 0}
+  _fullStatueHpColor: {r: 1, g: 1, b: 1, a: 1}
+  _halfStatueHpColor: {r: 1, g: 0.75347257, b: 0, a: 1}
+  _dangerStatueHpColor: {r: 1, g: 0.0047169924, b: 0.0047169924, a: 1}
   _waveNumberText: {fileID: 0}
   _countdownPanel: {fileID: 0}
   _countdownText: {fileID: 0}
-  _inactiveDelay: 0
-  _color1: {r: 0, g: 0, b: 0, a: 0}
-  _color2: {r: 0, g: 0, b: 0, a: 0}
+  _inactiveDelay: 2
+  _color1: {r: 1, g: 1, b: 1, a: 1}
+  _color2: {r: 1, g: 0, b: 0, a: 1}
   _gameOverPanel: {fileID: 0}
   _nameResultText: {fileID: 0}
   _killCountResultText: {fileID: 0}
@@ -365,8 +365,8 @@ MonoBehaviour:
       critText: {fileID: 0}
       cooldownText: {fileID: 0}
   _costText: {fileID: 0}
-  _costColorEnough: {r: 0, g: 0, b: 0, a: 0}
-  _costColorNotEnough: {r: 0, g: 0, b: 0, a: 0}
+  _costColorEnough: {r: 1, g: 0.9178281, b: 0.3066038, a: 1}
+  _costColorNotEnough: {r: 0.8784314, g: 0, b: 0, a: 1}
   _weaponSelectPanel: {fileID: 0}
   _UWButton: {fileID: 0}
   _UWPrompt: {fileID: 0}
@@ -376,8 +376,21 @@ MonoBehaviour:
   _mainPanel: {fileID: 0}
   _preparationPanel: {fileID: 0}
   _startButton: {fileID: 0}
-  _playersName: []
-  _playersStatus: []
+  _playersName:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _playersStatus:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _monsterDirectionPrefab: {fileID: 9163585613332811126, guid: 2b69c4aaa0896d549b7c0802fc1ec7f2, type: 3}
+  _warningPanel: {fileID: 0}
+  _monsterFarColor: {r: 1, g: 1, b: 1, a: 0}
+  _monsterCloseColor: {r: 1, g: 0, b: 0, a: 1}
+  _dirArrowMaxDistance: 30
 --- !u!114 &6121766743538725410
 MonoBehaviour:
   m_ObjectHideFlags: 0

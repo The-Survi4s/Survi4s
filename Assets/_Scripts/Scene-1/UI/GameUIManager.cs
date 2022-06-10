@@ -40,6 +40,7 @@ public class GameUIManager : MonoBehaviour
         UpdateCountdownUI();
         UpdateStatueUI();
         UpdateWaveUI();
+        UpdateWarningUI();
 
         // UI dependent on LocalPlayer
         if (!_localPlayer)
@@ -368,5 +369,61 @@ public class GameUIManager : MonoBehaviour
                 _playersStatus[i].text = "";
             }
         }
+    }
+
+    [Header("Warning UI")]
+    [SerializeField] private GameObject _monsterDirectionPrefab;
+    [SerializeField] private Image _warningPanel;
+    [SerializeField] private Color _monsterFarColor;
+    [SerializeField] private Color _monsterCloseColor;
+    [SerializeField] private float _dirArrowMaxDistance;
+    private Dictionary<int, Monster> _targetedMonsters = new Dictionary<int, Monster>();
+    private Dictionary<int, GameObject> _directionArrows = new Dictionary<int, GameObject>();
+
+    public void AddMonsterTarget(Monster monster)
+    {
+        if (_targetedMonsters.ContainsKey(monster.id)) return;
+        _targetedMonsters.Add(monster.id, monster);
+        _directionArrows.Add(monster.id, Instantiate(_monsterDirectionPrefab, _mainPanel.transform));
+    }
+
+    public void RemoveMonsterTarget(Monster monster)
+    {
+        if (!_targetedMonsters.ContainsKey(monster.id)) return;
+        Destroy(_directionArrows[monster.id]);
+        _targetedMonsters.Remove(monster.id);
+        _directionArrows.Remove(monster.id);
+    }
+
+    private void UpdateWarningUI()
+    {
+        if (_warningPanel.color.a > 0) _warningPanel.color = new Color(1, 1, 1, _warningPanel.color.a - Time.deltaTime);
+        foreach (var arrow in _directionArrows)
+        {
+            var monsterTarget = _targetedMonsters[arrow.Key].transform.position;
+            var aTransform = arrow.Value.transform as RectTransform;
+            var interfaceWorldPos = Camera.main.ScreenToWorldPoint(aTransform.transform.position);
+
+            RotateDirectionArrow(arrow, monsterTarget, interfaceWorldPos);
+            UpdateArrowColor(arrow, monsterTarget, interfaceWorldPos);
+        }
+    }
+
+    private void RotateDirectionArrow(KeyValuePair<int, GameObject> arrow, Vector3 monsterTarget, Vector3 interfaceWorldPos)
+    {
+        var angle = Mathf.Atan2(monsterTarget.y - interfaceWorldPos.y, monsterTarget.x - interfaceWorldPos.x) * Mathf.Rad2Deg;
+        arrow.Value.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    private void UpdateArrowColor(KeyValuePair<int, GameObject> arrow, Vector3 monsterTarget, Vector3 interfaceWorldPos)
+    {
+        var arrowImage = arrow.Value.GetComponent<Image>();
+        var distance = Vector3.Distance(interfaceWorldPos, monsterTarget);
+        arrowImage.color = Color.Lerp(_monsterFarColor, _monsterCloseColor, distance / _dirArrowMaxDistance);
+    }
+
+    public void ShowWarning()
+    {
+        _warningPanel.color = new Color(1, 1, 1, 1);
     }
 }

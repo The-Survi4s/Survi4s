@@ -84,6 +84,7 @@ public class UnitManager : MonoBehaviour
         monster.SetTargetWall(TilemapManager.Instance.GetWall(monster.origin));
         _monsterKdTree.Add(monster);
         _monsters.Add(monster.id, monster);
+        GameUIManager.Instance.AddMonsterTarget(monster);
     }
 
     public int GetIdThenAddBullet(BulletBase bullet)
@@ -116,6 +117,7 @@ public class UnitManager : MonoBehaviour
         if (!_monsters.ContainsKey(id)) return;
         var index = SearchMonsterIndex(_monsters[id]);
         if(index >= 0) _monsterKdTree.RemoveAt(index);
+        GameUIManager.Instance.RemoveMonsterTarget(_monsters[id]);
         _monsters.Remove(id);
     }
 
@@ -286,6 +288,16 @@ public class UnitManager : MonoBehaviour
     public Monster GetNearestMonster(Vector3 pos)
     {
         return _monsterKdTree.FindClosest(pos);
+    }
+
+    public float DistanceFromMonster(Vector3 pos, Monster monster)
+    {
+        return Vector3.Distance(monster.transform.position, pos);
+    }
+
+    public float DistanceFromMonster(Vector3 pos, int id)
+    {
+        return Vector3.Distance(_monsters[id].transform.position, pos);
     }
 
     public BulletBase GetNearestBullet(Vector3 pos)

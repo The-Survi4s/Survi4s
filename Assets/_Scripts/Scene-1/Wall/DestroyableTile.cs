@@ -23,13 +23,14 @@ public abstract class DestroyableTile : MonoBehaviour
 
     public void ModifyHp(float amount, int silentLevel = 0)
     {
-        
-
         hp += Mathf.FloorToInt(amount);
         //Debug.Log($"amount modified {amount}, current hp {hp}");
         if (hp > 0)
         {
-            audioManager.Play("Attacked");
+            if (amount < 0)
+            {
+                audioManager.Play("Attacked");
+            }
 
             if (hp > maxHp) hp = maxHp;
             if (silentLevel > 1) return;

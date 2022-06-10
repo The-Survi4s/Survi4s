@@ -10,8 +10,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<Sound> _sounds;
     [SerializeField, Min(0)] private float _minDistance;
     [SerializeField, Min(0)] private float _maxDistance;
+    private bool isPlaying;
 
-    void Awake()
+    private void Awake()
     {
         foreach (Sound s in _sounds)
         {
@@ -27,20 +28,25 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(string name)
+    private void Update()
     {
-        Sound s = _sounds.FirstOrDefault(sound => sound.name == name);
-        Play(s);
+        isPlaying = _sounds.Any(s => s.source.isPlaying);
     }
 
-    public void Play(Sound s)
+    public void Play(string name, bool isExclusive = false)
+    {
+        Sound s = _sounds.FirstOrDefault(sound => sound.name == name);
+        Play(s, isExclusive);
+    }
+
+    public void Play(Sound s, bool isExclusive = false)
     {
         if (s == null)
         {
             Debug.Log("Sound " + name + " not Found");
             return;
         }
-        else if (!s.source.isPlaying)
+        else if (!s.source.isPlaying && (!isExclusive || !isPlaying))
         {
             s.source.Play();
             Debug.Log(s.name);
@@ -49,6 +55,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayRandom()
     {
+        if (_sounds.Count == 0) return;
         var rand = Random.Range(0, _sounds.Count);
         Play(_sounds[rand]);
     }

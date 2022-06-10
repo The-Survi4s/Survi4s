@@ -57,7 +57,11 @@ public class TilemapManager : MonoBehaviour
     }
 
     // Used by Network Client
-    public void ModifyStatueHp(float amount) => statue.ModifyHp((int)amount);
+    public void ModifyStatueHp(float amount)
+    {
+        statue.ModifyHp((int)amount);
+        GameUIManager.Instance.ShowWarning();
+    }
 
     #endregion
 

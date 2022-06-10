@@ -477,7 +477,7 @@ public abstract class Monster : MonoBehaviour
         if(player) player.AddKillCount();
 
         //Debug.Log($"Monster {id} of type {setting.type} and from {origin} has been killed");
-        _animator.SetTrigger(DeadTrigger);
+        _animator.SetBool(IsDeadBool, true);
         OnMonsterDeath?.Invoke(id);
         SpawnManager.Instance.ClearIdIndex(id);
         UnitManager.Instance.DeleteMonsterFromList(id);

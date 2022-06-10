@@ -24,7 +24,7 @@ public class SpawnManager : MonoBehaviour
         public int count = 3;
         [Min(0.1f)]
         public float hpMultiplier = 1;
-        [Min(0)]
+        [Min(0.1f)]
         public float speedMultiplier = 1;
         public float randomSpawnOffsetMax = 10;
     }
