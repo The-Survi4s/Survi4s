@@ -30,13 +30,13 @@ public abstract class PlayerBulletBase : BulletBase
     protected virtual void OnNormalShot(Monster monster)
     {
         // Damage here
-        NetworkClient.Instance.ModifyMonsterHp(monster.id, -weapon.baseAttack);
+        NetworkClient.Instance.ModifyHp(monster, -weapon.baseAttack);
     }
 
     protected virtual void OnCriticalShot(Monster monster)
     {
         // More damage
-        NetworkClient.Instance.ModifyMonsterHp(monster.id, -weapon.baseAttack * criticalMultiplier);
+        NetworkClient.Instance.ModifyHp(monster, -weapon.baseAttack * criticalMultiplier);
     }
 
     public void Initialize(WeaponBase weaponOrigin, Vector2 mousePos, int bulletId, bool isLocal = false)

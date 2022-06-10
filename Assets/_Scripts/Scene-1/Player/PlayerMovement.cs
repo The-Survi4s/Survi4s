@@ -70,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Check statue Pos
-        var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.instance.statue.transform.position);
+        var distanceToStatue = Vector2.Distance(transform.position, TilemapManager.Instance.statue.transform.position);
         if (distanceToStatue < _minStatueDist) isNearStatue = true;
         else isNearStatue = false;
     }
@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         //Play animasi jump
         await Task.Delay(1);
         //teleport
-        transform.position = TilemapManager.instance.GetJumpPos(transform.position, _lastMoveDir);
+        transform.position = TilemapManager.Instance.GetJumpPos(transform.position, _lastMoveDir);
 
         player.animator.SetTrigger("Jump");
     }

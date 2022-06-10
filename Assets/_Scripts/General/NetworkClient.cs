@@ -16,6 +16,7 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private string IpAddress;
     private IPAddress ipAd;
     [SerializeField, Min(0)] private int _maximumRetries = 1;
+    [SerializeField] private bool _waitForServer = true;
 
     // Encryption ---------------------------------------------------------------------
     private RsaEncryption rsaEncryption;
@@ -28,7 +29,7 @@ public class NetworkClient : MonoBehaviour
     public bool isMaster { get; private set; }
     public int playersCount { get; private set; }
 
-    [SerializeField, Min(0.1f)] private float CheckTime = 0.8f;
+    [SerializeField, Min(0.1f)] private float CheckTime = 1f;
     private float _checkTime;
 
     // Connection status --------------------------------------------------------------
@@ -40,6 +41,7 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private int _receiveTimes;
     [SerializeField] private float _receiveTimesPerSecond;
     [SerializeField] private float _runTime;
+    [SerializeField] private bool useLocalConnection;
 
     // Eazy access ----------------------------------------------------------------------
     public static NetworkClient Instance { get; private set; }
@@ -61,7 +63,7 @@ public class NetworkClient : MonoBehaviour
     {
         // Preparation -------------------------------------------------------------
         client = new TcpClient();
-        ipAd = IPAddress.Parse(IpAddress);
+        ipAd = IPAddress.Parse(useLocalConnection ? "127.0.0.1" : IpAddress);
         rsaEncryption = new RsaEncryption(ServerPublicKey);
         isVerified = false;
         isMaster = false;
@@ -187,7 +189,8 @@ public class NetworkClient : MonoBehaviour
         UpWpn,
         PlVl,
         PJmp,
-        ChNm
+        ChNm,
+        GmOv
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -248,18 +251,18 @@ public class NetworkClient : MonoBehaviour
                     {
                         temp[i] = info[i + 3];
                     }
-                    LobbyMenuManager.Instance.UpdatePlayersInRoom(temp);
+                    GameUIManager.Instance.UpdatePlayersInRoom(temp);
                     break;
                 case Header.StGm:
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
                 case Header.SpwP:
-                    SpawnManager.instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
+                    SpawnManager.Instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
                 case Header.SpwM:
-                    SpawnManager.instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
+                    SpawnManager.Instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
                         EnumParse<Origin>(info[4]), float.Parse(info[5]));
                     break;
                 case Header.EqWp:
@@ -311,7 +314,8 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    TilemapManager.instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
+                    Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
+                    TilemapManager.Instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
                 case Header.MAtk:
@@ -321,7 +325,8 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                    TilemapManager.instance.ModifyStatueHp(float.Parse(info[2]));
+                    Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
+                    TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
                 case Header.DBl:
@@ -331,12 +336,12 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.RbWl:
                 {
-                    TilemapManager.instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
+                    TilemapManager.Instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
                     break;
                 }
                 case Header.UpWpn:
                 {
-                    UnitManager.Instance.FindAndUpgradeWeapon(info[2]);
+                    UnitManager.Instance.UpgradeWeapon(info[2]);
                     break;
                 }
                 case Header.PlVl:
@@ -349,7 +354,13 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.PJmp:
                 {
-                    UnitManager.Instance.GetPlayer(info[0]).movement.Jump();
+                    var player = UnitManager.Instance.GetPlayer(info[0]);
+                    if(player) player.movement.Jump();
+                    break;
+                }
+                case Header.GmOv:
+                {
+                    GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
                     break;
                 }
             }
@@ -396,8 +407,6 @@ public class NetworkClient : MonoBehaviour
         return genId;
     }
 
-    #region Send Message To Server
-
     // Private Method ---------------------------------------------------------------
     private void OnCreatedRoom(string roomName)
     {
@@ -420,6 +429,8 @@ public class NetworkClient : MonoBehaviour
         // Debugging
         Debug.Log("Room Joined");
     }
+
+    #region Send Message To Server
 
     // Public method that can be called to send message to server -------------------
     public void ChangeName(string newId, string newName)
@@ -473,38 +484,38 @@ public class NetworkClient : MonoBehaviour
     public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)
     {
         string[] msg = { Header.PlVl.ToString(), velocity.x.ToString("f2"), velocity.y.ToString("f2"), axis.ToString() };
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void SendMousePos(float x, float y)
     {
         string[] msg = {Header.MPos.ToString(), x.ToString("f2"), y.ToString("f2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void EquipWeapon(string weapon)
     {
         string[] msg = {Header.EqWp.ToString(), weapon};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void StartAttackAnimation() 
     {
         string[] msg = {Header.PAtk.ToString()};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void Jump()
     {
         string[] msg = { Header.PJmp.ToString() };
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void StartMonsterAttackAnimation(int targetId) 
     {
         //Debug.Log("Monster Attack Animation");
         string[] msg = {Header.MAtk.ToString(), targetId.ToString()};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos, int spawnedByMonsterId = -1)
@@ -514,62 +525,230 @@ public class NetworkClient : MonoBehaviour
             Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), mousePos.x.ToString("f2"),
             mousePos.y.ToString("f2"), spawnedByMonsterId.ToString()
         };
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void DestroyBullet(int id)
     {
         string[] msg = {Header.DBl.ToString(), id.ToString()};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void ModifyMonsterHp(int id, float amount)
     {
         string[] msg = {Header.MdMo.ToString(), id.ToString(), amount.ToString("f2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, float duration, int strength)
     {
         string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), duration.ToString("f2"), strength.ToString() };
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void ModifyPlayerHp(string playerName, float amount)
     {
         //Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
         string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void CorrectPlayerDeadPosition(float xPos, float yPos)
     {
         string[] msg = {Header.PlDd.ToString(), xPos.ToString("f2"), yPos.ToString("f2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void ModifyWallHp(int id, float amount)
     {
         string[] msg = {Header.MdWl.ToString(), id.ToString(), amount.ToString("f2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void ModifyStatueHp(float amount)
     {
         string[] msg = {Header.MdSt.ToString(), amount.ToString("f2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void RebuildWall(int brokenWallId, int amount)
     {
         string[] msg = { Header.RbWl.ToString(), brokenWallId.ToString(), amount.ToString() };
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
     public void UpgradeWeapon(string weaponName)
     {
         string[] msg = { Header.UpWpn.ToString(), weaponName };
-        SendMessageClient("1", msg);
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of any object that has an hp. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Statue"/>
+    /// <br/>- <see cref="Player"/>
+    /// <br/>- <see cref="Wall"/>
+    /// <br/>- <see cref="Monster"/>
+    /// </summary>
+    /// <param name="obj">The object with hp</param>
+    /// <param name="amount">The amount to modify hp</param>
+    /// <returns>
+    /// <see langword="true"/> on success. 
+    /// </returns>
+    public bool ModifyHp(Component obj, float amount)
+    {
+        string[] msg = { };
+        switch (obj)
+        {
+            case Wall wall:
+                msg = new string[] { Header.MdWl.ToString(), wall.id.ToString(), amount.ToString("f2") };
+                break;
+            case Monster monster:
+                msg = new string[] { Header.MdMo.ToString(), monster.id.ToString(), amount.ToString("f2") };
+                break;
+            case Player player:
+                msg = new string[] { Header.MdPl.ToString(), player.name, amount.ToString("f2") };
+                break;
+            case Statue _:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+        }
+        if (msg.Length > 0)
+        {
+            Debug.Log($"{msg[0]}, {msg[1]}, {amount}");
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {obj}");
+        return false;
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of anything that has an id and hp. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Wall"/>
+    /// <br/>- <see cref="Monster"/>
+    /// </summary>
+    /// <remarks>
+    /// Will try to get a name from the object with <paramref name="id"/> when <paramref name="target"/> is set to
+    /// <see cref="Target.Player"/>. <br/>
+    /// Ignores <paramref name="id"/> when <paramref name="target"/> is set to <see cref="Target.Statue"/>
+    /// </remarks>
+    /// <param name="target">Which type is the target</param>
+    /// <param name="id">The id of the target</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public bool ModifyHp(Target target, int id, float amount)
+    {
+        string[] msg = { };
+        switch (target)
+        {
+            case Target.Player:
+                Debug.LogError($"Must use string for Player name.");
+                var player = UnitManager.Instance.GetPlayer(id);
+                if (!player) break;
+                var name = player.name;
+                ModifyHp(target, name, amount);
+                break;
+            case Target.Statue:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Wall:
+                msg = new string[] { Header.MdWl.ToString(), id.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Monster:
+                msg = new string[] { Header.MdMo.ToString(), id.ToString(), amount.ToString("f2") };
+                break;
+        }
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {target}({id})");
+        return false;
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of anything that has a name and hp. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Player"/>
+    /// </summary>
+    /// <remarks>
+    /// Will try to extract id from <paramref name="name"/> when <paramref name="target"/> is set to
+    /// <see cref="Target.Wall"/> or <see cref="Target.Monster"/>. <br/>
+    /// Ignores <paramref name="name"/> when <paramref name="target"/> is set to <see cref="Target.Statue"/>
+    /// </remarks>
+    /// <param name="target">Which type is the target</param>
+    /// <param name="name">The name of the target</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public bool ModifyHp(Target target, string name, float amount)
+    {
+        string[] msg = { };
+        int id;
+        switch (target)
+        {
+            case Target.Player:
+                msg = new string[] { Header.MdPl.ToString(), name, amount.ToString("f2") };
+                break;
+            case Target.Statue:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Wall:
+                id = IntParse(name);
+                if (id == int.MinValue) break;
+                ModifyHp(target, id, amount);
+                break;
+            case Target.Monster:
+                id = IntParse(name);
+                if (id == int.MinValue) break;
+                ModifyHp(target, id, amount);
+                break;
+        }
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {target}({name})");
+        return false;
+    }
+
+    /// <summary>
+    /// Sends a message to server to modify hp of any object that has an hp but without identifier. <br/>
+    /// Currently supports:
+    /// <br/>- <see cref="Statue"/>
+    /// </summary>
+    /// <remarks>
+    /// Prints an error when the <paramref name="target"/> specified needs an identifier
+    /// </remarks>
+    /// <param name="target">Which type is the target</param>
+    /// <param name="amount">The amount to modify hp</param>
+    public bool ModifyHp(Target target, float amount)
+    {
+        string[] msg = { };
+        switch (target)
+        {
+            case Target.Player:
+                Debug.LogError("Player name not specified!");
+                break;
+            case Target.Statue:
+                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                break;
+            case Target.Wall:
+                Debug.LogError("Id not specified!");
+                break;
+            case Target.Monster:
+                Debug.LogError("Id not specified!");
+                break;
+        }
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+            return true;
+        }
+        Debug.LogError($"Failed to modify hp of {target}");
+        return false;
     }
 
     #endregion
@@ -584,6 +763,39 @@ public class NetworkClient : MonoBehaviour
     private static int ExtractId(string idAndName)
     {
         return int.Parse(idAndName.Substring(0, IdLength));
+    }
+
+    private string SelfRun(string[] msg)
+    {
+        string data = msg.Aggregate(myId + myName, (current, x) => current + ("|" + x));
+        ReceiveMessage(data);
+        return "3";
+    }
+    
+    private int IntParse(string str)
+    {
+        var numericString = "";
+        int index = 0;
+        foreach (char c in str)
+        {
+            if (c == '-' && index == 0) numericString = string.Concat(numericString, c);
+            else if ((c >= '0' && c <= '9'))
+            {
+                numericString = string.Concat(numericString, c);
+            }
+            else
+            {
+                index++;
+                continue;
+            }
+            index++;
+        }
+
+        if (int.TryParse(numericString, out int j))
+        {
+            return j;
+        }
+        else return int.MinValue;
     }
 
     #endregion

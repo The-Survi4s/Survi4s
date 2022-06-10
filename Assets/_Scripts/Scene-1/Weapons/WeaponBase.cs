@@ -10,9 +10,8 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float defaultBaseAttack;
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
-    [SerializeField] protected float _attackDistance = 2;
 
-    [field: SerializeField] public float baseAttack { get; protected set; }
+    public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
     public float cooldownTime { get; protected set; }
     protected float nextAttackTime;
@@ -21,12 +20,14 @@ public abstract class WeaponBase : MonoBehaviour
     public bool IsUsed() => ownerPlayer;
 
     [SerializeField] protected Vector3 offset;
+    [SerializeField] protected Vector3 attackPointOffset;
 
-    private bool isFacingRight;
+    //private bool isFacingRight;
     private float rotValZ;
 
     protected Animator _animator;
     protected AudioManager audioManager;
+    protected SpriteRenderer _renderer;
 
     [SerializeField] protected GameObject _particleToSpawn;
     [SerializeField] protected float _particleLifetime = 2;
@@ -51,8 +52,13 @@ public abstract class WeaponBase : MonoBehaviour
         audioManager = GetComponent<AudioManager>();
     }
 
-    protected virtual void Awake() => Init();
-    private void Update()
+    protected virtual void Awake()
+    {
+        _renderer = GetComponent<SpriteRenderer>();
+        Init();
+    }
+
+    protected virtual void Update()
     {
         // Check if this weapon is equipped ----------------------------------------
         if (ownerPlayer == null) return;
@@ -66,29 +72,31 @@ public abstract class WeaponBase : MonoBehaviour
             ? ownerPlayer.movement.localMousePos
             : ownerPlayer.movement.syncMousePos);
 
-        // Flip
+        // Flip y
         rotValZ = transform.eulerAngles.z;
+        /*
         if (rotValZ > 90.0f && rotValZ < 270.0f && isFacingRight)
         {
             isFacingRight = false;
-            transform.localScale -= new Vector3(0, 2, 0);
+            //transform.localScale -= new Vector3(0, 2, 0);
+            _renderer.flipY = true;
         }
         else if ((rotValZ < 90.0f || rotValZ > 270.0f) && !isFacingRight)
         {
             isFacingRight = true;
-            transform.localScale += new Vector3(0, 2, 0);
+            //transform.localScale += new Vector3(0, 2, 0);
+            _renderer.flipY = false;
         }
-        // Savety
-        if(transform.localScale.y < -1)
+        */
+        _renderer.flipY = rotValZ > 90.0f && rotValZ < 270.0f;
+        /*
+        // Safety
+        if(transform.localScale.y < -1 || transform.localScale.y > 1)
         {
             float gap = transform.localScale.y + 1.0f;
             transform.localScale -= new Vector3(0, gap, 0);
         }
-        else if (transform.localScale.y > 1)
-        {
-            float gap = transform.localScale.y + 1.0f;
-            transform.localScale -= new Vector3(0, gap, 0);
-        }
+        */
     }
 
     // Network methods -----------------------------------
@@ -130,10 +138,7 @@ public abstract class WeaponBase : MonoBehaviour
     // Attack methods --------------------------------------------
     public bool IsCritical() => Random.Range(0f, 100f) < critRate;
 
-    protected Vector2 GetAttackPoint()
-    {
-        return transform.position + transform.right * _attackDistance;
-    }
+    protected Vector2 AttackPoint => transform.position + transform.right * attackPointOffset.x + transform.up * attackPointOffset.y;
 
     public virtual void ReceiveAttackMessage() => PlayAnimation();
 
@@ -181,7 +186,8 @@ public abstract class WeaponBase : MonoBehaviour
         }
         else if (Level % 3 == 2)
         {
-            baseAttack += (baseAttack / 20.0f);
+            defaultBaseAttack += (defaultBaseAttack / 20.0f);
+            baseAttack = defaultBaseAttack;
         }
 
         // Increase cost to upgrade
@@ -190,7 +196,7 @@ public abstract class WeaponBase : MonoBehaviour
         Level++;
     }
 
-    public float LevelUpPreview_Atk => (Level % 3 == 2) ? baseAttack * 1.05f : baseAttack;
+    public float LevelUpPreview_Atk => (Level % 3 == 2) ? defaultBaseAttack * 1.05f : defaultBaseAttack;
     public float LevelUpPreview_Crit => (Level % 3 == 0) ? critRate * 1.1f : critRate;
     public float LevelUpPreview_Cooldown => (Level % 3 == 1) ? cooldownTime * 0.9f : cooldownTime;
 }

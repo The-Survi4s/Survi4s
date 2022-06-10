@@ -51,12 +51,13 @@ MonoBehaviour:
   _attackDistance: 2
   <baseAttack>k__BackingField: 0
   offset: {x: 0.2, y: 0.5, z: -1}
+  attackPointOffset: {x: 1.26, y: 0.24, z: 0}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
-  uiSprite: {fileID: 7193424756805613468, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
+  uiSprite: {fileID: -6225642005949883001, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  <MaxAmmo>k__BackingField: 10
+  <MaxAmmo>k__BackingField: 20
   _bullet: {fileID: 3545429094865367775, guid: 5238c46e52f490a49b674680e91d7951, type: 3}
   <inAccuracy>k__BackingField: 0.1
   _ammo: 0

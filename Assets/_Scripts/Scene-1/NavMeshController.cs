@@ -17,7 +17,7 @@ public class NavMeshController : MonoBehaviour
     {
         Debug.Log("Updating NavMesh...");
         await System.Threading.Tasks.Task.Delay(200);
-        _surface.BuildNavMesh();
+        if(_surface) _surface.BuildNavMesh();
         Debug.Log("Build Completed");
     }
 }

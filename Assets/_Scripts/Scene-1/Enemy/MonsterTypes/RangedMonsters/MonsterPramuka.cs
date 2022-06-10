@@ -29,7 +29,7 @@ public class MonsterPramuka : RangedMonsterBase
     {
         //Pinginnya ke dodge samping tapi aku males jadi teleport ke spawner aja
         Debug.Log("EVADE!");
-        transform.SetPositionAndRotation(SpawnManager.instance.GetSpawnerPos(origin), transform.rotation);
+        transform.SetPositionAndRotation(SpawnManager.Instance.GetSpawnerPos(origin), transform.rotation);
         RequestNewTargetWall();
         _evadeCooldownEndTime = Time.time + _evadeCooldown;
     }

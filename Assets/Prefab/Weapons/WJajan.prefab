@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5132510348381394870}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.273995, y: -2.5433319, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,14 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6341a652c4c5b4aaf9c4f843d1f674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultBaseAttack: 10
+  defaultBaseAttack: 2
   defaultCritRate: 5
-  maxCooldownTime: 10
-  _attackDistance: 2
-  offset: {x: 0.2, y: 0.5, z: -1}
+  maxCooldownTime: 2
+  offset: {x: 0.05, y: 0.56, z: -1}
+  attackPointOffset: {x: 0.3, y: 0.09, z: 0}
   _particleToSpawn: {fileID: 0}
   _particleLifetime: 2
-  uiSprite: {fileID: -7795066270765709585, guid: 3fb1dd3efd958ea4aac3260a78d46396, type: 3}
+  uiSprite: {fileID: 2253058385555353576, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
   _targetMask:

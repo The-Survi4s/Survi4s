@@ -17,6 +17,12 @@ public class WeaponRange : WeaponBase
         ReloadAmmo();
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(AttackPoint, 0.2f);
+    }
+
     public Vector2 GetOwnerMousePos()
     {
         if (ownerPlayer == null)
@@ -38,9 +44,7 @@ public class WeaponRange : WeaponBase
             if(Ammo > 0)
             {
                 // Send message to spawn bullet
-                Vector2 attackPoint = GetAttackPoint();
-                Vector2 mousePos = GetOwnerMousePos();
-                NetworkClient.Instance.SpawnBullet(attackPoint, mousePos);
+                NetworkClient.Instance.SpawnBullet(AttackPoint, GetOwnerMousePos());
             }
             else if(ownerPlayer.movement.isNearStatue)
             {

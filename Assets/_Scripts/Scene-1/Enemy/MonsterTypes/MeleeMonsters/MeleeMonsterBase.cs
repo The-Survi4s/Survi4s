@@ -27,7 +27,7 @@ public abstract class MeleeMonsterBase : Monster
 
     protected virtual void OnAttackStatue()
     {
-        NetworkClient.Instance.ModifyStatueHp(-currentStat.atk);
+        NetworkClient.Instance.ModifyHp(Target.Statue, -currentStat.atk);
     }
 
     protected virtual void OnAttackPlayer(Player player)
@@ -36,12 +36,12 @@ public abstract class MeleeMonsterBase : Monster
         var players = GetPlayersInRadius(); //Debug.Log("Player count : " + players.Count);
         foreach (var p in players)
         {
-            NetworkClient.Instance.ModifyPlayerHp(p.name, -currentStat.atk);
+            NetworkClient.Instance.ModifyHp(p, -currentStat.atk);
         }
     }
 
     protected virtual void OnAttackWall(Wall wall)
     {
-        NetworkClient.Instance.ModifyWallHp(wall.id, -currentStat.atk);
+        NetworkClient.Instance.ModifyHp(wall, -currentStat.atk);
     }
 }

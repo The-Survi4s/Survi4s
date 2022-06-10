@@ -62,15 +62,15 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Vector2 _playerSpawnPos = new Vector2(2, 2);
     [SerializeField] private List<GameObject> _playerPrefab;
 
-    public static SpawnManager instance { get; private set; }
+    public static SpawnManager Instance { get; private set; }
 
     private void Awake()
     {
         audioManager = GetComponent<AudioManager>();
 
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -109,7 +109,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// Sends a message to server to spawn player
     /// </summary>
-    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, UnitManager.Instance.playerCount);
+    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, NetworkClient.Instance.playersCount - 1);
 
     /// <summary>
     /// Called by <see cref="NetworkClient"/>. Instantiates a <see cref="Player"/> on <see cref="_playerPrefab"/>

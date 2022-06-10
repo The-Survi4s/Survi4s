@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         //If uninitialized return
         if (!Ready() || 
             !(_gameState == GameState.WaveSpawn || _gameState == GameState.WaveOver)) return;
-        if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.instance.statue.hp <= 0)
+        if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.Instance.statue.hp <= 0)
         {
             ChangeState(GameState.GameOver);
         }
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
         return (
             UnitManager.Instance.PlayerInitializedCount == UnitManager.Instance.playerCount &&
             UnitManager.Instance.playerCount > 0 &&
-            TilemapManager.instance.statue.IsInitialized);
+            TilemapManager.Instance.statue.IsInitialized);
     }
 
     public void ChangeState(GameState newState)
@@ -123,10 +123,6 @@ public class GameManager : MonoBehaviour
         TilemapManager.instance.statue.PlayDestroyedAnimation();
         // Broadcast game over
         GameOver?.Invoke();
-        // Show game over screen with score and disconnect button
-        // Ke scene 0
-
-        
     }
 
     private async void HandleWaveOver()
@@ -137,7 +133,7 @@ public class GameManager : MonoBehaviour
             await Task.Yield();
         }
 
-        ChangeState(SpawnManager.instance.currentWave < Settings.maxWave
+        ChangeState(SpawnManager.Instance.currentWave < Settings.maxWave
             ? GameState.WavePreparation
             : GameState.GameOver);
     }
@@ -149,8 +145,6 @@ public class GameManager : MonoBehaviour
 
         await SpawnManager.instance.StartWave();
         ChangeState(GameState.WaveOver);
-
-        
     }
 
     private async void HandleWavePreparation()
@@ -159,8 +153,6 @@ public class GameManager : MonoBehaviour
         await CountDown(Settings.preparationTime);
         // On countdown done, or on some button pressed, wave spawn
         ChangeState(GameState.WaveSpawn);
-
-        
     }
 
     private async Task CountDown(float duration)
@@ -185,10 +177,10 @@ public class GameManager : MonoBehaviour
         // Display statue HP dan UI lain
 
         // Spawn Player ---------------------------------------------------------------------
-        SpawnManager.instance.SendSpawnPlayer();
+        SpawnManager.Instance.SendSpawnPlayer();
 
         // Deactivate Panels ----------------------------------------------------------------
-        LobbyMenuManager.Instance.SetActivePreparationPanel(false);
+        GameUIManager.Instance.SetActivePreparationPanel(false);
         
         SetIgnoreCollisions();
 
@@ -220,7 +212,7 @@ public class GameManager : MonoBehaviour
     public async void ForceStartNextWave()
     {
         if(_gameState != GameState.WavePreparation) return;
-        await SpawnManager.instance.StartWave();
+        await SpawnManager.Instance.StartWave();
     }
 
     private int Log2(int a) => (int)Mathf.Log(a, 2);

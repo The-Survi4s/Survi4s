@@ -26,8 +26,8 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        origin = TilemapManager.instance.GetOrigin(transform.position);
-        SpawnManager.instance.AddSpawner(this);
+        origin = TilemapManager.Instance.GetOrigin(transform.position);
+        SpawnManager.Instance.AddSpawner(this);
         this.gameObject.name = "Spawner " + origin;
     }
 
@@ -35,6 +35,11 @@ public class Spawner : MonoBehaviour
     {
         //Debug.Log("Id " + monsterId + " exists? " + UnitManager.Instance.MonsterIdExist(monsterId));
         this._spawnOffset = spawnOffset;
+        if (UnitManager.Instance.MonsterIdExist(monsterId))
+        {
+            Debug.LogWarning($"Duplicate monster received! Id:{monsterId}");
+            return;
+        }
         GameObject temp = Instantiate(monsterPrefab, spawnPos, Quaternion.identity);
         Monster monster = temp.GetComponent<Monster>();
         monster.Initialize(origin, monsterId, waveInfo.CalculateStat(monster.defaultStat));
