@@ -172,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
         if (localMousePos != _historyMousePos && Time.time >= _mousePosNextTime)
         {
             _historyMousePos = localMousePos;
-            NetworkClient.Instance.SendMousePos(localMousePos.x, localMousePos.y);
+            NetworkClient.Instance.SendMousePos(localMousePos);
 
             _mousePosNextTime = Time.time + _mousePosSendCoolDown;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -23,11 +24,13 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private string ServerPublicKey;
 
     // Player Room and Name -----------------------------------------------------------
+    public bool IsConnected => client.Connected;
     public string myId { get; private set; }
     public string myName { get; private set; }
     public string myRoomName { get; private set; }
     public bool isMaster { get; private set; }
     public int playersCount { get; private set; }
+    private int _playerNumber = -1;
 
     [SerializeField, Min(0.1f)] private float CheckTime = 1f;
     private float _checkTime;
@@ -83,6 +86,7 @@ public class NetworkClient : MonoBehaviour
         // Start try to connect again and again -------------------------------------
         StartCoroutine(TryConnecting());
     }
+
     private IEnumerator TryConnecting()
     {
         int count = 0;
@@ -153,46 +157,108 @@ public class NetworkClient : MonoBehaviour
             _checkTime -= Time.deltaTime;
             if (_checkTime <= 0)
             {
-                SendMessageClient("2", "A");
+                SendMessageClient(Recipient.Server, "A");
             }
         }
         _runTime += Time.deltaTime;
     }
 
-    // Header enums
-    private enum Header
+    // Generate id of 6 random number ------------------------------------------------
+    private const int IdLength = 6;
+    public string GeneratePlayerId()
     {
-        Svr,    // Server
-        RCrd,   // Room Created
-        RJnd,   // Room Joined
-        RnFd,   // Room not found
-        RsF,    // Room is full
-        REx,    // Room exit
-        MPos,   // Sync Mouse Pos
-        PlCt,   // Player Count
-        StGm,   // Start game
-        SpwP,
-        EqWp,
-        PAtk,
-        SwBl,
-        MdMo,
-        MdPl,
-        PlDd,
-        MdWl,
-        SpwM,
-        MoEf,
-        MAtk,
-        MdSt,
-        LRm,
-        DBl,
-        RbWl,
-        UpWpn,
-        PlVl,
-        PJmp,
-        ChNm,
-        GmOv
+        string genId = "";
+        for (int i = 0; i < IdLength; i++)
+        {
+            genId += UnityEngine.Random.Range(0, 10).ToString();
+        }
+        return genId;
     }
 
+    #region Type declarations
+    /// <summary>
+    /// Message subject
+    /// </summary>
+    private enum Subject
+    {
+        /// <summary>Server</summary>
+        Svr,
+        /// <summary>Room created</summary>
+        RCrd,
+        /// <summary>Room joined</summary>
+        RJnd,
+        /// <summary>Room not found</summary>
+        RnFd,
+        /// <summary>Room is full</summary>
+        RsF,
+        /// <summary>Exit room</summary>
+        REx,
+        /// <summary>Sync mouse position</summary>
+        MPos,
+        /// <summary>Player count</summary>
+        PlCt,
+        /// <summary>Start game</summary>
+        StGm,
+        /// <summary>Spawn <see cref="Player"/></summary>
+        SpwP,
+        /// <summary>Equip <see cref="WeaponBase"/></summary>
+        EqWp,
+        /// <summary><see cref="Player"/> attack</summary>
+        PAtk,
+        /// <summary>Spawn <see cref="BulletBase"/></summary>
+        SpwB,
+        /// <summary>Modify <see cref="Monster"/> hp</summary>
+        MdMo,
+        /// <summary>Modify <see cref="Player"/> hp</summary>
+        MdPl,
+        /// <summary>Correct <see cref="Player"/> dead position</summary>
+        PlDd,
+        /// <summary>Modify <see cref="Wall"/> hp</summary>
+        MdWl,
+        /// <summary>Spawn <see cref="Monster"/></summary>
+        SpwM,
+        /// <summary>Add <see cref="StatusEffectBase"/> to a <see cref="Monster"/></summary>
+        MoEf,
+        /// <summary><see cref="Monster"/> attack</summary>
+        MAtk,
+        /// <summary>Modify <see cref="Statue"/> hp</summary>
+        MdSt,
+        /// <summary><see cref="Player"/> leave room / disconnect</summary>
+        LRm,
+        /// <summary>Destroy <see cref="BulletBase"/></summary>
+        DBl,
+        /// <summary>Rebuilt <see cref="Wall"/></summary>
+        RbWl,
+        /// <summary>Upgrade <see cref="WeaponBase"/></summary>
+        UpWpn,
+        /// <summary>Sync <see cref="Player"/> velocity</summary>
+        PlVl,
+        /// <summary><see cref="Player"/> jump</summary>
+        PJmp,
+        /// <summary>Change name</summary>
+        ChNm,
+        /// <summary>Game over</summary>
+        GmOv,
+        /// <summary>Sync <see cref="Player"/> position</summary>
+        PlPos,
+        /// <summary>Start Matchmaking</summary>
+        StMtc,
+        /// <summary>Request create room</summary>
+        CrR,
+        /// <summary>Request join room</summary>
+        JnR,
+        /// <summary>Request exit room</summary>
+        ExR,
+        /// <summary>Request lock room</summary>
+        LcR,
+        /// <summary>Set to Master</summary>
+        SeMs
+    }
+
+    private enum Recipient { None, All, Server, AllExceptSender, SpecificPlayer}
+    #endregion
+
+    #region Receive Message
     // Receive and Process incoming message here ----------------------------------
     private void ReceiveMessage(string message)
     {
@@ -203,30 +269,30 @@ public class NetworkClient : MonoBehaviour
         // ID+NameClient|MPos|...
         var info = message.Split('|');
         info[0] = info[0].Trim('\0');
-        if (info[0] == Header.Svr.ToString())
-            switch (EnumParse<Header>(info[1]))
+        if (info[0] == Subject.Svr.ToString())
+            switch (EnumParse<Subject>(info[1]))
             {
-                case Header.RCrd:
+                case Subject.RCrd:
                     OnCreatedRoom(info[2]);
                     break;
-                case Header.RJnd:
+                case Subject.RJnd:
                     OnJoinedRoom(info[2], int.Parse(info[3]));
                     break;
-                case Header.RnFd:
+                case Subject.RnFd:
                     JoinRoomPanel.Instance.RoomNotFound();
                     break;
-                case Header.RsF:
+                case Subject.RsF:
                     JoinRoomPanel.Instance.RoomIsFull();
                     break;
-                case Header.REx:
+                case Subject.REx:
                     ScenesManager.Instance.LoadScene(0);
                     break;
-                case Header.LRm:
+                case Subject.LRm:
                 {
                     UnitManager.Instance.HandlePlayerDisconnect(info[1]);
                     break;
                 }
-                case Header.ChNm:
+                case Subject.ChNm:
                 {
                     myId = info[2];
                     myName = info[3];
@@ -235,47 +301,47 @@ public class NetworkClient : MonoBehaviour
             }
         else
         {
-            //Debug.Log(EnumParse<Header>(info[1]));
-            switch (EnumParse<Header>(info[1]))
+            Debug.Log(EnumParse<Subject>(info[1]));
+            switch (EnumParse<Subject>(info[1]))
             {
-                case Header.MPos:
+                case Subject.MPos:
                 {
                     UnitManager.Instance.SyncMousePos(info[0], float.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case Header.PlCt:
+                case Subject.PlCt:
                     Debug.Log(info[2]);
                     playersCount = int.Parse(info[2]);
-                    string[] temp = new string[playersCount];
+                    var temp = new string[playersCount];
                     for(int i = 0; i < playersCount; i++)
                     {
                         temp[i] = info[i + 3];
                     }
                     GameUIManager.Instance.UpdatePlayersInRoom(temp);
                     break;
-                case Header.StGm:
+                case Subject.StGm:
                     GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
                     break;
-                case Header.SpwP:
+                case Subject.SpwP:
                     SpawnManager.Instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])),
                         int.Parse(info[4]));
                     break;
-                case Header.SpwM:
+                case Subject.SpwM:
                     SpawnManager.Instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
-                        EnumParse<Origin>(info[4]), float.Parse(info[5]));
+                        (Origin)int.Parse(info[4]), float.Parse(info[5]));
                     break;
-                case Header.EqWp:
+                case Subject.EqWp:
                 {
                     UnitManager.Instance.OnEquipWeapon(info[0], info[2]);
                     break;
                 }
-                case Header.PAtk:
+                case Subject.PAtk:
                 {
                     UnitManager.Instance.PlayAttackAnimation(info[0]);
                     break;
                 }
-                case Header.SwBl:
+                case Subject.SpwB:
                 {
                     var monsterId = int.Parse(info[6]);
                     var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
@@ -290,94 +356,256 @@ public class NetworkClient : MonoBehaviour
                     }
                     break;
                 }
-                case Header.MdMo:
+                case Subject.MdMo:
                 {
                     UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]), float.Parse(info[3]), info[0]);
                     break;
                 }
-                case Header.MoEf:
+                case Subject.MoEf:
                 {
                     UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(info[2]),
-                        EnumParse<StatusEffect>(info[3]), float.Parse(info[4]), int.Parse(info[5]));
+                        (StatusEffect)int.Parse(info[3]), float.Parse(info[4]), int.Parse(info[5]));
                     break;
                 }
-                case Header.MdPl:
+                case Subject.MdPl:
                 {
                     //Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
                     UnitManager.Instance.ModifyPlayerHp(info[2], float.Parse(info[3]));
                     break;
                 }
-                case Header.PlDd:
+                case Subject.PlDd:
                 {
                     UnitManager.Instance.CorrectDeadPosition(info[0], new Vector2(float.Parse(info[2]), float.Parse(info[3])));
                     break;
                 }
-                case Header.MdWl:
+                case Subject.MdWl:
                 {
-                    Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
+                    //Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
                     TilemapManager.Instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
-                case Header.MAtk:
+                case Subject.MAtk:
                 {
                     UnitManager.Instance.PlayMonsterAttackAnimation(int.Parse(info[2]));
                     break;
                 }
-                case Header.MdSt:
+                case Subject.MdSt:
                 {
-                    Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
+                    //Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
                     TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
-                case Header.DBl:
+                case Subject.DBl:
                 {
                     UnitManager.Instance.DestroyBullet(int.Parse(info[2]));
                     break;
                 }
-                case Header.RbWl:
+                case Subject.RbWl:
                 {
                     TilemapManager.Instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
                     break;
                 }
-                case Header.UpWpn:
+                case Subject.UpWpn:
                 {
                     UnitManager.Instance.UpgradeWeapon(info[2]);
                     break;
                 }
-                case Header.PlVl:
+                case Subject.PlVl:
                 {
                     UnitManager.Instance.SetPlayerVelocity(
                         info[0], 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])), 
-                        EnumParse<PlayerMovement.Axis>(info[4]));
+                        (PlayerMovement.Axis)int.Parse(info[4]));
                     break;
                 }
-                case Header.PJmp:
+                case Subject.PJmp:
                 {
                     var player = UnitManager.Instance.GetPlayer(info[0]);
                     if(player) player.movement.Jump();
                     break;
                 }
-                case Header.GmOv:
+                case Subject.GmOv:
                 {
                     GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
                     break;
                 }
+                case Subject.PlPos:
+                    {
+
+                        break;
+                    }
+                case Subject.SeMs:
+                    {
+                        break;
+                    }
             }
         }
     }
+    #endregion
+
+    #region Send Message Wrapper
+    /// <summary>
+    /// Emulates data sent from server, then changes <see cref="Recipient"/> type to AllExceptSender
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns><see cref="Recipient.AllExceptSender"/></returns>
+    private Recipient SelfRun(string[] message)
+    {
+        string data = message.Aggregate(myId + myName, (current, x) => current + ("|" + x));
+        ReceiveMessage(data);
+        return Recipient.AllExceptSender;
+    }
+
+    /// <summary>
+    /// Sends a message to server. 
+    /// </summary>
+    /// <param name="receiver">The recipient of the message</param>
+    /// <param name="subject">The message subject</param>
+    /// <param name="body">The message body</param>
+    private void SendMessageClient(Recipient receiver, Subject subject, params string[] body)
+    {
+        SendMessageClient(((int)receiver).ToString(), MessageBuilder(subject, body));
+    }
+
+    /// <summary>
+    /// Sends a message to server. 
+    /// </summary>
+    /// <param name="receiver">The recipient of the message</param>
+    /// <param name="subject">The message subject</param>
+    /// <param name="body">The message body</param>
+    private void SendMessageClient(Recipient receiver, Subject subject, params float[] body)
+    {
+        SendMessageClient(((int)receiver).ToString(), MessageBuilder(subject, body));
+    }
+
+    /// <summary>
+    /// Sends a message to server with auto <see cref="Recipient"/>
+    /// <br/><paramref name="message"/> must already includes <see cref="Subject"/>
+    /// </summary>
+    /// <remarks>
+    /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else set it to <see cref="Recipient.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="message">The message</param>
+    /// <param name="errorMessage">Show this error when fail</param>
+    /// <returns></returns>
+    private bool SendMessageClient(string[] message, string errorMessage = "Message is empty")
+    {
+        if (message.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? Recipient.All : SelfRun(message), message);
+            return true;
+        }
+        Debug.LogError(errorMessage);
+        return false;
+    }
+
+    /// <summary>
+    /// Sends a message to server with auto <see cref="Recipient"/>
+    /// </summary>
+    /// <remarks>
+    /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else set it to <see cref="Recipient.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="subject"></param>
+    /// <param name="body">The message</param>
+    /// <param name="errorMessage">Show this error when fail</param>
+    /// <returns></returns>
+    private bool SendMessageClient(Subject subject, params string[] body)
+    {
+        return SendMessageClient(MessageBuilder(subject, body));
+    }
+
+    /// <summary>
+    /// Sends a message to server with auto <see cref="Recipient"/>
+    /// </summary>
+    /// <remarks>
+    /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else set it to <see cref="Recipient.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="subject"></param>
+    /// <param name="body">The message</param>
+    /// <param name="errorMessage">Show this error when fail</param>
+    /// <returns></returns>
+    private bool SendMessageClient(Subject subject, params float[] body)
+    {
+        return SendMessageClient(MessageBuilder(subject, body));
+    }
+
+    /// <summary>
+    /// Sends a message to server with auto <see cref="Recipient"/>
+    /// </summary>
+    /// <remarks>
+    /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else set it to <see cref="Recipient.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="subject"></param>
+    /// <param name="body">The message</param>
+    /// <param name="errorMessage">Show this error when fail</param>
+    /// <returns></returns>
+    private bool SendMessageClient(Subject subject)
+    {
+        return SendMessageClient(MessageBuilder(subject));
+    }
+
+    /// <summary>
+    /// Sends a message to server. 
+    /// <br/><paramref name="message"/> must already includes <see cref="Subject"/>
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="message"></param>
+    private void SendMessageClient(Recipient receiver, params string[] message)
+    {
+        SendMessageClient(((int)receiver).ToString(), message);
+    }
+
+    private void SendMessageClient(Recipient receiver, Subject subject)
+    {
+        SendMessageClient(((int)receiver).ToString(), subject.ToString());
+    }
+
+    /// <summary>
+    /// Constructs a message. 
+    /// </summary>
+    /// <param name="subject">Message subject</param>
+    /// <param name="body">Message body</param>
+    /// <returns></returns>
+    private string[] MessageBuilder(Subject subject, params float[] body)
+    {
+        var msg = new List<string>() { subject.ToString() };
+        foreach (var item in body)
+        {
+            var isInt = (int)item == item;
+            msg.Add(item.ToString(isInt ? "f0" : "f2"));
+        }
+        return msg.ToArray();
+    }
+
+    /// <summary>
+    /// Constructs a message. 
+    /// </summary>
+    /// <param name="subject">Message subject</param>
+    /// <param name="body">Message body</param>
+    /// <returns></returns>
+    private string[] MessageBuilder(Subject subject, params string[] body)
+    {
+        var msg = new List<string>() { subject.ToString() };
+        msg.AddRange(body);
+        return msg.ToArray();
+    }
+
+    /// <summary>
+    /// Constructs a message. 
+    /// </summary>
+    /// <param name="subject">Message subject</param>
+    /// <returns></returns>
+    private string[] MessageBuilder(Subject subject)
+    {
+        return new string[] { subject.ToString() };
+    }
 
     // Process message that is about to be sent ---------------------------------------
-    private void SendMessageClient(string target, string message)
-    {
-        // Message format : target|header|data|data|data...
-        // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
-        string[] temp = new string[1];
-        temp[0] = message;
-
-        SendMessageClient(target, temp);
-    }
-    private void SendMessageClient(string target, string[] message)
+    private void SendMessageClient(string target, params string[] message)
     {
         // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
@@ -391,26 +619,13 @@ public class NetworkClient : MonoBehaviour
         _sendTimes++;
         _sendTimesPerSecond = _sendTimes / _runTime;
     }
+    #endregion
 
-    // If want to check connection status -------------------------------------------
-    public bool IsConnected() => client.Connected;
-
-    // Generate id of 6 random number ------------------------------------------------
-    private const int IdLength = 6;
-    public string GeneratePlayerId()
-    {
-        string genId = "";
-        for(int i = 0; i < IdLength; i++)
-        {
-            genId += UnityEngine.Random.Range(0, 10).ToString();
-        }
-        return genId;
-    }
-
+    #region Event Handlers
     // Private Method ---------------------------------------------------------------
     private void OnCreatedRoom(string roomName)
     {
-        // Set to master, becuse we the one created room ---------------------------
+        // Set to master, because we are the one who created the room ---------------------------
         isMaster = true;
         playersCount = 1;
 
@@ -418,7 +633,7 @@ public class NetworkClient : MonoBehaviour
         ScenesManager.Instance.LoadScene(1);
 
         // Debugging
-        Debug.Log("Room Created");
+        Debug.Log($"Room '{roomName}' Created");
     }
 
     private void OnJoinedRoom(string roomName, int count)
@@ -427,163 +642,127 @@ public class NetworkClient : MonoBehaviour
         ScenesManager.Instance.LoadScene(1);
 
         // Do someting with count
-
+        _playerNumber = count;
 
         // Debugging
-        Debug.Log("Room Joined");
+        Debug.Log("Joined room " + roomName);
     }
+    #endregion
 
-    #region Send Message To Server
+    #region Send Message Calls
 
     // Public method that can be called to send message to server -------------------
     public void ChangeName(string newId, string newName)
     {
-        string[] msg = { "ChNm", newId, newName };
-        SendMessageClient("2", msg);
+        SendMessageClient(Recipient.Server, Subject.ChNm, newId, newName);
     }
     public void StartMatchmaking()
     {
-        SendMessageClient("2", "StMtc");
+        SendMessageClient(Recipient.Server, Subject.StMtc);
     }
 
     public void CreateRoom(string roomName, int maxPlayer, bool isPublic)
     {
-        string[] message = {"CrR", roomName, maxPlayer.ToString(), isPublic.ToString()};
-        SendMessageClient("2", message);
+        SendMessageClient(Recipient.Server, Subject.CrR, roomName, maxPlayer.ToString(), isPublic.ToString());
     }
 
     public void JoinRoom(string roomName)
     {
-        string[] message = {"JnR", roomName, roomName};
-        SendMessageClient("2", message);
+        SendMessageClient(Recipient.Server, Subject.JnR, roomName);
     }
     public void ExitRoom()
     {
-        SendMessageClient("2", "ExR");
+        SendMessageClient(Recipient.Server, Subject.ExR);
     }
 
     public void StartGame()
     {
-        SendMessageClient("1", "StGm");
+        SendMessageClient(Recipient.All, Subject.StGm);
     }
     public void LockTheRoom()
     {
-        SendMessageClient("2", "LcR");
+        SendMessageClient(Recipient.Server, Subject.LcR);
     }
 
-    public void SpawnPlayer(Vector2 spawnPos, int skin)
+    public void SpawnPlayer(Vector2 spawnPos)
     {
-        string[] msg = {Header.SpwP.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), skin.ToString()};
-        SendMessageClient("1", msg);
+        SendMessageClient(Recipient.All, Subject.SpwP, spawnPos.x, spawnPos.y, _playerNumber);
     }
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
         //Debug.Log($"Send spawn monster: id {id}, type {type}");
-        string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
-        SendMessageClient("1", msg);
+        SendMessageClient(Recipient.All, Subject.SpwM, id, type, (int)origin);
     }
 
     public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)
     {
-        string[] msg = { Header.PlVl.ToString(), velocity.x.ToString("f2"), velocity.y.ToString("f2"), axis.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.PlVl, velocity.x, velocity.y, (int)axis);
     }
 
-    public void SendMousePos(float x, float y)
+    public void SyncPlayerPos(Vector2 pos)
     {
-        string[] msg = {Header.MPos.ToString(), x.ToString("f2"), y.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.PlPos, pos.x, pos.y);
     }
 
-    public void EquipWeapon(string weapon)
+    public void SyncMonsterPos(Vector2 pos)
     {
-        string[] msg = {Header.EqWp.ToString(), weapon};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.PlPos, pos.x, pos.y);
+    }
+
+    public void SendMousePos(Vector2 mousePos)
+    {
+        SendMessageClient(Subject.MPos, mousePos.x, mousePos.y);
+    }
+
+    public void EquipWeapon(string weaponName)
+    {
+        SendMessageClient(Subject.EqWp, weaponName);
     }
 
     public void StartAttackAnimation() 
     {
-        string[] msg = {Header.PAtk.ToString()};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.PAtk);
     }
 
     public void Jump()
     {
-        string[] msg = { Header.PJmp.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Subject.PJmp));
     }
 
     public void StartMonsterAttackAnimation(int targetId) 
     {
-        //Debug.Log("Monster Attack Animation");
-        string[] msg = {Header.MAtk.ToString(), targetId.ToString()};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.MAtk, targetId);
     }
 
-    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos, int spawnedByMonsterId = -1)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 targetPos, int spawnedByMonsterId = -1)
     {
-        string[] msg =
-        {
-            Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), mousePos.x.ToString("f2"),
-            mousePos.y.ToString("f2"), spawnedByMonsterId.ToString()
-        };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.SpwB, spawnPos.x, spawnPos.y, targetPos.x, targetPos.y, spawnedByMonsterId);
     }
 
     public void DestroyBullet(int id)
     {
-        string[] msg = {Header.DBl.ToString(), id.ToString()};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyMonsterHp(int id, float amount)
-    {
-        string[] msg = {Header.MdMo.ToString(), id.ToString(), amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.DBl, id);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, float duration, int strength)
     {
-        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), duration.ToString("f2"), strength.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyPlayerHp(string playerName, float amount)
-    {
-        //Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
-        string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.MoEf, targetId, (int)effect, duration, strength);
     }
 
     public void CorrectPlayerDeadPosition(float xPos, float yPos)
     {
-        string[] msg = {Header.PlDd.ToString(), xPos.ToString("f2"), yPos.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyWallHp(int id, float amount)
-    {
-        string[] msg = {Header.MdWl.ToString(), id.ToString(), amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyStatueHp(float amount)
-    {
-        string[] msg = {Header.MdSt.ToString(), amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.PlDd, xPos, yPos);
     }
 
     public void RebuildWall(int brokenWallId, int amount)
     {
-        string[] msg = { Header.RbWl.ToString(), brokenWallId.ToString(), amount.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.RbWl, brokenWallId, amount);
     }
 
     public void UpgradeWeapon(string weaponName)
     {
-        string[] msg = { Header.UpWpn.ToString(), weaponName };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(Subject.UpWpn, weaponName);
     }
 
     /// <summary>
@@ -601,30 +780,23 @@ public class NetworkClient : MonoBehaviour
     /// </returns>
     public bool ModifyHp(Component obj, float amount)
     {
-        string[] msg = { };
+        string[] message = { };
         switch (obj)
         {
             case Wall wall:
-                msg = new string[] { Header.MdWl.ToString(), wall.id.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdWl, wall.id, amount);
                 break;
             case Monster monster:
-                msg = new string[] { Header.MdMo.ToString(), monster.id.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdMo, monster.id, amount);
                 break;
             case Player player:
-                msg = new string[] { Header.MdPl.ToString(), player.name, amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdPl, player.name, amount.ToString("f2"));
                 break;
             case Statue _:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdSt, amount);
                 break;
         }
-        if (msg.Length > 0)
-        {
-            Debug.Log($"{msg[0]}, {msg[1]}, {amount}");
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {obj}");
-        return false;
+        return SendMessageClient(message, errorMessage: $"Failed to modify HP of {obj}");
     }
 
     /// <summary>
@@ -643,33 +815,26 @@ public class NetworkClient : MonoBehaviour
     /// <param name="amount">The amount to modify hp</param>
     public bool ModifyHp(Target target, int id, float amount)
     {
-        string[] msg = { };
+        string[] message = { };
         switch (target)
         {
             case Target.Player:
                 Debug.LogError($"Must use string for Player name.");
-                var player = UnitManager.Instance.GetPlayer(id);
-                if (!player) break;
+                var player = UnitManager.Instance.GetPlayer(id); if (!player) break;
                 var name = player.name;
                 ModifyHp(target, name, amount);
                 break;
             case Target.Statue:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdSt, amount);
                 break;
             case Target.Wall:
-                msg = new string[] { Header.MdWl.ToString(), id.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdWl, id, amount);
                 break;
             case Target.Monster:
-                msg = new string[] { Header.MdMo.ToString(), id.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdMo, id, amount);
                 break;
         }
-        if (msg.Length > 0)
-        {
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {target}({id})");
-        return false;
+        return SendMessageClient(message, errorMessage: $"Failed to modify HP of {target}({id})");
     }
 
     /// <summary>
@@ -687,34 +852,23 @@ public class NetworkClient : MonoBehaviour
     /// <param name="amount">The amount to modify hp</param>
     public bool ModifyHp(Target target, string name, float amount)
     {
-        string[] msg = { };
+        string[] message = { };
         int id;
         switch (target)
         {
             case Target.Player:
-                msg = new string[] { Header.MdPl.ToString(), name, amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdPl, name, amount.ToString("f2"));
                 break;
             case Target.Statue:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdSt, amount);
                 break;
-            case Target.Wall:
-                id = IntParse(name);
-                if (id == int.MinValue) break;
-                ModifyHp(target, id, amount);
-                break;
-            case Target.Monster:
+            default:
                 id = IntParse(name);
                 if (id == int.MinValue) break;
                 ModifyHp(target, id, amount);
                 break;
         }
-        if (msg.Length > 0)
-        {
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {target}({name})");
-        return false;
+        return SendMessageClient(message, errorMessage:$"Failed to modify HP of {target}({name})");
     }
 
     /// <summary>
@@ -729,52 +883,46 @@ public class NetworkClient : MonoBehaviour
     /// <param name="amount">The amount to modify hp</param>
     public bool ModifyHp(Target target, float amount)
     {
-        string[] msg = { };
+        string[] message = { };
         switch (target)
         {
             case Target.Player:
                 Debug.LogError("Player name not specified!");
                 break;
             case Target.Statue:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                message = MessageBuilder(Subject.MdSt, amount);
                 break;
-            case Target.Wall:
-                Debug.LogError("Id not specified!");
-                break;
-            case Target.Monster:
+            default:
                 Debug.LogError("Id not specified!");
                 break;
         }
-        if (msg.Length > 0)
-        {
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {target}");
-        return false;
+        return SendMessageClient(message, errorMessage: $"Failed to modify HP of {target}");
     }
 
     #endregion
 
     #region Utilities
-    // Utilities
+    /// <summary>
+    /// Parses a string to an enum of type <typeparamref name="T"/>
+    /// </summary>
+    /// <typeparam name="T">The enum type</typeparam>
+    /// <param name="stringToEnum">the string to parse</param>
+    /// <returns>The enum <typeparamref name="T"/></returns>
     private static T EnumParse<T>(string stringToEnum)
     {
         return (T) Enum.Parse(typeof(T), stringToEnum, true);
     }
 
+    /// <summary>
+    /// Extracts <see cref="IdLength"/> digit numbers from <paramref name="idAndName"/>
+    /// </summary>
+    /// <param name="idAndName"></param>
+    /// <returns><see cref="IdLength"/> digit numbers of id</returns>
     private static int ExtractId(string idAndName)
     {
         return int.Parse(idAndName.Substring(0, IdLength));
     }
 
-    private string SelfRun(string[] msg)
-    {
-        string data = msg.Aggregate(myId + myName, (current, x) => current + ("|" + x));
-        ReceiveMessage(data);
-        return "3";
-    }
-    
     private int IntParse(string str)
     {
         var numericString = "";

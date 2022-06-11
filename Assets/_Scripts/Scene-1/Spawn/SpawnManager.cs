@@ -109,7 +109,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// Sends a message to server to spawn player
     /// </summary>
-    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, NetworkClient.Instance.playersCount - 1);
+    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos);
 
     /// <summary>
     /// Called by <see cref="NetworkClient"/>. Instantiates a <see cref="Player"/> on <see cref="_playerPrefab"/>

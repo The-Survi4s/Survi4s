@@ -9,7 +9,7 @@ public abstract class MonsterBulletBase : BulletBase
     {
         if (owner && NetworkClient.Instance.isMaster)
         {
-            Debug.Log("Hit! " + col);
+            //Debug.Log("Hit! " + col);
             if (col.TryGetComponent(out Player player)) NetworkClient.Instance.ModifyHp(player, -owner.currentStat.atk);
             else if(col.TryGetComponent(out Wall wall)) NetworkClient.Instance.ModifyHp(wall, -owner.currentStat.atk);
             else if(col.TryGetComponent(out Statue statue)) NetworkClient.Instance.ModifyHp(statue, -owner.currentStat.atk);

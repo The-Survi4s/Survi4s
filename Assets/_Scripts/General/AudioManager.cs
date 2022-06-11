@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour
         else if (!s.source.isPlaying && (!isExclusive || !isPlaying))
         {
             s.source.Play();
-            Debug.Log(s.name);
+            //Debug.Log(s.name);
         }
     }
 

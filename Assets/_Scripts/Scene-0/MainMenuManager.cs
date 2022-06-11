@@ -43,7 +43,7 @@ public class MainMenuManager : MonoBehaviour
             selectNamePanel.SetActive(true);
             connectPanel.SetActive(false);
         }
-        else if (!NetworkClient.Instance.IsConnected())
+        else if (!NetworkClient.Instance.IsConnected)
         {
             selectNamePanel.SetActive(false);
             connectPanel.SetActive(true);
