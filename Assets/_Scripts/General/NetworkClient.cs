@@ -190,7 +190,8 @@ public class NetworkClient : MonoBehaviour
         PlVl,
         PJmp,
         ChNm,
-        GmOv
+        GmOv,
+        PlPos
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -235,7 +236,7 @@ public class NetworkClient : MonoBehaviour
             }
         else
         {
-            //Debug.Log(EnumParse<Header>(info[1]));
+            Debug.Log(EnumParse<Header>(info[1]));
             switch (EnumParse<Header>(info[1]))
             {
                 case Header.MPos:
@@ -314,7 +315,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdWl:
                 {
-                    Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
+                    //Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
                     TilemapManager.Instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
                     break;
                 }
@@ -325,7 +326,7 @@ public class NetworkClient : MonoBehaviour
                 }
                 case Header.MdSt:
                 {
-                    Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
+                    //Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
                     TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
                     break;
                 }
@@ -490,9 +491,15 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
-    public void SendMousePos(float x, float y)
+    public void SetPlayerPos(Vector2 pos)
     {
-        string[] msg = {Header.MPos.ToString(), x.ToString("f2"), y.ToString("f2")};
+        string[] msg = { Header.PlPos.ToString(), pos.x.ToString("f2"), pos.y.ToString("f2") };
+        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+    }
+
+    public void SendMousePos(Vector2 mousePos)
+    {
+        string[] msg = {Header.MPos.ToString(), mousePos.x.ToString("f2"), mousePos.y.ToString("f2")};
         SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
@@ -521,12 +528,12 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
 
-    public void SpawnBullet(Vector2 spawnPos, Vector2 mousePos, int spawnedByMonsterId = -1)
+    public void SpawnBullet(Vector2 spawnPos, Vector2 targetPos, int spawnedByMonsterId = -1)
     {
         string[] msg =
         {
-            Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), mousePos.x.ToString("f2"),
-            mousePos.y.ToString("f2"), spawnedByMonsterId.ToString()
+            Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), targetPos.x.ToString("f2"),
+            targetPos.y.ToString("f2"), spawnedByMonsterId.ToString()
         };
         SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
     }
