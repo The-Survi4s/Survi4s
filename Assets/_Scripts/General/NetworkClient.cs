@@ -30,7 +30,7 @@ public class NetworkClient : MonoBehaviour
     public string myRoomName { get; private set; }
     public bool isMaster { get; private set; }
     public int playersCount { get; private set; }
-    private int _playerNumber = -1;
+    private int _playerNumber = 0;
 
     [SerializeField, Min(0.1f)] private float CheckTime = 1f;
     private float _checkTime;
@@ -172,6 +172,7 @@ public class NetworkClient : MonoBehaviour
         {
             genId += UnityEngine.Random.Range(0, 10).ToString();
         }
+        //Debug.Log("Id generated:" + genId);
         return genId;
     }
 
@@ -267,8 +268,15 @@ public class NetworkClient : MonoBehaviour
         // Message format : sender|header|data|data|data... 
         // Svr|RCrd|...
         // ID+NameClient|MPos|...
+        message.Trim('\0');
         var info = message.Split('|');
         info[0] = info[0].Trim('\0');
+        message = "";
+        foreach (var item in info)
+        {
+            message += item + "|";
+        }
+        //Debug.Log(message);
         if (info[0] == Subject.Svr.ToString())
             switch (EnumParse<Subject>(info[1]))
             {
@@ -301,7 +309,7 @@ public class NetworkClient : MonoBehaviour
             }
         else
         {
-            Debug.Log(EnumParse<Subject>(info[1]));
+            //Debug.Log(EnumParse<Subject>(info[1]));
             switch (EnumParse<Subject>(info[1]))
             {
                 case Subject.MPos:
@@ -310,7 +318,7 @@ public class NetworkClient : MonoBehaviour
                     break;
                 }
                 case Subject.PlCt:
-                    Debug.Log(info[2]);
+                    Debug.Log("Player count:" + info[2]);
                     playersCount = int.Parse(info[2]);
                     var temp = new string[playersCount];
                     for(int i = 0; i < playersCount; i++)
@@ -692,7 +700,7 @@ public class NetworkClient : MonoBehaviour
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
         //Debug.Log($"Send spawn monster: id {id}, type {type}");
-        SendMessageClient(Recipient.All, Subject.SpwM, id, type, (int)origin);
+        SendMessageClient(Recipient.All, Subject.SpwM, id, type, (int)origin, spawnOffset);
     }
 
     public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)

@@ -120,7 +120,8 @@ public class SpawnManager : MonoBehaviour
     /// <param name="skin">Which sprite will the <see cref="Player"/> use</param>
     public void ReceiveSpawnPlayer(string idAndName, int id, Vector2 pos, int skin)
     {
-        if (_playerPrefab[skin].TryGetComponent(out Player player))
+        Debug.Log($"name:{idAndName}, id:{id}, pos:{pos}, skin:{skin}");
+        if (_playerPrefab[skin].TryGetComponent(out Player _))
         {
             GameObject temp = Instantiate(_playerPrefab[skin], pos, Quaternion.identity);
             temp.name = idAndName.Trim();
