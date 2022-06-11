@@ -210,7 +210,7 @@ public class NetworkClient : MonoBehaviour
                     OnCreatedRoom(info[2]);
                     break;
                 case Header.RJnd:
-                    OnJoinedRoom(info[2]);
+                    OnJoinedRoom(info[2], int.Parse(info[3]));
                     break;
                 case Header.RnFd:
                     JoinRoomPanel.Instance.RoomNotFound();
@@ -421,10 +421,13 @@ public class NetworkClient : MonoBehaviour
         Debug.Log("Room Created");
     }
 
-    private void OnJoinedRoom(string roomName)
+    private void OnJoinedRoom(string roomName, int count)
     {
         // Load Scene 
         ScenesManager.Instance.LoadScene(1);
+
+        // Do someting with count
+
 
         // Debugging
         Debug.Log("Room Joined");
