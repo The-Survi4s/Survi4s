@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -28,6 +29,7 @@ public class NetworkClient : MonoBehaviour
     public string myRoomName { get; private set; }
     public bool isMaster { get; private set; }
     public int playersCount { get; private set; }
+    private int _playerNumber = -1;
 
     [SerializeField, Min(0.1f)] private float CheckTime = 1f;
     private float _checkTime;
@@ -153,45 +155,97 @@ public class NetworkClient : MonoBehaviour
             _checkTime -= Time.deltaTime;
             if (_checkTime <= 0)
             {
-                SendMessageClient("2", "A");
+                SendMessageClient(Receiver.Server, "A");
             }
         }
         _runTime += Time.deltaTime;
     }
 
-    // Header enums
+    /// <summary>
+    /// Message headers
+    /// </summary>
     private enum Header
     {
-        Svr,    // Server
-        RCrd,   // Room Created
-        RJnd,   // Room Joined
-        RnFd,   // Room not found
-        RsF,    // Room is full
-        REx,    // Room exit
-        MPos,   // Sync Mouse Pos
-        PlCt,   // Player Count
-        StGm,   // Start game
+        /// <summary>Server</summary>
+        Svr,
+        /// <summary>Room created</summary>
+        RCrd,
+        /// <summary>Room joined</summary>
+        RJnd,
+        /// <summary>Room not found</summary>
+        RnFd,
+        /// <summary>Room is full</summary>
+        RsF,
+        /// <summary>Exit room</summary>
+        REx,
+        /// <summary>Sync mouse position</summary>
+        MPos,
+        /// <summary>Player count</summary>
+        PlCt,
+        /// <summary>Start game</summary>
+        StGm,
+        /// <summary>Spawn <see cref="Player"/></summary>
         SpwP,
+        /// <summary>Equip <see cref="WeaponBase"/></summary>
         EqWp,
+        /// <summary><see cref="Player"/> attack</summary>
         PAtk,
-        SwBl,
+        /// <summary>Spawn <see cref="BulletBase"/></summary>
+        SpwB,
+        /// <summary>Modify <see cref="Monster"/> hp</summary>
         MdMo,
+        /// <summary>Modify <see cref="Player"/> hp</summary>
         MdPl,
+        /// <summary>Correct <see cref="Player"/> dead position</summary>
         PlDd,
+        /// <summary>Modify <see cref="Wall"/> hp</summary>
         MdWl,
+        /// <summary>Spawn <see cref="Monster"/></summary>
         SpwM,
+        /// <summary>Add <see cref="StatusEffectBase"/> to a <see cref="Monster"/></summary>
         MoEf,
+        /// <summary><see cref="Monster"/> attack</summary>
         MAtk,
+        /// <summary>Modify <see cref="Statue"/> hp</summary>
         MdSt,
+        /// <summary><see cref="Player"/> leave room / disconnect</summary>
         LRm,
+        /// <summary>Destroy <see cref="BulletBase"/></summary>
         DBl,
+        /// <summary>Rebuilt <see cref="Wall"/></summary>
         RbWl,
+        /// <summary>Upgrade <see cref="WeaponBase"/></summary>
         UpWpn,
+        /// <summary>Sync <see cref="Player"/> velocity</summary>
         PlVl,
+        /// <summary><see cref="Player"/> jump</summary>
         PJmp,
+        /// <summary>Change name</summary>
         ChNm,
+        /// <summary>Game over</summary>
         GmOv,
-        PlPos
+        /// <summary>Sync <see cref="Player"/> position</summary>
+        PlPos,
+        /// <summary>Start Matchmaking</summary>
+        StMtc,
+        /// <summary>Request create room</summary>
+        CrR,
+        /// <summary>Request join room</summary>
+        JnR,
+        /// <summary>Request exit room</summary>
+        ExR,
+        /// <summary>Request lock room</summary>
+        LcR,
+        /// <summary>Set to Master</summary>
+        SeMs
+    }
+
+    private static class Receiver
+    {
+        public const string All = "1";
+        public const string Server = "2";
+        public const string AllExceptSender = "3";
+        public static string SpecificPlayer;
     }
 
     // Receive and Process incoming message here ----------------------------------
@@ -247,7 +301,7 @@ public class NetworkClient : MonoBehaviour
                 case Header.PlCt:
                     Debug.Log(info[2]);
                     playersCount = int.Parse(info[2]);
-                    string[] temp = new string[playersCount];
+                    var temp = new string[playersCount];
                     for(int i = 0; i < playersCount; i++)
                     {
                         temp[i] = info[i + 3];
@@ -264,7 +318,7 @@ public class NetworkClient : MonoBehaviour
                     break;
                 case Header.SpwM:
                     SpawnManager.Instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
-                        EnumParse<Origin>(info[4]), float.Parse(info[5]));
+                        (Origin)int.Parse(info[4]), float.Parse(info[5]));
                     break;
                 case Header.EqWp:
                 {
@@ -276,7 +330,7 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.PlayAttackAnimation(info[0]);
                     break;
                 }
-                case Header.SwBl:
+                case Header.SpwB:
                 {
                     var monsterId = int.Parse(info[6]);
                     var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
@@ -299,7 +353,7 @@ public class NetworkClient : MonoBehaviour
                 case Header.MoEf:
                 {
                     UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(info[2]),
-                        EnumParse<StatusEffect>(info[3]), float.Parse(info[4]), int.Parse(info[5]));
+                        (StatusEffect)int.Parse(info[3]), float.Parse(info[4]), int.Parse(info[5]));
                     break;
                 }
                 case Header.MdPl:
@@ -350,7 +404,7 @@ public class NetworkClient : MonoBehaviour
                     UnitManager.Instance.SetPlayerVelocity(
                         info[0], 
                         new Vector2(float.Parse(info[2]), float.Parse(info[3])), 
-                        EnumParse<PlayerMovement.Axis>(info[4]));
+                        (PlayerMovement.Axis)int.Parse(info[4]));
                     break;
                 }
                 case Header.PJmp:
@@ -364,6 +418,11 @@ public class NetworkClient : MonoBehaviour
                     GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
                     break;
                 }
+                case Header.PlPos:
+                    {
+
+                        break;
+                    }
             }
         }
     }
@@ -373,7 +432,7 @@ public class NetworkClient : MonoBehaviour
     {
         // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
-        string[] temp = new string[1];
+        var temp = new string[1];
         temp[0] = message;
 
         SendMessageClient(target, temp);
@@ -411,7 +470,7 @@ public class NetworkClient : MonoBehaviour
     // Private Method ---------------------------------------------------------------
     private void OnCreatedRoom(string roomName)
     {
-        // Set to master, becuse we the one created room ---------------------------
+        // Set to master, because we are the one who created the room ---------------------------
         isMaster = true;
         playersCount = 1;
 
@@ -419,7 +478,7 @@ public class NetworkClient : MonoBehaviour
         ScenesManager.Instance.LoadScene(1);
 
         // Debugging
-        Debug.Log("Room Created");
+        Debug.Log($"Room '{roomName}' Created");
     }
 
     private void OnJoinedRoom(string roomName, int count)
@@ -428,10 +487,10 @@ public class NetworkClient : MonoBehaviour
         ScenesManager.Instance.LoadScene(1);
 
         // Do someting with count
-
+        _playerNumber = count;
 
         // Debugging
-        Debug.Log("Room Joined");
+        Debug.Log("Joined room " + roomName);
     }
 
     #region Send Message To Server
@@ -439,158 +498,133 @@ public class NetworkClient : MonoBehaviour
     // Public method that can be called to send message to server -------------------
     public void ChangeName(string newId, string newName)
     {
-        string[] msg = { "ChNm", newId, newName };
-        SendMessageClient("2", msg);
+        var msg = MessageBuilder(Header.ChNm, newId, newName );
+        SendMessageClient(Receiver.Server, msg);
     }
     public void StartMatchmaking()
     {
-        SendMessageClient("2", "StMtc");
+        SendMessageClient(Receiver.Server, Header.StMtc);
     }
 
     public void CreateRoom(string roomName, int maxPlayer, bool isPublic)
     {
-        string[] message = {"CrR", roomName, maxPlayer.ToString(), isPublic.ToString()};
-        SendMessageClient("2", message);
+        var message = MessageBuilder(Header.CrR, roomName, maxPlayer.ToString(), isPublic.ToString());
+        SendMessageClient(Receiver.Server, message);
     }
 
     public void JoinRoom(string roomName)
     {
-        string[] message = {"JnR", roomName, roomName};
-        SendMessageClient("2", message);
+        var message = MessageBuilder(Header.JnR, roomName);
+        SendMessageClient(Receiver.Server, message);
     }
     public void ExitRoom()
     {
-        SendMessageClient("2", "ExR");
+        SendMessageClient(Receiver.Server, Header.ExR);
     }
 
     public void StartGame()
     {
-        SendMessageClient("1", "StGm");
+        SendMessageClient(Receiver.All, Header.StGm);
     }
     public void LockTheRoom()
     {
-        SendMessageClient("2", "LcR");
+        SendMessageClient(Receiver.Server, Header.LcR);
     }
 
-    public void SpawnPlayer(Vector2 spawnPos, int skin)
+    public void SpawnPlayer(Vector2 spawnPos)
     {
-        string[] msg = {Header.SpwP.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), skin.ToString()};
-        SendMessageClient("1", msg);
+        var msg = MessageBuilder(Header.SpwP, spawnPos.x, spawnPos.y, _playerNumber);
+        SendMessageClient(Receiver.All, msg);
     }
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
     {
         //Debug.Log($"Send spawn monster: id {id}, type {type}");
-        string[] msg = {Header.SpwM.ToString(), id.ToString(), type.ToString(), origin.ToString(), spawnOffset.ToString("F2")};
-        SendMessageClient("1", msg);
+        var msg = MessageBuilder(Header.SpwM, id, type, (int)origin, spawnOffset);
+        SendMessageClient(Receiver.All, msg);
     }
 
     public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)
     {
-        string[] msg = { Header.PlVl.ToString(), velocity.x.ToString("f2"), velocity.y.ToString("f2"), axis.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.PlVl, velocity.x, velocity.y, (int)axis );
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
-    public void SetPlayerPos(Vector2 pos)
+    public void SyncPlayerPos(Vector2 pos)
     {
-        string[] msg = { Header.PlPos.ToString(), pos.x.ToString("f2"), pos.y.ToString("f2") };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.PlPos, pos.x, pos.y);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void SendMousePos(Vector2 mousePos)
     {
-        string[] msg = {Header.MPos.ToString(), mousePos.x.ToString("f2"), mousePos.y.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.MPos, mousePos.x, mousePos.y);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
-    public void EquipWeapon(string weapon)
+    public void EquipWeapon(string weaponName)
     {
-        string[] msg = {Header.EqWp.ToString(), weapon};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.EqWp, weaponName);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void StartAttackAnimation() 
     {
-        string[] msg = {Header.PAtk.ToString()};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.PAtk);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void Jump()
     {
-        string[] msg = { Header.PJmp.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.PJmp);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void StartMonsterAttackAnimation(int targetId) 
     {
         //Debug.Log("Monster Attack Animation");
-        string[] msg = {Header.MAtk.ToString(), targetId.ToString()};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.MAtk, targetId);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void SpawnBullet(Vector2 spawnPos, Vector2 targetPos, int spawnedByMonsterId = -1)
     {
         string[] msg =
         {
-            Header.SwBl.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), targetPos.x.ToString("f2"),
+            Header.SpwB.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), targetPos.x.ToString("f2"),
             targetPos.y.ToString("f2"), spawnedByMonsterId.ToString()
         };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void DestroyBullet(int id)
     {
-        string[] msg = {Header.DBl.ToString(), id.ToString()};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyMonsterHp(int id, float amount)
-    {
-        string[] msg = {Header.MdMo.ToString(), id.ToString(), amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.DBl, id);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, float duration, int strength)
     {
-        string[] msg = {Header.MoEf.ToString(), targetId.ToString(), effect.ToString(), duration.ToString("f2"), strength.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyPlayerHp(string playerName, float amount)
-    {
-        //Debug.Log("Send: Monster deals"+amount+" damage to "+playerName);
-        string[] msg = {Header.MdPl.ToString(), playerName, amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.MoEf, targetId, (int)effect, duration, strength);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void CorrectPlayerDeadPosition(float xPos, float yPos)
     {
-        string[] msg = {Header.PlDd.ToString(), xPos.ToString("f2"), yPos.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyWallHp(int id, float amount)
-    {
-        string[] msg = {Header.MdWl.ToString(), id.ToString(), amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-    }
-
-    public void ModifyStatueHp(float amount)
-    {
-        string[] msg = {Header.MdSt.ToString(), amount.ToString("f2")};
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.PlDd, xPos, yPos);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void RebuildWall(int brokenWallId, int amount)
     {
-        string[] msg = { Header.RbWl.ToString(), brokenWallId.ToString(), amount.ToString() };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.RbWl, brokenWallId, amount);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     public void UpgradeWeapon(string weaponName)
     {
-        string[] msg = { Header.UpWpn.ToString(), weaponName };
-        SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
+        var msg = MessageBuilder(Header.UpWpn, weaponName);
+        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
     }
 
     /// <summary>
@@ -612,26 +646,19 @@ public class NetworkClient : MonoBehaviour
         switch (obj)
         {
             case Wall wall:
-                msg = new string[] { Header.MdWl.ToString(), wall.id.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdWl, wall.id, amount);
                 break;
             case Monster monster:
-                msg = new string[] { Header.MdMo.ToString(), monster.id.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdMo, monster.id, amount);
                 break;
             case Player player:
-                msg = new string[] { Header.MdPl.ToString(), player.name, amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdPl, player.name, amount.ToString("f2"));
                 break;
             case Statue _:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdSt, amount);
                 break;
         }
-        if (msg.Length > 0)
-        {
-            Debug.Log($"{msg[0]}, {msg[1]}, {amount}");
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {obj}");
-        return false;
+        return SendMessageClient(msg, $"Failed to modify HP of {obj}");
     }
 
     /// <summary>
@@ -655,28 +682,21 @@ public class NetworkClient : MonoBehaviour
         {
             case Target.Player:
                 Debug.LogError($"Must use string for Player name.");
-                var player = UnitManager.Instance.GetPlayer(id);
-                if (!player) break;
+                var player = UnitManager.Instance.GetPlayer(id); if (!player) break;
                 var name = player.name;
                 ModifyHp(target, name, amount);
                 break;
             case Target.Statue:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdSt, amount);
                 break;
             case Target.Wall:
-                msg = new string[] { Header.MdWl.ToString(), id.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdWl, id, amount);
                 break;
             case Target.Monster:
-                msg = new string[] { Header.MdMo.ToString(), id.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdMo, id, amount);
                 break;
         }
-        if (msg.Length > 0)
-        {
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {target}({id})");
-        return false;
+        return SendMessageClient(msg, $"Failed to modify HP of {target}({id})");
     }
 
     /// <summary>
@@ -699,29 +719,18 @@ public class NetworkClient : MonoBehaviour
         switch (target)
         {
             case Target.Player:
-                msg = new string[] { Header.MdPl.ToString(), name, amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdPl, name, amount.ToString("f2"));
                 break;
             case Target.Statue:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdSt, amount);
                 break;
-            case Target.Wall:
-                id = IntParse(name);
-                if (id == int.MinValue) break;
-                ModifyHp(target, id, amount);
-                break;
-            case Target.Monster:
+            default:
                 id = IntParse(name);
                 if (id == int.MinValue) break;
                 ModifyHp(target, id, amount);
                 break;
         }
-        if (msg.Length > 0)
-        {
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {target}({name})");
-        return false;
+        return SendMessageClient(msg, $"Failed to modify HP of {target}({name})");
     }
 
     /// <summary>
@@ -743,22 +752,13 @@ public class NetworkClient : MonoBehaviour
                 Debug.LogError("Player name not specified!");
                 break;
             case Target.Statue:
-                msg = new string[] { Header.MdSt.ToString(), amount.ToString("f2") };
+                msg = MessageBuilder(Header.MdSt, amount);
                 break;
-            case Target.Wall:
-                Debug.LogError("Id not specified!");
-                break;
-            case Target.Monster:
+            default:
                 Debug.LogError("Id not specified!");
                 break;
         }
-        if (msg.Length > 0)
-        {
-            SendMessageClient(_waitForServer ? "1" : SelfRun(msg), msg);
-            return true;
-        }
-        Debug.LogError($"Failed to modify hp of {target}");
-        return false;
+        return SendMessageClient(msg, $"Failed to modify HP of {target}");
     }
 
     #endregion
@@ -779,9 +779,54 @@ public class NetworkClient : MonoBehaviour
     {
         string data = msg.Aggregate(myId + myName, (current, x) => current + ("|" + x));
         ReceiveMessage(data);
-        return "3";
+        return Receiver.AllExceptSender;
     }
     
+    /// <summary>
+    /// Automatically sends <paramref name="msg"/> to <see cref="Receiver.All"/> or <see cref="Receiver.AllExceptSender"/>
+    /// </summary>
+    /// <param name="msg"></param>
+    /// <param name="errorMessage"></param>
+    /// <returns></returns>
+    private bool SendMessageClient(string[] msg, string errorMessage = null)
+    {
+        if (msg.Length > 0)
+        {
+            SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+            return true;
+        }
+        if(errorMessage != null) Debug.LogError(errorMessage);
+        return false;
+    }
+
+    private void SendMessageClient(string target, Header header)
+    {
+        SendMessageClient(target, header.ToString());
+    }
+
+    private string[] MessageBuilder(Header header, params float[] data)
+    {
+        var msg = new List<string>() { header.ToString() };
+        foreach (var item in data)
+        {
+            var isInt = (int)item == item;
+            msg.Add(item.ToString(isInt ? "f0" : "f2"));
+        }
+        return msg.ToArray();
+    }
+
+    private string[] MessageBuilder(Header header, params string[] data)
+    {
+        var msg = new List<string>() { header.ToString() };
+        msg.AddRange(data);
+        return msg.ToArray();
+    }
+
+    private string[] MessageBuilder(Header header)
+    {
+        return new string[] { header.ToString() };
+    }
+
     private int IntParse(string str)
     {
         var numericString = "";

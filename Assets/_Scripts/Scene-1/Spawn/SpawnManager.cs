@@ -109,7 +109,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// Sends a message to server to spawn player
     /// </summary>
-    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos, UnitManager.Instance.playerCount - 1);
+    public void SendSpawnPlayer() => NetworkClient.Instance.SpawnPlayer(_playerSpawnPos);
 
     /// <summary>
     /// Called by <see cref="NetworkClient"/>. Instantiates a <see cref="Player"/> on <see cref="_playerPrefab"/>
@@ -120,7 +120,6 @@ public class SpawnManager : MonoBehaviour
     /// <param name="skin">Which sprite will the <see cref="Player"/> use</param>
     public void ReceiveSpawnPlayer(string idAndName, int id, Vector2 pos, int skin)
     {
-        skin = _playerPrefab.Count - 1;
         if (_playerPrefab[skin].TryGetComponent(out Player player))
         {
             GameObject temp = Instantiate(_playerPrefab[skin], pos, Quaternion.identity);
