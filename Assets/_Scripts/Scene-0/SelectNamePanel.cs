@@ -39,7 +39,7 @@ public class SelectNamePanel : MonoBehaviour
         MainMenuManager.Instance.UpdateName(nameTemp);
 
         // Tell Server ----------------------------------------------------------------------
-        if (NetworkClient.Instance.IsConnected())
+        if (NetworkClient.Instance.IsConnected)
         {
             NetworkClient.Instance.ChangeName(IdTemp, nameTemp);
         }
