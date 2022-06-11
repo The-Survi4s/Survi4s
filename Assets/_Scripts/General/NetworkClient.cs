@@ -240,13 +240,7 @@ public class NetworkClient : MonoBehaviour
         SeMs
     }
 
-    private static class Receiver
-    {
-        public const string All = "1";
-        public const string Server = "2";
-        public const string AllExceptSender = "3";
-        public static string SpecificPlayer;
-    }
+    private enum Receiver { None, All, Server, AllExceptSender, SpecificPlayer}
 
     // Receive and Process incoming message here ----------------------------------
     private void ReceiveMessage(string message)
@@ -423,21 +417,16 @@ public class NetworkClient : MonoBehaviour
 
                         break;
                     }
+                case Header.SeMs:
+                    {
+                        break;
+                    }
             }
         }
     }
 
     // Process message that is about to be sent ---------------------------------------
-    private void SendMessageClient(string target, string message)
-    {
-        // Message format : target|header|data|data|data...
-        // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
-        var temp = new string[1];
-        temp[0] = message;
-
-        SendMessageClient(target, temp);
-    }
-    private void SendMessageClient(string target, string[] message)
+    private void SendMessageClient(string target, params string[] message)
     {
         // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
@@ -546,85 +535,72 @@ public class NetworkClient : MonoBehaviour
 
     public void SetPlayerVelocity(Vector2 velocity, PlayerMovement.Axis axis)
     {
-        var msg = MessageBuilder(Header.PlVl, velocity.x, velocity.y, (int)axis );
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.PlVl, velocity.x, velocity.y, (int)axis));
     }
 
     public void SyncPlayerPos(Vector2 pos)
     {
-        var msg = MessageBuilder(Header.PlPos, pos.x, pos.y);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.PlPos, pos.x, pos.y));
+    }
+
+    public void SyncMonsterPos(Vector2 pos)
+    {
+        SendMessageClient(MessageBuilder(Header.PlPos, pos.x, pos.y));
     }
 
     public void SendMousePos(Vector2 mousePos)
     {
-        var msg = MessageBuilder(Header.MPos, mousePos.x, mousePos.y);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.MPos, mousePos.x, mousePos.y));
     }
 
     public void EquipWeapon(string weaponName)
     {
-        var msg = MessageBuilder(Header.EqWp, weaponName);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.EqWp, weaponName));
     }
 
     public void StartAttackAnimation() 
     {
-        var msg = MessageBuilder(Header.PAtk);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.PAtk));
     }
 
     public void Jump()
     {
-        var msg = MessageBuilder(Header.PJmp);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.PJmp));
     }
 
     public void StartMonsterAttackAnimation(int targetId) 
     {
-        //Debug.Log("Monster Attack Animation");
-        var msg = MessageBuilder(Header.MAtk, targetId);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.MAtk, targetId));
     }
 
     public void SpawnBullet(Vector2 spawnPos, Vector2 targetPos, int spawnedByMonsterId = -1)
     {
-        string[] msg =
-        {
-            Header.SpwB.ToString(), spawnPos.x.ToString("f2"), spawnPos.y.ToString("f2"), targetPos.x.ToString("f2"),
-            targetPos.y.ToString("f2"), spawnedByMonsterId.ToString()
-        };
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.SpwB, spawnPos.x, spawnPos.y, targetPos.x, targetPos.y, spawnedByMonsterId));
     }
 
     public void DestroyBullet(int id)
     {
-        var msg = MessageBuilder(Header.DBl, id);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.DBl, id));
     }
 
     public void ApplyStatusEffectToMonster(int targetId, StatusEffect effect, float duration, int strength)
     {
-        var msg = MessageBuilder(Header.MoEf, targetId, (int)effect, duration, strength);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.MoEf, targetId, (int)effect, duration, strength));
     }
 
     public void CorrectPlayerDeadPosition(float xPos, float yPos)
     {
-        var msg = MessageBuilder(Header.PlDd, xPos, yPos);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.PlDd, xPos, yPos));
     }
 
     public void RebuildWall(int brokenWallId, int amount)
     {
-        var msg = MessageBuilder(Header.RbWl, brokenWallId, amount);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.RbWl, brokenWallId, amount));
     }
 
     public void UpgradeWeapon(string weaponName)
     {
-        var msg = MessageBuilder(Header.UpWpn, weaponName);
-        SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
+        SendMessageClient(MessageBuilder(Header.UpWpn, weaponName));
     }
 
     /// <summary>
@@ -658,7 +634,7 @@ public class NetworkClient : MonoBehaviour
                 msg = MessageBuilder(Header.MdSt, amount);
                 break;
         }
-        return SendMessageClient(msg, $"Failed to modify HP of {obj}");
+        return SendMessageClient(msg, errorMessage: $"Failed to modify HP of {obj}");
     }
 
     /// <summary>
@@ -696,7 +672,7 @@ public class NetworkClient : MonoBehaviour
                 msg = MessageBuilder(Header.MdMo, id, amount);
                 break;
         }
-        return SendMessageClient(msg, $"Failed to modify HP of {target}({id})");
+        return SendMessageClient(msg, errorMessage: $"Failed to modify HP of {target}({id})");
     }
 
     /// <summary>
@@ -730,7 +706,7 @@ public class NetworkClient : MonoBehaviour
                 ModifyHp(target, id, amount);
                 break;
         }
-        return SendMessageClient(msg, $"Failed to modify HP of {target}({name})");
+        return SendMessageClient(msg, errorMessage:$"Failed to modify HP of {target}({name})");
     }
 
     /// <summary>
@@ -758,50 +734,87 @@ public class NetworkClient : MonoBehaviour
                 Debug.LogError("Id not specified!");
                 break;
         }
-        return SendMessageClient(msg, $"Failed to modify HP of {target}");
+        return SendMessageClient(msg, errorMessage: $"Failed to modify HP of {target}");
     }
 
     #endregion
 
     #region Utilities
-    // Utilities
+    /// <summary>
+    /// Parses a string to an enum of type <typeparamref name="T"/>
+    /// </summary>
+    /// <typeparam name="T">The enum type</typeparam>
+    /// <param name="stringToEnum">the string to parse</param>
+    /// <returns>The enum <typeparamref name="T"/></returns>
     private static T EnumParse<T>(string stringToEnum)
     {
         return (T) Enum.Parse(typeof(T), stringToEnum, true);
     }
 
+    /// <summary>
+    /// Extracts <see cref="IdLength"/> digit numbers from <paramref name="idAndName"/>
+    /// </summary>
+    /// <param name="idAndName"></param>
+    /// <returns><see cref="IdLength"/> digit numbers of id</returns>
     private static int ExtractId(string idAndName)
     {
         return int.Parse(idAndName.Substring(0, IdLength));
     }
 
-    private string SelfRun(string[] msg)
+    /// <summary>
+    /// Emulates data sent from server, then changes <see cref="Receiver"/> type to AllExceptSender
+    /// </summary>
+    /// <param name="msg"></param>
+    /// <returns><see cref="Receiver.AllExceptSender"/></returns>
+    private Receiver SelfRun(string[] msg)
     {
         string data = msg.Aggregate(myId + myName, (current, x) => current + ("|" + x));
         ReceiveMessage(data);
         return Receiver.AllExceptSender;
     }
-    
-    /// <summary>
-    /// Automatically sends <paramref name="msg"/> to <see cref="Receiver.All"/> or <see cref="Receiver.AllExceptSender"/>
-    /// </summary>
-    /// <param name="msg"></param>
-    /// <param name="errorMessage"></param>
+
+    /// <remarks>
+    /// Sends a message to <see cref="Receiver.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else send it to <see cref="Receiver.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="msg">The message</param>
+    /// <param name="errorMessage">Show this error when fail</param>
     /// <returns></returns>
-    private bool SendMessageClient(string[] msg, string errorMessage = null)
+    private bool SendMessageClient(string[] msg, Receiver receiverIfWaitForServer = Receiver.All, string errorMessage = "Message is empty")
     {
         if (msg.Length > 0)
         {
             SendMessageClient(_waitForServer ? Receiver.All : SelfRun(msg), msg);
             return true;
         }
-        if(errorMessage != null) Debug.LogError(errorMessage);
+        Debug.LogError(errorMessage);
         return false;
     }
 
-    private void SendMessageClient(string target, Header header)
+    /// <summary>
+    /// Sends a message to server. 
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="header"></param>
+    /// <param name="data"></param>
+    private void SendMessageClient(Receiver target, Header header, params string[] data)
     {
-        SendMessageClient(target, header.ToString());
+        SendMessageClient(((int)target).ToString(), MessageBuilder(header, data));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="message"></param>
+    private void SendMessageClient(Receiver target, params string[] message)
+    {
+        SendMessageClient(((int)target).ToString(), message);
+    }
+
+    private void SendMessageClient(Receiver target, Header header)
+    {
+        SendMessageClient(((int)target).ToString(), header.ToString());
     }
 
     private string[] MessageBuilder(Header header, params float[] data)
