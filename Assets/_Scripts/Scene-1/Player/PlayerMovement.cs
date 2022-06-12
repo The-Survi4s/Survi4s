@@ -12,13 +12,18 @@ public class PlayerMovement : MonoBehaviour
     public enum Axis { none, all, x, y }
     // For player facing ---------------------------------------------------------------
     private Camera _mainCamera;
-    public Vector3 localMousePos { get; private set; }
-    private Vector3 _historyMousePos;
-    public Vector3 syncMousePos { get; private set; }
 
-    // Frame rate sending mouse pos
-    [SerializeField] private float _mousePosSendRate = 10;
-    private float _mousePosSendCoolDown, _mousePosNextTime;
+    public Vector3 localMousePos { get; private set; }
+    private Vector3 _lastMousePos;
+    public Vector3 syncedMousePos { get; private set; }
+    [SerializeField, Min(0)] private float _mousePosSyncRate = 10;
+    [SerializeField, Min(0)] private float _maxMouseDistDiff = 0.2f;
+    private float _mousePosSendCooldown, _mousePosNextTime;
+
+    [SerializeField, Min(0)] private float _positionSyncRate = 10;
+    [SerializeField, Min(0)] private float _maxDistanceDifference = 1;
+    private float _posSendCooldown, _posNextTime;
+    private Vector3 _lastPosition;
 
     // Check for near statue
     [SerializeField] private float _minStatueDist = 3.0f;
@@ -34,22 +39,19 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private Vector2 _lastMoveDir;
 
+    private AudioManager _audioManager;
+
     private void Awake()
     {
         player = GetComponent<Player>();
         _rigidbody = GetComponent<Rigidbody2D>();
+        _audioManager = GetComponent<AudioManager>();
     }
 
     private void Start()
     {
-        _historyMousePos = Vector3.zero;
-        localMousePos = Vector3.zero;
-        syncMousePos = Vector3.zero;
-        _moveDir = Vector2.zero;
-        _lastMoveDir = Vector2.zero;
-
-        _mousePosSendCoolDown = 1 / _mousePosSendRate;
-        _mousePosNextTime = 0;
+        _mousePosSendCooldown = 1 / _mousePosSyncRate;
+        _posSendCooldown = 1 / _positionSyncRate;
     }
 
     private void Update()
@@ -95,20 +97,17 @@ public class PlayerMovement : MonoBehaviour
         if (player.isLocal)
         {
             SendMousePos();
+            SendPosition();
         }
 
-        if(_rigidbody.velocity == Vector2.zero)
-        {
-            player.animator.SetBool("isWalk", false);
+        SetAnimation(_rigidbody.velocity == Vector2.zero);
+    }
 
-            GetComponent<AudioManager>().Stop("Walk");
-        }
-        else
-        {
-            player.animator.SetBool("isWalk", true);
-
-            GetComponent<AudioManager>().Play("Walk");            
-        }
+    private void SetAnimation(bool isWalking)
+    {
+        player.animator.SetBool("isWalk", isWalking);
+        if (isWalking) _audioManager.Play("Walk");
+        else _audioManager.Stop("Walk");
     }
 
     // For detecting input keyboard ------------------------------------------------------
@@ -126,6 +125,19 @@ public class PlayerMovement : MonoBehaviour
         if (axis == Axis.none) return;
         NetworkClient.Instance.SetPlayerVelocity(new Vector2(horizontalInput, verticalInput), axis);
     }
+
+    private void SendPosition()
+    {
+        if (Vector3.Distance(_lastPosition, transform.position) > _maxDistanceDifference && Time.time >= _posNextTime)
+        {
+            _lastPosition = transform.position;
+            NetworkClient.Instance.SyncPlayerPos(transform.position);
+
+            _posNextTime = Time.time + _posSendCooldown;
+        }
+    }
+
+    public void SetPosition(Vector2 pos) => transform.position = pos;
 
     // For detecting input mouse ---------------------------------------------------------
     private void DetectMovementMouse()
@@ -169,18 +181,18 @@ public class PlayerMovement : MonoBehaviour
     private void SendMousePos()
     {
         // Need update for better connection
-        if (localMousePos != _historyMousePos && Time.time >= _mousePosNextTime)
+        if (Vector3.Distance(localMousePos, _lastMousePos) > _maxDistanceDifference && Time.time >= _mousePosNextTime)
         {
-            _historyMousePos = localMousePos;
+            _lastMousePos = localMousePos;
             NetworkClient.Instance.SendMousePos(localMousePos);
 
-            _mousePosNextTime = Time.time + _mousePosSendCoolDown;
+            _mousePosNextTime = Time.time + _mousePosSendCooldown;
         }
     }
 
     // For Sync mouse pos --------------------------------------------------------------------
     public void SyncMousePos(float x, float y)
     {
-        syncMousePos = new Vector3(x, y, 0);
+        syncedMousePos = new Vector3(x, y, 0);
     }
 }

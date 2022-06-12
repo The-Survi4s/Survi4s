@@ -166,10 +166,15 @@ public abstract class Monster : MonoBehaviour
     private Player _currentTargetPlayer;
 
     /// <summary>
+    /// The name of the last player that attacked this Monster
+    /// </summary>
+    private string _lastPlayerHit;
+
+    /// <summary>
     /// Current nearest <see cref="Player"/> as a candidate to chase or attack. 
     /// <br/>Used when <see cref="MonsterMovement._currentTarget"/> is <see cref="Target.Player"/>
     /// </summary>
-    [field: SerializeField] public Player nearestPlayer { get; private set; }
+    [field: SerializeField] public Player targetPlayer { get; private set; }
 
     /// <summary>
     /// For visuals only. Checks what is this <see cref="Monster"/> currently targetting
@@ -208,7 +213,21 @@ public abstract class Monster : MonoBehaviour
 
         FirstSetup();
         CheckConflictingPriorities();
-        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
+        targetPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
+    }
+
+    public void SendSync()
+    {
+        if (!NetworkClient.Instance.isMaster) return;
+        NetworkClient.Instance.SyncMonster(id, transform.position, currentTarget, targetWall.id, targetPlayer.name);
+    }
+
+    public void Sync(Vector2 position, Target sync_target, Wall sync_targetWall, Player sync_targetPlayer)
+    {
+        transform.position = position;
+        currentTarget = sync_target;
+        if(sync_targetWall) targetWall = sync_targetWall;
+        if(sync_targetPlayer) targetPlayer = sync_targetPlayer;
     }
 
     private void FirstSetup()
@@ -241,7 +260,7 @@ public abstract class Monster : MonoBehaviour
         monsterStat.UpdateStatCooldown();
         ApplyStatusEffects();
 
-        nearestPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
+        targetPlayer = UnitManager.Instance.GetNearestPlayer(transform.position, true);
 
         if (!targetWall) ReRequestWall(_targetWallCellPos);
         
@@ -299,7 +318,7 @@ public abstract class Monster : MonoBehaviour
     /// Whenever <see cref="MonsterStat.isAttackReady"/> and one of these 
     /// <br/>objects' distance to this <see cref="Monster"/> 
     /// are less than <see cref="Setting.attackRange"/> before attacking
-    /// <br/>- <see cref="nearestPlayer"/>, 
+    /// <br/>- <see cref="targetPlayer"/>, 
     /// <br/>- <see cref="targetWall"/>, or 
     /// <br/>- <see cref="TilemapManager.statue"/>
     /// </remarks>
@@ -307,7 +326,7 @@ public abstract class Monster : MonoBehaviour
     {
         if (monsterStat.isAttackReady && !isDead)
         {
-            var nearestObj = PickNearest(nearestPlayer, targetWall, TilemapManager.Instance.statue);
+            var nearestObj = PickNearest(targetPlayer, targetWall, TilemapManager.Instance.statue);
             if (DistanceTo(nearestObj) < setting.attackRange)
             {
                 SendAttackMessage(nearestObj);
@@ -392,7 +411,6 @@ public abstract class Monster : MonoBehaviour
     /// Adds <see cref="MonsterStat.hitPoint"/> by <paramref name="amount"/>, rounded. 
     /// </summary>
     /// <param name="amount"></param>
-    private string _lastPlayerHit;
     public void ModifyHitPoint(float amount, string playerName)
     {
         monsterStat.hitPoint += Mathf.RoundToInt(amount);

@@ -95,20 +95,20 @@ public class UnitManager : MonoBehaviour
     }
 
     // Deletion
-    private void PlayerDeadEventHandler(string idAndName)
+    private void PlayerDeadEventHandler(string playerName)
     {
-        if(!_players.ContainsKey(idAndName)) return;
-        var index = SearchPlayerIndex(_players[idAndName], true);
+        if(!_players.ContainsKey(playerName)) return;
+        var index = SearchPlayerIndex(_players[playerName], true);
         if(index >= 0) _playerAliveKdTree.RemoveAt(index);
     }
 
-    public void HandlePlayerDisconnect(string idAndName)
+    public void HandlePlayerDisconnect(string playerName)
     {
-        Debug.Log(idAndName + " disconnected");
-        PlayerDeadEventHandler(idAndName);
-        if (!_players.ContainsKey(idAndName)) return;
+        Debug.Log(playerName + " disconnected");
+        PlayerDeadEventHandler(playerName);
+        if (!_players.ContainsKey(playerName)) return;
 
-        var index = SearchPlayerIndex(_players[idAndName]);
+        var index = SearchPlayerIndex(_players[playerName]);
         if (index >= 0) _playerKdTree.RemoveAt(index);
     }
 
@@ -189,10 +189,10 @@ public class UnitManager : MonoBehaviour
         _players[playerName].stats.CorrectDeadPosition(pos);
     }
 
-    public void ApplyStatusEffectToMonster(int targetId, StatusEffect statusEffect, float duration, int strength)
+    public void ApplyStatusEffectToMonster(int monsterId, StatusEffect statusEffect, float duration, int strength)
     {
-        if (!_monsters.ContainsKey(targetId)) return; 
-        _monsters[targetId].AddStatusEffect(StatusEffectFactory.CreateNew(_monsters[targetId], statusEffect, duration, strength));
+        if (!_monsters.ContainsKey(monsterId)) return; 
+        _monsters[monsterId].AddStatusEffect(StatusEffectFactory.CreateNew(_monsters[monsterId], statusEffect, duration, strength));
     }
 
     public void PlayMonsterAttackAnimation(int monsterId)
@@ -216,6 +216,27 @@ public class UnitManager : MonoBehaviour
     {
         if (!_players.ContainsKey(playerName)) return;
         _players[playerName].movement.SetVelocity(velocity, axis);
+    }
+
+    public void SyncPlayerPos(string playerName, Vector2 position)
+    {
+        if (!_players.ContainsKey(playerName)) return;
+        _players[playerName].movement.SetPosition(position);
+    }
+
+    public void SendSyncMonster()
+    {
+        foreach (var monster in _monsters.Values)
+        {
+            monster.SendSync();
+        }
+    }
+
+    public void ReceiveSyncMonster(int monsterId, Vector2 position, Target sync_target, int targetWallId, string targetPlayerName)
+    {
+        if (!_monsters.ContainsKey(monsterId)) return;
+        _monsters[monsterId].Sync(
+            position, sync_target, (Wall)TilemapManager.Instance.GetWall(targetWallId), GetPlayer(targetPlayerName));
     }
 
     // Utilities ----------------------

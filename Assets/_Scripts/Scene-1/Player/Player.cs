@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
             }
             if(!movement.isNearStatue || Input.GetKeyDown(KeyCode.Escape)) GameUIManager.Instance.ShowUpgradePanel(false);
 
-            _renderer.flipX = movement.syncMousePos.x < transform.position.x;
+            _renderer.flipX = movement.syncedMousePos.x < transform.position.x;
         }
 
         if (isDead)

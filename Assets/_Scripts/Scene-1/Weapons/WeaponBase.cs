@@ -70,7 +70,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Rotate weapon based on owner mouse pos
         RotateWeapon(isLocal
             ? ownerPlayer.movement.localMousePos
-            : ownerPlayer.movement.syncMousePos);
+            : ownerPlayer.movement.syncedMousePos);
 
         // Flip y
         rotValZ = transform.eulerAngles.z;

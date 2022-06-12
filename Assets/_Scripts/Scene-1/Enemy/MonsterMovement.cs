@@ -190,7 +190,7 @@ public class MonsterMovement : MonoBehaviour
         if (!_owner.targetWall) _owner.RequestNewTargetWall();
         _targetWallPos = _owner.targetWall.transform.position;
 
-        if (_owner.nearestPlayer && !_owner.nearestPlayer.isDead) _targetPlayerPos = _owner.nearestPlayer.transform.position;
+        if (_owner.targetPlayer && !_owner.targetPlayer.isDead) _targetPlayerPos = _owner.targetPlayer.transform.position;
         else _targetPlayerPos = _statuePos;
     }
 }

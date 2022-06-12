@@ -30,7 +30,7 @@ public class WeaponRange : WeaponBase
             return new Vector2(0, 0);
         }
 
-        return ownerPlayer.movement.syncMousePos;
+        return ownerPlayer.movement.syncedMousePos;
     }
 
     public void ReloadAmmo() => Ammo = MaxAmmo;

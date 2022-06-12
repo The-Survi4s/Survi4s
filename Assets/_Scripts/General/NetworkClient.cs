@@ -74,7 +74,13 @@ public class NetworkClient : MonoBehaviour
         _checkTime = CheckTime;
     }
 
-    // Try connecting to server ------------------------------------------------------
+    // Try connecting to server ------------------------------------------------------ Panggil ini untuk reconnect
+    // TODO:
+    // -Player disconnect belum ilang. PUNAHKAN GAMEOBJECT PLAYERNYA, lempar ke scene 0, 
+    // -Sync player and monster pos
+    // -Player reconnect
+    // -Kalo player disconnect, keluarkan UI "you have been disconnected"
+    // A
     public void BeginConnecting() 
     {
         MainMenuManager.Instance.SetActiveConnectingPanel(true);
@@ -253,7 +259,9 @@ public class NetworkClient : MonoBehaviour
         /// <summary>Request lock room</summary>
         LcR,
         /// <summary>Set to Master</summary>
-        SeMs
+        SeMs,
+        /// <summary>Sync <see cref="Monster"/> position and targets</summary>
+        SynM
     }
 
     private enum Recipient { None, All, Server, AllExceptSender, SpecificPlayer}
@@ -269,183 +277,194 @@ public class NetworkClient : MonoBehaviour
         // Svr|RCrd|...
         // ID+NameClient|MPos|...
         message.Trim('\0');
-        var info = message.Split('|');
-        info[0] = info[0].Trim('\0');
+        var msg = message.Split('|');
+        msg[0] = msg[0].Trim('\0');
         message = "";
-        foreach (var item in info)
+        foreach (var item in msg)
         {
             message += item + "|";
         }
-        Debug.Log(message);
-        if (info[0] == Subject.Svr.ToString())
-            switch (EnumParse<Subject>(info[1]))
-            {
-                case Subject.RCrd:
-                    OnCreatedRoom(info[2]);
-                    break;
-                case Subject.RJnd:
-                    OnJoinedRoom(info[2], int.Parse(info[3]));
-                    break;
-                case Subject.RnFd:
-                    JoinRoomPanel.Instance.RoomNotFound();
-                    break;
-                case Subject.RsF:
-                    JoinRoomPanel.Instance.RoomIsFull();
-                    break;
-                case Subject.REx:
-                    ScenesManager.Instance.LoadScene(0);
-                    break;
-                case Subject.LRm:
-                {
-                    UnitManager.Instance.HandlePlayerDisconnect(info[1]);
-                    break;
-                }
-                case Subject.ChNm:
-                {
-                    myId = info[2];
-                    myName = info[3];
-                    break;
-                }
-            }
-        else
+        //Debug.Log(message);
+        var senderName = msg[0];
+        var subject = EnumParse<Subject>(msg[1]);
+        
+        //Debug.Log(EnumParse<Subject>(info[1]));
+        switch (subject)
         {
-            //Debug.Log(EnumParse<Subject>(info[1]));
-            switch (EnumParse<Subject>(info[1]))
+            case Subject.RCrd:
+                OnCreatedRoom(msg[2]);
+                break;
+            case Subject.RJnd:
+                OnJoinedRoom(msg[2], int.Parse(msg[3]));
+                break;
+            case Subject.RnFd:
+                Debug.Log("Masuk room not found");
+                JoinRoomPanel.Instance.RoomNotFound();
+                break;
+            case Subject.RsF:
+                JoinRoomPanel.Instance.RoomIsFull();
+                break;
+            case Subject.REx:
+                ScenesManager.Instance.LoadScene(0);
+                break;
+            case Subject.LRm:
             {
-                case Subject.MPos:
+                UnitManager.Instance.HandlePlayerDisconnect(msg[1]);
+                break;
+            }
+            case Subject.ChNm:
+            {
+                myId = msg[2];
+                myName = msg[3];
+                break;
+            }
+            case Subject.MPos:
+            {
+                UnitManager.Instance.SyncMousePos(senderName, float.Parse(msg[2]), float.Parse(msg[3]));
+                break;
+            }
+            case Subject.PlCt:
+                Debug.Log("Player count:" + msg[2]);
+                playersCount = int.Parse(msg[2]);
+                var temp = new string[playersCount];
+                for(int i = 0; i < playersCount; i++)
                 {
-                    UnitManager.Instance.SyncMousePos(info[0], float.Parse(info[2]), float.Parse(info[3]));
-                    break;
+                    temp[i] = msg[i + 3];
                 }
-                case Subject.PlCt:
-                    Debug.Log("Player count:" + info[2]);
-                    playersCount = int.Parse(info[2]);
-                    var temp = new string[playersCount];
-                    for(int i = 0; i < playersCount; i++)
-                    {
-                        temp[i] = info[i + 3];
-                    }
-                    GameUIManager.Instance.UpdatePlayersInRoom(temp);
-                    break;
-                case Subject.StGm:
-                    GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
-                    break;
-                case Subject.SpwP:
-                    SpawnManager.Instance.ReceiveSpawnPlayer(info[0], ExtractId(info[0]), 
-                        new Vector2(float.Parse(info[2]), float.Parse(info[3])),
-                        int.Parse(info[4]));
-                    break;
-                case Subject.SpwM:
-                    SpawnManager.Instance.ReceiveSpawnMonster(int.Parse(info[2]), int.Parse(info[3]),
-                        (Origin)int.Parse(info[4]), float.Parse(info[5]));
-                    break;
-                case Subject.EqWp:
+                GameUIManager.Instance.UpdatePlayersInRoom(temp);
+                break;
+            case Subject.StGm:
+                GameManager.Instance.ChangeState(GameManager.GameState.StartGame);
+                break;
+            case Subject.SpwP:
+                SpawnManager.Instance.ReceiveSpawnPlayer(senderName, ExtractId(senderName), 
+                    new Vector2(float.Parse(msg[2]), float.Parse(msg[3])),
+                    int.Parse(msg[4]));
+                break;
+            case Subject.SpwM:
+                SpawnManager.Instance.ReceiveSpawnMonster(int.Parse(msg[2]), int.Parse(msg[3]),
+                    (Origin)int.Parse(msg[4]), float.Parse(msg[5]));
+                break;
+            case Subject.EqWp:
+            {
+                UnitManager.Instance.OnEquipWeapon(senderName, msg[2]);
+                break;
+            }
+            case Subject.PAtk:
+            {
+                UnitManager.Instance.PlayAttackAnimation(senderName);
+                break;
+            }
+            case Subject.SpwB:
+            {
+                var monsterId = int.Parse(msg[6]);
+                var a = new Vector2(float.Parse(msg[2]), float.Parse(msg[3]));
+                var b = new Vector2(float.Parse(msg[4]), float.Parse(msg[5]));
+                if (monsterId != -1)
                 {
-                    UnitManager.Instance.OnEquipWeapon(info[0], info[2]);
-                    break;
+                    UnitManager.Instance.SpawnBullet(monsterId, a, b);
                 }
-                case Subject.PAtk:
+                else
                 {
-                    UnitManager.Instance.PlayAttackAnimation(info[0]);
-                    break;
+                    UnitManager.Instance.SpawnBullet(senderName, a, b);
                 }
-                case Subject.SpwB:
-                {
-                    var monsterId = int.Parse(info[6]);
-                    var a = new Vector2(float.Parse(info[2]), float.Parse(info[3]));
-                    var b = new Vector2(float.Parse(info[4]), float.Parse(info[5]));
-                    if (monsterId != -1)
-                    {
-                        UnitManager.Instance.SpawnBullet(monsterId, a, b);
-                    }
-                    else
-                    {
-                        UnitManager.Instance.SpawnBullet(info[0], a, b);
-                    }
-                    break;
-                }
-                case Subject.MdMo:
-                {
-                    UnitManager.Instance.ModifyMonsterHp(int.Parse(info[2]), float.Parse(info[3]), info[0]);
-                    break;
-                }
-                case Subject.MoEf:
-                {
-                    UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(info[2]),
-                        (StatusEffect)int.Parse(info[3]), float.Parse(info[4]), int.Parse(info[5]));
-                    break;
-                }
-                case Subject.MdPl:
-                {
-                    //Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
-                    UnitManager.Instance.ModifyPlayerHp(info[2], float.Parse(info[3]));
-                    break;
-                }
-                case Subject.PlDd:
-                {
-                    UnitManager.Instance.CorrectDeadPosition(info[0], new Vector2(float.Parse(info[2]), float.Parse(info[3])));
-                    break;
-                }
-                case Subject.MdWl:
-                {
-                    //Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
-                    TilemapManager.Instance.ModifyWallHp(int.Parse(info[2]), float.Parse(info[3]));
-                    break;
-                }
-                case Subject.MAtk:
-                {
-                    UnitManager.Instance.PlayMonsterAttackAnimation(int.Parse(info[2]));
-                    break;
-                }
-                case Subject.MdSt:
-                {
-                    //Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
-                    TilemapManager.Instance.ModifyStatueHp(float.Parse(info[2]));
-                    break;
-                }
-                case Subject.DBl:
-                {
-                    UnitManager.Instance.DestroyBullet(int.Parse(info[2]));
-                    break;
-                }
-                case Subject.RbWl:
-                {
-                    TilemapManager.Instance.RebuiltWall(int.Parse(info[2]), int.Parse(info[3]));
-                    break;
-                }
-                case Subject.UpWpn:
-                {
-                    UnitManager.Instance.UpgradeWeapon(info[2]);
-                    break;
-                }
-                case Subject.PlVl:
-                {
-                    UnitManager.Instance.SetPlayerVelocity(
-                        info[0], 
-                        new Vector2(float.Parse(info[2]), float.Parse(info[3])), 
-                        (PlayerMovement.Axis)int.Parse(info[4]));
-                    break;
-                }
-                case Subject.PJmp:
-                {
-                    var player = UnitManager.Instance.GetPlayer(info[0]);
-                    if(player) player.movement.Jump();
-                    break;
-                }
-                case Subject.GmOv:
-                {
-                    GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
-                    break;
-                }
-                case Subject.PlPos:
-                    {
-
-                        break;
-                    }
-                case Subject.SeMs:
-                    {
-                        break;
-                    }
+                break;
+            }
+            case Subject.MdMo:
+            {
+                UnitManager.Instance.ModifyMonsterHp(int.Parse(msg[2]), float.Parse(msg[3]), senderName);
+                break;
+            }
+            case Subject.MoEf:
+            {
+                UnitManager.Instance.ApplyStatusEffectToMonster(int.Parse(msg[2]),
+                    (StatusEffect)int.Parse(msg[3]), float.Parse(msg[4]), int.Parse(msg[5]));
+                break;
+            }
+            case Subject.MdPl:
+            {
+                //Debug.Log("Receive: ModifyPlayerHp " + info[2] + " " + info[3]);
+                UnitManager.Instance.ModifyPlayerHp(msg[2], float.Parse(msg[3]));
+                break;
+            }
+            case Subject.PlDd:
+            {
+                UnitManager.Instance.CorrectDeadPosition(senderName, new Vector2(float.Parse(msg[2]), float.Parse(msg[3])));
+                break;
+            }
+            case Subject.MdWl:
+            {
+                //Debug.Log($"Wall {int.Parse(info[2])} hp modified by {float.Parse(info[3])}");
+                TilemapManager.Instance.ModifyWallHp(int.Parse(msg[2]), float.Parse(msg[3]));
+                break;
+            }
+            case Subject.MAtk:
+            {
+                UnitManager.Instance.PlayMonsterAttackAnimation(int.Parse(msg[2]));
+                break;
+            }
+            case Subject.MdSt:
+            {
+                //Debug.Log($"Statue hp modified by {float.Parse(info[2])}");
+                TilemapManager.Instance.ModifyStatueHp(float.Parse(msg[2]));
+                break;
+            }
+            case Subject.DBl:
+            {
+                UnitManager.Instance.DestroyBullet(int.Parse(msg[2]));
+                break;
+            }
+            case Subject.RbWl:
+            {
+                TilemapManager.Instance.RebuiltWall(int.Parse(msg[2]), int.Parse(msg[3]));
+                break;
+            }
+            case Subject.UpWpn:
+            {
+                UnitManager.Instance.UpgradeWeapon(msg[2]);
+                break;
+            }
+            case Subject.PlVl:
+            {
+                UnitManager.Instance.SetPlayerVelocity(
+                    senderName, 
+                    new Vector2(float.Parse(msg[2]), float.Parse(msg[3])), 
+                    (PlayerMovement.Axis)int.Parse(msg[4]));
+                break;
+            }
+            case Subject.PJmp:
+            {
+                var player = UnitManager.Instance.GetPlayer(senderName);
+                if(player) player.movement.Jump();
+                break;
+            }
+            case Subject.GmOv:
+            {
+                GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
+                break;
+            }
+            case Subject.PlPos:
+            {
+                UnitManager.Instance.SyncPlayerPos(
+                    playerName:     senderName,
+                    position:       new Vector2(float.Parse(msg[2]), float.Parse(msg[3]))
+                    );
+                break;
+            }
+            case Subject.SynM:
+            {
+                UnitManager.Instance.ReceiveSyncMonster(
+                    monsterId:          int.Parse(msg[2]),
+                    position:           new Vector2(float.Parse(msg[3]), float.Parse(msg[4])),
+                    sync_target:        EnumParse<Target>(msg[5]),
+                    targetWallId:       int.Parse(msg[6]),
+                    targetPlayerName:   msg[7]);
+                break;
+            }
+            case Subject.SeMs:
+            {
+                isMaster = true;
+                break;
             }
         }
     }
@@ -488,9 +507,9 @@ public class NetworkClient : MonoBehaviour
 
     /// <summary>
     /// Sends a message to server with auto <see cref="Recipient"/>
-    /// <br/><paramref name="message"/> must already includes <see cref="Subject"/>
     /// </summary>
     /// <remarks>
+    /// <paramref name="message"/> must already have <see cref="Subject"/> included. <br/><br/>
     /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
     /// Else set it to <see cref="Recipient.AllExceptSender"/>
     /// </remarks>
@@ -512,12 +531,12 @@ public class NetworkClient : MonoBehaviour
     /// Sends a message to server with auto <see cref="Recipient"/>
     /// </summary>
     /// <remarks>
+    /// <paramref name="body"/> must not have any <see cref="Subject"/> in it. <br/><br/>
     /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
     /// Else set it to <see cref="Recipient.AllExceptSender"/>
     /// </remarks>
     /// <param name="subject"></param>
     /// <param name="body">The message</param>
-    /// <param name="errorMessage">Show this error when fail</param>
     /// <returns></returns>
     private bool SendMessageClient(Subject subject, params string[] body)
     {
@@ -528,16 +547,52 @@ public class NetworkClient : MonoBehaviour
     /// Sends a message to server with auto <see cref="Recipient"/>
     /// </summary>
     /// <remarks>
+    /// <paramref name="body"/> must not have any <see cref="Subject"/> in it. <br/><br/>
     /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
     /// Else set it to <see cref="Recipient.AllExceptSender"/>
     /// </remarks>
     /// <param name="subject"></param>
     /// <param name="body">The message</param>
-    /// <param name="errorMessage">Show this error when fail</param>
     /// <returns></returns>
     private bool SendMessageClient(Subject subject, params float[] body)
     {
         return SendMessageClient(MessageBuilder(subject, body));
+    }
+
+    /// <summary>
+    /// Sends a message to server with auto <see cref="Recipient"/><br/>
+    /// Appends <paramref name="body2"/> behind <paramref name="body1"/>
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="body1"/> and <paramref name="body2"/> must not have any <see cref="Subject"/> in it. <br/><br/>
+    /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else set it to <see cref="Recipient.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="subject"></param>
+    /// <param name="body1"></param>
+    /// <param name="body2"></param>
+    /// <returns></returns>
+    private bool SendMessageClient(Subject subject, string[] body1, params string[] body2)
+    {
+        return SendMessageClient(MessageBuilder(subject, body1, body2));
+    }
+
+    /// <summary>
+    /// Sends a message to server with auto <see cref="Recipient"/>. <br/>
+    /// Appends <paramref name="body2"/> behind <paramref name="body1"/>
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="body1"/> and <paramref name="body2"/> must not have any <see cref="Subject"/> in it. <br/><br/>
+    /// Receiver set to <see cref="Recipient.All"/> if <see cref="_waitForServer"/> is set to <see langword="true"/>. <br/>
+    /// Else set it to <see cref="Recipient.AllExceptSender"/>
+    /// </remarks>
+    /// <param name="subject"></param>
+    /// <param name="body1"></param>
+    /// <param name="body2"></param>
+    /// <returns></returns>
+    private bool SendMessageClient(Subject subject, string[] body1, params float[] body2)
+    {
+        return SendMessageClient(MessageBuilder(subject, body1, body2));
     }
 
     /// <summary>
@@ -548,8 +603,6 @@ public class NetworkClient : MonoBehaviour
     /// Else set it to <see cref="Recipient.AllExceptSender"/>
     /// </remarks>
     /// <param name="subject"></param>
-    /// <param name="body">The message</param>
-    /// <param name="errorMessage">Show this error when fail</param>
     /// <returns></returns>
     private bool SendMessageClient(Subject subject)
     {
@@ -558,8 +611,10 @@ public class NetworkClient : MonoBehaviour
 
     /// <summary>
     /// Sends a message to server. 
-    /// <br/><paramref name="message"/> must already includes <see cref="Subject"/>
     /// </summary>
+    /// <remarks>
+    /// <paramref name="message"/> must already have <see cref="Subject"/> included. 
+    /// </remarks>
     /// <param name="receiver"></param>
     /// <param name="message"></param>
     private void SendMessageClient(Recipient receiver, params string[] message)
@@ -573,33 +628,33 @@ public class NetworkClient : MonoBehaviour
     }
 
     /// <summary>
-    /// Constructs a message. 
+    /// Constructs a message. This is the base of MessageBuilder
     /// </summary>
+    /// <remarks>
+    /// <paramref name="body"/> must not have any <see cref="Subject"/> in it
+    /// </remarks>
     /// <param name="subject">Message subject</param>
-    /// <param name="body">Message body</param>
-    /// <returns></returns>
-    private string[] MessageBuilder(Subject subject, params float[] body)
-    {
-        var msg = new List<string>() { subject.ToString() };
-        foreach (var item in body)
-        {
-            var isInt = (int)item == item;
-            msg.Add(item.ToString(isInt ? "f0" : "f2"));
-        }
-        return msg.ToArray();
-    }
-
-    /// <summary>
-    /// Constructs a message. 
-    /// </summary>
-    /// <param name="subject">Message subject</param>
-    /// <param name="body">Message body</param>
+    /// <param name="body">Message body. Build message bodies using <see cref="BodyBuilder(string[])"/></param>
     /// <returns></returns>
     private string[] MessageBuilder(Subject subject, params string[] body)
     {
         var msg = new List<string>() { subject.ToString() };
         msg.AddRange(body);
         return msg.ToArray();
+    }
+
+    /// <summary>
+    /// Constructs a message. 
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="body"/> must not have any <see cref="Subject"/> in it
+    /// </remarks>
+    /// <param name="subject">Message subject</param>
+    /// <param name="body">Message body</param>
+    /// <returns></returns>
+    private string[] MessageBuilder(Subject subject, params float[] body)
+    {
+        return MessageBuilder(subject, BodyBuilder(body));
     }
 
     /// <summary>
@@ -612,7 +667,90 @@ public class NetworkClient : MonoBehaviour
         return new string[] { subject.ToString() };
     }
 
-    // Process message that is about to be sent ---------------------------------------
+    /// <summary>
+    /// Constructs a message. Combines <paramref name="body1"/> and <paramref name="body2"/>
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="body1"/> and <paramref name="body2"/> must not have any <see cref="Subject"/> in them. 
+    /// </remarks>
+    /// <param name="subject">Message subject</param>
+    /// <param name="body1">the main body</param>
+    /// <param name="body2">body to append behind <paramref name="body1"/></param>
+    /// <returns></returns>
+    private string[] MessageBuilder(Subject subject, string[] body1, params string[] body2)
+    {
+        return MessageBuilder(subject, BodyBuilder(body1, body2));
+    }
+
+    /// <summary>
+    /// Constructs a message. Combines <paramref name="body1"/> and <paramref name="body2"/>
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="body1"/> and <paramref name="body2"/> must not have any <see cref="Subject"/> in them. 
+    /// </remarks>
+    /// <param name="subject">Message subject</param>
+    /// <param name="body1">the main body</param>
+    /// <param name="body2">body to append behind <paramref name="body1"/></param>
+    /// <returns></returns>
+    private string[] MessageBuilder(Subject subject, string[] body1, params float[] body2)
+    {
+        return MessageBuilder(subject, BodyBuilder(body1, body2));
+    }
+
+    /// <summary>
+    /// Constructs a message body. 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    private string[] BodyBuilder(params string[] data) => data;
+
+    /// <summary>
+    /// Constructs a message body. 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    private string[] BodyBuilder(params float[] data)
+    {
+        var msg = new List<string>();
+        foreach (var item in data)
+        {
+            var isInt = (int)item == item;
+            msg.Add(item.ToString(isInt ? "f0" : "f2"));
+        }
+        return msg.ToArray();
+    }
+
+    /// <summary>
+    /// Constructs a message body. Appends <paramref name="data"/> behind <paramref name="body"/>
+    /// </summary>
+    /// <param name="body"></param>
+    /// <param name="data">The data to append behind <paramref name="body"/></param>
+    /// <returns></returns>
+    private string[] BodyBuilder(string[] body, params string[] data)
+    {
+        List<string> msg = body.ToList();
+        msg.AddRange(body);
+        msg.AddRange(data);
+        return msg.ToArray();
+    }
+
+    /// <summary>
+    /// Constructs a message body. Appends <paramref name="data"/> behind <paramref name="body"/>
+    /// </summary>
+    /// <param name="body"></param>
+    /// <param name="data">The data to append behind <paramref name="body"/></param>
+    /// <returns></returns>
+    private string[] BodyBuilder(string[] body, params float[] data)
+    {
+        return BodyBuilder(body, BodyBuilder(data));
+    }
+
+    //  ---------------------------------------
+    /// <summary>
+    /// Processes message that is about to be sent, then send the message to the server. 
+    /// </summary>
+    /// <param name="target">The value of <see cref="Recipient"/>, in string</param>
+    /// <param name="message">The message. Build messages using <see cref="MessageBuilder(Subject, string[])"/></param>
     private void SendMessageClient(string target, params string[] message)
     {
         // Message format : target|header|data|data|data...
@@ -713,9 +851,9 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient(Subject.PlPos, pos.x, pos.y);
     }
 
-    public void SyncMonsterPos(Vector2 pos)
+    public void SyncMonster(int monsterId, Vector2 pos, Target currentTarget, int targetWallId, string targetPlayer)
     {
-        SendMessageClient(Subject.PlPos, pos.x, pos.y);
+        SendMessageClient(Subject.SynM, BodyBuilder(monsterId, pos.x, pos.y, (int)currentTarget, targetWallId), targetPlayer);
     }
 
     public void SendMousePos(Vector2 mousePos)
