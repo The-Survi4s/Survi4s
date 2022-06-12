@@ -276,7 +276,7 @@ public class NetworkClient : MonoBehaviour
         {
             message += item + "|";
         }
-        //Debug.Log(message);
+        Debug.Log(message);
         if (info[0] == Subject.Svr.ToString())
             switch (EnumParse<Subject>(info[1]))
             {
@@ -619,7 +619,7 @@ public class NetworkClient : MonoBehaviour
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
 
         string data = message.Aggregate(target, (current, x) => current + ("|" + x));
-
+        Debug.Log("Send:" + data);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(networkStream, data);
 
