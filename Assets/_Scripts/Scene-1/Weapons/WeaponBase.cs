@@ -13,7 +13,7 @@ public abstract class WeaponBase : MonoBehaviour
     public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
     public float cooldownDuration { get; protected set; }
-    public float remainingCooldownTime => Mathf.Max(0, Time.time - nextAttackTime);
+    public float remainingCooldownTime => Mathf.Clamp(nextAttackTime - Time.time, 0, cooldownDuration);
     protected float nextAttackTime;
     public bool isReady => Time.time >= nextAttackTime;
     protected Player ownerPlayer;

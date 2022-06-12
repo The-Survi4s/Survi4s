@@ -349,7 +349,7 @@ public class TilemapManager : MonoBehaviour
     /// Must NOT <see langword="null"/>: <br/><code>    <see cref="_wallTileStages"/></code><br/><code>    <see cref="_statueTileStages"/></code>
     /// </remarks>
     /// <param name="tile"> The tile to be updated </param>
-    public void UpdateWallTilemap(DestroyableTile tile)
+    public async void UpdateWallTilemap(DestroyableTile tile)
     {
         // Choosing the right Tile Stages
         var tileStages = tile switch
@@ -370,12 +370,13 @@ public class TilemapManager : MonoBehaviour
         tile.spriteVariantId = variantId;
         var cellPos = tile.cellPos;
 
-        //var isDestroyed = false;
+        var isDestroyed = false;
         // If wall is destroyed variant, spawn brokenWall
         if (variantId == variantCount && tile is Wall wall)
         {
             SpawnBrokenWall(wall);
-            //isDestroyed = true;
+            Destroy(wall.gameObject);
+            isDestroyed = true;
         }
 
         // Store does this location has a navmesh
@@ -384,9 +385,11 @@ public class TilemapManager : MonoBehaviour
         // Set tile, then update Tilemap and NavMesh
         TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
         _wallTilemap.SetTile(cellPos, newTile);
+        await Task.Delay(100);
         _wallTilemap.RefreshTile(cellPos);
 
         //Debug.Log($"tile {tile} at {cellPos} isDestroyed? {isDestroyed}, newTile:{newTile}. varId:{variantId}/{variantCount}");
+        if (isDestroyed) NavMeshController.UpdateNavMesh();
     }
 
     /// <summary>

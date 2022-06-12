@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         _renderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        stats.PlayerRevived += OnPlayerRevivedEventHandler;
     }
 
     private void Start()
@@ -75,10 +77,20 @@ public class Player : MonoBehaviour
         else animator.SetBool("isDead", false);
     }
 
+    private void OnPlayerRevivedEventHandler(string playerName)
+    {
+        animator.Play("MainCharIdle");
+    }
+
     public bool isDead => stats.isDead;
 
     public void AddKillCount()
     {
         KillCount++;
+    }
+
+    private void OnDestroy()
+    {
+        stats.PlayerRevived -= OnPlayerRevivedEventHandler;
     }
 }

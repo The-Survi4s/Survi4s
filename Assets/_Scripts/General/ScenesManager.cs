@@ -23,4 +23,8 @@ public class ScenesManager : MonoBehaviour
     {
         SceneManager.LoadScene(id);
     }
+
+    [SerializeField] private GameObject _disconnectedPanel;
+
+    public void SetDisconnectedPanelActive(bool isActive) => _disconnectedPanel.SetActive(isActive);
 }

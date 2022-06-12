@@ -218,8 +218,13 @@ public abstract class Monster : MonoBehaviour
 
     public void SendSync()
     {
-        if (!NetworkClient.Instance.isMaster) return;
-        NetworkClient.Instance.SyncMonster(id, transform.position, currentTarget, targetWall.id, targetPlayer.name);
+        if (!NetworkClient.Instance.isMaster || !targetWall || !targetPlayer) return;
+        NetworkClient.Instance.SyncMonster(
+            id, 
+            transform.position, 
+            currentTarget, 
+            targetWall ? targetWall.id : -1, 
+            targetPlayer ? targetPlayer.name : "");
     }
 
     public void Sync(Vector2 position, Target sync_target, Wall sync_targetWall, Player sync_targetPlayer)

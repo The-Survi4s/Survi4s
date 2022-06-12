@@ -354,7 +354,7 @@ MonoBehaviour:
   _healthBar: {fileID: 0}
   _ammoUIPrefab: {fileID: 6552638097850743740, guid: 0035106f1ece4c64cae2e633d8090b0a, type: 3}
   _ammoGap: 4
-  _ammoOffset: {x: -2, y: 2}
+  _ammoOffset: {x: -2, y: 0}
   _currentXpText: {fileID: 0}
   _killCountText: {fileID: 0}
   _monsterLeftText: {fileID: 0}
@@ -389,6 +389,8 @@ MonoBehaviour:
   _UWPrompt: {fileID: 0}
   _damageOverlay: {fileID: 0}
   _selectedWeapon: {fileID: 0}
+  _weaponCooldownRect: {fileID: 0}
+  _selectedWeaponSize: 27
   _inGameMenuPanel: {fileID: 0}
   _mainPanel: {fileID: 0}
   _preparationPanel: {fileID: 0}

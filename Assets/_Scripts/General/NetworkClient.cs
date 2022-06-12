@@ -77,14 +77,13 @@ public class NetworkClient : MonoBehaviour
     // Try connecting to server ------------------------------------------------------ Panggil ini untuk reconnect
     // TODO:
     // -Player disconnect belum ilang. PUNAHKAN GAMEOBJECT PLAYERNYA, lempar ke scene 0, 
-    // -Sync player and monster pos
     // -Player reconnect
     // -Kalo player disconnect, keluarkan UI "you have been disconnected"
     // A
     public void BeginConnecting() 
     {
         MainMenuManager.Instance.SetActiveConnectingPanel(true);
-
+        ScenesManager.Instance.SetDisconnectedPanelActive(false);
         // Get Player Name -----------------------------------------------------------
         myName = PlayerDataLoader.Instance.TheData.UserName;
         myId = GeneratePlayerId();
@@ -309,7 +308,8 @@ public class NetworkClient : MonoBehaviour
                 break;
             case Subject.LRm:
             {
-                UnitManager.Instance.HandlePlayerDisconnect(msg[1]);
+                UnitManager.Instance.HandlePlayerDisconnect(senderName);
+                if (senderName == myName) ScenesManager.Instance.SetDisconnectedPanelActive(true);
                 break;
             }
             case Subject.ChNm:
@@ -453,6 +453,7 @@ public class NetworkClient : MonoBehaviour
             }
             case Subject.SynM:
             {
+                    //Debug.Log(message);
                 UnitManager.Instance.ReceiveSyncMonster(
                     monsterId:          int.Parse(msg[2]),
                     position:           new Vector2(float.Parse(msg[3]), float.Parse(msg[4])),
@@ -470,7 +471,7 @@ public class NetworkClient : MonoBehaviour
     }
     #endregion
 
-    #region Send Message Wrapper
+    #region SendMessageClient Wrapper
     /// <summary>
     /// Emulates data sent from server, then changes <see cref="Recipient"/> type to AllExceptSender
     /// </summary>
@@ -622,6 +623,11 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient(((int)receiver).ToString(), message);
     }
 
+    /// <summary>
+    /// Sends an empty message to server. 
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="subject"></param>
     private void SendMessageClient(Recipient receiver, Subject subject)
     {
         SendMessageClient(((int)receiver).ToString(), subject.ToString());
@@ -729,7 +735,6 @@ public class NetworkClient : MonoBehaviour
     private string[] BodyBuilder(string[] body, params string[] data)
     {
         List<string> msg = body.ToList();
-        msg.AddRange(body);
         msg.AddRange(data);
         return msg.ToArray();
     }
@@ -744,28 +749,45 @@ public class NetworkClient : MonoBehaviour
     {
         return BodyBuilder(body, BodyBuilder(data));
     }
+    
+    private string UnpackMessage(string[] message)
+    {
+        var str = "";
+        foreach (var item in message)
+        {
+            str += item + "|";
+        }
+        return str;
+    }
+    #endregion
 
     //  ---------------------------------------
     /// <summary>
     /// Processes message that is about to be sent, then send the message to the server. 
     /// </summary>
     /// <param name="target">The value of <see cref="Recipient"/>, in string</param>
-    /// <param name="message">The message. Build messages using <see cref="MessageBuilder(Subject, string[])"/></param>
+    /// <param name="message">The message. Use <see cref="MessageBuilder(Subject, string[])"/> to build messages</param>
     private void SendMessageClient(string target, params string[] message)
     {
         // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
+        try
+        {
+            string data = message.Aggregate(target, (current, x) => current + ("|" + x));
+            //Debug.Log("Send:" + data);
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(networkStream, data);
 
-        string data = message.Aggregate(target, (current, x) => current + ("|" + x));
-        Debug.Log("Send:" + data);
-        BinaryFormatter formatter = new BinaryFormatter();
-        formatter.Serialize(networkStream, data);
-
-        _checkTime = CheckTime;
-        _sendTimes++;
-        _sendTimesPerSecond = _sendTimes / _runTime;
+            _checkTime = CheckTime;
+            _sendTimes++;
+            _sendTimesPerSecond = _sendTimes / _runTime;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Send Message error: " + e);
+            SelfRun(MessageBuilder(Subject.LRm));
+        }
     }
-    #endregion
 
     #region Event Handlers
     // Private Method ---------------------------------------------------------------

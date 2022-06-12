@@ -184,10 +184,10 @@ MonoBehaviour:
   _sounds:
   - name: Attacked
     clip: {fileID: 8300000, guid: e0442ff554f88e34db78b31f8f7eb3bb, type: 3}
-    volume: 0.5
+    volume: 0.19
     pitch: 1
     priority: 128
     loop: 0
     source: {fileID: 0}
-  _minDistance: 10
-  _maxDistance: 100
+  _minDistance: 0
+  _maxDistance: 10

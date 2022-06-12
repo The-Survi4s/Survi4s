@@ -7,7 +7,9 @@ using Random = UnityEngine.Random;
 
 public class UnitManager : MonoBehaviour
 {
-    // Prefab -------------------------------------------------------------------------
+    // ---- -------------------------------------------------------------------------
+    private float _syncTime = 0.5f;
+    private float _nextSyncTime;
 
     // List ---------------------------------------------------------------------------
     private KdTree<Player> _playerKdTree;
@@ -55,7 +57,11 @@ public class UnitManager : MonoBehaviour
         _playerAliveKdTree.UpdatePositions();
         _monsterKdTree.UpdatePositions();
 
-        //Update player username to whatever the hell
+        if(Time.time > _nextSyncTime)
+        {
+            SendSyncMonster();
+            _nextSyncTime = Time.time + _syncTime;
+        }
     }
 
     // Spawn ------------------------------------------------------------------
@@ -70,7 +76,8 @@ public class UnitManager : MonoBehaviour
 
     private void PlayerRevivedEventHandler(string idAndName)
     {
-        
+        var player = GetPlayer(idAndName);
+        if(player) _playerAliveKdTree.Add(player);
     }
 
     public void AddMonster(Monster monster)
@@ -235,6 +242,7 @@ public class UnitManager : MonoBehaviour
     public void ReceiveSyncMonster(int monsterId, Vector2 position, Target sync_target, int targetWallId, string targetPlayerName)
     {
         if (!_monsters.ContainsKey(monsterId)) return;
+        Debug.Log("TargetPlayer:" + targetPlayerName + ".");
         _monsters[monsterId].Sync(
             position, sync_target, (Wall)TilemapManager.Instance.GetWall(targetWallId), GetPlayer(targetPlayerName));
     }

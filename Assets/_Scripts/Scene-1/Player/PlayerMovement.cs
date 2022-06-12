@@ -100,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
             SendPosition();
         }
 
-        SetAnimation(_rigidbody.velocity == Vector2.zero);
+        SetAnimation(_rigidbody.velocity != Vector2.zero);
     }
 
     private void SetAnimation(bool isWalking)
