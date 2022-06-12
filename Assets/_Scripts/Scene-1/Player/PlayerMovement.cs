@@ -181,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
     private void SendMousePos()
     {
         // Need update for better connection
-        if (Vector3.Distance(localMousePos, _lastMousePos) > _maxDistanceDifference && Time.time >= _mousePosNextTime)
+        if (Vector3.Distance(localMousePos, _lastMousePos) > _maxMouseDistDiff && Time.time >= _mousePosNextTime)
         {
             _lastMousePos = localMousePos;
             NetworkClient.Instance.SendMousePos(localMousePos);

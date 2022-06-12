@@ -52,6 +52,7 @@ public class GameUIManager : MonoBehaviour
         UpdateAmmoUI();
         UpdateExpUI();
         ShowUpgradePrompt();
+        UpdateWeaponUI();
     }
 
     [Header("Health UI")]
@@ -79,14 +80,12 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private float _ammoGap;
     [SerializeField] private Vector2 _ammoOffset = new Vector2(-2, 2);
     private List<GameObject> _ammoUIList;
-    private WeaponRange _weaponRange;
 
     private void UpdateAmmoUI()
     {
         var weapon = _localPlayer.weaponManager.weapon;
         if (weapon is WeaponRange wr)
         {
-            _weaponRange = wr;
             SetAmmoActive(wr.Ammo);
         }
         else
@@ -249,10 +248,10 @@ public class GameUIManager : MonoBehaviour
             var weapon = _localPlayer.weaponManager.weapon;
             _statTexts.first.atkText.text = weapon.baseAttack.ToString();
             _statTexts.first.critText.text = weapon.critRate.ToString();
-            _statTexts.first.cooldownText.text = weapon.cooldownTime.ToString();
+            _statTexts.first.cooldownText.text = weapon.cooldownDuration.ToString();
             _statTexts.second.atkText.text = "+" + (weapon.LevelUpPreview_Atk - weapon.baseAttack).ToString("f2");
             _statTexts.second.critText.text = "+" + (weapon.LevelUpPreview_Crit - weapon.critRate).ToString("f2");
-            _statTexts.second.cooldownText.text = (weapon.cooldownTime - weapon.LevelUpPreview_Cooldown).ToString("f2");
+            _statTexts.second.cooldownText.text = (weapon.cooldownDuration - weapon.LevelUpPreview_Cooldown).ToString("f2");
             _costText.text = weapon.UpgradeCost.ToString();
 
             if (_localPlayer.weaponManager.PlayerWeaponExp < weapon.UpgradeCost)
@@ -299,12 +298,22 @@ public class GameUIManager : MonoBehaviour
 
     [Header("Weapon UI")]
     [SerializeField] private Image _selectedWeapon;
+    [SerializeField] private RectTransform _weaponCooldownRect;
+    [SerializeField] private float _selectedWeaponSize = 27;
 
     public void ChangeWeaponImage(Sprite newSprite)
     {
         _selectedWeapon.sprite = newSprite;
         if (!newSprite) _selectedWeapon.color = new Color(0, 0, 0, 0);
         else _selectedWeapon.color = new Color(255, 255, 255, 255);
+    }
+
+    private void UpdateWeaponUI()
+    {
+        var weapon = _localPlayer.weaponManager.weapon;
+        if (!weapon) return;
+        var newHeight = weapon.remainingCooldownTime / weapon.cooldownDuration * _selectedWeaponSize;
+        _weaponCooldownRect.sizeDelta = new Vector2(_selectedWeaponSize, newHeight);
     }
 
     [Header("In Game UI")]
@@ -377,8 +386,8 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Color _monsterFarColor;
     [SerializeField] private Color _monsterCloseColor;
     [SerializeField] private float _dirArrowMaxDistance;
-    private Dictionary<int, Monster> _targetedMonsters = new Dictionary<int, Monster>();
-    private Dictionary<int, GameObject> _directionArrows = new Dictionary<int, GameObject>();
+    private readonly Dictionary<int, Monster> _targetedMonsters = new Dictionary<int, Monster>();
+    private readonly Dictionary<int, GameObject> _directionArrows = new Dictionary<int, GameObject>();
 
     public void AddMonsterTarget(Monster monster)
     {

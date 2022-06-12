@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioManager), typeof(SpriteRenderer), typeof(Animator))]
 public abstract class WeaponBase : MonoBehaviour
 {
-    
-
     [SerializeField] protected float defaultBaseAttack;
     [SerializeField] protected float defaultCritRate;
     [SerializeField] protected float maxCooldownTime;
 
     public float baseAttack { get; protected set; }
     public float critRate { get; protected set; }
-    public float cooldownTime { get; protected set; }
+    public float cooldownDuration { get; protected set; }
+    public float remainingCooldownTime => Mathf.Max(0, Time.time - nextAttackTime);
     protected float nextAttackTime;
     public bool isReady => Time.time >= nextAttackTime;
     protected Player ownerPlayer;
@@ -46,7 +46,7 @@ public abstract class WeaponBase : MonoBehaviour
     {
         baseAttack = defaultBaseAttack;
         critRate = defaultCritRate;
-        cooldownTime = maxCooldownTime;
+        cooldownDuration = maxCooldownTime;
         Level = 1;
 
         audioManager = GetComponent<AudioManager>();
@@ -74,29 +74,7 @@ public abstract class WeaponBase : MonoBehaviour
 
         // Flip y
         rotValZ = transform.eulerAngles.z;
-        /*
-        if (rotValZ > 90.0f && rotValZ < 270.0f && isFacingRight)
-        {
-            isFacingRight = false;
-            //transform.localScale -= new Vector3(0, 2, 0);
-            _renderer.flipY = true;
-        }
-        else if ((rotValZ < 90.0f || rotValZ > 270.0f) && !isFacingRight)
-        {
-            isFacingRight = true;
-            //transform.localScale += new Vector3(0, 2, 0);
-            _renderer.flipY = false;
-        }
-        */
         _renderer.flipY = rotValZ > 90.0f && rotValZ < 270.0f;
-        /*
-        // Safety
-        if(transform.localScale.y < -1 || transform.localScale.y > 1)
-        {
-            float gap = transform.localScale.y + 1.0f;
-            transform.localScale -= new Vector3(0, gap, 0);
-        }
-        */
     }
 
     // Network methods -----------------------------------
@@ -110,7 +88,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
     public void StartCooldown()
     {
-        nextAttackTime = Time.time + cooldownTime;
+        nextAttackTime = Time.time + cooldownDuration;
 
         audioManager.Play("Hit");
     }
@@ -183,7 +161,7 @@ public abstract class WeaponBase : MonoBehaviour
         }
         else if (Level % 3 == 1)
         {
-            cooldownTime -= (cooldownTime / 10.0f);
+            cooldownDuration -= (cooldownDuration / 10.0f);
         }
         else if (Level % 3 == 2)
         {
@@ -199,5 +177,5 @@ public abstract class WeaponBase : MonoBehaviour
 
     public float LevelUpPreview_Atk => (Level % 3 == 2) ? defaultBaseAttack * 1.05f : defaultBaseAttack;
     public float LevelUpPreview_Crit => (Level % 3 == 0) ? critRate * 1.1f : critRate;
-    public float LevelUpPreview_Cooldown => (Level % 3 == 1) ? cooldownTime * 0.9f : cooldownTime;
+    public float LevelUpPreview_Cooldown => (Level % 3 == 1) ? cooldownDuration * 0.9f : cooldownDuration;
 }
