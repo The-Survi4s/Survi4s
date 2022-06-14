@@ -411,7 +411,7 @@ public class TilemapManager : MonoBehaviour
         _aboveGroundTilemap2.RefreshTile(cellPos);
         await Task.Delay(100);
         //Debug.Log($"tile {tile} at {cellPos} isDestroyed? {isDestroyed}, newTile:{newTile}. varId:{variantId}/{variantCount}");
-        if (isDestroyed) NavMeshController.UpdateNavMesh();
+        if (isDestroyed) NavMeshManager.Instance.UpdateNavMesh(_aboveGroundTilemap2.CellToWorld(cellPos));
     }
 
     /// <summary>

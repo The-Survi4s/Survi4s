@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
+using System.Threading.Tasks;
 
 public class NavMeshManager : MonoBehaviour
 {
@@ -13,11 +14,24 @@ public class NavMeshManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private Vector3 _size;
     [SerializeField] private Bounds _bounds;
-    
+
     private Dictionary<Vector2, NavMeshSurface> _navMeshList = new Dictionary<Vector2, NavMeshSurface>();
     private List<NavMeshLink> _navLinkList = new List<NavMeshLink>();
-    // Start is called before the first frame update
-    void Start()
+
+    public static NavMeshManager Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    private void Start()
     {
         Draw();
 
@@ -28,7 +42,11 @@ public class NavMeshManager : MonoBehaviour
         SprinkleNavMeshes();
     }
 
-    private void SprinkleNavMeshes()
+    private void Update()
+    {
+    }
+
+    private async void SprinkleNavMeshes()
     {
         for (float x = _bounds.min.x + _size.x / 2; x < _bounds.max.x; x += _size.x)
         {
@@ -51,6 +69,7 @@ public class NavMeshManager : MonoBehaviour
                 {
                     InstantiateLink(loc, go.transform, false);
                 }
+                await Task.Delay(100);
             }
         }
     }
@@ -70,11 +89,20 @@ public class NavMeshManager : MonoBehaviour
             facingRight ? _size.x / 2 + _pointDiff / 2 : 0,
             0,
             facingRight ? 0 : _size.y / 2 + _pointDiff / 2);
+        link.width = _size.x;
     }
 
     public void UpdateNavMesh(Vector2 point)
     {
-
+        var currentPos = point;
+        var newPos = new Vector2(
+            Mathf.Round(currentPos.x / _size.x) * _size.x,
+            Mathf.Round(currentPos.y / _size.y) * _size.y);
+        Debug.Log("Is there a NavMesh at " + newPos + "? " + _navMeshList.ContainsKey(newPos));
+        if (_navMeshList.ContainsKey(newPos))
+        {
+            _navMeshList[newPos].BuildNavMeshAsync();
+        }
     }
 
     private void OnDrawGizmosSelected()
