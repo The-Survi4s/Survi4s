@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf7c34a0dc4e6348bea04faa70406ee, type: 3}
+  m_Name: MonsterAnimLibrary
+  m_EditorClassIdentifier: 
+  m_Labels:
+  - m_Name: Attack
+    m_Hash: 1080829965
+    m_CategoryList:
+    - m_Name: 1
+      m_Hash: -2082672713
+      m_Sprite: {fileID: -6936073166432781711, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 2
+      m_Hash: 450215437
+      m_Sprite: {fileID: -8023766490186892976, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 3
+      m_Hash: 1842515611
+      m_Sprite: {fileID: 3940749318788477242, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 4
+      m_Hash: -206169288
+      m_Sprite: {fileID: -7694585164829600915, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 5
+      m_Hash: -2068763730
+      m_Sprite: {fileID: -2597451101031882843, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 6
+      m_Hash: 498629140
+      m_Sprite: {fileID: 7551629392329009557, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 7
+      m_Hash: 1790921346
+      m_Sprite: {fileID: -3235308978582658028, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}
+    - m_Name: 8
+      m_Hash: -100641005
+      m_Sprite: {fileID: 292432807391702171, guid: 2726e4d3c2a24c949aa3217e3a9b8590, type: 3}

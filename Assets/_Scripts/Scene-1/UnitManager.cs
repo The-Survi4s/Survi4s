@@ -369,6 +369,7 @@ public class UnitManager : MonoBehaviour
 
     public Player GetPlayer(string idAndName)
     {
+        Debug.LogWarning(idAndName);
         if (!_players.ContainsKey(idAndName))
         {
             Debug.LogWarning($"Player [{idAndName}] not found!");
