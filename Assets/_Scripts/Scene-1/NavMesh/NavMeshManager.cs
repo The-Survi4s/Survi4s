@@ -10,6 +10,7 @@ public class NavMeshManager : MonoBehaviour
     [SerializeField] private GameObject _navMeshSurfacePrefab;
     [SerializeField] private GameObject _navMeshLinkPrefab;
     [SerializeField, Min(0)] private float _pointDiff = 0.2f;
+    [SerializeField] private Vector2 _offset = new Vector2(-9.5f, -8.5f);
     [SerializeField] private Tilemap _tilemap;
     [Header("Debug")]
     [SerializeField] private Vector3 _size;
@@ -17,6 +18,7 @@ public class NavMeshManager : MonoBehaviour
 
     private Dictionary<Vector2, NavMeshSurface> _navMeshList = new Dictionary<Vector2, NavMeshSurface>();
     private List<NavMeshLink> _navLinkList = new List<NavMeshLink>();
+    [SerializeField] private List<NavMeshSurface> _surfaceList = new List<NavMeshSurface>();
 
     public static NavMeshManager Instance { get; private set; }
     private void Awake()
@@ -42,15 +44,11 @@ public class NavMeshManager : MonoBehaviour
         SprinkleNavMeshes();
     }
 
-    private void Update()
-    {
-    }
-
     private async void SprinkleNavMeshes()
     {
-        for (float x = _bounds.min.x + _size.x / 2; x < _bounds.max.x; x += _size.x)
+        for (float x = (int)(_bounds.min.x + _size.x / 2); x < _bounds.max.x + _size.x / 2; x += _size.x)
         {
-            for (float y = _bounds.min.y + _size.y / 2; y < _bounds.max.y; y += _size.y)
+            for (float y = (int)(_bounds.min.y + _size.y / 2); y < _bounds.max.y + _size.y / 2; y += _size.y)
             {
                 // Instantiate NavMesh
                 var loc = new Vector2(x, y);
@@ -60,6 +58,7 @@ public class NavMeshManager : MonoBehaviour
                 navMesh.collectObjects = CollectObjects.Volume;
                 navMesh.BuildNavMeshAsync();
                 _navMeshList.Add(loc, navMesh);
+                _surfaceList.Add(navMesh);
 
                 if(x < _bounds.max.x - _size.x)
                 {
@@ -69,7 +68,7 @@ public class NavMeshManager : MonoBehaviour
                 {
                     InstantiateLink(loc, go.transform, false);
                 }
-                await Task.Delay(100);
+                await Task.Delay(250);
             }
         }
     }
@@ -96,8 +95,8 @@ public class NavMeshManager : MonoBehaviour
     {
         var currentPos = point;
         var newPos = new Vector2(
-            Mathf.Round(currentPos.x / _size.x) * _size.x,
-            Mathf.Round(currentPos.y / _size.y) * _size.y);
+            Mathf.Round(currentPos.x / _size.x) * _size.x + _size.x / 2 + _offset.x,
+            Mathf.Round(currentPos.y / _size.y) * _size.y + _size.y / 2 + _offset.y);
         Debug.Log("Is there a NavMesh at " + newPos + "? " + _navMeshList.ContainsKey(newPos));
         if (_navMeshList.ContainsKey(newPos))
         {
