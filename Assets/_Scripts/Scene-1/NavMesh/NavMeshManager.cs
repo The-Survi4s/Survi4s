@@ -10,6 +10,7 @@ public class NavMeshManager : MonoBehaviour
     [SerializeField] private GameObject _navMeshSurfacePrefab;
     [SerializeField] private GameObject _navMeshLinkPrefab;
     [SerializeField, Min(0)] private float _pointDiff = 0.2f;
+    [SerializeField, Min(1)] private int _linkDivision = 10;
     [SerializeField] private Vector2 _offset = new Vector2(-9.5f, -8.5f);
     [SerializeField] private Tilemap _tilemap;
     [Header("Debug")]
@@ -54,6 +55,7 @@ public class NavMeshManager : MonoBehaviour
                 var loc = new Vector2(x, y);
                 var go = Instantiate(_navMeshSurfacePrefab, loc, Quaternion.identity, this.transform);
                 go.transform.rotation = Quaternion.Euler(-90, 0, 0);
+                go.name = $"NavMeshSurface ({x}, {y})";
                 var navMesh = go.GetComponent<NavMeshSurface>();
                 navMesh.collectObjects = CollectObjects.Volume;
                 navMesh.BuildNavMeshAsync();
@@ -62,33 +64,45 @@ public class NavMeshManager : MonoBehaviour
 
                 if(x < _bounds.max.x - _size.x)
                 {
-                    InstantiateLink(loc, go.transform, true);
+                    InstantiateLink(go.transform, true);
                 }
                 if (y < _bounds.max.y - _size.y / 2)
                 {
-                    InstantiateLink(loc, go.transform, false);
+                    InstantiateLink(go.transform, false);
                 }
                 await Task.Delay(250);
             }
         }
     }
 
-    private void InstantiateLink(Vector2 loc, Transform parent, bool facingRight)
+    private void InstantiateLink(Transform parent, bool facingRight)
     {
-        var go2 = Instantiate(_navMeshLinkPrefab, loc, Quaternion.identity, parent);
-        go2.transform.rotation = Quaternion.Euler(-90, -90, 90);
+        var x = (facingRight ? _size.x / 2 : 0);
+        var y = (facingRight ? 0 : _size.y / 2);
+        var go2 = Instantiate(_navMeshLinkPrefab, Vector3.zero, Quaternion.identity, parent);
+        go2.transform.localPosition = new Vector3(x, 0, y);
+        go2.transform.Rotate(0, 90, 90);
+        if(facingRight) go2.transform.Rotate(0, 90, 0);
+
         var link = go2.GetComponent<NavMeshLink>();
         _navLinkList.Add(link);
 
-        link.startPoint = new Vector3(
-            facingRight ? _size.x / 2 - _pointDiff / 2 : 0, 
-            0, 
-            facingRight ? 0 : _size.y / 2 - _pointDiff / 2);
-        link.endPoint = new Vector3(
-            facingRight ? _size.x / 2 + _pointDiff / 2 : 0,
-            0,
-            facingRight ? 0 : _size.y / 2 + _pointDiff / 2);
-        link.width = _size.x;
+        link.startPoint = new Vector3(-_pointDiff, 0, 0);
+        link.endPoint = new Vector3(_pointDiff, 0, 0);
+        
+        link.width = _size.x / _linkDivision;
+
+        RaycastHit2D hit = Physics2D.Raycast(go2.transform.position, go2.transform.right);
+        int tries = 0;
+        while (hit && tries < 1000)
+        {
+            var dist = Vector2.Distance(go2.transform.position, hit.transform.position);
+            if (dist > _size.x / _linkDivision) break;
+            //Debug.Log($"Hit {hit.collider.gameObject} sejauh {dist}. R:{facingRight}");
+            go2.transform.Translate(go2.transform.right * Random.Range(-10, 11));
+            hit = Physics2D.Raycast(go2.transform.position, go2.transform.right);
+            tries++;
+        }
     }
 
     public void UpdateNavMesh(Vector2 point)
