@@ -8,7 +8,6 @@ public class BrokenWall : DestroyableTile
     {
         hp = 0;
         isDestroyed = true;
-        NavMeshController.UpdateNavMesh();
     }
 
     public int id { get; private set; }
@@ -26,7 +25,6 @@ public class BrokenWall : DestroyableTile
 
     private void OnDestroy()
     {
-        NavMeshController.UpdateNavMesh();
         Destroy(gameObject);
     }
 

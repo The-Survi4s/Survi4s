@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Min(0)] private float _minDistance;
     [SerializeField, Min(0)] private float _maxDistance;
     private bool isPlaying;
+    private float _nextTime;
 
     private void Awake()
     {
@@ -30,7 +31,11 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        isPlaying = _sounds.Any(s => s.source.isPlaying);
+        if(Time.time > _nextTime)
+        {
+            isPlaying = _sounds.Any(s => s.source.isPlaying);
+            _nextTime = Time.time + 1;
+        }
     }
 
     public void Play(string name, bool isExclusive = false)

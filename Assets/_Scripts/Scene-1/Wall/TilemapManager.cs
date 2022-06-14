@@ -16,6 +16,19 @@ public enum Origin { Right, Top, Left, Bottom }
 
 public class TilemapManager : MonoBehaviour
 {
+    [SerializeField] private Tilemap _groundTilemap1;
+    [SerializeField] private Tilemap _groundTilemap2;
+    [SerializeField] private Tilemap _aboveGroundTilemap1;
+    /// <summary>
+    /// Set in inspector. The <see cref="Tilemap"/> of all <see cref="Wall"/>s
+    /// </summary>
+    [SerializeField] private Tilemap _aboveGroundTilemap2;
+    [SerializeField] private Tilemap _decorationTilemap1;
+    [SerializeField] private Tilemap _decorationTilemap2;
+    [SerializeField] private Tilemap _decorationTilemap3;
+    [SerializeField] private Tilemap _miscTilemap;
+    [SerializeField] private Tilemap _roofTilemap;
+
     public static TilemapManager Instance { get; private set; }
     private void Awake()
     {
@@ -29,8 +42,21 @@ public class TilemapManager : MonoBehaviour
         }
     }
 
-    #region Statue Handlers
+    private void Start()
+    {
+        _groundTilemap1.CompressBounds();
+        _groundTilemap2.CompressBounds();
+        _aboveGroundTilemap1.CompressBounds();
+        _aboveGroundTilemap2.CompressBounds();
+        _decorationTilemap1.CompressBounds();
+        _decorationTilemap2.CompressBounds();
+        _decorationTilemap3.CompressBounds();
+        _miscTilemap.CompressBounds();
+        _roofTilemap.CompressBounds();
+    }
 
+    #region Statue Handlers
+    
     /// <summary>
     /// Singleton of the <see cref="Statue"/>
     /// </summary>
@@ -39,6 +65,7 @@ public class TilemapManager : MonoBehaviour
     /// <summary>
     /// Set in inspector. <see cref="TileStages"/> of <see cref="Statue"/>
     /// </summary>
+    [Header("Statue")]
     [SerializeField] private TileStages _statueTileStages;
 
     /// <summary>
@@ -91,13 +118,9 @@ public class TilemapManager : MonoBehaviour
     public int maxWallHp => 100;
 
     /// <summary>
-    /// Set in inspector. The <see cref="Tilemap"/> of all <see cref="Wall"/>s
-    /// </summary>
-    [SerializeField] private Tilemap _wallTilemap;
-
-    /// <summary>
     /// Set in inspector. <see cref="TileStages"/> of <see cref="Wall"/>s
     /// </summary>
+    [Header("Wall")]
     [SerializeField] private TileStages _wallTileStages;
 
     /// <summary>
@@ -147,7 +170,7 @@ public class TilemapManager : MonoBehaviour
     private void SpawnBrokenWall(Wall wall)
     {
         var brokenWallGameObject = Instantiate(_brokenWallPrefab, wall.transform.position, Quaternion.identity,
-            _wallTilemap.transform);
+            _aboveGroundTilemap2.transform);
         brokenWallGameObject.name = "Broken Wall " + wall.id;
         var brokenWall = brokenWallGameObject.GetComponent<BrokenWall>();
         brokenWall.Init(wall.id, wall.cellPos, wall.origin);
@@ -169,12 +192,12 @@ public class TilemapManager : MonoBehaviour
             bw.OnRebuilt -= OnRebuilt;
             Destroy(bw);
 
-            _wallTilemap.SetTile(cellPos, _wallTileStages.GetTile(_wallTileStages.getTileStages.Count - 1));
+            _aboveGroundTilemap2.SetTile(cellPos, _wallTileStages.GetTile(_wallTileStages.getTileStages.Count - 1));
             //Debug.Log("tile placed:" + _wallTilemap.GetTile(cellPos));
-            var wall = _wallTilemap.GetInstantiatedObject(cellPos).GetComponent<Wall>();
+            var wall = _aboveGroundTilemap2.GetInstantiatedObject(cellPos).GetComponent<Wall>();
             //Debug.Log("wall:" + wall);
             wall.Init(GetNewWallId(), GetOrigin(wall.transform.position), cellPos, 10);
-            _wallTilemap.RefreshTile(cellPos);
+            _aboveGroundTilemap2.RefreshTile(cellPos);
         }
         else Debug.LogWarning($"BrokenWall at {cellPos} not found");
     }
@@ -292,9 +315,9 @@ public class TilemapManager : MonoBehaviour
     /// </summary>
     /// <param name="worldPos">The position in world space</param>
     /// <returns></returns>
-    public Vector3Int WorldToCell(Vector3 worldPos) => _wallTilemap.WorldToCell(worldPos);
+    public Vector3Int WorldToCell(Vector3 worldPos) => _aboveGroundTilemap2.WorldToCell(worldPos);
 
-    public Vector3 CellToWorld(Vector3Int cellPos) => _wallTilemap.CellToWorld(cellPos);
+    public Vector3 CellToWorld(Vector3Int cellPos) => _aboveGroundTilemap2.CellToWorld(cellPos);
 
     #endregion
 
@@ -341,7 +364,7 @@ public class TilemapManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Updates a specific <paramref name="tile"/> on <see cref="_wallTilemap"/> to be it's variant (<see cref="TileStages"/>).
+    /// Updates a specific <paramref name="tile"/> on <see cref="_aboveGroundTilemap2"/> to be it's variant (<see cref="TileStages"/>).
     /// <br/>Then updates the <see cref="NavMesh"/>
     /// </summary>
     /// <remarks>
@@ -384,8 +407,8 @@ public class TilemapManager : MonoBehaviour
         await Task.Delay(100);
         // Set tile, then update Tilemap and NavMesh
         TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
-        _wallTilemap.SetTile(cellPos, newTile);
-        _wallTilemap.RefreshTile(cellPos);
+        _aboveGroundTilemap2.SetTile(cellPos, newTile);
+        _aboveGroundTilemap2.RefreshTile(cellPos);
         await Task.Delay(100);
         //Debug.Log($"tile {tile} at {cellPos} isDestroyed? {isDestroyed}, newTile:{newTile}. varId:{variantId}/{variantCount}");
         if (isDestroyed) NavMeshController.UpdateNavMesh();

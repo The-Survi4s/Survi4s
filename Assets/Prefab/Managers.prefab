@@ -270,6 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4125814745674863461}
   - component: {fileID: 4125814745674863460}
+  - component: {fileID: 34025944372112929}
   m_Layer: 0
   m_Name: TilemapManager
   m_TagString: Untagged
@@ -303,10 +304,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a04af785e83e834b9f814557db38deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _groundTilemap1: {fileID: 0}
+  _groundTilemap2: {fileID: 0}
+  _aboveGroundTilemap1: {fileID: 0}
+  _aboveGroundTilemap2: {fileID: 0}
+  _decorationTilemap1: {fileID: 0}
+  _decorationTilemap2: {fileID: 0}
+  _decorationTilemap3: {fileID: 0}
+  _miscTilemap: {fileID: 0}
+  _roofTilemap: {fileID: 0}
   _statueTileStages: {fileID: 11400000, guid: 84c09ac703ef52947812b79c8cea920f, type: 2}
-  _wallTilemap: {fileID: 0}
   _wallTileStages: {fileID: 11400000, guid: b7054501170ce16479029a20bda1877f, type: 2}
   _brokenWallPrefab: {fileID: 5697039316084575758, guid: 2c5153ae796f00d4590d85633a1c52d7, type: 3}
+--- !u!114 &34025944372112929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4125814745674863462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168003cbf2167ef41a76e03232149b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _navMeshSurfacePrefab: {fileID: 6934068186723674086, guid: e69317ad817b0344ba15b78217bf3d93, type: 3}
+  _navMeshLinkPrefab: {fileID: 724626510566192758, guid: 2366da79ac806004ea9f588152921294, type: 3}
+  _size: {x: 10, y: 10, z: 10}
+  _bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 81.5, y: 58.5, z: 0}
+  _tilemap: {fileID: 0}
 --- !u!1 &4125814745862421460
 GameObject:
   m_ObjectHideFlags: 0
@@ -961,6 +989,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b3dbba1475a25b4489178aeb6b1559c, type: 3}
+--- !u!4 &1175772124989977083 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2959137781475253297, guid: 6b3dbba1475a25b4489178aeb6b1559c, type: 3}
+  m_PrefabInstance: {fileID: 4125814746204106186}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5776562733524780327 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7596358253895837933, guid: 6b3dbba1475a25b4489178aeb6b1559c, type: 3}
@@ -972,11 +1005,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca27c1d2c1fabe4fa40ffe6c7e639f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &1175772124989977083 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2959137781475253297, guid: 6b3dbba1475a25b4489178aeb6b1559c, type: 3}
-  m_PrefabInstance: {fileID: 4125814746204106186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4342899689102347767
 PrefabInstance:
   m_ObjectHideFlags: 0
