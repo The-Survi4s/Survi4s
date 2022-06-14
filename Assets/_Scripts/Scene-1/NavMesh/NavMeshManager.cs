@@ -92,15 +92,12 @@ public class NavMeshManager : MonoBehaviour
         
         link.width = _size.x / _linkDivision;
 
-        RaycastHit2D hit = Physics2D.Raycast(go2.transform.position, go2.transform.right);
+        var hasNavMesh = NavMesh.SamplePosition(go2.transform.position, out NavMeshHit hit, 1f, NavMesh.AllAreas);
         int tries = 0;
-        while (hit && tries < 1000)
+        while (!hasNavMesh && tries < 1000)
         {
-            var dist = Vector2.Distance(go2.transform.position, hit.transform.position);
-            if (dist > _size.x / _linkDivision) break;
-            //Debug.Log($"Hit {hit.collider.gameObject} sejauh {dist}. R:{facingRight}");
             go2.transform.Translate(go2.transform.right * Random.Range(-10, 11));
-            hit = Physics2D.Raycast(go2.transform.position, go2.transform.right);
+            hasNavMesh = NavMesh.SamplePosition(go2.transform.position, out NavMeshHit _, 0.1f, NavMesh.AllAreas);
             tries++;
         }
     }
