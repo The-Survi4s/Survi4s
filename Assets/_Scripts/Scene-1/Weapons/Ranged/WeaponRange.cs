@@ -5,7 +5,7 @@ public class WeaponRange : WeaponBase
     [field: SerializeField] public int MaxAmmo { get; private set; }
     [SerializeField] private GameObject _bullet;
     [field: SerializeField] public float inAccuracy { get; private set; }
-    [SerializeField] private int _ammo;
+    private int _ammo;
     public int Ammo
     {
         get => _ammo;

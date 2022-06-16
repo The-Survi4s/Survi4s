@@ -12,6 +12,7 @@ public class PlayerStat : MonoBehaviour
     public event Action<string> PlayerRevived;
     public bool isInitialized { get; private set; }
     private bool _actionInvoked = false;
+    private Player owner;
 
     [SerializeField] private float _hitPoint;
     public float hitPoint
@@ -19,7 +20,7 @@ public class PlayerStat : MonoBehaviour
         get => _hitPoint;
         set
         {
-            if (value < _hitPoint) GameUIManager.Instance.ShowDamageOverlay(100);
+            if (value < _hitPoint && owner.isLocal) GameUIManager.Instance.ShowDamageOverlay(100);
             _hitPoint = value;
 
             if (_hitPoint <= 0)
@@ -34,6 +35,7 @@ public class PlayerStat : MonoBehaviour
 
             if (_actionInvoked && _hitPoint > 0)
             {
+                Debug.Log("Player " + name + " is trying to revive");
                 PlayerRevived?.Invoke(name);
                 _actionInvoked = false;
             }
@@ -46,6 +48,11 @@ public class PlayerStat : MonoBehaviour
     }
 
     public float moveSpeed { get; private set; }
+
+    private void Awake()
+    {
+        owner = GetComponent<Player>();
+    }
 
     private void Start()
     {

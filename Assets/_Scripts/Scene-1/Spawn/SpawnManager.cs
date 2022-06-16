@@ -121,6 +121,10 @@ public class SpawnManager : MonoBehaviour
     public void ReceiveSpawnPlayer(string idAndName, int id, Vector2 pos, int skin)
     {
         Debug.Log($"name:{idAndName}, id:{id}, pos:{pos}, skin:{skin}");
+        if(_playerPrefab.Count <= skin)
+        {
+            skin = 0;
+        }
         if (_playerPrefab[skin].TryGetComponent(out Player _))
         {
             GameObject temp = Instantiate(_playerPrefab[skin], pos, Quaternion.identity);
@@ -158,6 +162,7 @@ public class SpawnManager : MonoBehaviour
     /// <returns></returns>
     private async Task SendSpawnMonster(double interval) 
     {
+        if (!NetworkClient.Instance.isMaster) return;
         NetworkClient.Instance.SpawnMonster(GetVacantId(), GetRandomMonsterType(), GetRandomOrigin(),
             Random.Range(-_monsterSpawnSetting.randomSpawnOffsetMax, _monsterSpawnSetting.randomSpawnOffsetMax));
         var end = Time.time + interval;
@@ -165,8 +170,6 @@ public class SpawnManager : MonoBehaviour
         {
             await Task.Yield();
         }
-
-
     }
 
     /// <summary>

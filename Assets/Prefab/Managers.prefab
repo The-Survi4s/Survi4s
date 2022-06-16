@@ -304,6 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _statueTileStages: {fileID: 11400000, guid: 84c09ac703ef52947812b79c8cea920f, type: 2}
+  <maxWallHp>k__BackingField: 40
   _wallTilemap: {fileID: 0}
   _wallTileStages: {fileID: 11400000, guid: b7054501170ce16479029a20bda1877f, type: 2}
   _brokenWallPrefab: {fileID: 5697039316084575758, guid: 2c5153ae796f00d4590d85633a1c52d7, type: 3}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -5048950217417760166}
   - component: {fileID: 9137849247755373613}
   - component: {fileID: 8125261469877633826}
+  - component: {fileID: 3066017891278915258}
   m_Layer: 0
   m_Name: WEsSegar
   m_TagString: Weapon
@@ -45,7 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2facc19816b9542a4ae92586199cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  _sounds: []
+  _minDistance: 0
+  _maxDistance: 0
 --- !u!114 &9137849247755373613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,11 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b22b4297692ce4fb21612703e07af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultBaseAttack: 2
-  defaultCritRate: 5
-  maxCooldownTime: 2
-  _attackDistance: 2
-  <baseAttack>k__BackingField: 0
+  defaultBaseAttack: 3
+  defaultCritRate: 20
+  maxCooldownTime: 1.5
   offset: {x: 0.2, y: -3, z: -1}
   attackPointOffset: {x: 0.4, y: 0.26, z: 0}
   _particleToSpawn: {fileID: 0}
@@ -70,7 +71,7 @@ MonoBehaviour:
   uiSprite: {fileID: -5418954738924165560, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  <MaxAmmo>k__BackingField: 8
+  <MaxAmmo>k__BackingField: 10
   _bullet: {fileID: 6655036926467217695, guid: 602d62a42d1a8f34ba091fbd9a40f30d, type: 3}
   <inAccuracy>k__BackingField: 0.5
   _ammo: 0
@@ -125,3 +126,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3066017891278915258
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8550891108610605926}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

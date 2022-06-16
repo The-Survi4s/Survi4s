@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6746199795356569051}
   - component: {fileID: 9106936058835306326}
   - component: {fileID: 3439321459017308548}
+  - component: {fileID: 7247357397724703564}
   m_Layer: 0
   m_Name: WTipeX
   m_TagString: Weapon
@@ -69,7 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultBaseAttack: 1
   defaultCritRate: 5
-  maxCooldownTime: 0.2
+  maxCooldownTime: 0.1
   offset: {x: 0.2, y: 0.5, z: -1}
   attackPointOffset: {x: 1.65, y: 0.31, z: 0}
   _particleToSpawn: {fileID: 0}
@@ -77,10 +78,9 @@ MonoBehaviour:
   uiSprite: {fileID: -2554669634938815330, guid: a9807e6a3a5179040a9d99f6a626cf4b, type: 3}
   <UpgradeCost>k__BackingField: 4
   <Level>k__BackingField: 1
-  <MaxAmmo>k__BackingField: 5
+  <MaxAmmo>k__BackingField: 20
   _bullet: {fileID: 5926505289157146130, guid: 86e02e271c687c043a595287ac3db668, type: 3}
-  <inAccuracy>k__BackingField: 0.5
-  _ammo: 0
+  <inAccuracy>k__BackingField: 0.4
 --- !u!212 &3439321459017308548
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -132,3 +132,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7247357397724703564
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3013621511692704192}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -125,7 +125,7 @@ public abstract class WeaponBase : MonoBehaviour
     public void EquipWeapon(PlayerWeaponManager player)
     {
         if (!ownerPlayer) ownerPlayer = player.GetComponent<Player>();
-        GameUIManager.Instance.ChangeWeaponImage(uiSprite);
+        if(ownerPlayer.isLocal) GameUIManager.Instance.ChangeWeaponImage(uiSprite);
     }
     public void UnEquipWeapon(PlayerWeaponManager player, Vector2 dropPos, float zRotation)
     {

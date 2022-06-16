@@ -74,10 +74,15 @@ public class UnitManager : MonoBehaviour
         _players.Add(p.name, p);
     }
 
-    private void PlayerRevivedEventHandler(string idAndName)
+    private void PlayerRevivedEventHandler(string playerName)
     {
-        var player = GetPlayer(idAndName);
-        if(player) _playerAliveKdTree.Add(player);
+        Debug.Log("Player revived: " + playerName);
+        if (!_players.ContainsKey(playerName)) 
+        {
+            Debug.Log("No player named '" + playerName + "' found. No revives for you");
+            return;
+        }
+        _playerAliveKdTree.Add(_players[playerName]);
     }
 
     public void AddMonster(Monster monster)

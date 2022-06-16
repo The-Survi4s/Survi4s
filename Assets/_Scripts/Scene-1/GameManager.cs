@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
             !(_gameState == GameState.WaveSpawn || _gameState == GameState.WaveOver)) return;
         if (UnitManager.Instance.playerAliveCount <= 0 || TilemapManager.Instance.statue.hp <= 0)
         {
-            ChangeState(GameState.GameOver);
+            NetworkClient.Instance.SetGameState(GameState.GameOver);
         }
     }
 
@@ -133,9 +133,10 @@ public class GameManager : MonoBehaviour
             await Task.Yield();
         }
 
-        ChangeState(SpawnManager.Instance.currentWave < Settings.maxWave
-            ? GameState.WavePreparation
-            : GameState.GameOver);
+        NetworkClient.Instance.SetGameState(
+            SpawnManager.Instance.currentWave < Settings.maxWave ?
+            GameState.WavePreparation :
+            GameState.GameOver);
     }
 
     private async void HandleWaveSpawn()
@@ -206,8 +207,6 @@ public class GameManager : MonoBehaviour
     {
         NetworkClient.Instance.StartGame();
         NetworkClient.Instance.LockTheRoom();
-
-        
     }
 
     public async void ForceStartNextWave()

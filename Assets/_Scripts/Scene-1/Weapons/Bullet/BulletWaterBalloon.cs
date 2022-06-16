@@ -10,21 +10,22 @@ public class BulletWaterBalloon : PlayerBulletBase
 
     protected override void OnNormalShot(Monster monster)
     {
-        DamageMonstersInArea(monster.transform.position, base.OnNormalShot);
+        DamageMonstersInArea(monster, base.OnNormalShot);
     }
 
     protected override void OnCriticalShot(Monster monster)
     {
-        DamageMonstersInArea(monster.transform.position, base.OnCriticalShot);
+        DamageMonstersInArea(monster, base.OnCriticalShot);
     }
 
-    private void DamageMonstersInArea(Vector2 hitMonsterPos, Action<Monster> doSomethingWithTheMonster)
+    private void DamageMonstersInArea(Monster monster, Action<Monster> doSomethingWithTheMonster)
     {
-        var monsters = UnitManager.Instance.GetObjectsInRadius<Monster>(hitMonsterPos, _splashRad, _layerMask);
-        foreach (var monster in monsters)
+        doSomethingWithTheMonster?.Invoke(monster);
+        var monsters = UnitManager.Instance.GetObjectsInRadius<Monster>(monster.transform.position, _splashRad, _layerMask);
+        foreach (var m in monsters)
         {
-            Debug.Log("Splash damage " + monster);
-            doSomethingWithTheMonster?.Invoke(monster);
+            Debug.Log("Splash damage " + m);
+            doSomethingWithTheMonster?.Invoke(m);
         }
     }
 }

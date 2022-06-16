@@ -45,6 +45,7 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private float _receiveTimesPerSecond;
     [SerializeField] private float _runTime;
     [SerializeField] private bool useLocalConnection;
+    [SerializeField] private string localConnectionIP = "127.0.0.1";
 
     // Eazy access ----------------------------------------------------------------------
     public static NetworkClient Instance { get; private set; }
@@ -66,7 +67,12 @@ public class NetworkClient : MonoBehaviour
     {
         // Preparation -------------------------------------------------------------
         client = new TcpClient();
-        ipAd = IPAddress.Parse(useLocalConnection ? "127.0.0.1" : IpAddress);
+#if UNITY_EDITOR
+        ipAd = IPAddress.Parse(useLocalConnection ? localConnectionIP : IpAddress);
+#endif
+#if UNITY_STANDALONE && !UNITY_EDITOR
+        ipAd = IPAddress.Parse(IpAddress);
+#endif
         rsaEncryption = new RsaEncryption(ServerPublicKey);
         isVerified = false;
         isMaster = false;
@@ -181,7 +187,7 @@ public class NetworkClient : MonoBehaviour
         return genId;
     }
 
-    #region Type declarations
+#region Type declarations
     /// <summary>
     /// Message subject
     /// </summary>
@@ -260,13 +266,15 @@ public class NetworkClient : MonoBehaviour
         /// <summary>Set to Master</summary>
         SeMs,
         /// <summary>Sync <see cref="Monster"/> position and targets</summary>
-        SynM
+        SynM,
+        /// <summary>Set gamestate. isMaster only</summary>
+        SeSt
     }
 
     private enum Recipient { None, All, Server, AllExceptSender, SpecificPlayer}
-    #endregion
+#endregion
 
-    #region Receive Message
+#region Receive Message
     // Receive and Process incoming message here ----------------------------------
     private void ReceiveMessage(string message)
     {
@@ -467,11 +475,16 @@ public class NetworkClient : MonoBehaviour
                 isMaster = true;
                 break;
             }
+            case Subject.SeSt:
+            {
+                GameManager.Instance.ChangeState((GameManager.GameState)int.Parse(msg[2]));
+                break;
+            }
         }
     }
-    #endregion
+#endregion
 
-    #region SendMessageClient Wrapper
+#region SendMessageClient Wrapper
     /// <summary>
     /// Emulates data sent from server, then changes <see cref="Recipient"/> type to AllExceptSender
     /// </summary>
@@ -759,7 +772,7 @@ public class NetworkClient : MonoBehaviour
         }
         return str;
     }
-    #endregion
+#endregion
 
     //  ---------------------------------------
     /// <summary>
@@ -789,7 +802,7 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
-    #region Event Handlers
+#region Event Handlers
     // Private Method ---------------------------------------------------------------
     private void OnCreatedRoom(string roomName)
     {
@@ -815,9 +828,9 @@ public class NetworkClient : MonoBehaviour
         // Debugging
         Debug.Log("Joined room " + roomName);
     }
-    #endregion
+#endregion
 
-    #region Send Message Calls
+#region Send Message Calls
 
     // Public method that can be called to send message to server -------------------
     public void ChangeName(string newId, string newName)
@@ -838,9 +851,11 @@ public class NetworkClient : MonoBehaviour
     {
         SendMessageClient(Recipient.Server, Subject.JnR, roomName);
     }
+
     public void ExitRoom()
     {
         SendMessageClient(Recipient.Server, Subject.ExR);
+        SendMessageClient(Subject.REx);
     }
 
     public void StartGame()
@@ -852,9 +867,14 @@ public class NetworkClient : MonoBehaviour
         SendMessageClient(Recipient.Server, Subject.LcR);
     }
 
+    public void SetGameState(GameManager.GameState state)
+    {
+        if (isMaster) SendMessageClient(Subject.SeSt, (int)state);
+    }
+
     public void SpawnPlayer(Vector2 spawnPos)
     {
-        SendMessageClient(Recipient.All, Subject.SpwP, spawnPos.x, spawnPos.y, _playerNumber);
+        SendMessageClient(Recipient.All, Subject.SpwP, spawnPos.x, spawnPos.y, _playerNumber - 1);
     }
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)
@@ -1067,9 +1087,9 @@ public class NetworkClient : MonoBehaviour
         return SendMessageClient(message, errorMessage: $"Failed to modify HP of {target}");
     }
 
-    #endregion
+#endregion
 
-    #region Utilities
+#region Utilities
     /// <summary>
     /// Parses a string to an enum of type <typeparamref name="T"/>
     /// </summary>
@@ -1117,5 +1137,5 @@ public class NetworkClient : MonoBehaviour
         else return int.MinValue;
     }
 
-    #endregion
+#endregion
 }

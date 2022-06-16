@@ -88,7 +88,7 @@ public class TilemapManager : MonoBehaviour
     /// <summary>
     /// Set in inspector. The maximum and initial <see cref="Wall"/> hp. 
     /// </summary>
-    public int maxWallHp => 100;
+    [field: SerializeField] public int maxWallHp { get; private set; }
 
     /// <summary>
     /// Set in inspector. The <see cref="Tilemap"/> of all <see cref="Wall"/>s
@@ -326,7 +326,7 @@ public class TilemapManager : MonoBehaviour
                 break;
             case Statue s:
                 BroadcastStatueFallen?.Invoke(s);
-                GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
+                //GameManager.Instance.ChangeState(GameManager.GameState.GameOver);
                 break;
         }
     }
