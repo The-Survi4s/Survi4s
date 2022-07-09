@@ -381,7 +381,7 @@ public class TilemapManager : MonoBehaviour
 
         // Store does this location has a navmesh
         //var hasNavMesh = NavMesh.SamplePosition(CellToWorld(cellPos), out _, 0.1f, NavMesh.AllAreas);
-        await Task.Delay(100);
+        //await Task.Delay(100);
         // Set tile, then update Tilemap and NavMesh
         TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
         _wallTilemap.SetTile(cellPos, newTile);

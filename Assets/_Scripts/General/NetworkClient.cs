@@ -46,6 +46,7 @@ public class NetworkClient : MonoBehaviour
     [SerializeField] private float _runTime;
     [SerializeField] private bool useLocalConnection;
     [SerializeField] private string localConnectionIP = "127.0.0.1";
+    [SerializeField] private bool offlineMode;
 
     // Eazy access ----------------------------------------------------------------------
     public static NetworkClient Instance { get; private set; }
@@ -95,7 +96,11 @@ public class NetworkClient : MonoBehaviour
         myId = GeneratePlayerId();
 
         // Start try to connect again and again -------------------------------------
-        StartCoroutine(TryConnecting());
+        if(!offlineMode) StartCoroutine(TryConnecting());
+        else
+        {
+            MainMenuManager.Instance.SetActiveConnectingPanel(false);
+        }
     }
 
     private IEnumerator TryConnecting()
@@ -534,7 +539,8 @@ public class NetworkClient : MonoBehaviour
     {
         if (message.Length > 0)
         {
-            SendMessageClient(_waitForServer ? Recipient.All : SelfRun(message), message);
+            if (offlineMode) SelfRun(message);
+            else SendMessageClient(_waitForServer ? Recipient.All : SelfRun(message), message);
             return true;
         }
         Debug.LogError(errorMessage);
@@ -784,6 +790,11 @@ public class NetworkClient : MonoBehaviour
     {
         // Message format : target|header|data|data|data...
         // Target code : 1.All  2.Server  3.All except Sender   others:Specific player name
+        if(offlineMode)
+        {
+            SelfRun(message);
+            return;
+        }
         try
         {
             string data = message.Aggregate(target, (current, x) => current + ("|" + x));
@@ -809,7 +820,7 @@ public class NetworkClient : MonoBehaviour
         // Set to master, because we are the one who created the room ---------------------------
         isMaster = true;
         playersCount = 1;
-
+        _playerNumber = 1;
         // Load Scene 
         ScenesManager.Instance.LoadScene(1);
 
@@ -835,11 +846,13 @@ public class NetworkClient : MonoBehaviour
     // Public method that can be called to send message to server -------------------
     public void ChangeName(string newId, string newName)
     {
-        SendMessageClient(Recipient.Server, Subject.ChNm, newId, newName);
+        SendMessageClient(offlineMode ? SelfRun(MessageBuilder(Subject.ChNm, newId, newName)) : Recipient.Server, 
+            Subject.ChNm, newId, newName);
     }
     public void StartMatchmaking()
     {
-        SendMessageClient(Recipient.Server, Subject.StMtc);
+        if (offlineMode) SelfRun(MessageBuilder(Subject.RCrd, "OfflineRoom"));
+        else SendMessageClient(Recipient.Server, Subject.StMtc);
     }
 
     public void CreateRoom(string roomName, int maxPlayer, bool isPublic)
