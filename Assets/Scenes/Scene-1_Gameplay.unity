@@ -7920,7 +7920,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 1, z: -10}
   smoothFactor: 3
-  directionDistance: 3.5
+  directionDistance: 3
 --- !u!1 &251966238
 GameObject:
   m_ObjectHideFlags: 0

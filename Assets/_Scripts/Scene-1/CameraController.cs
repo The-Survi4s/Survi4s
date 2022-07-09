@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
     {
         if(target != null)
         {
-            oppositePos = Vector3.Lerp(oppositePos, targetDir * directionDistance, smoothFactor * Time.fixedDeltaTime);
+            oppositePos = Vector3.Lerp(targetDir * directionDistance, oppositePos, smoothFactor * Time.fixedDeltaTime);
             Vector3 targetPos = target.position + offset + oppositePos;
             Vector3 smoothPos = Vector3.Lerp(transform.position, targetPos, smoothFactor * Time.fixedDeltaTime);
             transform.position = smoothPos;
