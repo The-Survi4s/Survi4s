@@ -6,8 +6,11 @@ public class CameraController : MonoBehaviour
 {
     // Target follow --------------------------------------------------------------------
     private Transform target;
+    private Vector3 targetDir;
     [SerializeField] private Vector3 offset;
-    [SerializeField] [Range(1, 10)] private float smoothFactor; 
+    [SerializeField, Range(1, 10)] private float smoothFactor;
+    [SerializeField, Range(0, 10)] private float directionDistance = 5f;
+    Vector3 oppositePos = Vector3.zero;
 
     // Easy access ----------------------------------------------------------------------
     public static CameraController Instance;
@@ -27,7 +30,8 @@ public class CameraController : MonoBehaviour
     {
         if(target != null)
         {
-            Vector3 targetPos = target.position + offset;
+            oppositePos = Vector3.Lerp(oppositePos, targetDir * directionDistance, smoothFactor * Time.fixedDeltaTime);
+            Vector3 targetPos = target.position + offset + oppositePos;
             Vector3 smoothPos = Vector3.Lerp(transform.position, targetPos, smoothFactor * Time.fixedDeltaTime);
             transform.position = smoothPos;
         }
@@ -36,5 +40,10 @@ public class CameraController : MonoBehaviour
     public void SetTargetFollow (Transform target)
     {
         this.target = target;
+    }
+
+    public void SetTargetDir(Vector3 dir)
+    {
+        targetDir = dir;
     }
 }

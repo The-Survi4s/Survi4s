@@ -123,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
             axis = Axis.all;
         }
         if (axis == Axis.none) return;
+        CameraController.Instance.SetTargetDir(new Vector2(horizontalInput, verticalInput));
         NetworkClient.Instance.SetPlayerVelocity(new Vector2(horizontalInput, verticalInput), axis);
     }
 
