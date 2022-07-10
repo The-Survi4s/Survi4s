@@ -82,7 +82,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   attackRad: 1
-  repairAmount: 5
+  repairAmount: 3
 --- !u!212 &1433510959781582748
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -245,7 +245,7 @@ public class TilemapManager : MonoBehaviour
     {
         var dist = float.MaxValue;
         var res = _walls[0];
-        foreach (var wall in _walls.Where(w => !w.isDestroyed).ToList())
+        foreach (var wall in _walls)
         {
             var dist2 = Vector3.Distance(position, wall.transform.position);
             if (dist2 < dist)
@@ -254,7 +254,7 @@ public class TilemapManager : MonoBehaviour
                 res = wall;
             }
         }
-
+        //Debug.LogWarning("Nearest Wall is " + res);
         return res;
     }
 
@@ -362,7 +362,7 @@ public class TilemapManager : MonoBehaviour
 
         // Calculate variant id
         var variantCount = tileStages.getTileStages.Count;
-        var variantId = variantCount - Mathf.FloorToInt((tile.hp + 10) / (tile.maxHp * 1.0f) * variantCount);
+        var variantId = variantCount - Mathf.FloorToInt((tile.hp) / (tile.maxHp * 1.0f) * variantCount);
         if (tile.spriteVariantId == variantId) return;
 
         //Debug.Log($"varCount:{variantCount}, varId:{variantId}, tileHp:{tile.hp}, tileMHp:{tile.maxHp}");
@@ -381,7 +381,7 @@ public class TilemapManager : MonoBehaviour
 
         // Store does this location has a navmesh
         //var hasNavMesh = NavMesh.SamplePosition(CellToWorld(cellPos), out _, 0.1f, NavMesh.AllAreas);
-        //await Task.Delay(100);
+        await Task.Delay(100);
         // Set tile, then update Tilemap and NavMesh
         TileBase newTile = variantId == variantCount ? null : tileStages.GetTile(variantId);
         _wallTilemap.SetTile(cellPos, newTile);

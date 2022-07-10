@@ -200,6 +200,8 @@ public class GameManager : MonoBehaviour
         Physics2D.IgnoreLayerCollision(Log2(_monsterLayer), Log2(_monsterBulletLayer)); 
         Physics2D.IgnoreLayerCollision(Log2(_playerBulletLayer), Log2(_wallLayer));
         Physics2D.IgnoreLayerCollision(Log2(_playerBulletLayer), Log2(_monsterBulletLayer));
+        Physics2D.IgnoreLayerCollision(Log2(_monsterBulletLayer), Log2(_monsterBulletLayer));
+        Physics2D.IgnoreLayerCollision(Log2(_playerBulletLayer), Log2(_playerBulletLayer));
     }
 
     // Button hooks -------------------------------------------------------------------

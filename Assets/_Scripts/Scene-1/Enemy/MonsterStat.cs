@@ -47,7 +47,11 @@ public class MonsterStat : IHasCooldown
     public int hitPoint
     {
         get => _rawStat.hp;
-        set => _rawStat.hp = ValidateHp(value);
+        set 
+        {
+            _rawStat.hp = ValidateHp(value); 
+            if(_rawStat.hp <= 0) OnHpZero?.Invoke();
+        }
     }
 
     public float attack
@@ -93,7 +97,6 @@ public class MonsterStat : IHasCooldown
         }
 
         if (value > 0) return value;
-        OnHpZero?.Invoke();
         return 0;
     }
 

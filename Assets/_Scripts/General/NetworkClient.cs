@@ -887,7 +887,7 @@ public class NetworkClient : MonoBehaviour
 
     public void SpawnPlayer(Vector2 spawnPos)
     {
-        SendMessageClient(Recipient.All, Subject.SpwP, spawnPos.x, spawnPos.y, _playerNumber - 1);
+        SendMessageClient(Recipient.All, Subject.SpwP, spawnPos.x, spawnPos.y, Mathf.Max(_playerNumber - 1, 0));
     }
 
     public void SpawnMonster(int id, int type, Origin origin, float spawnOffset)

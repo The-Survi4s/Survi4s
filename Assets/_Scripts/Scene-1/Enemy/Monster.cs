@@ -297,7 +297,12 @@ public abstract class Monster : MonoBehaviour
     /// Requests a nearest target <see cref="Wall"/> as a candidate to attack or chase. 
     /// Stored in <see cref="targetWall"/>
     /// </summary>
-    public void RequestNewTargetWall() => targetWall = TilemapManager.Instance.GetWall(transform.position);
+    public bool RequestNewTargetWall() 
+    {
+        var a = targetWall;
+        targetWall = TilemapManager.Instance.GetWall(transform.position);
+        return !(a == targetWall);
+    }
 
     /// <summary>
     /// Re-requests a target <see cref="Wall"/> on the same <paramref name="cellPos"/>
@@ -457,6 +462,8 @@ public abstract class Monster : MonoBehaviour
     private const string DeadTrigger = "dead";
     private const string IsMovingBool = "isMoving";
 
+    private float flipDelay = 0;
+
     /// <summary>
     /// All animation logic goes here
     /// </summary>
@@ -464,7 +471,11 @@ public abstract class Monster : MonoBehaviour
     {
         // Moving
         _animator.SetBool(IsMovingBool, _monsterMovement.velocity != Vector3.zero);
-        _renderer.flipX = _monsterMovement.velocity.x < 0;
+        if (flipDelay < Time.time)
+        {
+            _renderer.flipX = _monsterMovement.velocity.x < 0;
+            flipDelay = Time.time + 0.5f;
+        }
     }
 
     public void PlayAttackAnimation()

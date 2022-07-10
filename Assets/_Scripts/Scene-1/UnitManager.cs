@@ -247,7 +247,7 @@ public class UnitManager : MonoBehaviour
     public void ReceiveSyncMonster(int monsterId, Vector2 position, Target sync_target, int targetWallId, string targetPlayerName)
     {
         if (!_monsters.ContainsKey(monsterId)) return;
-        Debug.Log("TargetPlayer:" + targetPlayerName + ".");
+        //Debug.Log("TargetPlayer:" + targetPlayerName + ".");
         _monsters[monsterId].Sync(
             position, sync_target, (Wall)TilemapManager.Instance.GetWall(targetWallId), GetPlayer(targetPlayerName));
     }
@@ -301,12 +301,16 @@ public class UnitManager : MonoBehaviour
 
     public Player GetNearestPlayer(Vector3 pos)
     {
-        return _playerKdTree.FindClosest(pos);
+        if (_playerKdTree.Count > 0) return _playerKdTree.FindClosest(pos);
+        else return null;
     }
 
     public Player GetNearestPlayer(Vector3 pos, bool isAlive)
     {
-        return !isAlive ? GetNearestPlayer(pos) : _playerAliveKdTree.FindClosest(pos);
+        var p = isAlive ? _playerAliveKdTree.FindClosest(pos) : GetNearestPlayer(pos);
+        if (!p && _playerAliveKdTree.Count > 0) p = isAlive ? _playerAliveKdTree[0] : _playerKdTree[0];
+        if (!p && _playerKdTree.Count > 0) p = _playerKdTree[0];
+        return p;
     }
 
     public List<Player> GetNearestPlayers(Vector3 pos, int count)
@@ -374,8 +378,8 @@ public class UnitManager : MonoBehaviour
 
     public Player GetPlayer(string idAndName)
     {
-        Debug.LogWarning(idAndName);
-        if (!_players.ContainsKey(idAndName))
+        //Debug.LogWarning(idAndName);
+        if (idAndName == null || !_players.ContainsKey(idAndName))
         {
             Debug.LogWarning($"Player [{idAndName}] not found!");
             return null;

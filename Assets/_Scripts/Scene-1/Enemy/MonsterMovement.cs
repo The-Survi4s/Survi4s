@@ -34,6 +34,11 @@ public class MonsterMovement : MonoBehaviour
     private Vector3 _targetOffset;
     private float _distanceToTarget;
 
+    [Header("Debug")]
+    public NavMeshPathStatus pathStatus;
+    public float remainingDistance;
+    public Vector3 desVel;
+
     void Start()
     {
         _owner = GetComponent<Monster>();
@@ -60,6 +65,9 @@ public class MonsterMovement : MonoBehaviour
         DecideTarget();
         UpdateStationaryTime();
         RecalculatePath();
+        remainingDistance = _agent.remainingDistance;
+        pathStatus = _agent.pathStatus; 
+        desVel = _agent.desiredVelocity;
     }
 
     /// <summary>
@@ -68,7 +76,7 @@ public class MonsterMovement : MonoBehaviour
     private void RecalculatePath()
     {
         var targetPos = _currentTargetPos + _targetOffset;
-        if (Vector3.Distance(_currentTargetPreviousPos, targetPos) > maxDistanceDifference)
+        if (Vector3.Distance(_currentTargetPreviousPos, targetPos) > maxDistanceDifference || stationaryTime > 10)
         {
             _agent.SetDestination(targetPos);
             _currentTargetPreviousPos = targetPos;
@@ -102,7 +110,7 @@ public class MonsterMovement : MonoBehaviour
 
     private void SetInitialCurrentTarget()
     {
-        if (_agent.pathStatus == NavMeshPathStatus.PathComplete) return;
+        if (stationaryTime < 3) return;
         _currentTarget = _owner.setting.priority;
         switch (_currentTarget)
         {
@@ -124,21 +132,7 @@ public class MonsterMovement : MonoBehaviour
 
     private void SetAlternativeTarget()
     {
-        switch (_agent.pathStatus)
-        {
-            case NavMeshPathStatus.PathComplete:
-                break;
-            case NavMeshPathStatus.PathPartial:
-                //Debug.Log($"{name} path partial");
-                TargetWallInstead();
-                break;
-            case NavMeshPathStatus.PathInvalid:
-                Debug.Log($"{name} path invalid");
-                TargetWallInstead();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        if (stationaryTime > 5) TargetWallInstead();
     }
 
     private void WhenDistracted()
@@ -165,6 +159,8 @@ public class MonsterMovement : MonoBehaviour
 
     private void TargetWallInstead()
     {
+        _owner.RequestNewTargetWall();
+        _targetWallPos = _owner.targetWall.transform.position;
         if (_owner.setting.MethodOf(Target.Wall) != Monster.TargetMethod.DontAttack)
         {
             _currentTargetPos = _targetWallPos;
@@ -192,5 +188,28 @@ public class MonsterMovement : MonoBehaviour
 
         if (_owner.targetPlayer && !_owner.targetPlayer.isDead) _targetPlayerPos = _owner.targetPlayer.transform.position;
         else _targetPlayerPos = _statuePos;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (_agent && _agent.hasPath)
+        {
+            Vector3 prevPos = transform.position;
+            foreach (var c in _agent.path.corners)
+            {
+                Gizmos.DrawLine(prevPos, c);
+                prevPos = c;
+            } 
+        }
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(_targetWallPos, 5);
+        Gizmos.DrawWireSphere(_targetPlayerPos, 5);
+        Gizmos.DrawSphere(_currentTargetPos, 1);
+    }
+
+    [ContextMenu(nameof(ForceSetDestination))]
+    public void ForceSetDestination()
+    {
+        _agent.SetDestination(_currentTargetPos);
     }
 }
